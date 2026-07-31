@@ -7,7 +7,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>land-art lab</title>
+    <title>land-art</title>
     <meta name="author" content="wpriverthemes.com">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="description"
@@ -54,6 +54,11 @@
         .process-slide .swiper { touch-action: pan-y; }
         .process-slide .swiper-wrapper { cursor: grab; }
         .process-slide .swiper-wrapper:active { cursor: grabbing; }
+        .section-team .team-item .image { height: 240px; }
+        .hero-icon-badge { position: absolute; display: flex; align-items: center; justify-content: center; background: #fff; box-shadow: 3px 13px 24px 0px rgba(0,0,0,0.25); color: #111111; }
+        .hero-icon-badge.rot-1 { width: 88px; height: 88px; border-radius: 22px; font-size: 34px; left: 118px; top: -18px; transform: rotate(-10deg); z-index: 3; }
+        .hero-icon-badge.rot-2 { width: 92px; height: 92px; border-radius: 24px; font-size: 34px; left: 172px; top: 34px; transform: rotate(10deg); z-index: 2; }
+        .hero-icon-badge.rot-3 { width: 80px; height: 80px; border-radius: 20px; font-size: 30px; left: 110px; top: 92px; transform: rotate(-8deg); z-index: 1; }
     </style>
 </head>
 
@@ -98,7 +103,7 @@
                             </ul>
                         </li>
                         <li class="menu-item has-child">
-                            <a href="#" class="item-link link1">LAND ARTS</a>
+                            <a href="#" class="item-link link1">Projects</a>
                             <ul class="sub-menu">
                                 <li class="sub-menu-item">
                                     <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalBeHuman">BE HUMAN</a>
@@ -133,9 +138,7 @@
         <!-- Hero Banner -->
         <div class="section-hero">
             <div class="hero-image">
-                <video class="" muted="" autoplay="" loop="" playsinline="">
-                    <source src="assets/images/video/hero.mp4" type="video/mp4">
-                </video>
+                <img src="assets/images/section/ate-talbai.jpg" alt="Aerial view of the ART N TECH land art site in the Gobi Desert">
             </div>
             <div class="container">
                 <div class="content-wrap text-center">
@@ -170,13 +173,19 @@
                         <span class="title1 fw-semibold text-gradient-1">LAND-ART</span>
                         <br>
                         <div class="title2 d-flex gap-20 justify-content-center flex-wrap">
-                            <span class="fw-semibold text-gradient-1">LAB</span>
+                            <span class="fw-semibold text-gradient-1"></span>
                             <div class="title-icon">
                                 <div class="box"></div>
                                 <div class="title-icon-wrap">
-                                    <img class="img-1 img-transform-3" src="assets/images/item/hero-1.svg" alt="">
-                                    <img class="img-2 img-transform-3" src="assets/images/item/hero-2.svg" alt="">
-                                    <img class="img-3 img-transform-3" src="assets/images/item/hero-3.svg" alt="">
+                                    <div class="img-transform-3 hero-icon-badge rot-1" title="Community">
+                                        <i class="icon icon-user-friends-solid"></i>
+                                    </div>
+                                    <div class="img-transform-3 hero-icon-badge rot-2" title="Hub">
+                                        <i class="icon icon-building"></i>
+                                    </div>
+                                    <div class="img-transform-3 hero-icon-badge rot-3" title="Climate Contribution">
+                                        <i class="icon icon-leaf-solid"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -912,13 +921,13 @@
                         <div class="heading-title text-white effectFade fadeRotateX">The Squad Shipping <br> Your AI</div>
                     </div>
                     <div class="row justify-content-center">
-                        <div class="col-lg-4 col-md-8 lg-mb-24">
+                        <div class="col-lg-3 col-md-6 lg-mb-24">
                             <div class="team-item h-100 effectFade fadeUp">
                                 <div class="image">
-                                    <img src="assets/images/team/team-1.jpg" alt="">
+                                    <img src="assets/images/team/Dagvasuren.B.jpg" alt="Dagvasuren.B">
                                 </div>
-                                <a href="#" class="name h6 fw-semibold">Ava Collins</a>
-                                <div class="sub text-body-1">Land-Art Lab’s Design Lead</div>
+                                <a href="#" class="name h6 fw-semibold">Dagvasuren.B</a>
+                                <div class="sub text-body-1">CEO, Beelog Technologies</div>
                                 <div class="tf-social justify-content-center">
                                     <a href="#" class="social-item">
                                         <i class="icon icon-twitter-x"></i>
@@ -932,76 +941,64 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-6 lg-mb-24">
-                            <div class="team-item style-1 mb-24 effectFade fadeUp">
-                                <div class="top">
-                                    <div class="image">
-                                        <img src="assets/images/team/team-2.jpg" alt="">
-                                    </div>
-                                    <div class="tf-social justify-content-center">
-                                        <a href="#" class="social-item">
-                                            <i class="icon icon-github"></i>
-                                        </a>
-                                        <a href="#" class="social-item">
-                                            <i class="icon icon-linkedin-in"></i>
-                                        </a>
-                                    </div>
+                        <div class="col-lg-3 col-md-6 lg-mb-24">
+                            <div class="team-item h-100 effectFade fadeUp" data-delay="0.1">
+                                <div class="image">
+                                    <img src="assets/images/team/Odgerel.B.png" alt="Odgerel.B">
                                 </div>
-                                <a href="#" class="name text-body-1 fw-semibold">Noah Reed</a>
-                                <div class="sub">ML/Agent Lead. Builds domain agents</div>
-                            </div>
-                            <div class="team-item style-1 effectFade fadeUp">
-                                <div class="top">
-                                    <div class="image">
-                                        <img src="assets/images/team/team-3.jpg" alt="">
-                                    </div>
-                                    <div class="tf-social justify-content-center">
-                                        <a href="#" class="social-item">
-                                            <i class="icon icon-github"></i>
-                                        </a>
-                                        <a href="#" class="social-item">
-                                            <i class="icon icon-linkedin-in"></i>
-                                        </a>
-                                    </div>
+                                <a href="#" class="name h6 fw-semibold">Odgerel.B</a>
+                                <div class="sub text-body-1">Team Member</div>
+                                <div class="tf-social justify-content-center">
+                                    <a href="#" class="social-item">
+                                        <i class="icon icon-twitter-x"></i>
+                                    </a>
+                                    <a href="#" class="social-item">
+                                        <i class="icon icon-linkedin-in"></i>
+                                    </a>
+                                    <a href="#" class="social-item">
+                                        <i class="icon icon-github"></i>
+                                    </a>
                                 </div>
-                                <a href="#" class="name text-body-1 fw-semibold">Lucas Hayes</a>
-                                <div class="sub">Solutions Architect. Connects AI to your stack</div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="team-item style-1 mb-24 effectFade fadeUp" data-delay="0.1">
-                                <div class="top">
-                                    <div class="image">
-                                        <img src="assets/images/team/team-4.jpg" alt="">
-                                    </div>
-                                    <div class="tf-social justify-content-center">
-                                        <a href="#" class="social-item">
-                                            <i class="icon icon-github"></i>
-                                        </a>
-                                        <a href="#" class="social-item">
-                                            <i class="icon icon-linkedin-in"></i>
-                                        </a>
-                                    </div>
+                        <div class="col-lg-3 col-md-6 lg-mb-24">
+                            <div class="team-item h-100 effectFade fadeUp" data-delay="0.2">
+                                <div class="image">
+                                    <img src="assets/images/team/team-4.jpg" alt="">
                                 </div>
-                                <a href="#" class="name text-body-1 fw-semibold">Jordan Brooks</a>
-                                <div class="sub">Data Engineer. Secure access policies</div>
+                                <a href="#" class="name h6 fw-semibold">Team Member</a>
+                                <div class="sub text-body-1">Photo coming soon</div>
+                                <div class="tf-social justify-content-center">
+                                    <a href="#" class="social-item">
+                                        <i class="icon icon-twitter-x"></i>
+                                    </a>
+                                    <a href="#" class="social-item">
+                                        <i class="icon icon-linkedin-in"></i>
+                                    </a>
+                                    <a href="#" class="social-item">
+                                        <i class="icon icon-github"></i>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="team-item style-1 effectFade fadeUp" data-delay="0.1">
-                                <div class="top">
-                                    <div class="image">
-                                        <img src="assets/images/team/team-5.jpg" alt="">
-                                    </div>
-                                    <div class="tf-social justify-content-center">
-                                        <a href="#" class="social-item">
-                                            <i class="icon icon-github"></i>
-                                        </a>
-                                        <a href="#" class="social-item">
-                                            <i class="icon icon-linkedin-in"></i>
-                                        </a>
-                                    </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 lg-mb-24">
+                            <div class="team-item h-100 effectFade fadeUp" data-delay="0.3">
+                                <div class="image">
+                                    <img src="assets/images/team/team-5.jpg" alt="">
                                 </div>
-                                <a href="#" class="name text-body-1 fw-semibold">Erin Park</a>
-                                <div class="sub">MLOps Engineer. Productionizes with CI/CD</div>
+                                <a href="#" class="name h6 fw-semibold">Team Member</a>
+                                <div class="sub text-body-1">Photo coming soon</div>
+                                <div class="tf-social justify-content-center">
+                                    <a href="#" class="social-item">
+                                        <i class="icon icon-twitter-x"></i>
+                                    </a>
+                                    <a href="#" class="social-item">
+                                        <i class="icon icon-linkedin-in"></i>
+                                    </a>
+                                    <a href="#" class="social-item">
+                                        <i class="icon icon-github"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1111,116 +1108,6 @@
                 </div>
             </div>
             <!-- /section-awards -->
-            <!-- section-testimonials -->
-            <div class="section-testimonials flat-spacing pt-0">
-                <div class="container">
-                    <div class="row justify-content-between">
-                        <div class="col-lg-5">
-                            <div class="col-left">
-                                <div class="heading-section mb-48">
-                                    <div class="heading-sub fw-semibold style-1 effectFade fadeUp">Testimonials</div>
-                                    <div class="heading-title text-white effectFade fadeRotateX">What Our <br> Clients Says</div>
-                                </div>
-                                <div class="swiper-testimonial_wrap effectFade fadeUp">
-                                    <div dir="ltr" class="swiper tf-swiper swiper-testimonial">
-                                        <div class="swiper-wrapper">
-                                            <div class="swiper-slide">
-                                                <div>
-                                                    <div class="top-icon d-flex gap-4">
-                                                        <i class="icon icon-star-solid"></i>
-                                                        <i class="icon icon-star-solid"></i>
-                                                        <i class="icon icon-star-solid"></i>
-                                                        <i class="icon icon-star-solid"></i>
-                                                        <i class="icon icon-star-solid"></i>
-                                                    </div>
-                                                    <div class="text-body-1 text-white desc">
-                                                        We shipped our first copilot in 7 weeks and cut support tickets by 31%. The eval dashboards made every decision obvious.
-                                                    </div>
-                                                    <div class="cite">
-                                                        <img class="line-left" src="assets/images/item/line-1.png" alt="">
-                                                        <div class="name text-body-3 text-neutral-400 fw-semibold">Elena Ruiz</div>
-                                                        <div class="line"></div>
-                                                        <div class="sub text-body-3 text-neutral-400">Cantos SaaS’s VP Product</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <div>
-                                                    <div class="top-icon">
-                                                        <svg width="23" height="20" viewBox="0 0 23 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M12.9375 20V10.3597C12.9375 7.72182 13.824 5.51559 15.5969 3.74101C17.4177 1.91847 19.8854 0.671463 23 0V6.40288C21.8021 6.78657 21.0115 7.26619 20.6281 7.84173C20.2448 8.3693 20.0292 9.04077 19.9813 9.85612H23V20H12.9375ZM0 20V10.3597C0 7.72182 0.886459 5.51559 2.65938 3.74101C4.48021 1.91847 6.94792 0.671463 10.0625 0V6.40288C8.9125 6.78657 8.12187 7.26619 7.69062 7.84173C7.30729 8.3693 7.09167 9.04077 7.04375 9.85612H10.0625V20H0Z" fill="#FD3A25"/>
-                                                        </svg>
-                                                    </div>
-                                                    <div class="text-body-1 text-white desc">
-                                                        SSO/SAML and RBAC landed smoothly. Latency stayed &lt;300 ms on p95—huge win for our agents.
-                                                    </div>
-                                                    <div class="cite">
-                                                        <img class="line-left" src="assets/images/item/line-1.png" alt="">
-                                                        <div class="name text-body-3 text-neutral-400 fw-semibold">Marcus Tan</div>
-                                                        <div class="line"></div>
-                                                        <div class="sub text-body-3 text-neutral-400">VectorPay’s CTO</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <div>
-                                                    <div class="top-icon">
-                                                        <svg width="23" height="20" viewBox="0 0 23 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M12.9375 20V10.3597C12.9375 7.72182 13.824 5.51559 15.5969 3.74101C17.4177 1.91847 19.8854 0.671463 23 0V6.40288C21.8021 6.78657 21.0115 7.26619 20.6281 7.84173C20.2448 8.3693 20.0292 9.04077 19.9813 9.85612H23V20H12.9375ZM0 20V10.3597C0 7.72182 0.886459 5.51559 2.65938 3.74101C4.48021 1.91847 6.94792 0.671463 10.0625 0V6.40288C8.9125 6.78657 8.12187 7.26619 7.69062 7.84173C7.30729 8.3693 7.09167 9.04077 7.04375 9.85612H10.0625V20H0Z" fill="#FD3A25"/>
-                                                        </svg>
-                                                    </div>
-                                                    <div class="text-body-1 text-white desc">
-                                                        The best partner for agentic work. Multi-step planning, tool use, and audit trails—done right the first time.
-                                                    </div>
-                                                    <div class="cite">
-                                                        <img class="line-left" src="assets/images/item/line-1.png" alt="">
-                                                        <div class="name text-body-3 text-neutral-400 fw-semibold">David Kim</div>
-                                                        <div class="line"></div>
-                                                        <div class="sub text-body-3 text-neutral-400">Northway's Ecommerce Director</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="group-slider">
-                                        <div class="group-btn-slider">
-                                            <div class="btn-slider nav-prev-swiper testimonials-prev">
-                                                <i class="icon icon-angle-left-solid"></i>
-                                            </div>
-                                            <div class="btn-slider nav-next-swiper testimonials-next">
-                                                <i class="icon icon-angle-right-solid"></i>
-                                            </div>
-                                        </div>
-                                        <div class="testimonials-pagination"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div dir="ltr" class="swiper sw-main-image effectFade fadeUp">
-                                <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                        <div class="testimonial-image">
-                                            <img src="assets/images/section/tes-1.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <div class="testimonial-image">
-                                            <img src="assets/images/section/tes-2.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <div class="testimonial-image">
-                                            <img src="assets/images/section/tes-3.jpg" alt="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /section-testimonials -->
         </div>
 
         <!-- section-pricing -->
@@ -1460,6 +1347,7 @@
                                 <!-- Honeypot: hidden from real visitors via CSS, only bots fill it in. -->
                                 <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;">
                                 <div class="attachment d-flex gap-8 align-items-center">
+
                                 </div>
                                 <div id="contactFormStatus" style="display:none; margin-bottom:16px;"></div>
                                 <button type="submit" class="tf-btn w-100">Submit Message</button>
