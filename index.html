@@ -11,10 +11,10 @@
     <meta name="author" content="wpriverthemes.com">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="description"
-        content="Land-Art Lab is an art-and-technology driven reforestation initiative fighting desertification in Mongolia's Gobi Desert through large-scale land art, satellite-monitored tree planting, and community-powered restoration.">
-    <meta property="og:title" content="Land-Art Lab">
+        content="Land-Art  is an art-and-technology driven reforestation initiative fighting desertification in Mongolia's Gobi Desert through large-scale land art, satellite-monitored tree planting, and community-powered restoration.">
+    <meta property="og:title" content="Land-Art">
     <meta property="og:description" content="Art and technology driven reforestation, fighting desertification in Mongolia's Gobi Desert.">
-    <meta property="og:site_name" content="Land-Art Lab">
+    <meta property="og:site_name" content="Land-Art">
 
     <!-- font -->
     <link rel="stylesheet" href="assets/fonts/fonts.css">
@@ -55,10 +55,16 @@
         .process-slide .swiper-wrapper { cursor: grab; }
         .process-slide .swiper-wrapper:active { cursor: grabbing; }
         .section-team .team-item .image { height: 240px; }
-        .hero-icon-badge { position: absolute; display: flex; align-items: center; justify-content: center; background: #fff; box-shadow: 3px 13px 24px 0px rgba(0,0,0,0.25); color: #111111; }
-        .hero-icon-badge.rot-1 { width: 88px; height: 88px; border-radius: 22px; font-size: 34px; left: 118px; top: -18px; transform: rotate(-10deg); z-index: 3; }
-        .hero-icon-badge.rot-2 { width: 92px; height: 92px; border-radius: 24px; font-size: 34px; left: 172px; top: 34px; transform: rotate(10deg); z-index: 2; }
-        .hero-icon-badge.rot-3 { width: 80px; height: 80px; border-radius: 20px; font-size: 30px; left: 110px; top: 92px; transform: rotate(-8deg); z-index: 1; }
+        .hero-icon-badge { position: absolute; display: flex; align-items: center; justify-content: center; background: #fff; box-shadow: 3px 13px 24px 0px rgba(0,0,0,0.25); }
+        .hero-icon-badge.rot-1 { width: 76px; height: 76px; border-radius: 20px; font-size: 28px; left: 125px; top: -10px; transform: rotate(-6deg); z-index: 3; color: #16A34A; }
+        .hero-icon-badge.rot-2 { width: 76px; height: 76px; border-radius: 20px; font-size: 28px; left: 172px; top: 28px; transform: rotate(6deg); z-index: 2; color: #6366F1; }
+        .hero-icon-badge.rot-3 { width: 76px; height: 76px; border-radius: 20px; font-size: 28px; left: 140px; top: 72px; transform: rotate(-6deg); z-index: 1; color: #0EA5E9; }
+        .doc-card { background: var(--neutral-100); border-radius: 24px; overflow: hidden; height: 100%; }
+        .doc-image { position: relative; cursor: pointer; aspect-ratio: 1.5; background: #000; }
+        .doc-image img, .doc-image video { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .film-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(2, 8, 16, 0.55); border: 2px solid rgba(255, 255, 255, 0.85); color: #fff; font-size: 18px; transition: all .25s; pointer-events: none; }
+        .doc-image:hover .film-play-btn { background: var(--primary, #FF3B26); border-color: var(--primary, #FF3B26); transform: translate(-50%, -50%) scale(1.08); }
+        .doc-content { padding: 20px 24px 28px; }
     </style>
 </head>
 
@@ -89,21 +95,13 @@
                             <a href="index.html" class="item-link link1 active">Home</a>
                         </li>
                         <li class="menu-item">
-                            <a href="about.html" class="item-link link1">About</a>
+                            <a href="#about" class="item-link link1">About</a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#services" class="item-link link1">Services</a>
                         </li>
                         <li class="menu-item has-child">
-                            <a href="#" class="item-link link1">Services</a>
-                            <ul class="sub-menu">
-                                <li class="sub-menu-item">
-                                    <a href="service.html" class="item-link link1">Services</a>
-                                </li>
-                                <li class="sub-menu-item">
-                                    <a href="service-single.html" class="item-link link1">Services single</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="menu-item has-child">
-                            <a href="#" class="item-link link1">Projects</a>
+                            <a href="#works" class="item-link link1">Projects</a>
                             <ul class="sub-menu">
                                 <li class="sub-menu-item">
                                     <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalBeHuman">BE HUMAN</a>
@@ -116,17 +114,15 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="menu-item has-child">
-                            <a href="#" class="item-link link1">Blog</a>
-                                </li>
-                            </ul>
+                        <li class="menu-item">
+                            <a href="#documentaries" class="item-link link1">Blog</a>
                         </li>
                         <li class="menu-item">
-                            <a href="contact.html" class="item-link link1">Contact</a>
+                            <a href="#contact" class="item-link link1">Contact</a>
                         </li>
                     </ul>
                 </div>
-                <a href="contact.html" class="tf-btn d-lg-flex d-none">
+                <a href="#contact" class="tf-btn d-lg-flex d-none">
                     Start a Project
                 </a>
                 <a href="#" class="tf-btn open-mb-menu mobile-menu d-lg-none d-flex">
@@ -194,7 +190,7 @@
                         From discovery to deployment, we plug into your stack to prototype, <br> validate, and launch AI experiences your users actually love.
                     </p>
                     <div class="bot-btns effectFade fadeRotateX">
-                        <a href="service.html" class="tf-btn">
+                        <a href="#services" class="tf-btn">
                             Explore Services
                         </a>
                         <a href="#pricing" class="tf-btn-2">
@@ -227,7 +223,7 @@
                                     Available for worldwide project
                                 </div>
                                 <h5 class="title fw-semibold text-white">Based in <span class="text-brand">Montréal, Canada</span></h5>
-                                <a href="contact.html" class="tf-btn">
+                                <a href="#contact" class="tf-btn">
                                     Start a Project
                                 </a>
                             </div>
@@ -287,7 +283,7 @@
                                 <div class="cite">
                                     <div class="name text-body-3 fw-semibold">Ava Collins</div>
                                     <div class="line"></div>
-                                    <div class="sub text-body-3">Land-Art Lab’s Design Lead</div>
+                                    <div class="sub text-body-3">Land-Art's Design Lead</div>
                                 </div>
                             </div>
                         </div>
@@ -803,24 +799,24 @@
                         <div class="features-wrap justify-content-between">
                             <div class="features-col col-left lg-mb-24">
                                 <div class="features-item effectFade fadeUp">
-                                    <i class="icon icon-robot-solid"></i>
-                                    <h6 class="title fw-semibold">Agent-Powered Workflows</h6>
+                                    <i class="icon icon-bolt-solid"></i>
+                                    <h6 class="title fw-semibold">Incubator</h6>
                                     <p class="text-secondary">
-                                        Turn repetitive tasks into autonomous flows—agents plan, execute, and report with guardrails, audit trails, and clear handoff to humans.
+                                        A structured program that takes early-stage ideas from concept to launch, with dedicated support for ventures working to combat desertification.
                                     </p>
                                 </div>
                                 <div class="features-item effectFade fadeUp">
-                                    <i class="icon icon-clipboard-check-solid"></i>
-                                    <h6 class="title fw-semibold">Eval-First Quality</h6>
+                                    <i class="icon icon-user-check-solid"></i>
+                                    <h6 class="title fw-semibold">Mentorship Program</h6>
                                     <p class="text-secondary">
-                                        Measure accuracy, latency, safety, and cost from day one. Our evals and dashboards keep models reliable and budgets predictable.
+                                        Direct guidance from experienced entrepreneurs, scientists, and land-art practitioners at every stage of building a venture.
                                     </p>
                                 </div>
                                 <div class="features-item effectFade fadeUp">
-                                    <i class="icon icon-book-solid"></i>
-                                    <h6 class="title fw-semibold">Private Knowledge RAG</h6>
+                                    <i class="icon icon-user-friends-solid"></i>
+                                    <h6 class="title fw-semibold">Community</h6>
                                     <p class="text-secondary">
-                                        Make your docs, tickets, and wikis instantly useful with retrieval augmented generation—freshness, citations, and explainability built in.
+                                        A growing network of youth, founders, and researchers united by a shared mission to restore the Gobi Desert.
                                     </p>
                                 </div>
                             </div>
@@ -829,24 +825,24 @@
                             </div>
                             <div class="features-col col-right">
                                 <div class="features-item effectFade fadeUp" data-delay="0.1">
-                                    <i class="icon icon-user-check-solid"></i>
-                                    <h6 class="title fw-semibold">Human-Centered AI UX</h6>
+                                    <i class="icon icon-search-solid"></i>
+                                    <h6 class="title fw-semibold">Laboratory</h6>
                                     <p class="text-secondary">
-                                        Interfaces, prompts, and error states designed for trust and adoption—so the smart thing is also the obvious thing to do.
+                                        A dedicated space for testing land-restoration techniques and sustainable materials before they are deployed on-site.
                                     </p>
                                 </div>
                                 <div class="features-item effectFade fadeUp" data-delay="0.1">
-                                    <i class="icon icon-shield-alt-solid"></i>
-                                    <h6 class="title fw-semibold">Secure by Design</h6>
+                                    <i class="icon icon-building"></i>
+                                    <h6 class="title fw-semibold">Co-Working Space</h6>
                                     <p class="text-secondary">
-                                        PII handling, SSO/SAML, RBAC, secrets management, and compliance workflows—ship AI that’s safe, auditable, and enterprise-ready.
+                                        An open, well-equipped workspace where residents and visiting collaborators can meet and work throughout their stay.
                                     </p>
                                 </div>
                                 <div class="features-item effectFade fadeUp" data-delay="0.1">
-                                    <i class="icon icon-plug-solid"></i>
-                                    <h6 class="title fw-semibold">Seamless Integrations</h6>
+                                    <i class="icon icon-leaf-solid"></i>
+                                    <h6 class="title fw-semibold">Botanical Garden</h6>
                                     <p class="text-secondary">
-                                        Plug into your stack (CRM, helpdesk, ERP, data warehouse) with webhooks and APIs to turn insights into action—fast.
+                                        A living collection of drought-resistant and native species, serving as both a research resource and a demonstration of the Hub's work.
                                     </p>
                                 </div>
                             </div>
@@ -899,7 +895,7 @@
                         <div class="text effectFade fadeUp">
                             We design, build, and evaluate with a modern AI stack—LLMs, vector search, orchestration, and observability—so your features are fast, reliable, and secure.
                         </div>
-                        <a href="contact.html" class="tf-btn effectFade fadeRotateX">
+                        <a href="#contact" class="tf-btn effectFade fadeRotateX">
                             Get Started
                         </a>
                     </div>
@@ -1110,6 +1106,55 @@
             <!-- /section-awards -->
         </div>
 
+        <!-- section-documentaries -->
+        <div id="documentaries" class="section-documentaries flat-spacing">
+            <div class="container">
+                <div class="heading-section center mb-64">
+                    <div class="heading-sub fw-semibold mx-auto effectFade fadeUp">Documentaries</div>
+                    <div class="heading-title text-gradient-3 effectFade fadeRotateX">Watch Our Story</div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-24" id="doc-1">
+                        <div class="doc-card effectFade fadeUp">
+                            <div class="doc-image film-trigger" data-video="assets/videos/doc-1-gobi-future.mp4" role="button" tabindex="0" aria-label="Play Building the Future of Gobi 2.0">
+                                <img src="assets/images/blog/blog-doc-1-gobi-future.jpg" alt="Building the Future of Gobi 2.0">
+                                <span class="film-play-btn"><i class="icon icon-play-filled"></i></span>
+                            </div>
+                            <div class="doc-content">
+                                <p class="text-secondary fw-semibold mb-8">Documentary · 2021</p>
+                                <h6 class="fw-semibold">Building the Future of Gobi 2.0</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-24" id="doc-2">
+                        <div class="doc-card effectFade fadeUp" data-delay="0.1">
+                            <div class="doc-image film-trigger" data-video="assets/videos/doc-2-greenland-gobi.mp4" role="button" tabindex="0" aria-label="Play Greenland in Gobi">
+                                <img src="assets/images/blog/blog-doc-2-greenland-gobi.jpg" alt="Greenland in Gobi">
+                                <span class="film-play-btn"><i class="icon icon-play-filled"></i></span>
+                            </div>
+                            <div class="doc-content">
+                                <p class="text-secondary fw-semibold mb-8">Documentary · Univision Re-Generation</p>
+                                <h6 class="fw-semibold">Greenland in Gobi</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-24" id="doc-3">
+                        <div class="doc-card effectFade fadeUp" data-delay="0.2">
+                            <div class="doc-image film-trigger" data-video="assets/videos/doc-3-art-n-tech.mp4" role="button" tabindex="0" aria-label="Play Art N Tech">
+                                <img src="assets/images/blog/blog-doc-3-art-n-tech.jpg" alt="Art N Tech">
+                                <span class="film-play-btn"><i class="icon icon-play-filled"></i></span>
+                            </div>
+                            <div class="doc-content">
+                                <p class="text-secondary fw-semibold mb-8">Documentary · 2024</p>
+                                <h6 class="fw-semibold">Art N Tech</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /section-documentaries -->
+
         <!-- section-pricing -->
         <div id="pricing" class="section-pricing flat-spacing">
             <div class="container">
@@ -1139,7 +1184,7 @@
                                     <div class="price-number fw-bold" data-month="1000" data-year="9900">$9,900</div>
                                     <h6 class="price-per">/ year</h6>
                                 </div>
-                                <a href="contact.html" class="tf-btn">
+                                <a href="#contact" class="tf-btn">
                                     Get Started
                                 </a>
                             </div>
@@ -1187,7 +1232,7 @@
                                     <div class="price-number fw-bold" data-month="1700" data-year="19900">$19,900</div>
                                     <h6 class="price-per">/ year</h6>
                                 </div>
-                                <a href="contact.html" class="tf-btn">
+                                <a href="#contact" class="tf-btn">
                                     Get Started
                                 </a>
                             </div>
@@ -1368,7 +1413,7 @@
                     <a href="index.html" class="footer-logo">
                         <img src="assets/images/logo/logo-2.svg" alt="">
                     </a>
-                    <div class="title h6 fw-semibold">Get connected <br> with Land-Art Lab on social</div>
+                    <div class="title h6 fw-semibold">Get connected <br> with Land-Art on social</div>
                     <div class="text">Don’t miss our new updates!</div>
                     <div class="tf-social-1 justify-content-center">
                         <a href="https://x.com/" target="_blank" class="text-body-1 fw-semibold">
@@ -1377,13 +1422,13 @@
                                 <i class="icon icon-twitter-x"></i>
                             </div>
                         </a>
-                        <a href="https://www.facebook.com/" target="_blank" class="text-body-1 fw-semibold">
+                        <a href="https://www.facebook.com/shambala.today/" target="_blank" class="text-body-1 fw-semibold">
                             Facebook
                             <div class="social-item">
                                 <i class="icon icon-facebook-f"></i>
                             </div>
                         </a>
-                        <a href="https://www.instagram.com/" target="_blank" class="text-body-1 fw-semibold">
+                        <a href="https://www.instagram.com/shambala2056?igsh=MThkandhYW5jeTQ3Yg%3D%3D&utm_source=qr" target="_blank" class="text-body-1 fw-semibold">
                             Instagram
                             <div class="social-item">
                                 <i class="icon icon-instagram"></i>
@@ -1400,16 +1445,16 @@
                 <div class="footer-bottom">
                     <ul class="footer-links d-flex gap-24 align-items-center">
                         <li>
-                            <a href="about.html" class="fw-semibold link-underline link1">About</a>
+                            <a href="#about" class="fw-semibold link-underline link1">About</a>
                         </li>
                         <li>
-                            <a href="service.html" class="fw-semibold link-underline link1">Services</a>
+                            <a href="#services" class="fw-semibold link-underline link1">Services</a>
                         </li>
                         <li>
                             <a href="#works" class="fw-semibold link-underline link1">Works</a>
                         </li>
                         <li>
-                            <a href="contact.html" class="fw-semibold link-underline link1">Contact</a>
+                            <a href="#contact" class="fw-semibold link-underline link1">Contact</a>
                         </li>
                     </ul>
                     <p class="text-secondary coppy-rights text-center">© 2026 Shambala Engineering Campus LLC
@@ -1450,7 +1495,7 @@
                             </li>
                             <li>
                                 <div class="item">
-                                    <a href="about.html" class="mb-menu-link text-display-1">
+                                    <a href="#about" class="mb-menu-link text-display-1">
                                         <span class="text">About</span>
                                     </a>
                                 </div>
@@ -1474,41 +1519,21 @@
                             </li>
                             <li>
                                 <div class="item">
-                                    <div class="has-sub-menu">
-                                        <a href="#dropdown-menu-2" class="mb-menu-link text-display-1 collapsed" data-bs-toggle="collapse"
-                                            aria-expanded="false" aria-controls="dropdown-menu-2">
-                                            <span class="text">Services</span>
-                                        </a>
-                                        <div id="dropdown-menu-2" class="collapse" data-bs-parent="#mobile-menu">
-                                            <ul class="sub-nav-menu">
-                                                <li><a href="service.html" class="sub-nav-link text-white">Services</a></li>
-                                                <li><a href="service-single.html" class="sub-nav-link text-white">Services Single</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    <a href="#services" class="mb-menu-link text-display-1">
+                                        <span class="text">Services</span>
+                                    </a>
                                 </div>
                             </li>
                             <li>
                                 <div class="item">
-                                    <div class="has-sub-menu">
-                                        <a href="#dropdown-menu-3" class="mb-menu-link text-display-1 collapsed" data-bs-toggle="collapse"
-                                            aria-expanded="false" aria-controls="dropdown-menu-3">
-                                            <span class="text">Blog</span>
-                                        </a>
-                                        <div id="dropdown-menu-3" class="collapse" data-bs-parent="#mobile-menu">
-                                            <ul class="sub-nav-menu">
-                                                <li><a href="blog-standard.html" class="sub-nav-link text-white">Blog Standard</a></li>
-                                                <li><a href="blog-two-columns.html" class="sub-nav-link text-white">Blog Grid 2</a></li>
-                                                <li><a href="blog-three-columns.html" class="sub-nav-link text-white">Blog Grid 3</a></li>
-                                                <li><a href="blog-single.html" class="sub-nav-link text-white">Blog Single</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    <a href="#documentaries" class="mb-menu-link text-display-1">
+                                        <span class="text">Blog</span>
+                                    </a>
                                 </div>
                             </li>
                             <li>
                                 <div class="item">
-                                    <a href="contact.html" class="mb-menu-link text-display-1">
+                                    <a href="#contact" class="mb-menu-link text-display-1">
                                         <span class="text">Contact</span>
                                     </a>
                                 </div>
@@ -1938,49 +1963,19 @@
             window.addEventListener("load", initProcessSwipe);
         }
 
-        var contactForm = document.getElementById("contactForm");
-        if (contactForm) {
-            var statusEl = document.getElementById("contactFormStatus");
-            var submitBtn = contactForm.querySelector('button[type="submit"]');
-            contactForm.addEventListener("submit", function (e) {
-                e.preventDefault();
-                var data = Object.fromEntries(new FormData(contactForm).entries());
-                submitBtn.disabled = true;
-                submitBtn.textContent = "Sending...";
-                statusEl.style.display = "none";
-                fetch("/api/contact", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data),
-                })
-                    .then(function (res) {
-                        return res.json().then(function (body) {
-                            return { ok: res.ok, body: body };
-                        });
-                    })
-                    .then(function (result) {
-                        statusEl.style.display = "block";
-                        if (result.ok) {
-                            statusEl.textContent = "Thanks — your message has been sent. We'll get back to you soon.";
-                            statusEl.style.color = "#2e7d32";
-                            contactForm.reset();
-                        } else {
-                            statusEl.textContent = result.body.error || "Something went wrong. Please try again.";
-                            statusEl.style.color = "#c62828";
-                        }
-                    })
-                    .catch(function () {
-                        statusEl.style.display = "block";
-                        statusEl.textContent = "Network error — please check your connection and try again.";
-                        statusEl.style.color = "#c62828";
-                    })
-                    .finally(function () {
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = "Submit Message";
-                    });
+        document.querySelectorAll(".doc-image.film-trigger").forEach(function (trigger) {
+            trigger.addEventListener("click", function () {
+                if (trigger.querySelector("video")) return;
+                var video = document.createElement("video");
+                video.src = trigger.dataset.video;
+                video.controls = true;
+                video.autoplay = true;
+                video.playsInline = true;
+                trigger.innerHTML = "";
+                trigger.appendChild(video);
             });
-        }
-    </script>
+        });
+</script>
 
 </body>
 
