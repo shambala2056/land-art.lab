@@ -42,7 +42,7 @@
         });
 
         $goTop.on("click", function () {
-            $("html, body").animate({ scrollTop: 0 }, 100);
+            $("html, body").scrollTop(0);
         });
     };
     /* Infinite Slide 
@@ -239,7 +239,7 @@
     };
     // counter
     var counter = function () {
-        if ($(document.body).hasClass("counter-scroll")) {
+        if ($(document.body).hasClass("counter-scroll") && $(".counter").length) {
           var a = 0;
           $(window).scroll(function () {
             var oTop = $(".counter").offset().top - window.innerHeight;

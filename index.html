@@ -33,6 +33,7 @@
     <link rel="apple-touch-icon-precomposed" href="assets/images/logo/favicon.svg">
 
     <style>
+        html, :root { scroll-behavior: auto !important; }
         .partner-wrap .infiniteSlide_partner { gap: 48px; align-items: center; }
         .partner-wrap .infiniteSlide_partner img { height: 40px; width: auto; max-width: 160px; object-fit: contain; filter: brightness(0); opacity: 0.45; }
         .process-card .icon.icon-photo { width: 100%; height: 180px; margin: -32px -32px 24px -32px; border-radius: 40px 40px 0 0; background: var(--neutral-300); padding: 0; overflow: hidden; }
@@ -54,8 +55,9 @@
         .process-slide .swiper { touch-action: pan-y; }
         .process-slide .swiper-wrapper { cursor: grab; }
         .process-slide .swiper-wrapper:active { cursor: grabbing; }
-        .section-team .team-item .image { height: 240px; background: #09111C; }
-        .section-team .team-item .image img { object-fit: contain; }
+        .section-team .team-item { background: linear-gradient(0deg, var(--neutral-900, #18181B), var(--neutral-900, #18181B)), radial-gradient(62.56% 62.56% at 28.14% -10.42%, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0) 100%); }
+        .section-team .team-item .image { height: 240px; background: #FFE505; }
+        .section-team .team-item .image img { object-fit: cover; object-position: center top; filter: grayscale(100%); }
         .hero-icon-badge { position: absolute; display: flex; align-items: center; justify-content: center; background: #fff; box-shadow: 3px 13px 24px 0px rgba(0,0,0,0.25); }
         .hero-icon-badge i { -webkit-text-stroke: 1.5px currentColor; }
         .hero-icon-badge.rot-1 { width: 76px; height: 76px; border-radius: 20px; font-size: 32px; left: 125px; top: -10px; transform: rotate(-6deg); z-index: 3; color: #16A34A; }
@@ -73,10 +75,17 @@
         .site-logo-img { height: 34px; width: auto; display: block; }
         .site-logo-img.footer { height: 44px; }
         .hero-logo-standalone { height: 190px; width: auto; display: block; margin: 0 auto; }
+        /* Subtle ambient motion on the static hero photo: slow breathing zoom. */
+        .hero-image { overflow: hidden; }
+        .hero-image img { animation: heroZoom 16s ease-in-out infinite; will-change: transform; }
+        @keyframes heroZoom { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+        @media (prefers-reduced-motion: reduce) { .hero-image img { animation: none; } }
         /* Land art poster images are portrait (5315x7087 ≈ 3:4) — old cards assumed landscape.
            Full-width made them enormous, so lay out as a 2-column grid of smaller cards instead. */
         .featured-works-item .image { aspect-ratio: 3 / 4; }
         .featured-works-item .image img { object-fit: contain; background: #09111C; }
+        .featured-works-item:hover .image img { transform: none; }
+        .featured-works-item .image:after, .featured-works-item:hover .image:after { content: none; }
         .featured-works-list { grid-template-columns: repeat(2, 1fr); }
         .featured-works-item .content { padding: 24px 24px 16px; }
         .featured-works-item .content .bot { flex-direction: column; gap: 12px; }
@@ -213,6 +222,13 @@
         .feat-modal-close:hover { background: var(--brand); color: #09111C; border-color: var(--brand); }
         .feat-modal-diagram { display: none; }
         .feat-modal.has-diagram .feat-modal-diagram { display: block; }
+
+        /* Bootstrap project/process modals: keep content within the viewport and scrollable on any device */
+        .modal.modalCentered .modal-content { max-height: 90vh; }
+        .modal.modalCentered .modal-body { min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        @media (max-width: 767px) {
+            .modal.modalCentered .modal-content { max-height: 94vh; }
+        }
 
         /* Three-channel integration loop — Hub / Lab / Community */
         .feat-sys { display: grid; grid-template-columns: minmax(220px,1fr) 1.1fr; background: #0D1620; border: 1px solid #16232F; border-radius: 20px; overflow: hidden; }
@@ -394,7 +410,7 @@
                             <a href="index.html" class="item-link link1">Home</a>
                         </li>
                         <li class="menu-item">
-                            <a href="#about" class="item-link link1">About</a>
+                            <a href="#about" class="item-link link1">Highlight Project</a>
                         </li>
                         <li class="menu-item">
                             <a href="#services" class="item-link link1">Ecosystem</a>
@@ -425,7 +441,7 @@
                     </ul>
                 </div>
                 <a href="#contact" class="tf-btn d-lg-flex d-none">
-                    Start a Project
+                    Invest
                 </a>
                 <a href="#" class="tf-btn open-mb-menu mobile-menu d-lg-none d-flex">
                     <i class="icon icon-grip-lines-solid"></i>
@@ -467,16 +483,16 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="heading-section">
-                            <div class="heading-sub fw-semibold effectFade fadeUp">About Us</div>
+                            <div class="heading-sub fw-semibold effectFade fadeUp">Highlight Project</div>
                             <div class="heading-title text-gradient-2 effectFade fadeRotateX">HEXAGON — The Hive of<br>those who stay.</div>
                         </div>
                     </div>
-                    <div class="col-xxl-7 col-lg-6 lg-mb-24">
+                    <div class="col-xxl-7 col-lg-6 lg-mb-24 mx-auto">
                         <div class="col-left">
                             <div class="position-relative z-5">
                                 <div class="sub text-white">
                                     <span class="dot"></span>
-                                    Available for worldwide project
+                                    In progress
                                 </div>
                                 <h5 class="title fw-semibold text-white">Based in <span class="text-brand">Dornogovi, Mongolia</span></h5>
                                 <a href="#contact" class="tf-btn">
@@ -486,61 +502,7 @@
                             <img loading="lazy" class="effectFade fadeRotateX" src="assets/images/section/HEXAGON.jpg" alt="Hexagon cell pattern">
                         </div>
                     </div>
-                    <div class="col-xxl-5 col-lg-6">
-                        <div class="review-box mb-24">
-                            <div class="desc fw-semibold text-body-1">Trusted by 120+ clients across 4 industries - <br> shipping AI from idea to production in 8–10 weeks</div>
-                            <div class="d-flex justify-content-between flex-wrap align-items-end gap-12">
-                                <div class="">
-                                    <div class="d-flex gap-4 text mb-10">
-                                        <svg width="26" height="24" viewBox="0 0 26 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M12.6792 18.3019L18.1887 16.9057L20.4906 24L12.6792 18.3019ZM25.3585 9.13208H15.6604L12.6792 0L9.69811 9.13208H0L7.84906 14.7925L4.86792 23.9245L12.717 18.2641L17.5472 14.7925L25.3585 9.13208Z" fill="#219653"/>
-                                        </svg>
-                                        Trustpilot
-                                    </div>
-                                    <div class="d-flex gap-2">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <rect width="24" height="24" fill="#3F3F46"/>
-                                            <path d="M11.9996 16.4114L15.6496 15.4341L17.1746 20.4001L11.9996 16.4114ZM20.3996 9.99255H13.9746L11.9996 3.6001L10.0246 9.99255H3.59961L8.79961 13.9548L6.82461 20.3473L12.0246 16.385L15.2246 13.9548L20.3996 9.99255Z" fill="white"/>
-                                        </svg>
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <rect width="24" height="24" fill="#3F3F46"/>
-                                            <path d="M11.9996 16.4114L15.6496 15.4341L17.1746 20.4001L11.9996 16.4114ZM20.3996 9.99255H13.9746L11.9996 3.6001L10.0246 9.99255H3.59961L8.79961 13.9548L6.82461 20.3473L12.0246 16.385L15.2246 13.9548L20.3996 9.99255Z" fill="white"/>
-                                        </svg>
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <rect width="24" height="24" fill="#3F3F46"/>
-                                            <path d="M11.9996 16.4114L15.6496 15.4341L17.1746 20.4001L11.9996 16.4114ZM20.3996 9.99255H13.9746L11.9996 3.6001L10.0246 9.99255H3.59961L8.79961 13.9548L6.82461 20.3473L12.0246 16.385L15.2246 13.9548L20.3996 9.99255Z" fill="white"/>
-                                        </svg>
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <rect width="24" height="24" fill="#3F3F46"/>
-                                            <path d="M11.9996 16.4114L15.6496 15.4341L17.1746 20.4001L11.9996 16.4114ZM20.3996 9.99255H13.9746L11.9996 3.6001L10.0246 9.99255H3.59961L8.79961 13.9548L6.82461 20.3473L12.0246 16.385L15.2246 13.9548L20.3996 9.99255Z" fill="white"/>
-                                        </svg>
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <rect width="24" height="24" fill="#3F3F46"/>
-                                            <path d="M11.9996 16.4114L15.6496 15.4341L17.1746 20.4001L11.9996 16.4114ZM20.3996 9.99255H13.9746L11.9996 3.6001L10.0246 9.99255H3.59961L8.79961 13.9548L6.82461 20.3473L12.0246 16.385L15.2246 13.9548L20.3996 9.99255Z" fill="white"/>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="counter text-neutral-200">
-                                    <span class="number" data-speed="1500" data-to="120" data-inviewport="yes">10</span><span>+</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="box-quotes effectFade fadeRotateX">
-                            <div class="content">
-                                <div class="icon mb-8">
-                                    <svg width="23" height="20" viewBox="0 0 23 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12.9375 20V10.3597C12.9375 7.72182 13.824 5.51559 15.5969 3.74101C17.4177 1.91847 19.8854 0.671463 23 0V6.40288C21.8021 6.78657 21.0115 7.26619 20.6281 7.84173C20.2448 8.3693 20.0292 9.04077 19.9813 9.85612H23V20H12.9375ZM0 20V10.3597C0 7.72182 0.886459 5.51559 2.65938 3.74101C4.48021 1.91847 6.94792 0.671463 10.0625 0V6.40288C8.9125 6.78657 8.12187 7.26619 7.69062 7.84173C7.30729 8.3693 7.09167 9.04077 7.04375 9.85612H10.0625V20H0Z" fill="#E4E4E7"/>
-                                    </svg>
-                                </div>
-                                <div class="text-body-1 fw-semibold desc">Good AI feels obvious—because the hard work is hidden.</div>
-                                <div class="cite">
-                                    <div class="name text-body-3 fw-semibold">Ava Collins</div>
-                                    <div class="line"></div>
-                                    <div class="sub text-body-3">Land-Art's Design Lead</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -781,10 +743,6 @@
                             <div class="featured-works-item  effectFade fadeUp no-div">
                                 <div class="image main-mouse-hover">
                                     <img loading="lazy" src="assets/images/section/featured-works-poster-behuman.jpg" alt="BE HUMAN land art aerial view">
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalBeHuman" class="tf-mouse view-project h6">
-                                        View Project
-                                        <i class="icon icon-arrow-top-right"></i>
-                                    </a>
                                 </div>
                                 <div class="content">
                                     <div class="pagi-dot">
@@ -817,10 +775,6 @@
                             <div class="featured-works-item ">
                                 <div class="image main-mouse-hover">
                                     <img loading="lazy" src="assets/images/section/featured-works-poster-artntech.jpg" alt="ART N TECH land art aerial view">
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalArtNTech" class="tf-mouse view-project h6">
-                                        View Project
-                                        <i class="icon icon-arrow-top-right"></i>
-                                    </a>
                                 </div>
                                 <div class="content">
                                     <div class="pagi-dot">
@@ -853,10 +807,6 @@
                             <div class="featured-works-item ">
                                 <div class="image main-mouse-hover">
                                     <img loading="lazy" src="assets/images/section/featured-works-poster-mongolz.jpg" alt="Mongolz #1 land art aerial view">
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalMongolz" class="tf-mouse view-project h6">
-                                        View Project
-                                        <i class="icon icon-arrow-top-right"></i>
-                                    </a>
                                 </div>
                                 <div class="content">
                                     <div class="pagi-dot">
@@ -889,10 +839,6 @@
                             <div class="featured-works-item ">
                                 <div class="image main-mouse-hover">
                                     <img loading="lazy" src="assets/images/section/featured-works-poster-hexagon.jpg" alt="HEXAGON land art aerial view">
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalHexagon" class="tf-mouse view-project h6">
-                                        View Project
-                                        <i class="icon icon-arrow-top-right"></i>
-                                    </a>
                                 </div>
                                 <div class="content">
                                     <div class="pagi-dot">
@@ -1022,102 +968,6 @@
                 </div>
             </div>
             <!-- /section-process -->
-            <!-- section-benefits -->
-            <div class="section-benefits flat-spacing pt-0">
-                <div class="container">
-                    <div class="heading-section center mb-70">
-                        <div class="heading-sub fw-semibold effectFade fadeUp">Benefits</div>
-                        <div class="heading-title text-gradient-3 effectFade fadeRotateX">Why Choose Us</div>
-                    </div>
-                    <div class="row mb-24">
-                        <div class="col-lg-7">
-                            <div class="benefits-box benefits-progress">
-                                <div class="benefits-progress-inner">
-                                    <div class="benefits-progress-item">
-                                        <div class="progress-line" data-progress="100"></div>
-                                        <div class="progress-text fw-semibold">
-                                            <i class="icon icon-leaf-solid"></i>
-                                            Drip Irrigation
-                                        </div>
-                                    </div>
-                                    <div class="benefits-progress-item">
-                                        <div class="progress-line" data-progress="100"></div>
-                                        <div class="progress-text fw-semibold">
-                                            <i class="icon icon-tachometer-alt-solid"></i>
-                                           Fencing
-                                        </div>
-                                    </div>
-                                    <div class="benefits-progress-item">
-                                        <div class="progress-line" data-progress="100"></div>
-                                        <div class="progress-text fw-semibold">
-                                            <i class="icon icon-shield-alt-solid"></i>
-                                            Monitoring
-                                        </div>
-                                    </div>
-                                    <div class="benefits-progress-item">
-                                        <div class="progress-line" data-progress="90"></div>
-                                        <div class="progress-text fw-semibold">
-                                            <i class="icon icon-eye"></i>
-                                            Replant Guarantee
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <h6 class="fw-semibold title">Built to Last in the Gobi</h6>
-                                    <p class="text text-secondary">Every site is equipped with drip irrigation, protective fencing, and <br> ongoing monitoring — so what we plant actually survives. We send you a photo of your tree once a year by email.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-5">
-                            <div class="benefits-box benefits-step effectFade fadeUp">
-                                <div class="benefits-step-inner">
-                                    <div class="line-step"></div>
-                                    <div class="step-item">
-                                        <i class="icon icon-check-solid"></i>
-                                    </div>
-                                    <div class="step-item">
-                                        <i class="icon icon-check-solid"></i>
-                                    </div>
-                                    <div class="step-item">
-                                        <i class="icon icon-check-solid"></i>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <h6 class="fw-semibold title">A Track Record You Can See</h6>
-                                    <p class="text text-secondary">We've been growing land art in the Gobi Desert since 2019 — 3 completed installations and over 160,000 Siberian Elm trees planted, with more on the way.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-5">
-                            <div class="benefits-box benefits-secure ">
-                                <div class="benefits-secure-inner text-center">
-                                    <img loading="lazy" src="assets/images/item/benefits-1.svg" alt="">
-                                </div>
-                                <div class="content">
-                                    <h6 class="fw-semibold title">Secure by Design</h6>
-                                    <p class="text text-secondary">PII handling, SSO/SAML, RBAC, encryption, and audit trails -built in, not bolted on. Enterprise-ready from the start.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-7">
-                            <div class="benefits-box benefits-design">
-                                <div class="benefits-design-inner">
-                                    <img loading="lazy" class="item-img-1" src="assets/images/item/benefits-2.svg" alt="">
-                                    <img loading="lazy" class="item-img-2 rightleft" src="assets/images/item/benefits-3.png" alt="">
-                                    <img loading="lazy" class="item-img-3 updown" src="assets/images/item/benefits-4.png" alt="">
-                                </div>
-                                <div class="content">
-                                    <h6 class="fw-semibold title">Design-Led AI Experiences</h6>
-                                    <p class="text text-secondary">We craft prompts, interfaces, and guardrails that feel intuitive - so adoption rises and support tickets fall.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /section-benefits -->
             <!-- section-features -->
             <div class="section-features flat-spacing pt-0">
                 <div class="container">
@@ -1255,21 +1105,19 @@
 
         <div class="box-black">
             <div class="light-box"></div>
-            <img loading="lazy" class="light-top" src="assets/images/item/light-top.png" alt="">
-            <img loading="lazy" class="light-bot" src="assets/images/item/light-bot.png" alt="">
-            
+
             <!-- section-team -->
             <div class="section-team flat-spacing">
                 <div class="container">
                     <div class="heading-section center mb-64">
-                        <div class="heading-sub fw-semibold style-1 effectFade fadeUp">Community</div>
-                        <div class="heading-title text-white effectFade fadeRotateX">The Squad Shipping <br> Your AI</div>
+                        <div class="heading-title text-white effectFade fadeRotateX">Community <br> members
+                        </div>
                     </div>
                     <div class="row justify-content-center">
                         <div class="col-lg-3 col-md-6 lg-mb-24">
                             <div class="team-item h-100 effectFade fadeUp">
                                 <div class="image">
-                                    <img loading="lazy" src="assets/images/team/Dagvasuren.B.jpg" alt="Dagvasuren.B">
+                                    <img loading="lazy" src="assets/images/team/Dagvasuren.B.png" alt="Dagvasuren.B">
                                 </div>
                                 <a href="#" class="name h6 fw-semibold">Dagvasuren.B</a>
                                 <div class="sub text-body-1">CEO, Beelog Technologies</div>
@@ -1309,7 +1157,7 @@
                         <div class="col-lg-3 col-md-6 lg-mb-24">
                             <div class="team-item h-100 effectFade fadeUp" data-delay="0.2">
                                 <div class="image">
-                                    <img loading="lazy" src="assets/images/team/team-4.jpg" alt="">
+                                    <img loading="lazy" src="assets/images/team/Amgalan-Erdene.N.jpg" alt="Amgalan-Erdene.N">
                                 </div>
                                 <a href="#" class="name h6 fw-semibold">Amgalan-Erdene.N </a>
                                 <div class="sub text-body-1">Executive Director, Ungu Nem NGO</div>
@@ -1329,7 +1177,7 @@
                         <div class="col-lg-3 col-md-6 lg-mb-24">
                             <div class="team-item h-100 effectFade fadeUp" data-delay="0.3">
                                 <div class="image">
-                                    <img loading="lazy" src="assets/images/team/team-5.jpg" alt="">
+                                    <img loading="lazy" src="assets/images/team/Tsevegsuren.S.png" alt="Tsevegsuren.S">
                                 </div>
                                 <a href="#" class="name h6 fw-semibold">Tsevegsuren.S</a>
                                 <div class="sub text-body-1">CEO, Plastic Center LLC</div>
@@ -1350,27 +1198,6 @@
                 </div>
             </div>
             <!-- /section-team -->
-            <!-- section-awards -->
-            <div class="section-awards flat-spacing">
-                <div class="container">
-                    <div class="heading-section center mb-48">
-                        <div class="heading-sub fw-semibold style-1 mb-0 effectFade fadeUp">Awards</div>
-                    </div>
-                    <div class="d-grid gap-16">
-                        <div class="awards-item effectFade fadeUp">
-                            <div class="title text-body-1 text-white">Best Initiative Award</div>
-                            <div class="text text-body-1 text-white">Unplug 2022</div>
-                            <div class="year text-body-1 text-neutral-400">/ 2022</div>
-                        </div>
-                        <div class="awards-item effectFade fadeUp" data-delay="0.1">
-                            <div class="title text-body-1 text-white">Sustainable Development Leader</div>
-                            <div class="text text-body-1 text-white">SDG OPEN DAY 2022</div>
-                            <div class="year text-body-1 text-neutral-400">/ 2022</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /section-awards -->
         </div>
 
         <!-- section-documentaries -->
@@ -1422,76 +1249,6 @@
         </div>
         <!-- /section-documentaries -->
 
-        <!-- section-faqs -->
-        <div class="section-faqs flat-spacing pt-0">
-            <div class="container">
-                <div class="heading-section center mb-64">
-                    <div class="heading-sub fw-semibold effectFade fadeUp">FAQs</div>
-                    <div class="heading-title text-gradient-3 effectFade fadeRotateX">
-                        Frequently Asked <br>Questions
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-lg-8">
-                        <div class="accordion-asked" id="accordion-asked">
-                            <div class="accordion-asked-item effectFade fadeRotateX">
-                                <div class="accordion-asked-title" id="asked1">
-                                    <button class="accordion-button text-body-1 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                                        What’s the typical timeline from idea to v1?
-                                        <span class="right-icon"></span>
-                                    </button>
-                                </div>
-                                <div id="collapse1" role="region" class="accordion-collapse collapse show" aria-labelledby="asked1" data-bs-parent="#accordion-asked">
-                                    <div class="accordion-body">
-                                        A clear problem statement, success metrics, access to sample data, and a stakeholder who can make decisions. We’ll run a kickoff workshop to align scope.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="accordion-asked-item effectFade fadeRotateX" data-delay="0.1">
-                                <div class="accordion-asked-title" id="asked2">
-                                    <button class="accordion-button text-body-1 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                                        What do we need to start?
-                                        <span class="right-icon"></span>
-                                    </button>
-                                </div>
-                                <div id="collapse2" role="region" class="accordion-collapse collapse" aria-labelledby="asked2" data-bs-parent="#accordion-asked">
-                                    <div class="accordion-body">
-                                        A clear problem statement, success metrics, access to sample data, and a stakeholder who can make decisions. We’ll run a kickoff workshop to align scope.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="accordion-asked-item effectFade fadeRotateX" data-delay="0.2">
-                                <div class="accordion-asked-title" id="asked3">
-                                    <button class="accordion-button text-body-1 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                                        Which models/stack do you use?
-                                        <span class="right-icon"></span>
-                                    </button>
-                                </div>
-                                <div id="collapse3" role="region" class="accordion-collapse collapse" aria-labelledby="asked3" data-bs-parent="#accordion-asked">
-                                    <div class="accordion-body">
-                                        A clear problem statement, success metrics, access to sample data, and a stakeholder who can make decisions. We’ll run a kickoff workshop to align scope.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="accordion-asked-item effectFade fadeRotateX" data-delay="0.3">
-                                <div class="accordion-asked-title" id="asked4">
-                                    <button class="accordion-button text-body-1 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                                        Are model/API costs included in pricing?
-                                        <span class="right-icon"></span>
-                                    </button>
-                                </div>
-                                <div id="collapse4" role="region" class="accordion-collapse collapse" aria-labelledby="asked4" data-bs-parent="#accordion-asked">
-                                    <div class="accordion-body">
-                                        A clear problem statement, success metrics, access to sample data, and a stakeholder who can make decisions. We’ll run a kickoff workshop to align scope.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /section-faqs -->
         <!-- section-contact -->
         <div id="contact" class="flat-spacing pt-0">
             <div class="section-contact">
@@ -1543,7 +1300,6 @@
                                 </fieldset>
                                 <!-- Honeypot: hidden from real visitors via CSS, only bots fill it in. -->
                                 <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;">
-                                <div class="attachment d-flex gap-8 align-items-center">
 
                                 </div>
                                 <div id="contactFormStatus" style="display:none; margin-bottom:16px;"></div>
@@ -1558,46 +1314,17 @@
         <!-- footer -->
         <footer>
             <div class="footer-image">
-                <img loading="lazy" class="effectFade fadeUp" src="assets/images/logo/logo-footer.png" alt="">
             </div>
             <div class="container">
                 <div class="footer-content">
                     <a href="index.html" class="footer-logo">
                         <img loading="lazy" class="site-logo-img footer" src="assets/images/logo/land-art-logo.png" alt="Land-art space">
                     </a>
-                    <div class="title h6 fw-semibold">Get connected <br> with Land-Art on social</div>
-                    <div class="text">Don’t miss our new updates!</div>
-                    <div class="tf-social-1 justify-content-center">
-                        <a href="https://x.com/" target="_blank" class="text-body-1 fw-semibold">
-                            Twitter / X
-                            <div class="social-item">
-                                <i class="icon icon-twitter-x"></i>
-                            </div>
-                        </a>
-                        <a href="https://www.facebook.com/shambala.today/" target="_blank" class="text-body-1 fw-semibold">
-                            Facebook
-                            <div class="social-item">
-                                <i class="icon icon-facebook-f"></i>
-                            </div>
-                        </a>
-                        <a href="https://www.instagram.com/shambala2056?igsh=MThkandhYW5jeTQ3Yg%3D%3D&utm_source=qr" target="_blank" class="text-body-1 fw-semibold">
-                            Instagram
-                            <div class="social-item">
-                                <i class="icon icon-instagram"></i>
-                            </div>
-                        </a>
-                        <a href="https://www.linkedin.com/" target="_blank" class="text-body-1 fw-semibold">
-                            Linkedin
-                            <div class="social-item">
-                                <i class="icon icon-linkedin-in"></i>
-                            </div>
-                        </a>
-                    </div>
                 </div>
                 <div class="footer-bottom">
                     <ul class="footer-links d-flex gap-24 align-items-center">
                         <li>
-                            <a href="#about" class="fw-semibold link-underline link1">About</a>
+                            <a href="#about" class="fw-semibold link-underline link1">Highlight Project</a>
                         </li>
                         <li>
                             <a href="#services" class="fw-semibold link-underline link1">Services</a>
@@ -1648,7 +1375,7 @@
                             <li>
                                 <div class="item">
                                     <a href="#about" class="mb-menu-link text-display-1">
-                                        <span class="text">About</span>
+                                        <span class="text">Highlight Project</span>
                                     </a>
                                 </div>
                             </li>
