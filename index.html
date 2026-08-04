@@ -56,19 +56,312 @@
         .process-slide .swiper-wrapper:active { cursor: grabbing; }
         .section-team .team-item .image { height: 240px; }
         .hero-icon-badge { position: absolute; display: flex; align-items: center; justify-content: center; background: #fff; box-shadow: 3px 13px 24px 0px rgba(0,0,0,0.25); }
-        .hero-icon-badge.rot-1 { width: 76px; height: 76px; border-radius: 20px; font-size: 28px; left: 125px; top: -10px; transform: rotate(-6deg); z-index: 3; color: #16A34A; }
-        .hero-icon-badge.rot-2 { width: 76px; height: 76px; border-radius: 20px; font-size: 28px; left: 172px; top: 28px; transform: rotate(6deg); z-index: 2; color: #6366F1; }
-        .hero-icon-badge.rot-3 { width: 76px; height: 76px; border-radius: 20px; font-size: 28px; left: 140px; top: 72px; transform: rotate(-6deg); z-index: 1; color: #0EA5E9; }
+        .hero-icon-badge i { -webkit-text-stroke: 1.5px currentColor; }
+        .hero-icon-badge.rot-1 { width: 76px; height: 76px; border-radius: 20px; font-size: 32px; left: 125px; top: -10px; transform: rotate(-6deg); z-index: 3; color: #16A34A; }
+        .hero-icon-badge.rot-2 { width: 76px; height: 76px; border-radius: 20px; font-size: 32px; left: 172px; top: 28px; transform: rotate(6deg); z-index: 2; color: #6366F1; }
+        .hero-icon-badge.rot-3 { width: 76px; height: 76px; border-radius: 20px; font-size: 32px; left: 140px; top: 72px; transform: rotate(-6deg); z-index: 1; color: #0EA5E9; }
         .doc-card { background: var(--neutral-100); border-radius: 24px; overflow: hidden; height: 100%; }
         .doc-image { position: relative; cursor: pointer; aspect-ratio: 1.5; background: #000; }
         .doc-image img, .doc-image video { width: 100%; height: 100%; object-fit: cover; display: block; }
         .film-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(2, 8, 16, 0.55); border: 2px solid rgba(255, 255, 255, 0.85); color: #fff; font-size: 18px; transition: all .25s; pointer-events: none; }
-        .doc-image:hover .film-play-btn { background: var(--primary, #FF3B26); border-color: var(--primary, #FF3B26); transform: translate(-50%, -50%) scale(1.08); }
+        .doc-image:hover .film-play-btn { background: var(--brand, #b2d135); border-color: var(--brand, #b2d135); transform: translate(-50%, -50%) scale(1.08); }
         .doc-content { padding: 20px 24px 28px; }
+        /* Static price, excluded from the shared monthly/yearly toggle JS (it's a one-time purchase, not a subscription). */
+        .price-number-fixed { font-weight: 700; font-size: 72px; line-height: 72px; letter-spacing: -0.03em; }
+        @media (max-width: 767px) { .price-number-fixed { font-size: 40px; line-height: 48px; } }
+        .site-logo-img { height: 34px; width: auto; display: block; }
+        .site-logo-img.footer { height: 44px; }
+        .hero-logo-standalone { height: 190px; width: auto; display: block; margin: 0 auto; }
+        /* Land art poster images are portrait (5315x7087 ≈ 3:4) — old cards assumed landscape */
+        .featured-works-item .image { aspect-ratio: 3 / 4; }
+        .featured-works-item .image img { object-fit: contain; background: #09111C; }
+        @media (max-width: 991px) { .hero-logo-standalone { height: 120px; } }
+        @media (max-width: 767px) { .hero-logo-standalone { height: 78px; } }
+        .features-center-logo { width: 76%; height: auto; object-fit: contain; }
+        .features-center { background: #fff; box-shadow: 0px -3px 0px 0px rgba(0,0,0,.06) inset, 0px 1px 0px 0px rgba(255,255,255,.8) inset, 0px 3.44px 5.57px 0px rgba(0,0,0,.08), 0px 16px 32px 0px rgba(0,0,0,.08); }
+        /* Ecosystem interaction-network diagram (ported from dornogovi-ecosystem-2.html) */
+        .eco-web-intro { max-width: 62ch; margin-left: auto; margin-right: auto; }
+        .eco-web-wrap { margin-top: 40px; border: 1px solid #1F3040; background: #09111C; border-radius: 20px; position: relative; overflow: hidden; }
+        #ecoWeb { display: block; width: 100%; height: auto; }
+        .eco-web-bar { display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center; padding: 16px 22px; border-top: 1px solid #16232F; background: #050A12; }
+        .eco-web-msg { font-family: 'Urbanist', sans-serif; font-size: 14px; font-weight: 500; letter-spacing: 0.01em; color: #B8C4D4; line-height: 1.7; max-width: 62ch; }
+        .eco-web-msg b { color: #b2d135; font-weight: 700; }
+        .eco-web-msg em { color: #35C9B8; font-style: normal; font-weight: 600; }
+        .eco-web-btn { font-family: 'Urbanist', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: #B8C4D4; background: none; border: 1px solid #29405A; border-radius: 999px; padding: 10px 20px; cursor: pointer; transition: color .3s, border-color .3s, background .3s; white-space: nowrap; }
+        .eco-web-btn:hover { color: #09111C; border-color: #35C9B8; background: #35C9B8; }
+        .eco-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; font-family: 'Urbanist', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.01em; color: #7C8CA0; }
+        .eco-legend span { display: flex; align-items: center; gap: 9px; }
+        .eco-legend i { width: 16px; height: 2px; border-radius: 1px; background: #35C9B8; display: block; }
+        .eco-legend i.fb { background-image: linear-gradient(90deg, #b2d135 55%, transparent 55%); background-size: 5px 100%; background-color: transparent; }
+        .eco-legend-item { cursor: pointer; padding: 7px 12px; border-radius: 999px; border: 1px solid transparent; transition: background .3s ease, color .3s ease, border-color .3s ease; }
+        .eco-legend-item:hover { background: rgba(178,209,53,.07); color: #B8C4D4; }
+        .eco-legend-item.act { background: rgba(178,209,53,.12); border-color: rgba(178,209,53,.35); color: #fff; }
+        .eco-note { margin-top: 32px; border-left: 2px solid #b2d135; padding: 14px 0 14px 20px; max-width: 62ch; transition: opacity .25s ease; }
+        .eco-note .role { font-family: 'Urbanist', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: #b2d135; display: block; margin-bottom: 8px; }
+        .eco-note p { font-size: 14px; color: #8296AB; }
+        .eco-nd { cursor: pointer; }
+        .eco-nd .eco-hx { fill: #101D2E; stroke: #2A4058; stroke-width: 1.2; transition: fill .45s ease, stroke .45s ease, opacity .5s ease, transform .35s cubic-bezier(.3,1.4,.5,1); transform-box: fill-box; transform-origin: center; }
+        .eco-nd.pulse .eco-hx { transform: scale(1.22); }
+        .eco-nd .eco-gl { opacity: 0; transition: opacity .45s ease; }
+        .eco-nd .eco-lb { fill: #A8B7C9; font-family: 'Urbanist', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; text-anchor: middle; transition: fill .45s ease, opacity .5s ease; }
+        .eco-nd .eco-ico { stroke: #6B7F97; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: stroke .45s ease, opacity .5s ease; }
+        .eco-nd.plant .eco-hx { stroke: #b2d135; stroke-dasharray: 5 4; }
+        .eco-nd.plant .eco-lb { fill: #b2d135; }
+        .eco-nd.hot .eco-hx { fill: var(--c); stroke: var(--c); }
+        .eco-nd.hot .eco-ico { stroke: #050A12; }
+        .eco-nd.hot .eco-lb { fill: #FFFFFF; }
+        .eco-nd.hot .eco-gl { opacity: 0.16; }
+        .eco-nd.dead .eco-hx { fill: #1A1216; stroke: #b2d135; stroke-dasharray: 3 3; }
+        .eco-nd.dead .eco-ico, .eco-nd.dead .eco-lb { opacity: 0.32; }
+        .eco-nd.mute { opacity: 0.22; }
+        .eco-ed { fill: none; stroke: #223349; stroke-width: 1.1; opacity: 0.6; transition: stroke .45s ease, opacity .5s ease; }
+        .eco-ed.fb { stroke-dasharray: 4 4; }
+        .eco-ed.on { stroke: #35C9B8; stroke-width: 1.6; opacity: 1; }
+        .eco-ed.on.fb { stroke: #b2d135; }
+        .eco-ed.mute { opacity: 0.12; }
+        .eco-ed.dead { stroke: #b2d135; opacity: 0.4; }
+
+        /* Mini ecosystem network preview, embedded inline inside the active accordion tab */
+        .eco-mini-wrap { width: 100%; height: 460px; border-radius: 16px; overflow: hidden; background: #09111C; display: flex; flex-direction: column; }
+        .eco-mini-wrap svg { width: 100%; flex: 1 1 auto; min-height: 0; display: block; }
+        .eco-mini-msg { flex: 0 0 auto; padding: 14px 18px; border-top: 1px solid #16232F; background: #050A12; font-family: 'Urbanist', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.01em; color: #B8C4D4; line-height: 1.6; }
+        .eco-mini-msg b { color: #b2d135; font-weight: 700; }
+        .eco-mini-msg em { color: #35C9B8; font-style: normal; font-weight: 600; }
+        @media (max-width: 575px) { .eco-mini-wrap { height: 340px; } }
+
+        /* Restoration Sequence mini widget (accordion tab 04) */
+        .tl-mini { width: 100%; height: 460px; border-radius: 16px; overflow: hidden; background: #09111C; display: flex; flex-direction: column; }
+        .tl-mini-tabs { flex: 0 0 auto; display: grid; grid-template-columns: repeat(4,1fr); border-bottom: 1px solid #16232F; }
+        .tl-mini-tab { background: none; border: none; border-right: 1px solid #16232F; cursor: pointer; padding: 10px 8px; text-align: left; transition: background .3s ease; font-family: 'Urbanist', sans-serif; }
+        .tl-mini-tab:last-child { border-right: none; }
+        .tl-mini-tab:hover { background: rgba(178,209,53,.05); }
+        .tl-mini-tab .yr { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: #7C8CA0; display: block; margin-bottom: 3px; }
+        .tl-mini-tab .ti { font-size: 10px; font-weight: 600; letter-spacing: 0.01em; color: #B8C4D4; display: block; line-height: 1.25; }
+        .tl-mini-tab.act { background: rgba(178,209,53,.08); }
+        .tl-mini-tab.act .yr, .tl-mini-tab.act .ti { color: #b2d135; }
+        .tl-mini-bar { flex: 0 0 auto; height: 2px; background: #16232F; position: relative; overflow: hidden; }
+        .tl-mini-bar i { position: absolute; left: 0; top: 0; bottom: 0; background: #b2d135; width: 0; display: block; }
+        .tl-mini-stage { position: relative; flex: 1 1 auto; min-height: 0; }
+        .tl-mini-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+        .tl-mini-desc { flex: 0 0 auto; padding: 12px 16px; border-top: 1px solid #16232F; background: #050A12; font-family: 'Urbanist', sans-serif; font-size: 12px; letter-spacing: 0.01em; color: #B8C4D4; line-height: 1.6; }
+        .tl-mini-desc b { color: #b2d135; font-weight: 700; }
+        @media (max-width: 575px) { .tl-mini { height: 380px; } .tl-mini-tab .ti { display: none; } }
+
+        /* Governing Principles mini widget (accordion tab 05) */
+        .pr5-mini { width: 100%; height: 460px; border-radius: 16px; overflow: hidden; background: #09111C; display: flex; flex-direction: column; }
+        .pr5-mini-tabs { flex: 0 0 auto; display: grid; grid-template-columns: repeat(5,1fr); border-bottom: 1px solid #16232F; }
+        .pr5-mini-tab { background: none; border: none; border-right: 1px solid #16232F; cursor: pointer; padding: 9px 6px; text-align: left; transition: background .3s ease; font-family: 'Urbanist', sans-serif; }
+        .pr5-mini-tab:last-child { border-right: none; }
+        .pr5-mini-tab:hover { background: rgba(178,209,53,.05); }
+        .pr5-mini-tab .n { font-size: 9px; letter-spacing: 0.1em; color: #7C8CA0; display: block; margin-bottom: 2px; }
+        .pr5-mini-tab .t { font-size: 9px; font-weight: 600; letter-spacing: 0.01em; color: #B8C4D4; display: block; line-height: 1.2; }
+        .pr5-mini-tab.act { background: rgba(178,209,53,.08); }
+        .pr5-mini-tab.act .n, .pr5-mini-tab.act .t { color: #b2d135; }
+        .pr5-mini-canvas { position: relative; flex: 1 1 auto; min-height: 0; }
+        .pr5-mini-canvas canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+        .pr5-mini-key { position: absolute; left: 14px; top: 12px; z-index: 2; display: flex; flex-wrap: wrap; gap: 10px; }
+        .pr5-mini-key span { font-family: 'Urbanist', sans-serif; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #B8C4D4; display: flex; align-items: center; gap: 5px; }
+        .pr5-mini-key i { width: 7px; height: 7px; flex: none; border-radius: 50%; display: block; }
+        .pr5-mini-cap { position: absolute; left: 14px; right: 14px; bottom: 12px; z-index: 2; font-family: 'Urbanist', sans-serif; font-size: 11px; color: #B8C4D4; line-height: 1.5; }
+        .pr5-mini-read { position: absolute; right: 14px; top: 12px; z-index: 2; font-family: 'Urbanist', sans-serif; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #7C8CA0; }
+        .pr5-mini-bar { flex: 0 0 auto; height: 2px; background: #16232F; position: relative; overflow: hidden; }
+        .pr5-mini-bar i { position: absolute; left: 0; top: 0; bottom: 0; background: #b2d135; width: 0; display: block; }
+        @media (max-width: 575px) { .pr5-mini { height: 380px; } .pr5-mini-tab .t { display: none; } }
+
+        /* Investment structure content, reused inside the animated Features description box */
+        .inv-intro { max-width: 68ch; margin: 24px auto 0; text-align: center; color: var(--neutral-500); }
+        .inv-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-top: 24px; }
+        .inv-stat { background: #fff; border-radius: 20px; padding: 24px 20px; text-align: center; }
+        .inv-stat .v { font-size: 30px; font-weight: 700; line-height: 1.15; }
+        .inv-stat .k { font-size: 13px; color: var(--neutral-500); margin-top: 8px; display: block; }
+        @media (max-width: 767px) { .inv-stats { grid-template-columns: 1fr 1fr; } }
+        .feat-modal-text .inv-stat { background: #101822; border: 1px solid #223349; }
+        .feat-modal-text .inv-stat .v { color: #fff; }
+        .feat-modal-text .inv-stat .k { color: #7C8CA0; }
+        .feat-ff-stage { display: none; position: relative; width: 100%; aspect-ratio: 16/7.4; min-height: 220px; background: #0D1620; border: 1px solid #16232F; border-radius: 16px; margin-bottom: 22px; overflow: hidden; }
+        .feat-ff-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+        .inv-tiers { overflow-x: auto; }
+        .inv-tiers table { width: 100%; border-collapse: collapse; min-width: 640px; }
+        .inv-tiers th, .inv-tiers td { padding: 16px 14px; border-bottom: 1px solid var(--neutral-200); text-align: left; font-size: 14px; }
+        .inv-tiers th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500); font-weight: 600; }
+        .inv-tiers .tier-n { font-weight: 700; }
+        .inv-tiers tbody tr:last-child .tier-n { color: var(--brand); }
+
+        /* Features cards stay compact (title + icon only) — pressing one opens a big modal window with the full info */
+        .features-item.feat-click { cursor: pointer; transition: transform .3s ease, box-shadow .3s ease; }
+        .features-item.feat-click:hover { transform: translateY(-4px); }
+        .features-item.feat-click.act { box-shadow: 0 0 0 2px var(--brand) inset, 0px 7.77px 16px 0px rgba(0,0,0,.0588235294), 0px 3px 3px 0px rgba(0,0,0,.1019607843); }
+        .features-item.feat-click.act .icon { background-color: var(--brand); }
+
+        .feat-modal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; padding: 24px; }
+        .feat-modal.show { display: flex; }
+        .feat-modal-backdrop { position: absolute; inset: 0; background: rgba(2,6,12,.8); opacity: 0; transition: opacity .3s ease; }
+        .feat-modal.anim-in .feat-modal-backdrop { opacity: 1; }
+        .feat-modal-panel { position: relative; width: 100%; max-width: 960px; max-height: 85vh; overflow-y: auto; background: #09111C; border: 1px solid #16232F; border-radius: 32px; padding: 48px; opacity: 0; transform: scale(.94) translateY(10px); transition: opacity .35s cubic-bezier(.22,1,.36,1), transform .35s cubic-bezier(.22,1,.36,1); }
+        .feat-modal.anim-in .feat-modal-panel { opacity: 1; transform: scale(1) translateY(0); }
+        .feat-modal-close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid #29405A; background: transparent; color: #8296AB; font-size: 22px; line-height: 1; cursor: pointer; transition: background .3s ease, color .3s ease, border-color .3s ease; }
+        .feat-modal-close:hover { background: var(--brand); color: #09111C; border-color: var(--brand); }
+        .feat-modal-diagram { display: none; }
+        .feat-modal.has-diagram .feat-modal-diagram { display: block; }
+
+        /* Three-channel integration loop — Hub / Lab / Community */
+        .feat-sys { display: grid; grid-template-columns: minmax(220px,1fr) 1.1fr; background: #0D1620; border: 1px solid #16232F; border-radius: 20px; overflow: hidden; }
+        .feat-sys-viz { display: grid; place-items: center; padding: 20px; border-right: 1px solid #16232F; }
+        .feat-sys-viz svg { width: 100%; max-width: 340px; height: auto; display: block; }
+        .feat-sys-pan { padding: 24px 28px; display: flex; flex-direction: column; justify-content: center; transition: opacity .25s ease; }
+        .feat-sys-pan.fade { opacity: 0; }
+        .feat-sys-tag { font-family: 'Urbanist', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--k, #b2d135); display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .feat-sys-tag svg { width: 14px; height: 14px; flex: none; }
+        .feat-sys-pan h3 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .feat-sys-pan .sub { font-size: 13px; color: #8296AB; line-height: 1.6; margin-bottom: 14px; }
+        .feat-sys-pan ul { list-style: none; margin: 0 0 16px; padding: 0; }
+        .feat-sys-pan li { font-size: 13px; color: #8296AB; padding-left: 16px; position: relative; line-height: 1.7; margin-bottom: 3px; }
+        .feat-sys-pan li::before { content: ''; position: absolute; left: 0; top: .62em; width: 5px; height: 5px; background: var(--k, #b2d135); opacity: .8; clip-path: polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%); }
+        .feat-sys-io { border-top: 1px solid #16232F; padding-top: 12px; font-family: 'Urbanist', sans-serif; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #5A616B; line-height: 2; }
+        .feat-sys-io b { color: #b2d135; font-weight: 600; }
+        .feat-sys-io i { color: #35C9B8; font-style: normal; }
+        .feat-sys-nd { cursor: pointer; }
+        .feat-sys-nd .hx { fill: #101822; stroke: #223349; stroke-width: 1.2; transition: fill .45s ease, stroke .45s ease; }
+        .feat-sys-nd:hover .hx { stroke: var(--k); }
+        .feat-sys-nd.on .hx { fill: var(--k); stroke: var(--k); }
+        .feat-sys-nd .ic2 { stroke: #6B7F97; fill: none; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; transition: stroke .45s ease; }
+        .feat-sys-nd.on .ic2 { stroke: #050A12; }
+        .feat-sys-nd .tx { fill: #7C8CA0; font-family: 'Urbanist', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-anchor: middle; transition: fill .45s ease; }
+        .feat-sys-nd.on .tx { fill: #fff; }
+        .feat-sys-ed { fill: none; stroke: #223349; stroke-width: 1.2; transition: stroke .4s ease, opacity .4s ease; }
+        .feat-sys-ed.out { stroke: #b2d135; }
+        .feat-sys-ed.inn { stroke: #35C9B8; }
+        .feat-sys-ed.dim { opacity: .28; }
+        .feat-sys-lb { fill: #5A616B; font-family: 'Urbanist', sans-serif; font-size: 8px; letter-spacing: 0.06em; text-anchor: middle; opacity: 0; transition: opacity .4s ease; }
+        .feat-sys-lb.show { opacity: 1; }
+        @media (max-width: 700px) { .feat-sys { grid-template-columns: 1fr; } .feat-sys-viz { border-right: none; border-bottom: 1px solid #16232F; } }
+
+        .feat-modal-text { border-left: 2px solid #b2d135; padding: 4px 0 4px 22px; }
+        .feat-modal-text h4 { font-family: 'Urbanist', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #b2d135; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .feat-modal-text h4::before { content: ''; width: 15px; height: 15px; flex: none; background: #b2d135; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8'%3E%3Ccircle cx='12' cy='5' r='2.2'/%3E%3Ccircle cx='5' cy='18' r='2.2'/%3E%3Ccircle cx='19' cy='18' r='2.2'/%3E%3Cpath d='M10.6 6.9 6.4 16.1M13.4 6.9l4.2 9.2M7.2 18h9.6'/%3E%3C/svg%3E") center/contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8'%3E%3Ccircle cx='12' cy='5' r='2.2'/%3E%3Ccircle cx='5' cy='18' r='2.2'/%3E%3Ccircle cx='19' cy='18' r='2.2'/%3E%3Cpath d='M10.6 6.9 6.4 16.1M13.4 6.9l4.2 9.2M7.2 18h9.6'/%3E%3C/svg%3E") center/contain no-repeat; }
+        .feat-modal-text ul { margin: 0 0 18px; padding-left: 20px; color: #8296AB; }
+        .feat-modal-text ul li { margin-bottom: 6px; }
+        .feat-modal-text p { color: #8296AB; font-size: 14px; line-height: 1.7; }
+        .feat-modal-text p strong { color: #fff; }
+        .feat-modal-text .out { font-weight: 600; color: var(--brand); }
+        .feat-modal-text .inv-tiers th { color: #7C8CA0; border-color: #16232F; }
+        .feat-modal-text .inv-tiers td { color: #B8C4D4; border-color: #16232F; }
+        .feat-modal-text .inv-tiers .tier-n { color: #fff; }
+        .feat-modal-text .inv-tiers tbody tr:last-child .tier-n { color: var(--brand); }
+
+        /* Summer Programme — 3-stage tab switcher inside the modal */
+        .sp-sub { display: block; font-size: 13px; color: #7C8CA0; margin-bottom: 20px; }
+        .sp-tabs { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 22px; }
+        .sp-tab { display: flex; flex-direction: column; align-items: flex-start; background: #101822; border: 1px solid #223349; border-radius: 12px; padding: 12px 14px; text-align: left; cursor: pointer; transition: background .3s ease, border-color .3s ease; }
+        .sp-tab .ph { font-family: 'Urbanist', sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #7C8CA0; display: block; margin-bottom: 4px; }
+        .sp-tab .nm { font-size: 15px; font-weight: 700; color: #fff; }
+        .sp-tab.act { background: rgba(178,209,53,.12); border-color: #b2d135; }
+        .sp-tab.act .ph { color: #b2d135; }
+        .sp-tab:hover:not(.act) { border-color: #35C9B8; }
+        .sp-desc-box { transition: opacity .25s ease; }
+        .sp-desc-box h5 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+        .sp-desc-box ul { list-style: none; margin: 0 0 14px; padding: 0; }
+        .sp-desc-box ul li { font-size: 13px; color: #8296AB; padding-left: 16px; position: relative; line-height: 1.7; margin-bottom: 4px; }
+        .sp-desc-box ul li::before { content: ''; position: absolute; left: 0; top: .62em; width: 5px; height: 5px; background: #b2d135; opacity: .8; clip-path: polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%); }
+        .sp-desc-box .out { font-weight: 600; color: var(--brand); font-size: 13px; }
+        @media (max-width: 575px) { .sp-tabs { grid-template-columns: 1fr; } }
+        @media (max-width: 767px) { .feat-modal-panel { padding: 28px; border-radius: 24px; } }
+
+        /* Ecosystem view tabs (eco / integ / prog) */
+        .eco-tabs { display: grid; grid-template-columns: repeat(3,1fr); border: 1px solid #1F3040; border-bottom: none; border-radius: 20px 20px 0 0; overflow: hidden; margin-top: 40px; }
+        .eco-tab { background: #09111C; border: none; border-right: 1px solid #1F3040; cursor: pointer; padding: 16px 14px; text-align: left; transition: background .4s ease; font-family: 'Urbanist', sans-serif; }
+        .eco-tab:last-child { border-right: none; }
+        .eco-tab:hover { background: #0D1826; }
+        .eco-tab .yr { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #7C8CA0; display: block; margin-bottom: 4px; }
+        .eco-tab .ti { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: #B8C4D4; display: block; line-height: 1.3; }
+        .eco-tab.act { background: rgba(178,209,53,.09); }
+        .eco-tab.act .ti, .eco-tab.act .yr { color: #b2d135; }
+        .eco-web-wrap { margin-top: 0; border-radius: 0 0 20px 20px; }
+        #ecoWeb.fade { opacity: 0; }
+        #ecoWeb { transition: opacity .35s ease; }
+        @media (max-width: 620px) { .eco-tab .ti { font-size: 11px; } }
+
+        /* Timeline model */
+        .eco-timeline { margin-top: 40px; border: 1px solid #1F3040; background: #09111C; border-radius: 20px; overflow: hidden; }
+        .et-tabs { display: grid; grid-template-columns: repeat(4,1fr); border-bottom: 1px solid #1F3040; }
+        .et-tab { background: none; border: none; border-right: 1px solid #1F3040; cursor: pointer; padding: 16px 14px; text-align: left; transition: background .4s ease; font-family: 'Urbanist', sans-serif; }
+        .et-tab:last-child { border-right: none; }
+        .et-tab:hover { background: #0D1826; }
+        .et-tab .yr { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #7C8CA0; display: block; margin-bottom: 4px; }
+        .et-tab .ti { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: #B8C4D4; display: block; line-height: 1.3; }
+        .et-tab.act { background: rgba(178,209,53,.09); }
+        .et-tab.act .ti, .et-tab.act .yr { color: #b2d135; }
+        .et-desc { padding: 26px 28px; font-family: 'Urbanist', sans-serif; font-size: 15px; color: #B8C4D4; line-height: 1.7; }
+        .et-desc strong { color: #fff; }
+        @media (max-width: 767px) { .et-tabs { grid-template-columns: 1fr 1fr; } }
+
+        /* Governing principles */
+        .eco-principles { margin-top: 40px; border: 1px solid #1F3040; background: #09111C; border-radius: 20px; overflow: hidden; }
+        .pr-item { border-top: 1px solid #1F3040; padding: 22px 28px; cursor: pointer; transition: background .3s ease; }
+        .pr-item:first-child { border-top: none; }
+        .pr-item:hover { background: #0D1826; }
+        .pr-head { display: flex; align-items: baseline; gap: 16px; }
+        .pr-n { font-family: 'Urbanist', sans-serif; font-size: 15px; color: #b2d135; font-weight: 700; }
+        .pr-t { font-family: 'Urbanist', sans-serif; font-size: 16px; font-weight: 600; color: #fff; }
+        .pr-d { font-family: 'Urbanist', sans-serif; font-size: 14px; color: #8296AB; margin-top: 12px; max-width: 70ch; line-height: 1.7; display: none; }
+        .pr-item.act .pr-d { display: block; }
+        .pr-item.act .pr-n, .pr-item.act .pr-t { color: #b2d135; }
+
+        /* Hive parcel map (investment structure) */
+        .hive-pm-wrap { margin-top: 40px; border: 1px solid #1F3040; background: #09111C; border-radius: 20px; overflow: hidden; font-family: 'Urbanist', sans-serif; }
+        .hive-pm-wrap .pm-top { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center; padding: 18px 22px; border-bottom: 1px solid #1F3040; }
+        .hive-pm-wrap .pm-name { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .hive-pm-wrap .pm-name input { font-family: 'Urbanist', sans-serif; font-size: 13px; background: #050A12; border: 1px solid #29405A; color: #fff; padding: 9px 12px; width: 190px; outline: none; border-radius: 8px; transition: border-color .3s; }
+        .hive-pm-wrap .pm-name input:focus { border-color: #b2d135; }
+        .hive-pm-wrap .pm-name input::placeholder { color: #7C8CA0; }
+        .hive-pm-wrap .pm-btn { font-family: 'Urbanist', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: #B8C4D4; background: none; border: 1px solid #29405A; border-radius: 999px; padding: 9px 16px; cursor: pointer; transition: color .3s, border-color .3s; white-space: nowrap; }
+        .hive-pm-wrap .pm-btn:hover { color: #09111C; border-color: #b2d135; background: #b2d135; }
+        .hive-pm-wrap .pm-btn.clr:hover { color: #09111C; border-color: #8296AB; background: #8296AB; }
+        .hive-pm-wrap .pm-legend { display: flex; flex-wrap: wrap; gap: 18px; padding: 14px 22px; border-bottom: 1px solid #1F3040; font-size: 12px; letter-spacing: 0.02em; text-transform: uppercase; color: #7C8CA0; }
+        .hive-pm-wrap .pm-legend span { display: flex; align-items: center; gap: 8px; }
+        .hive-pm-wrap .pm-legend i { background: #101D2E; border: 1px solid #2A4058; display: block; clip-path: polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%); }
+        .hive-pm-wrap .pm-stage { padding: 20px; display: grid; place-items: center; }
+        .hive-pm-wrap .pm-stage svg { width: 100%; max-width: 900px; height: auto; display: block; }
+        .hive-pm-wrap #pmap .cell { fill: #101D2E; stroke: #2A4058; stroke-width: .8; cursor: pointer; transition: fill .3s ease, stroke .3s ease; }
+        .hive-pm-wrap #pmap .cell:hover { fill: #16233A; stroke: #35C9B8; }
+        .hive-pm-wrap #pmap .cell.sel { fill: #6E8A1E; stroke: #b2d135; }
+        .hive-pm-wrap #pmap .cell.sold { fill: #b2d135; stroke: #C6E05C; }
+        .hive-pm-wrap #pmap .cell.sold:hover { fill: #93B22A; }
+        .hive-pm-wrap #pmap text.nm { fill: #06070A; font-family: 'Urbanist', sans-serif; font-weight: 700; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+        .hive-pm-wrap .pm-out { display: grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap: 1px; background: #1F3040; border-top: 1px solid #1F3040; }
+        .hive-pm-wrap .pm-cell { background: #050A12; padding: 20px 18px; }
+        .hive-pm-wrap .pm-cell .v { font-weight: 700; color: #B8C4D4; font-size: 26px; line-height: 1; letter-spacing: -0.02em; }
+        .hive-pm-wrap .pm-cell .v.gold { color: #b2d135; }
+        .hive-pm-wrap .pm-cell .k { font-size: 13px; color: #7C8CA0; margin-top: 8px; display: block; }
+        .hive-pm-wrap .pm-tier { padding: 14px 22px; border-top: 1px solid #1F3040; font-size: 12px; letter-spacing: 0.02em; text-transform: uppercase; color: #7C8CA0; line-height: 1.7; }
+        .hive-pm-wrap .pm-tier b { color: #b2d135; font-weight: 700; }
+        .hive-intro { max-width: 62ch; margin: 0 auto 8px; }
     </style>
 </head>
 
 <body class="counter-scroll">
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.5 18 12a6.5 6.5 0 1 1-12 0z"/></symbol>
+        <symbol id="i-elm" viewBox="0 0 24 24"><path d="M12 3.4c4 0 7 2.8 7 6.2 0 3.1-2.5 5.7-5.8 6.1V21h-2.4v-5.3C7.5 15.3 5 12.7 5 9.6c0-3.4 3-6.2 7-6.2z"/><path d="M12 15.7 9.6 13.3M12 18l2.4-2.2"/></symbol>
+        <symbol id="i-flower" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><circle cx="12" cy="6.5" r="2.5"/><circle cx="12" cy="17.5" r="2.5"/><circle cx="6.5" cy="12" r="2.5"/><circle cx="17.5" cy="12" r="2.5"/></symbol>
+        <symbol id="i-bug" viewBox="0 0 24 24"><path d="M12 7.6c2.2 0 3.8 2 3.8 4.5S14.2 17.2 12 17.2s-3.8-2.6-3.8-5.1S9.8 7.6 12 7.6z"/><path d="M8.3 10.6 5.2 9M8.3 12.9H5.2M8.7 15.2 6.2 17.2M15.7 10.6 18.8 9M15.7 12.9h3.1M15.3 15.2l2.5 2M10.9 7.7 9.7 5.5M13.1 7.7l1.2-2.2"/></symbol>
+        <symbol id="i-hex" viewBox="0 0 24 24"><path d="M12 2.8 20 7.4v9.2L12 21.2 4 16.6V7.4z"/><path d="M12 8.6 15.4 10.6v3.8L12 16.4 8.6 14.4v-3.8z"/></symbol>
+        <symbol id="i-paw" viewBox="0 0 24 24"><ellipse cx="6.5" cy="10" rx="1.8" ry="2.5"/><ellipse cx="10.5" cy="6.9" rx="1.8" ry="2.5"/><ellipse cx="15" cy="6.9" rx="1.8" ry="2.5"/><ellipse cx="18.5" cy="10.4" rx="1.8" ry="2.5"/><path d="M12.5 13c3 0 5.5 2 5.5 4.4 0 1.6-1.4 2.6-3 2.2-1.7-.5-3.3-.5-5 0-1.6.4-3-.6-3-2.2C7 15 9.5 13 12.5 13z"/></symbol>
+        <symbol id="i-bird" viewBox="0 0 24 24"><path d="M3 13.4c3.7 0 6.6-1.9 8.6-5.4"/><path d="M21 13.4c-3.7 0-6.6-1.9-8.6-5.4"/><path d="M11.3 7.9h1.4"/></symbol>
+        <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3.5 20.5 8 12 12.5 3.5 8z"/><path d="M3.5 13 12 17.5 20.5 13"/></symbol>
+        <symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19 9.5 8l3.5 5.4 2-2.8L21 19z"/><path d="M8 10.2h3"/></symbol>
+        <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4.2 21 19.5H3z"/><path d="M12 10v4"/><path d="M12 16.8h.01"/></symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.4V12l3.2 2"/></symbol>
+        <symbol id="i-network" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="18" r="2.2"/><circle cx="19" cy="18" r="2.2"/><path d="M10.6 6.9 6.4 16.1M13.4 6.9l4.2 9.2M7.2 18h9.6"/></symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.6v2M12 19.4v2M2.6 12h2M19.4 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M18.7 5.3l-1.4 1.4M6.7 17.3l-1.4 1.4"/></symbol>
+        <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21.5s7-6.4 7-11.2a7 7 0 1 0-14 0c0 4.8 7 11.2 7 11.2z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+        <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19.5c-1-8.5 5.5-14 15-14 .5 8.5-5 14.5-13 14.5-1.2 0-1.9-.1-2-.5z"/><path d="M5.5 19.5C8 15 11.5 11.8 16 10"/></symbol>
+        <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.7 5.6 6.1.8-4.5 4.2 1.2 6-5.5-3-5.5 3 1.2-6-4.5-4.2 6.1-.8z"/></symbol>
+        <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9.2 3h5.6"/><path d="M10.6 3v6.3L5.7 17.4A1.6 1.6 0 0 0 7.1 19.9h9.8a1.6 1.6 0 0 0 1.4-2.5L13.4 9.3V3"/><path d="M8.2 14.4h7.6"/></symbol>
+        <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9.2" cy="8.2" r="3"/><path d="M3.6 19.4c0-3.1 2.5-5.3 5.6-5.3s5.6 2.2 5.6 5.3"/><path d="M16.2 6.3a2.7 2.7 0 0 1 0 5.2"/><path d="M17.3 14.6c1.9.7 3.1 2.5 3.1 4.8"/></symbol>
+        <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a1.5 1.5 0 0 0-1.5 1.5v15A1.5 1.5 0 0 0 7 21h10a1.5 1.5 0 0 0 1.5-1.5V7.5z"/><path d="M14 3v4.5h4.5M9 12h6M9 16h4"/></symbol>
+    </svg>
     <canvas class="cursor-trail" id="trail" style="display: none;"></canvas>
 
     <!-- Scroll Top -->
@@ -86,19 +379,16 @@
         <!-- Header -->
         <header class="tf-header header2">
             <div class="header-inner">
-                <a href="index.html" class="logo-site">
-                    <img src="assets/images/logo/logo.svg" alt="">
-                </a>
                 <div class="box-navigation">
                     <ul class="nav-menu-main">
                         <li class="menu-item">
-                            <a href="index.html" class="item-link link1 active">Home</a>
+                            <a href="index.html" class="item-link link1">Home</a>
                         </li>
                         <li class="menu-item">
                             <a href="#about" class="item-link link1">About</a>
                         </li>
                         <li class="menu-item">
-                            <a href="#services" class="item-link link1">Services</a>
+                            <a href="#services" class="item-link link1">Ecosystem</a>
                         </li>
                         <li class="menu-item has-child">
                             <a href="#works" class="item-link link1">Projects</a>
@@ -107,7 +397,7 @@
                                     <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalBeHuman">BE HUMAN</a>
                                 </li>
                                 <li class="sub-menu-item">
-                                    <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalArtNTech">ART N TECH</a>
+                                    <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalArtNTech">ATE</a>
                                 </li>
                                 <li class="sub-menu-item">
                                     <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalMongolz">MONGOLZ#1</a>
@@ -115,7 +405,7 @@
                             </ul>
                         </li>
                         <li class="menu-item">
-                            <a href="#documentaries" class="item-link link1">Blog</a>
+                            <a href="#documentaries" class="item-link link1">Documentaries</a>
                         </li>
                         <li class="menu-item">
                             <a href="#contact" class="item-link link1">Contact</a>
@@ -134,67 +424,21 @@
         <!-- Hero Banner -->
         <div class="section-hero">
             <div class="hero-image">
-                <img src="assets/images/section/ate-talbai.jpg" alt="Aerial view of the ART N TECH land art site in the Gobi Desert">
+                <img src="assets/images/02.jpg" alt="">
             </div>
             <div class="container">
                 <div class="content-wrap text-center">
-                    <div class="sub fw-semibold effectFade fadeUp">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3.53252 12.0966C3.75106 11.5025 4.59108 11.5025 4.81645 12.0966L5.54037 14.0567C5.60866 14.2411 5.75891 14.3913 5.9433 14.4596L7.90335 15.1835C8.49751 15.4021 8.49751 16.2421 7.90335 16.4674L5.9433 17.1914C5.75891 17.2597 5.60866 17.4099 5.54037 17.5943L4.81645 19.5543C4.59791 20.1485 3.75789 20.1485 3.53252 19.5543L2.8086 17.5943C2.74031 17.4099 2.59006 17.2597 2.40566 17.1914L0.44562 16.4674C-0.14854 16.2489 -0.14854 15.4089 0.44562 15.1835L2.40566 14.4596C2.59006 14.3913 2.74031 14.2411 2.8086 14.0567L3.53252 12.0966Z" fill="url(#paint0_linear_580_105)"/>
-                            <path d="M3.53252 12.0966C3.75106 11.5025 4.59108 11.5025 4.81645 12.0966L5.54037 14.0567C5.60866 14.2411 5.75891 14.3913 5.9433 14.4596L7.90335 15.1835C8.49751 15.4021 8.49751 16.2421 7.90335 16.4674L5.9433 17.1914C5.75891 17.2597 5.60866 17.4099 5.54037 17.5943L4.81645 19.5543C4.59791 20.1485 3.75789 20.1485 3.53252 19.5543L2.8086 17.5943C2.74031 17.4099 2.59006 17.2597 2.40566 17.1914L0.44562 16.4674C-0.14854 16.2489 -0.14854 15.4089 0.44562 15.1835L2.40566 14.4596C2.59006 14.3913 2.74031 14.2411 2.8086 14.0567L3.53252 12.0966Z" fill="url(#paint1_linear_580_105)"/>
-                            <path d="M11.4068 0.670991C11.7346 -0.223664 12.9981 -0.223664 13.3259 0.670991L14.7874 4.61157C14.8898 4.89157 15.1152 5.11011 15.3952 5.21938L19.3358 6.68088C20.2304 7.00869 20.2304 8.27214 19.3358 8.59995L15.3952 10.0614C15.1152 10.1639 14.8967 10.3893 14.7874 10.6693L13.3259 14.6098C12.9981 15.5045 11.7346 15.5045 11.4068 14.6098L9.94534 10.6693C9.8429 10.3893 9.61753 10.1707 9.33752 10.0614L5.39694 8.59995C4.50229 8.27214 4.50229 7.00869 5.39694 6.68088L9.33752 5.21938C9.61753 5.11694 9.83607 4.89157 9.94534 4.61157L11.4068 0.670991Z" fill="url(#paint2_linear_580_105)"/>
-                            <path d="M11.4068 0.670991C11.7346 -0.223664 12.9981 -0.223664 13.3259 0.670991L14.7874 4.61157C14.8898 4.89157 15.1152 5.11011 15.3952 5.21938L19.3358 6.68088C20.2304 7.00869 20.2304 8.27214 19.3358 8.59995L15.3952 10.0614C15.1152 10.1639 14.8967 10.3893 14.7874 10.6693L13.3259 14.6098C12.9981 15.5045 11.7346 15.5045 11.4068 14.6098L9.94534 10.6693C9.8429 10.3893 9.61753 10.1707 9.33752 10.0614L5.39694 8.59995C4.50229 8.27214 4.50229 7.00869 5.39694 6.68088L9.33752 5.21938C9.61753 5.11694 9.83607 4.89157 9.94534 4.61157L11.4068 0.670991Z" fill="url(#paint3_linear_580_105)"/>
-                            <defs>
-                            <linearGradient id="paint0_linear_580_105" x1="10.2993" y1="-1.30435" x2="21.6031" y2="11.1057" gradientUnits="userSpaceOnUse">
-                            <stop offset="1" stop-color="#555D64"/>
-                            <stop offset="1" stop-color="#292C2E"/>
-                            </linearGradient>
-                            <linearGradient id="paint1_linear_580_105" x1="10.0034" y1="0" x2="10.0034" y2="20" gradientUnits="userSpaceOnUse">
-                            <stop offset="1" stop-color="#EA2B16"/>
-                            <stop offset="1" stop-color="#FF3B26"/>
-                            </linearGradient>
-                            <linearGradient id="paint2_linear_580_105" x1="10.2993" y1="-1.30435" x2="21.6031" y2="11.1057" gradientUnits="userSpaceOnUse">
-                            <stop offset="1" stop-color="#555D64"/>
-                            <stop offset="1" stop-color="#292C2E"/>
-                            </linearGradient>
-                            <linearGradient id="paint3_linear_580_105" x1="10.0034" y1="0" x2="10.0034" y2="20" gradientUnits="userSpaceOnUse">
-                            <stop offset="1" stop-color="#EA2B16"/>
-                            <stop offset="1" stop-color="#FF3B26"/>
-                            </linearGradient>
-                            </defs>
-                        </svg>
-                        ART AND TECH DRIVEN REFORESTATION 
-                    </div>
                     <div class="title text-display-2 effectFade fadeRotateX">
-                        <span class="title1 fw-semibold text-gradient-1">LAND-ART</span>
-                        <br>
-                        <div class="title2 d-flex gap-20 justify-content-center flex-wrap">
-                            <span class="fw-semibold text-gradient-1"></span>
-                            <div class="title-icon">
-                                <div class="box"></div>
-                                <div class="title-icon-wrap">
-                                    <div class="img-transform-3 hero-icon-badge rot-1" title="Community">
-                                        <i class="icon icon-user-friends-solid"></i>
-                                    </div>
-                                    <div class="img-transform-3 hero-icon-badge rot-2" title="Hub">
-                                        <i class="icon icon-building"></i>
-                                    </div>
-                                    <div class="img-transform-3 hero-icon-badge rot-3" title="Climate Contribution">
-                                        <i class="icon icon-leaf-solid"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <img class="hero-logo-standalone" src="assets/images/logo/land-art-logo-white.png" alt="Land-art space">
                     </div>
                     <p class="text effectFade fadeUp">
-                        From discovery to deployment, we plug into your stack to prototype, <br> validate, and launch AI experiences your users actually love.
                     </p>
                     <div class="bot-btns effectFade fadeRotateX">
                         <a href="#services" class="tf-btn">
-                            Explore Services
+                            Explore ecosystem
                         </a>
-                        <a href="#pricing" class="tf-btn-2">
-                            View Pricing Plans
+                        <a href="#works" class="tf-btn-2">
+                            Projects
                         </a>
                     </div>
                 </div>
@@ -227,7 +471,7 @@
                                     Start a Project
                                 </a>
                             </div>
-                            <img class="effectFade fadeRotateX" src="assets/images/item/earth.png" alt="">
+                            <img class="effectFade fadeRotateX" src="assets/images/section/HEXAGON.jpg" alt="Hexagon cell pattern">
                         </div>
                     </div>
                     <div class="col-xxl-5 col-lg-6">
@@ -298,7 +542,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="partner-wrap">
-                            <p class="text-secondary text fw-semibold">Trusted by 100+ <br> top-tier brands</p>
+                            <p class="text-secondary text fw-semibold">Partners <br> </p>
                             <div class="infiniteSlide_tech_main d-grid">
                                 <div class="infiniteSlide infiniteSlide_partner" data-clone="1">
                                     <img src="assets/images/partner/shambala/ach-tus.webp" alt="ACH TUSIIN TUKHAI ULGERUUD">
@@ -383,95 +627,135 @@
                             <div class="d-flex flex-column justify-content-between h-100">
                                 <div class="col-left">
                                     <div class="heading-section mb-48">
-                                        <div class="heading-sub fw-semibold effectFade fadeUp">Services</div>
-                                        <div class="heading-title text-gradient-3 effectFade fadeRotateX">End-to-End <br> AI Services</div>
+                                        <div class="heading-sub fw-semibold effectFade fadeUp">Ecosystem</div>
+                                        <div class="heading-title text-gradient-3 effectFade fadeRotateX">A Web,  <br> Not a Chain</div>
                                     </div>
-                                    <p class="effectFade fadeUp">We turn ambiguous AI ideas into production features your users trust—combining strategy, design, engineering, and rigorous evaluation.</p>
+                                    <p class="effectFade fadeUp">An ecosystem is not a one-way chain but a network with feedback — plants depend on pollinators, and pollinators on plants. The three units of Land Art Space act at different points in that network: Hub engages directly with plants and water, Lab measures and verifies the results, Community trains people and closes the loop.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-lg-6">
                             <div class="accordion-faq_list" id="accordion-services">
                                 <div class="accordion-faq_item effectFade fadeUp" role="presentation">
-                                    <div class="accordion-action services-image-btn active-img" data-img="assets/images/section/service-1.jpg" data-bs-target="#faq-1" role="button"
+                                    <div class="accordion-action" data-eco="eco" data-bs-target="#faq-1" role="button"
                                         data-bs-toggle="collapse" aria-controls="faq-1" aria-expanded="true">
                                         <div class="accordion-title">
-                                            AI Strategy <br> & Mapping
+                                            Ecosystem <br> Network
                                             <div class="text-body-1 num">(01)</div>
                                         </div>
                                     </div>
                                     <div id="faq-1" class="collapse show" data-bs-parent="#accordion-services">
                                         <div class="accordion-content">
-                                            <div class="text-body-3 text-neutral-300 text">Identify high-ROI use cases and define a realistic, measurable AI roadmap.</div>
+                                            <div class="eco-mini-slot" id="ecoSlot1">
+                                                <div class="eco-mini-wrap show" id="ecoMiniWrap">
+                                                    <svg id="ecoWebMini" viewBox="0 0 900 620" role="img" aria-label="Ecosystem interaction network preview"></svg>
+                                                    <div class="eco-mini-msg" id="ecoMiniMsg">Hover or click a node to see its connections</div>
+                                                </div>
+                                            </div>
+                                            <div class="text-body-3 text-neutral-300 text eco-desc">How water, plants, insects, and soil depend on each other in the Gobi Desert.</div>
                                             <div class="list-tags">
-                                                <a href="#" class="tags-item fw-semibold">Stakeholder discovery</a>
-                                                <a href="#" class="tags-item fw-semibold">Value model & KPI definition</a>
-                                                <a href="#" class="tags-item fw-semibold">Data readiness assessment</a>
+                                                <a href="#" class="tags-item fw-semibold">Water</a>
+                                                <a href="#" class="tags-item fw-semibold">Plants & pollinators</a>
+                                                <a href="#" class="tags-item fw-semibold">Soil</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="accordion-faq_item effectFade fadeUp" role="presentation">
-                                    <div class="accordion-action services-image-btn collapsed" data-img="assets/images/section/service-2.jpg" data-bs-target="#faq-2" role="button"
+                                    <div class="accordion-action collapsed" data-eco="integ" data-bs-target="#faq-2" role="button"
                                         data-bs-toggle="collapse" aria-controls="faq-2" aria-expanded="false">
                                         <div class="accordion-title">
-                                            AI UX <br> & Product Design
+                                            Integration
                                             <div class="text-body-1 num">(02)</div>
                                         </div>
                                     </div>
                                     <div id="faq-2" class="collapse" data-bs-parent="#accordion-services">
                                         <div class="accordion-content">
-                                            <div class="text-body-3 text-neutral-300 text">Human-centered flows, prompts, and interfaces that build trust and adoption.</div>
+                                            <div class="eco-mini-slot" id="ecoSlot2"></div>
+                                            <div class="text-body-3 text-neutral-300 text eco-desc">How Hub, Lab, and Community act on the ecosystem — and close the loop.</div>
                                             <div class="list-tags">
-                                                <a href="#" class="tags-item fw-semibold">Prototype flows</a>
-                                                <a href="#" class="tags-item fw-semibold">Prompt UX patterns</a>
-                                                <a href="#" class="tags-item fw-semibold">Usability testing with real users</a>
+                                                <a href="#" class="tags-item fw-semibold">Hub</a>
+                                                <a href="#" class="tags-item fw-semibold">Lab</a>
+                                                <a href="#" class="tags-item fw-semibold">Community</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="accordion-faq_item effectFade fadeUp" role="presentation">
-                                    <div class="accordion-action services-image-btn collapsed" data-img="assets/images/section/service-3.jpg" data-bs-target="#faq-3" role="button"
+                                    <div class="accordion-action collapsed" data-eco="prog" data-bs-target="#faq-3" role="button"
                                         data-bs-toggle="collapse" aria-controls="faq-3" aria-expanded="false">
                                         <div class="accordion-title">
-                                            LLM / Agent <br> Development
+                                            Programme <br> Structure
                                             <div class="text-body-1 num">(03)</div>
                                         </div>
                                     </div>
                                     <div id="faq-3" class="collapse" data-bs-parent="#accordion-services">
                                         <div class="accordion-content">
-                                            <div class="text-body-3 text-neutral-300 text">Domain-specific copilots and agents that plan, execute, and report.</div>
+                                            <div class="eco-mini-slot" id="ecoSlot3"></div>
+                                            <div class="text-body-3 text-neutral-300 text eco-desc">From desertification and eco-migration to restored land and local specialists.</div>
                                             <div class="list-tags">
-                                                <a href="#" class="tags-item fw-semibold">Multi-step planning</a>
-                                                <a href="#" class="tags-item fw-semibold">Function calling & toolchains</a>
-                                                <a href="#" class="tags-item fw-semibold">Guardrails and audit trails</a>
+                                                <a href="#" class="tags-item fw-semibold">Desertification</a>
+                                                <a href="#" class="tags-item fw-semibold">Restoration</a>
+                                                <a href="#" class="tags-item fw-semibold">Local jobs</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="accordion-faq_item effectFade fadeUp" role="presentation">
-                                    <div class="accordion-action services-image-btn collapsed" data-img="assets/images/section/service-4.jpg" data-bs-target="#faq-4" role="button"
+                                    <div class="accordion-action collapsed" data-bs-target="#faq-4" role="button"
                                         data-bs-toggle="collapse" aria-controls="faq-4" aria-expanded="false">
                                         <div class="accordion-title">
-                                            Data Engineering <br> & Pipelines
+                                            Restoration <br> Sequence
                                             <div class="text-body-1 num">(04)</div>
                                         </div>
                                     </div>
                                     <div id="faq-4" class="collapse" data-bs-parent="#accordion-services">
                                         <div class="accordion-content">
-                                            <div class="text-body-3 text-neutral-300 text">Reliable data flows from ingestion to features, built for scale and cost control.</div>
-                                            <div class="list-tags">
-                                                <a href="#" class="tags-item fw-semibold">Data cleaning & chunking</a>
-                                                <a href="#" class="tags-item fw-semibold">Hybrid search</a>
-                                                <a href="#" class="tags-item fw-semibold">Freshness, citations, and re-ranking</a>
+                                            <div class="tl-mini" id="tlMini">
+                                                <div class="tl-mini-tabs" id="tlMiniTabs">
+                                                    <button class="tl-mini-tab act" data-st="0"><span class="yr">Year 0–2</span><span class="ti">Entry Planting</span></button>
+                                                    <button class="tl-mini-tab" data-st="1"><span class="yr">Year 3–7</span><span class="ti">Nebkha effect</span></button>
+                                                    <button class="tl-mini-tab" data-st="2"><span class="yr">Year 8–15</span><span class="ti">Moisture holds</span></button>
+                                                    <button class="tl-mini-tab" data-st="3"><span class="yr">Year 15+</span><span class="ti">Ecosystem network</span></button>
+                                                </div>
+                                                <div class="tl-mini-bar"><i id="tlMiniBar"></i></div>
+                                                <div class="tl-mini-stage"><canvas id="tlMiniCv"></canvas></div>
+                                                <div class="tl-mini-desc" id="tlMiniDesc"></div>
+                                            </div>
+                                            <div class="text-body-3 text-neutral-300 text eco-desc">An ecosystem does not recover all at once — from entry planting to a self-sustaining network across four stages.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-faq_item effectFade fadeUp" role="presentation">
+                                    <div class="accordion-action collapsed" data-bs-target="#faq-5" role="button"
+                                        data-bs-toggle="collapse" aria-controls="faq-5" aria-expanded="false">
+                                        <div class="accordion-title">
+                                            Governing <br> Principles
+                                            <div class="text-body-1 num">(05)</div>
+                                        </div>
+                                    </div>
+                                    <div id="faq-5" class="collapse" data-bs-parent="#accordion-services">
+                                        <div class="accordion-content">
+                                            <div class="pr5-mini" id="pr5Mini">
+                                                <div class="pr5-mini-tabs" id="pr5MiniTabs">
+                                                    <button class="pr5-mini-tab act" data-i="0"><span class="n">I</span><span class="t">Water as the limiting resource</span></button>
+                                                    <button class="pr5-mini-tab" data-i="1"><span class="n">II</span><span class="t">Engineers create habitat</span></button>
+                                                    <button class="pr5-mini-tab" data-i="2"><span class="n">III</span><span class="t">Narrow phenological window</span></button>
+                                                    <button class="pr5-mini-tab" data-i="3"><span class="n">IV</span><span class="t">Landscape connectivity</span></button>
+                                                    <button class="pr5-mini-tab" data-i="4"><span class="n">V</span><span class="t">Climate vulnerability</span></button>
+                                                </div>
+                                                <div class="pr5-mini-canvas">
+                                                    <canvas id="pr5MiniCv"></canvas>
+                                                    <div class="pr5-mini-key" id="pr5MiniKey"></div>
+                                                    <div class="pr5-mini-read" id="pr5MiniRead"></div>
+                                                    <div class="pr5-mini-cap" id="pr5MiniCap"></div>
+                                                </div>
+                                                <div class="pr5-mini-bar"><i id="pr5MiniBar"></i></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="services-image effectFade fadeUp">
-                            <img src="assets/images/section/service-1.jpg" alt="">
                         </div>
                     </div>
                 </div>
@@ -487,7 +771,7 @@
                         <div class="">
                             <div class="featured-works-item  effectFade fadeUp no-div">
                                 <div class="image main-mouse-hover">
-                                    <img src="assets/images/section/featured-works-6-behuman.webp" alt="BE HUMAN land art aerial view">
+                                    <img src="assets/images/section/featured-works-poster-behuman.jpg" alt="BE HUMAN land art aerial view">
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#modalBeHuman" class="tf-mouse view-project h6">
                                         View Project
                                         <i class="icon icon-arrow-top-right"></i>
@@ -522,7 +806,7 @@
                         <div class="">
                             <div class="featured-works-item ">
                                 <div class="image main-mouse-hover">
-                                    <img src="assets/images/section/featured-works-7-artntech.webp" alt="ART N TECH land art aerial view">
+                                    <img src="assets/images/section/featured-works-poster-artntech.jpg" alt="ART N TECH land art aerial view">
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#modalArtNTech" class="tf-mouse view-project h6">
                                         View Project
                                         <i class="icon icon-arrow-top-right"></i>
@@ -557,7 +841,7 @@
                         <div class="">
                             <div class="featured-works-item ">
                                 <div class="image main-mouse-hover">
-                                    <img src="assets/images/section/featured-works-5-mongolz.webp" alt="Mongolz #1 land art aerial view">
+                                    <img src="assets/images/section/featured-works-poster-mongolz.jpg" alt="Mongolz #1 land art aerial view">
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#modalMongolz" class="tf-mouse view-project h6">
                                         View Project
                                         <i class="icon icon-arrow-top-right"></i>
@@ -601,7 +885,7 @@
                             <div class="process-heading h-100">
                                 <div class="heading-section mb-80">
                                     <div class="heading-sub fw-semibold effectFade fadeUp">Process</div>
-                                    <div class="heading-title text-gradient-3 effectFade fadeRotateX">From Idea <br> to Production</div>
+                                    <div class="heading-title text-gradient-3 effectFade fadeRotateX">Work <br> sequence</div>
                                 </div>
                                 <div class="group-btn-slider">
                                     <div class="nav-prev-swiper">
@@ -668,7 +952,7 @@
                                         </div>
                                         <div class="swiper-slide">
                                             <div class="process-card" data-bs-toggle="modal" data-bs-target="#modalProcess3">
-                                                <div class="icon icon-photo"><img src="assets/images/process/step-16.webp" alt="Satellite monitoring of the planting site"></div>
+                                                <div class="icon icon-photo"><img src="assets/images/process/step-16.webp" alt="Satellite view of a completed land art installation"></div>
                                                 <div class="content">
                                                     <h4 class="title fw-semibold">Monitoring</h4>
                                                     <p class="text text-secondary">Control systems, pest management, and satellite tracking keep every planting verified long after it's in the ground.</p>
@@ -702,37 +986,37 @@
                             <div class="benefits-box benefits-progress">
                                 <div class="benefits-progress-inner">
                                     <div class="benefits-progress-item">
-                                        <div class="progress-line" data-progress="60"></div>
+                                        <div class="progress-line" data-progress="100"></div>
                                         <div class="progress-text fw-semibold">
-                                            <i class="icon icon-bullseye-solid"></i>
-                                            Accuracy
+                                            <i class="icon icon-leaf-solid"></i>
+                                            Drip Irrigation
                                         </div>
                                     </div>
                                     <div class="benefits-progress-item">
                                         <div class="progress-line" data-progress="100"></div>
                                         <div class="progress-text fw-semibold">
                                             <i class="icon icon-tachometer-alt-solid"></i>
-                                            Latency
+                                           Fencing
                                         </div>
                                     </div>
                                     <div class="benefits-progress-item">
-                                        <div class="progress-line" data-progress="40"></div>
+                                        <div class="progress-line" data-progress="100"></div>
                                         <div class="progress-text fw-semibold">
                                             <i class="icon icon-shield-alt-solid"></i>
-                                            Safety
+                                            Monitoring
                                         </div>
                                     </div>
                                     <div class="benefits-progress-item">
-                                        <div class="progress-line" data-progress="80"></div>
+                                        <div class="progress-line" data-progress="90"></div>
                                         <div class="progress-text fw-semibold">
-                                            <i class="icon icon-coins-solid"></i>
-                                            Cost
+                                            <i class="icon icon-eye"></i>
+                                            Replant Guarantee
                                         </div>
                                     </div>
                                 </div>
                                 <div class="content">
-                                    <h6 class="fw-semibold title">Outcome over Output</h6>
-                                    <p class="text text-secondary">We measure what matters - accuracy, latency, safety, and <br> cost - so every sprint ships business value, not just features.</p>
+                                    <h6 class="fw-semibold title">Built to Last in the Gobi</h6>
+                                    <p class="text text-secondary">Every site is equipped with drip irrigation, protective fencing, and <br> ongoing monitoring — so what we plant actually survives. We send you a photo of your tree once a year by email.</p>
                                 </div>
                             </div>
                         </div>
@@ -751,8 +1035,8 @@
                                     </div>
                                 </div>
                                 <div class="content">
-                                    <h6 class="fw-semibold title">Eval-First Reliability</h6>
-                                    <p class="text text-secondary">From day one, we run offline/online evals, canary tests, and tracing. You see how models perform - and why.</p>
+                                    <h6 class="fw-semibold title">A Track Record You Can See</h6>
+                                    <p class="text text-secondary">We've been growing land art in the Gobi Desert since 2019 — 3 completed installations and over 160,000 Siberian Elm trees planted, with more on the way.</p>
                                 </div>
                             </div>
                         </div>
@@ -791,60 +1075,63 @@
                 <div class="container">
                     <div class="heading-section center mb-64">
                         <div class="heading-sub fw-semibold effectFade fadeUp">Features</div>
-                        <div class="heading-title text-gradient-3 effectFade fadeRotateX">All Features in One</div>
+                        <div class="heading-title text-gradient-3 effectFade fadeRotateX">Investment Structure</div>
+                        <p class="inv-intro effectFade fadeUp">Core idea: use land art to restore desertified regions and reduce the number of ecological refugees displaced by drought and dzud. The restored land then supports education for local children and the conditions for them to work at home afterwards. Investment is not an abstract donation — it converts into land: USD 30 = 1 m² of restored land + 1 NFC card. The full 10,000 m² is divided into hexagonal cells sized by price — from a 1 m² cell up to a 100 m² cell. Every cell has a location, and the buyer's name is engraved on it.</p>
                     </div>
                 </div>
                 <div class="position-relative">
                     <div class="container z-5">
                         <div class="features-wrap justify-content-between">
                             <div class="features-col col-left lg-mb-24">
-                                <div class="features-item effectFade fadeUp">
-                                    <i class="icon icon-bolt-solid"></i>
-                                    <h6 class="title fw-semibold">Incubator</h6>
-                                    <p class="text-secondary">
-                                        A structured program that takes early-stage ideas from concept to launch, with dedicated support for ventures working to combat desertification.
-                                    </p>
+                                <div class="features-item feat-click effectFade fadeUp" data-feat="hub" role="button" tabindex="0" aria-haspopup="dialog">
+                                    <i class="icon icon-building"></i>
+                                    <h6 class="title fw-semibold">Hub</h6>
                                 </div>
-                                <div class="features-item effectFade fadeUp">
-                                    <i class="icon icon-user-check-solid"></i>
-                                    <h6 class="title fw-semibold">Mentorship Program</h6>
-                                    <p class="text-secondary">
-                                        Direct guidance from experienced entrepreneurs, scientists, and land-art practitioners at every stage of building a venture.
-                                    </p>
+                                <div class="features-item feat-click effectFade fadeUp" data-feat="lab" role="button" tabindex="0" aria-haspopup="dialog">
+                                    <i class="icon icon-search-solid"></i>
+                                    <h6 class="title fw-semibold">Lab</h6>
                                 </div>
-                                <div class="features-item effectFade fadeUp">
+                                <div class="features-item feat-click effectFade fadeUp" data-feat="community" role="button" tabindex="0" aria-haspopup="dialog">
                                     <i class="icon icon-user-friends-solid"></i>
                                     <h6 class="title fw-semibold">Community</h6>
-                                    <p class="text-secondary">
-                                        A growing network of youth, founders, and researchers united by a shared mission to restore the Gobi Desert.
-                                    </p>
                                 </div>
                             </div>
                             <div class="features-center flex-shrink">
-                                <img src="assets/images/logo/logo-1.svg" alt="">
+                                <img class="features-center-logo" src="assets/images/logo/land-art-logo.png" alt="Land-art space">
                             </div>
                             <div class="features-col col-right">
-                                <div class="features-item effectFade fadeUp" data-delay="0.1">
-                                    <i class="icon icon-search-solid"></i>
-                                    <h6 class="title fw-semibold">Laboratory</h6>
-                                    <p class="text-secondary">
-                                        A dedicated space for testing land-restoration techniques and sustainable materials before they are deployed on-site.
-                                    </p>
+                                <div class="features-item feat-click effectFade fadeUp" data-delay="0.1" data-feat="fund" role="button" tabindex="0" aria-haspopup="dialog">
+                                    <i class="icon icon-coins-solid"></i>
+                                    <h6 class="title fw-semibold">Where Your Payment Goes</h6>
                                 </div>
-                                <div class="features-item effectFade fadeUp" data-delay="0.1">
-                                    <i class="icon icon-building"></i>
-                                    <h6 class="title fw-semibold">Co-Working Space</h6>
-                                    <p class="text-secondary">
-                                        An open, well-equipped workspace where residents and visiting collaborators can meet and work throughout their stay.
-                                    </p>
+                                <div class="features-item feat-click effectFade fadeUp" data-delay="0.1" data-feat="tiers" role="button" tabindex="0" aria-haspopup="dialog">
+                                    <i class="icon icon-credit-card-solid"></i>
+                                    <h6 class="title fw-semibold">Investment Tiers</h6>
                                 </div>
-                                <div class="features-item effectFade fadeUp" data-delay="0.1">
-                                    <i class="icon icon-leaf-solid"></i>
-                                    <h6 class="title fw-semibold">Botanical Garden</h6>
-                                    <p class="text-secondary">
-                                        A living collection of drought-resistant and native species, serving as both a research resource and a demonstration of the Hub's work.
-                                    </p>
+                                <div class="features-item feat-click effectFade fadeUp" data-delay="0.1" data-feat="summer" role="button" tabindex="0" aria-haspopup="dialog">
+                                    <i class="icon icon-clipboard-check-solid"></i>
+                                    <h6 class="title fw-semibold">Summer Programme</h6>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feat-modal" id="featModal" aria-hidden="true">
+                        <div class="feat-modal-backdrop" id="featModalBackdrop"></div>
+                        <div class="feat-modal-panel" role="dialog" aria-modal="true" aria-labelledby="featModalTitle">
+                            <button type="button" class="feat-modal-close" id="featModalClose" aria-label="Close">&times;</button>
+                            <div class="feat-modal-diagram" id="featModalDiagram">
+                                <div class="feat-sys">
+                                    <div class="feat-sys-viz">
+                                        <svg id="featSysSvg" viewBox="0 0 420 372" role="img" aria-label="Hub, Lab and Community integration loop"></svg>
+                                    </div>
+                                    <div class="feat-sys-pan" id="featSysPan"></div>
+                                </div>
+                            </div>
+                            <div class="feat-modal-text" id="featModalTextWrap">
+                                <h4 id="featModalTitle"></h4>
+                                <div class="feat-ff-stage" id="featFfStage"><canvas id="featFfCanvas"></canvas></div>
+                                <div id="featModalBody"></div>
                             </div>
                         </div>
                     </div>
@@ -876,33 +1163,47 @@
             </div>
             <!-- /section-features -->
         </div>
-        
-        <!-- section-tools -->
-        <div class="section-tools flat-spacing">
-            <img class="img-1 img-grow-1" src="assets/images/item/item-4.svg" alt="">
-            <img class="img-2 img-grow-2" src="assets/images/item/item-5.svg" alt="">
-            <img class="img-3 img-grow-3" src="assets/images/item/item-6.svg" alt="">
-            <img class="img-4 img-grow-4" src="assets/images/item/item-7.svg" alt="">
-            <img class="img-5 img-grow-5" src="assets/images/item/item-8.svg" alt="">
-            <img class="img-6 img-grow-6" src="assets/images/item/item-9.svg" alt="">
+
+        <!-- section-pricing -->
+        <div id="pricing" class="section-pricing flat-spacing">
             <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xl-5 col-md-8 text-center">
-                        <div class="heading-section center mb-48">
-                            <div class="heading-sub fw-semibold effectFade fadeUp">Tools</div>
-                            <div class="heading-title text-gradient-3 effectFade fadeRotateX">We work with powerful AI tools</div>
-                        </div>
-                        <div class="text effectFade fadeUp">
-                            We design, build, and evaluate with a modern AI stack—LLMs, vector search, orchestration, and observability—so your features are fast, reliable, and secure.
-                        </div>
-                        <a href="#contact" class="tf-btn effectFade fadeRotateX">
-                            Get Started
-                        </a>
+                <div class="heading-section mb-48 text-center">
+                    <div class="heading-sub fw-semibold effectFade fadeUp mx-auto">Pricing Plans</div>
+                    <div class="heading-title text-gradient-3 effectFade fadeRotateX">
+                        Own a Piece <br> of The Hive
                     </div>
+                    <p class="text-neutral-400 eco-web-intro effectFade fadeUp" style="margin: 16px auto 0;">
+                        USD 30 = 1 m² of restored land. Investment isn't a donation — it converts into land, funding the Land Art Hub building, training for local children, and permanent local jobs. Select cells below to see what your plot would look like; payments open soon.
+                    </p>
+                </div>
+                <div class="hive-pm-wrap effectFade fadeUp">
+                    <div class="pm-top">
+                        <div class="pm-name">
+                            <input id="pName" type="text" maxlength="18" placeholder="Buyer name">
+                            <button class="pm-btn" id="pApply">Engrave name</button>
+                        </div>
+                        <div class="pm-name">
+                            <button class="pm-btn clr" id="pClear">Clear</button>
+                        </div>
+                    </div>
+                    <div class="pm-legend">
+                        <span><i style="width:9px;height:10px"></i>1 m² · $30</span>
+                        <span><i style="width:13px;height:15px"></i>10 m² · $300</span>
+                        <span><i style="width:18px;height:20px"></i>100 m² · $3,000</span>
+                        <span><i style="width:24px;height:27px"></i>1,000 m² · $30,000</span>
+                    </div>
+                    <div class="pm-stage"><svg id="pmap" role="img" aria-label="Cell map of the Hive site"></svg></div>
+                    <div class="pm-out">
+                        <div class="pm-cell"><div class="v" id="pCells">0</div><span class="k">Cells selected</span></div>
+                        <div class="pm-cell"><div class="v" id="pArea">0</div><span class="k">Area, m²</span></div>
+                        <div class="pm-cell"><div class="v" id="pShare">0%</div><span class="k">Share of the artwork</span></div>
+                        <div class="pm-cell"><div class="v gold" id="pPrice">$0</div><span class="k">Total, USD</span></div>
+                    </div>
+                    <div class="pm-tier" id="pInfo">Click cells to select, enter a name and press Engrave · 4 plot sizes: $30 · $300 · $3,000 · $30,000 · small cells are shown enlarged for legibility</div>
                 </div>
             </div>
         </div>
-        <!-- /section-tools -->
+        <!-- /section-pricing -->
 
         <div class="box-black">
             <div class="light-box"></div>
@@ -913,7 +1214,7 @@
             <div class="section-team flat-spacing">
                 <div class="container">
                     <div class="heading-section center mb-64">
-                        <div class="heading-sub fw-semibold style-1 effectFade fadeUp">Team Members</div>
+                        <div class="heading-sub fw-semibold style-1 effectFade fadeUp">Community</div>
                         <div class="heading-title text-white effectFade fadeRotateX">The Squad Shipping <br> Your AI</div>
                     </div>
                     <div class="row justify-content-center">
@@ -943,7 +1244,7 @@
                                     <img src="assets/images/team/Odgerel.B.png" alt="Odgerel.B">
                                 </div>
                                 <a href="#" class="name h6 fw-semibold">Odgerel.B</a>
-                                <div class="sub text-body-1">Team Member</div>
+                                <div class="sub text-body-1">CEO, Oim Green Studio LLC</div>
                                 <div class="tf-social justify-content-center">
                                     <a href="#" class="social-item">
                                         <i class="icon icon-twitter-x"></i>
@@ -962,8 +1263,8 @@
                                 <div class="image">
                                     <img src="assets/images/team/team-4.jpg" alt="">
                                 </div>
-                                <a href="#" class="name h6 fw-semibold">Team Member</a>
-                                <div class="sub text-body-1">Photo coming soon</div>
+                                <a href="#" class="name h6 fw-semibold">Amgalan-Erdene.N </a>
+                                <div class="sub text-body-1">Executive Director, Ungu Nem NGO</div>
                                 <div class="tf-social justify-content-center">
                                     <a href="#" class="social-item">
                                         <i class="icon icon-twitter-x"></i>
@@ -982,8 +1283,8 @@
                                 <div class="image">
                                     <img src="assets/images/team/team-5.jpg" alt="">
                                 </div>
-                                <a href="#" class="name h6 fw-semibold">Team Member</a>
-                                <div class="sub text-body-1">Photo coming soon</div>
+                                <a href="#" class="name h6 fw-semibold">Tsevegsuren.S</a>
+                                <div class="sub text-body-1">CEO, Plastic Center LLC</div>
                                 <div class="tf-social justify-content-center">
                                     <a href="#" class="social-item">
                                         <i class="icon icon-twitter-x"></i>
@@ -1001,66 +1302,6 @@
                 </div>
             </div>
             <!-- /section-team -->
-            <!-- section-statistic -->
-            <div class="section-statistic">
-                <div class="line"></div>
-                <div class="container">
-                    <div class="row justify-content-between">
-                        <div class="col-md-6">
-                            <div class="heading-section mb-48">
-                                <div class="heading-sub fw-semibold style-1 effectFade fadeUp">Statistic</div>
-                                <div class="heading-title text-white effectFade fadeRotateX">Human-centered <br> AI, built for <br> production</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="statistic-slider">
-                                <div class="text text-body-1 text-neutral-400 effectFade fadeUp">
-                                    We shipped our first copilot in 7 weeks and cut support tickets by 31%. The eval dashboards made every decision obvious.
-                                </div>
-                                <div class="swiper swiper-progressbar">
-                                    <div class="group-slider effectFade fadeUp">
-                                        <div class="progress-bar">
-                                            <div class="progress-fill" id="progressBar"></div>
-                                        </div>
-                                        <div class="group-btn-slider">
-                                            <div class="btn-slider progressbar-prev">
-                                                <i class="icon icon-angle-left-solid"></i>
-                                            </div>
-                                            <div class="btn-slider progressbar-next">
-                                                <i class="icon icon-angle-right-solid"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="swiper-wrapper effectFade fadeUp">
-                                        <div class="swiper-slide">
-                                            <div class="title fw-semibold text-body-1">OUR GROWTH</div>
-                                            <div class="statistic-number">
-                                                <span class="number text-white fw-semibold">230</span>
-                                                <span class="prefix text-brand">K</span>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="title fw-semibold text-body-1">UPTIME FOR KEY FLOWS</div>
-                                            <div class="statistic-number">
-                                                <span class="number text-white fw-semibold">95</span>
-                                                <span class="prefix text-brand">%</span>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="title fw-semibold text-body-1">ON TIME DELIVERY</div>
-                                            <div class="statistic-number">
-                                                <span class="number text-white fw-semibold">99</span>
-                                                <span class="prefix text-brand">%</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /section-statistic -->
             <!-- section-awards -->
             <div class="section-awards flat-spacing">
                 <div class="container">
@@ -1069,36 +1310,14 @@
                     </div>
                     <div class="d-grid gap-16">
                         <div class="awards-item effectFade fadeUp">
-                            <div class="image">
-                                <img src="assets/images/partner/partner-7.svg" alt="">
-                            </div>
-                            <div class="title text-body-1 text-white">Innovation in AI</div>
-                            <div class="text text-body-1 text-white">Underwriting Risk Copilot (Fintech)</div>
-                            <div class="year text-body-1 text-neutral-400">/ 2025</div>
+                            <div class="title text-body-1 text-white">Best Initiative Award</div>
+                            <div class="text text-body-1 text-white">Unplug 2022</div>
+                            <div class="year text-body-1 text-neutral-400">/ 2022</div>
                         </div>
                         <div class="awards-item effectFade fadeUp" data-delay="0.1">
-                            <div class="image">
-                                <img src="assets/images/partner/partner-8.svg" alt="">
-                            </div>
-                            <div class="title text-body-1 text-white">Best AI Product Design</div>
-                            <div class="text text-body-1 text-white">Support Copilot (SaaS)</div>
-                            <div class="year text-body-1 text-neutral-400">/ 2025</div>
-                        </div>
-                        <div class="awards-item effectFade fadeUp" data-delay="0.2">
-                            <div class="image">
-                                <img src="assets/images/partner/partner-9.svg" alt="">
-                            </div>
-                            <div class="title text-body-1 text-white">Data & AI Excellence</div>
-                            <div class="text text-body-1 text-white">Clinical Note Summarizer (Healthcare)</div>
-                            <div class="year text-body-1 text-neutral-400">/ 2024</div>
-                        </div>
-                        <div class="awards-item effectFade fadeUp" data-delay="0.3">
-                            <div class="image">
-                                <img src="assets/images/partner/partner-10.svg" alt="">
-                            </div>
-                            <div class="title text-body-1 text-white">Innovation in AI</div>
-                            <div class="text text-body-1 text-white">Underwriting Risk Copilot (Fintech)</div>
-                            <div class="year text-body-1 text-neutral-400">/ 2024</div>
+                            <div class="title text-body-1 text-white">Sustainable Development Leader</div>
+                            <div class="text text-body-1 text-white">SDG OPEN DAY 2022</div>
+                            <div class="year text-body-1 text-neutral-400">/ 2022</div>
                         </div>
                     </div>
                 </div>
@@ -1140,8 +1359,8 @@
                     </div>
                     <div class="col-lg-4 col-md-6 mb-24" id="doc-3">
                         <div class="doc-card effectFade fadeUp" data-delay="0.2">
-                            <div class="doc-image film-trigger" data-video="assets/videos/doc-3-art-n-tech.mp4" role="button" tabindex="0" aria-label="Play Art N Tech">
-                                <img src="assets/images/blog/blog-doc-3-art-n-tech.jpg" alt="Art N Tech">
+                            <div class="doc-image film-trigger" data-video="assets/videos/doc-3-art-n-tech.mp4" role="button" tabindex="0" aria-label="Play ATE">
+                                <img src="assets/images/blog/blog-doc-3-art-n-tech.jpg" alt="ATE">
                                 <span class="film-play-btn"><i class="icon icon-play-filled"></i></span>
                             </div>
                             <div class="doc-content">
@@ -1154,121 +1373,6 @@
             </div>
         </div>
         <!-- /section-documentaries -->
-
-        <!-- section-pricing -->
-        <div id="pricing" class="section-pricing flat-spacing">
-            <div class="container">
-                <div class="heading-section mb-80">
-                    <div class="heading-sub fw-semibold effectFade fadeUp">Pricing Plans</div>
-                    <div class="heading-title text-gradient-3 gap-8 effectFade fadeRotateX">
-                        From pilot to enterprise <br>
-                        <div class="h-8 d-none d-lg-block"></div>
-                        clear scope, transparent costs <br>
-                        <div class="h-8 d-none d-lg-block"></div>
-                        <input type="checkbox" id="pricingSwitch" class="tf-switch-check" checked>&nbsp;annually.
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6 lg-mb-24">
-                        <div class="pricing-item h-100 effectFade fadeRotateX">
-                            <div class="top d-flex gap-12 align-items-center">
-                                <div class="d-flex gap-8 align-items-center">
-                                    <i class="icon icon-user-friends-solid fs-24"></i>
-                                    <div class="fw-semibold text">Starter Plan</div>
-                                </div>
-                                <div class="line"></div>
-                                <div class="fw-semibold text-secondary">For startups</div>
-                            </div>
-                            <div class="heading">
-                                <div class="d-flex gap-14 align-items-end">
-                                    <div class="price-number fw-bold" data-month="1000" data-year="9900">$9,900</div>
-                                    <h6 class="price-per">/ year</h6>
-                                </div>
-                                <a href="#contact" class="tf-btn">
-                                    Get Started
-                                </a>
-                            </div>
-                            <div class="line"></div>
-                            <div class="content">
-                                <div>
-                                    <div class="title fw-semibold mb-4">What’s included</div>
-                                    <div class="text fw-semibold">
-                                        Prove value in two weeks with a clickable UX, tech spike, and a clear go/no-go roadmap.
-                                    </div>
-                                </div>
-                                <ul class="list-text type-check">
-                                    <li>
-                                        <i class="icon icon-check-solid"></i>
-                                        Discovery workshop
-                                    </li>
-                                    <li>
-                                        <i class="icon icon-check-solid"></i>
-                                        Opportunity brief
-                                    </li>
-                                    <li>
-                                        <i class="icon icon-check-solid"></i>
-                                        Clickable UX
-                                    </li>
-                                    <li>
-                                        <i class="icon icon-check-solid"></i>
-                                        1 data source & 1 integration
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="pricing-item h-100 style-black effectFade fadeRotateX" data-delay="0.1">
-                            <div class="top d-flex gap-12 align-items-center">
-                                <div class="d-flex gap-8 align-items-center">
-                                    <i class="icon icon-building fs-24"></i>
-                                    <div class="fw-semibold text">Enterprise Plan</div>
-                                </div>
-                                <div class="line"></div>
-                                <div class="fw-semibold text-neutral-400">For organisations</div>
-                            </div>
-                            <div class="heading">
-                                <div class="d-flex gap-14 align-items-end">
-                                    <div class="price-number fw-bold" data-month="1700" data-year="19900">$19,900</div>
-                                    <h6 class="price-per">/ year</h6>
-                                </div>
-                                <a href="#contact" class="tf-btn">
-                                    Get Started
-                                </a>
-                            </div>
-                            <div class="line"></div>
-                            <div class="content">
-                                <div>
-                                    <div class="title fw-semibold mb-4">What’s included</div>
-                                    <div class="text fw-semibold">
-                                        Compliance-ready delivery for complex orgs—multi-env releases, canaries, and change management.
-                                    </div>
-                                </div>
-                                <ul class="list-text type-check">
-                                    <li>
-                                        <i class="icon icon-check-solid"></i>
-                                        Everything in Starter
-                                    </li>
-                                    <li>
-                                        <i class="icon icon-check-solid"></i>
-                                        CI/CD, tracing, alerts, guardrails
-                                    </li>
-                                    <li>
-                                        <i class="icon icon-check-solid"></i>
-                                        Full eval dashboard
-                                    </li>
-                                    <li>
-                                        <i class="icon icon-check-solid"></i>
-                                        3 data source & 3 integration
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /section-pricing -->
 
         <!-- section-faqs -->
         <div class="section-faqs flat-spacing pt-0">
@@ -1411,7 +1515,7 @@
             <div class="container">
                 <div class="footer-content">
                     <a href="index.html" class="footer-logo">
-                        <img src="assets/images/logo/logo-2.svg" alt="">
+                        <img class="site-logo-img footer" src="assets/images/logo/land-art-logo.png" alt="Land-art space">
                     </a>
                     <div class="title h6 fw-semibold">Get connected <br> with Land-Art on social</div>
                     <div class="text">Don’t miss our new updates!</div>
@@ -1510,7 +1614,7 @@
                                         <div id="dropdown-menu-1" class="collapse" data-bs-parent="#mobile-menu">
                                             <ul class="sub-nav-menu">
                                                 <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalBeHuman">BE HUMAN</a></li>
-                                                <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalArtNTech">ART N TECH</a></li>
+                                                <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalArtNTech">ATE</a></li>
                                                 <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalMongolz">MONGOLZ#1</a></li>
                                             </ul>
                                         </div>
@@ -1568,44 +1672,6 @@
     </div>
     <!-- /Mobile Menu -->
     <!-- Left Bar -->
-    <div class="tf-left-bar">
-        <a class="btn-setting-color" data-bs-toggle="offcanvas" href="#settingColorMenu">
-            <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.0015 7.50004C11.1115 7.50004 10.2415 7.76396 9.50144 8.25843C8.76142 8.7529 8.18464 9.4557 7.84405 10.278C7.50346 11.1002 7.41434 12.005 7.58797 12.8779C7.76161 13.7509 8.19019 14.5527 8.81953 15.182C9.44886 15.8114 10.2507 16.2399 11.1236 16.4136C11.9965 16.5872 12.9013 16.4981 13.7236 16.1575C14.5458 15.8169 15.2487 15.2401 15.7431 14.5001C16.2376 13.7601 16.5015 12.8901 16.5015 12C16.5003 10.8069 16.0258 9.66308 15.1821 8.81943C14.3385 7.97579 13.1946 7.50128 12.0015 7.50004ZM12.0015 15C11.4082 15 10.8281 14.8241 10.3348 14.4945C9.84145 14.1648 9.45693 13.6963 9.22987 13.1481C9.00281 12.5999 8.9434 11.9967 9.05915 11.4148C9.17491 10.8328 9.46063 10.2983 9.88019 9.87872C10.2997 9.45916 10.8343 9.17344 11.4162 9.05769C11.9982 8.94193 12.6014 9.00134 13.1496 9.2284C13.6977 9.45547 14.1663 9.83998 14.4959 10.3333C14.8256 10.8267 15.0015 11.4067 15.0015 12C15.0015 12.7957 14.6854 13.5588 14.1228 14.1214C13.5602 14.684 12.7972 15 12.0015 15ZM20.2515 12.2025C20.2553 12.0675 20.2553 11.9325 20.2515 11.7975L21.6503 10.05C21.7236 9.95829 21.7744 9.85059 21.7985 9.73563C21.8226 9.62067 21.8193 9.50165 21.789 9.38817C21.5597 8.52623 21.2167 7.69865 20.769 6.92723C20.7104 6.82628 20.629 6.7404 20.5314 6.67644C20.4337 6.61248 20.3225 6.57219 20.2065 6.55879L17.9828 6.31129C17.8903 6.21379 17.7965 6.12004 17.7015 6.03004L17.439 3.80067C17.4255 3.68462 17.3851 3.57332 17.3209 3.47566C17.2568 3.37801 17.1708 3.29668 17.0696 3.23817C16.2979 2.79131 15.4704 2.44864 14.6087 2.21911C14.4951 2.18891 14.3761 2.18583 14.2611 2.21009C14.1461 2.23435 14.0385 2.28529 13.9468 2.35879L12.204 3.75004C12.069 3.75004 11.934 3.75004 11.799 3.75004L10.0515 2.35411C9.95975 2.28076 9.85206 2.23 9.7371 2.2059C9.62213 2.1818 9.50311 2.18504 9.38963 2.21536C8.52783 2.44507 7.70031 2.78806 6.92869 3.23536C6.82774 3.29397 6.74187 3.37535 6.6779 3.473C6.61394 3.57065 6.57366 3.68189 6.56026 3.79785L6.31276 6.02535C6.21526 6.11848 6.12151 6.21223 6.03151 6.3066L3.80213 6.56254C3.68608 6.57604 3.57479 6.61647 3.47713 6.6806C3.37947 6.74473 3.29814 6.83079 3.23963 6.93192C2.79277 7.70363 2.4501 8.53114 2.22057 9.39286C2.19038 9.50641 2.18729 9.62547 2.21156 9.74044C2.23582 9.8554 2.28675 9.96306 2.36026 10.0547L3.75151 11.7975C3.75151 11.9325 3.75151 12.0675 3.75151 12.2025L2.35557 13.95C2.28223 14.0418 2.23146 14.1495 2.20736 14.2645C2.18326 14.3794 2.1865 14.4984 2.21682 14.6119C2.44612 15.4739 2.78913 16.3014 3.23682 17.0729C3.29544 17.1738 3.37681 17.2597 3.47447 17.3236C3.57212 17.3876 3.68335 17.4279 3.79932 17.4413L6.02307 17.6888C6.1162 17.7863 6.20995 17.88 6.30432 17.97L6.56401 20.1994C6.57751 20.3155 6.61794 20.4268 6.68207 20.5244C6.7462 20.6221 6.83226 20.7034 6.93338 20.7619C7.7051 21.2088 8.53261 21.5514 9.39432 21.781C9.50787 21.8112 9.62693 21.8143 9.7419 21.79C9.85687 21.7657 9.96452 21.7148 10.0562 21.6413L11.799 20.25C11.934 20.2538 12.069 20.2538 12.204 20.25L13.9515 21.6488C14.0433 21.7221 14.151 21.7729 14.2659 21.797C14.3809 21.8211 14.4999 21.8179 14.6134 21.7875C15.4753 21.5582 16.3029 21.2152 17.0743 20.7675C17.1753 20.7089 17.2611 20.6275 17.3251 20.5299C17.3891 20.4322 17.4294 20.321 17.4428 20.205L17.6903 17.9813C17.7878 17.8888 17.8815 17.795 17.9715 17.7L20.2009 17.4375C20.3169 17.424 20.4282 17.3836 20.5259 17.3195C20.6235 17.2554 20.7049 17.1693 20.7634 17.0682C21.2102 16.2965 21.5529 15.4689 21.7824 14.6072C21.8126 14.4937 21.8157 14.3746 21.7915 14.2596C21.7672 14.1447 21.7163 14.037 21.6428 13.9454L20.2515 12.2025ZM18.7421 11.5932C18.7581 11.8642 18.7581 12.1359 18.7421 12.4069C18.731 12.5925 18.7891 12.7755 18.9053 12.9207L20.2356 14.5829C20.0829 15.068 19.8875 15.5386 19.6515 15.9891L17.5328 16.2291C17.3482 16.2496 17.1779 16.3378 17.0546 16.4766C16.8742 16.6796 16.682 16.8718 16.479 17.0522C16.3402 17.1755 16.252 17.3458 16.2315 17.5304L15.9962 19.6472C15.5457 19.8833 15.0751 20.0788 14.5899 20.2313L12.9268 18.901C12.7937 18.7946 12.6284 18.7368 12.4581 18.7369H12.4131C12.1421 18.7529 11.8703 18.7529 11.5993 18.7369C11.4138 18.7257 11.2307 18.7839 11.0856 18.9L9.41869 20.2313C8.93357 20.0786 8.46297 19.8832 8.01244 19.6472L7.77244 17.5313C7.75196 17.3468 7.66378 17.1764 7.52494 17.0532C7.32198 16.8727 7.12978 16.6805 6.94932 16.4775C6.82607 16.3387 6.65571 16.2505 6.4712 16.23L4.35432 15.9938C4.11825 15.5433 3.92279 15.0727 3.77026 14.5875L5.10057 12.9244C5.21673 12.7793 5.27486 12.5962 5.2637 12.4107C5.24776 12.1397 5.24776 11.8679 5.2637 11.5969C5.27486 11.4114 5.21673 11.2283 5.10057 11.0832L3.77026 9.41723C3.92291 8.9321 4.11836 8.4615 4.35432 8.01098L6.47026 7.77098C6.65477 7.7505 6.82513 7.66231 6.94838 7.52348C7.12884 7.32052 7.32105 7.12831 7.52401 6.94785C7.66339 6.82452 7.75194 6.65377 7.77244 6.46879L8.00776 4.35286C8.45823 4.11679 8.92884 3.92132 9.41401 3.76879L11.0771 5.0991C11.2222 5.21527 11.4053 5.2734 11.5909 5.26223C11.8619 5.24629 12.1336 5.24629 12.4046 5.26223C12.5902 5.2734 12.7733 5.21527 12.9184 5.0991L14.5843 3.76879C15.0694 3.92144 15.54 4.1169 15.9906 4.35286L16.2306 6.46879C16.2511 6.65331 16.3392 6.82367 16.4781 6.94692C16.681 7.12738 16.8732 7.31958 17.0537 7.52254C17.1769 7.66137 17.3473 7.74956 17.5318 7.77004L19.6487 8.00535C19.8848 8.45583 20.0802 8.92644 20.2328 9.4116L18.9024 11.0747C18.7852 11.2211 18.727 11.406 18.7393 11.5932H18.7421Z" fill="#fff"/>
-            </svg>
-        </a>
-    </div>
-    <!-- Left Bar -->
-    <!-- Setting Color -->
-    <div class="offcanvas offcanvas-end offcanvas-color" id="settingColorMenu">
-        <div class="offcanvas-content">
-            <span class="icon-close-popup" data-bs-dismiss="offcanvas">
-                <i class="icon-close"></i>
-            </span>
-            <div class="canvas-header">
-                <h3 class="fw-semibold text-white">Configuration</h3>
-            </div>
-            <div class="canvas-body">
-                <h6 class="title fw-semibold text-white">COLORS</h6>
-                <div class="settings-color list-choose mb-24">
-                    <button type="button" class="choose-item link-no-action active"></button>
-                    <button type="button" class="choose-item link-no-action"></button>
-                    <button type="button" class="choose-item link-no-action"></button>
-                    <button type="button" class="choose-item link-no-action"></button>
-                    <button type="button" class="choose-item link-no-action"></button>
-                    <button type="button" class="choose-item link-no-action"></button>
-                    <button type="button" class="choose-item link-no-action"></button>
-                    <button type="button" class="choose-item link-no-action"></button>
-                </div>
-                <h6 class="title fw-semibold text-white">CUSTOM CURSOR</h6>
-                <div>
-                    <input type="checkbox" id="cursor" class="tf-switch-check style-small">
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /Setting Color -->
-
     <!-- Land Art Modals -->
     <div class="modal fade modalCentered" id="modalBeHuman" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -1616,7 +1682,7 @@
                 <div class="modal-body">
                     <div class="featured-works-item">
                         <div class="image">
-                            <img src="assets/images/section/featured-works-6-behuman.webp" alt="BE HUMAN land art aerial view">
+                            <img src="assets/images/section/featured-works-poster-behuman.jpg" alt="BE HUMAN land art aerial view">
                         </div>
                         <div class="content">
                             <div class="bot">
@@ -1651,11 +1717,11 @@
                 <div class="modal-body">
                     <div class="featured-works-item">
                         <div class="image">
-                            <img src="assets/images/section/featured-works-7-artntech.webp" alt="ART N TECH land art aerial view">
+                            <img src="assets/images/section/featured-works-poster-artntech.jpg" alt="ATE land art aerial view">
                         </div>
                         <div class="content">
                             <div class="bot">
-                                <h4 class="heading fw-semibold">ART N TECH <br> Land Art</h4>
+                                <h4 class="heading fw-semibold">ATE <br> Land Art</h4>
                                 <div class="grid-text">
                                     <div class="item">
                                         <div class="title text-secondary">DESCRIPTION</div>
@@ -1686,7 +1752,7 @@
                 <div class="modal-body">
                     <div class="featured-works-item">
                         <div class="image">
-                            <img src="assets/images/section/featured-works-5-mongolz.webp" alt="Mongolz #1 land art aerial view">
+                            <img src="assets/images/section/featured-works-poster-mongolz.jpg" alt="Mongolz #1 land art aerial view">
                         </div>
                         <div class="content">
                             <div class="bot">
@@ -1865,7 +1931,7 @@
                             </div>
                         </div>
                         <div class="step-card">
-                            <div class="step-img-wrap"><img src="assets/images/process/step-15.webp" alt="Pest Control"></div>
+                            <div class="step-img-wrap"><img src="assets/images/process/step-15.jpg" alt="Pest Control"></div>
                             <div class="step-card-body">
                                 <div class="step-num">15</div>
                                 <div class="step-title">Pest Control</div>
@@ -1975,6 +2041,1547 @@
                 trigger.appendChild(video);
             });
         });
+
+        function mountEcoNetwork(opts){
+          var svg=document.getElementById(opts.svgId); if(!svg) return;
+          var NS='http://www.w3.org/2000/svg';
+          var msg=opts.msgId?document.getElementById(opts.msgId):null, actBtn=opts.actBtnId?document.getElementById(opts.actBtnId):null;
+          var tabs=opts.tabsSelector?[].slice.call(document.querySelectorAll(opts.tabsSelector)):[];
+          var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+          var P={
+            water:'#35C9B8', elm:'#9BC47F', plant:'#7FA86B', bug:'#A6AEB6', poll:'#b2d135',
+            rod:'#8F86D8', bird:'#8F86D8', soil:'#7268C4', hub:'#b2d135', lab:'#35C9B8',
+            comm:'#9BC47F', prob:'#FF5A36', prob2:'#8C939B', out:'#F9FAFB'
+          };
+
+          var VIEWS={
+            eco:{
+              box:'0 0 900 620',
+              btn:'Simulate collapse', mode:'cascade',
+              hint:'Hover a node to see its links · click to simulate collapse',
+              N:[
+                {id:'water', mn:'Water', x:450,y:64, c:P.water,ic:'i-drop'},
+                {id:'elm',   mn:'Elm · planted', x:300,y:200,c:P.elm,  ic:'i-elm',plant:1},
+                {id:'carag', mn:'Caragana', x:600,y:200,c:P.plant,ic:'i-flower'},
+                {id:'invert',mn:'Decomposers', x:190,y:330,c:P.bug,  ic:'i-bug'},
+                {id:'polli', mn:'Pollinators', x:710,y:330,c:P.poll, ic:'i-hex'},
+                {id:'rodent',mn:'Rodents', x:330,y:455,c:P.rod,  ic:'i-paw'},
+                {id:'birds', mn:'Birds', x:610,y:455,c:P.bird, ic:'i-bird'},
+                {id:'soil',  mn:'Soil', x:450,y:558,c:P.soil, ic:'i-layers'}
+              ],
+              E:[['water','elm',0],['water','carag',0],
+                 ['elm','polli',0],['elm','invert',0],['elm','birds',0],['elm','soil',0],
+                 ['carag','polli',0],['carag','invert',0],['carag','soil',0],
+                 ['polli','elm',1],['polli','carag',1],
+                 ['invert','soil',0],['invert','rodent',0],
+                 ['rodent','soil',1],['rodent','birds',0],
+                 ['birds','rodent',1],['birds','invert',1],
+                 ['soil','water',1]]
+            },
+            prog:{
+              box:'0 0 900 600',
+              btn:'Play the loop', mode:'tour',
+              hint:'Hover or click a node for detail',
+              N:[
+                {id:'desert',mn:'Desertification',x:100,y:175,c:P.prob2,ic:'i-sun',
+                 d:'The starting point: pasture degrades, livestock is lost, and herder households lose their livelihood.'},
+                {id:'refug',mn:'Eco-migration',x:100,y:420,c:P.prob,ic:'i-alert',
+                 d:'Households leaving their land for the city because of environmental degradation. Their children are the target group for Community.'},
+                {id:'hub',mn:'LAND ART HUB',x:360,y:130,c:P.hub,ic:'i-hex',
+                 d:'The physical site, land artworks, a nursery and irrigation. Revenue is generated here, and local jobs are created here.'},
+                {id:'lab',mn:'LAND ART LAB',x:620,y:290,c:P.lab,ic:'i-flask',
+                 d:'Species trials, geometry measurements, biodiversity monitoring and MRV methodology. Turns the work of Hub into evidence.'},
+                {id:'comm',mn:'LAND ART COMMUNITY',x:360,y:450,c:P.comm,ic:'i-people',
+                 d:'Nature-based education and vocational training for local children. Training connects directly to jobs at Hub and Lab, so young people stay in their home region.'},
+                {id:'land',mn:'Restored land',x:820,y:130,c:P.plant,ic:'i-leaf',
+                 d:'Restored hectares, stabilised soil and rising biodiversity — reducing desertification in turn.'},
+                {id:'spec',mn:'Local specialists',x:820,y:450,c:P.out,ic:'i-star',
+                 d:'Foresters, drone operators, MRV technicians, guides, designers. The final aim of the project — people staying in their home region.'}
+              ],
+              E:[['desert','hub',0],['desert','refug',0],
+                 ['hub','land',0],['hub','lab',0],['hub','comm',0],
+                 ['lab','hub',1],['lab','comm',0],
+                 ['comm','hub',1],['comm','lab',1],['comm','spec',0],
+                 ['refug','comm',0],['land','desert',1,160]],
+              tour:[['desert','Desertification strips herder households of their livelihood'],
+                    ['hub','Hub creates land art on degraded ground, plants trees and generates jobs'],
+                    ['comm','A share of Hub revenue funds Community and educates children from displaced households'],
+                    ['lab','Lab verifies the methods of Hub through trials and monitoring'],
+                    ['spec','Graduates become specialists and stay in their home region'],
+                    ['land','Restored land reduces desertification in turn, closing the loop']]
+            },
+            integ:{
+              box:'0 0 900 700',
+              btn:'Play the loop', mode:'tour',
+              hint:'Gold dashed lines are the intervention points of the programme · click a node for detail',
+              N:[
+                {id:'desert',mn:'Desertification',x:330,y:78,c:P.prob2,ic:'i-sun',
+                 d:'The starting point: pasture degrades and the soil, water and plant layers weaken.'},
+                {id:'refug',mn:'Eco-migration',x:590,y:78,c:P.prob,ic:'i-alert',
+                 d:'Households leaving their land because of degradation. the target group for Community.'},
+                {id:'hub',mn:'HUB',x:230,y:250,c:P.hub,ic:'i-hex',
+                 d:'Site, seedlings, irrigation, land art. Acts directly on the water and plant layers of the ecosystem.'},
+                {id:'lab',mn:'LAB',x:460,y:250,c:P.lab,ic:'i-flask',
+                 d:'Measures species, geometry and biodiversity. Takes data from the ecosystem and returns methodology to Hub.'},
+                {id:'comm',mn:'COMMUNITY',x:690,y:250,c:P.comm,ic:'i-people',
+                 d:'Education and vocational training. Returns trained people to Hub and Lab.'},
+                {id:'water',mn:'Water',x:120,y:432,c:P.water,ic:'i-drop',
+                 d:'Rainfall and groundwater. Sets the ceiling for every layer above.'},
+                {id:'plants',mn:'Plants · Elm · caragana',x:345,y:432,c:P.elm,ic:'i-elm',plant:1,
+                 d:'Engineer species. Break the wind, hold moisture and create habitat for every other layer.'},
+                {id:'insect',mn:'Insects',x:570,y:432,c:P.poll,ic:'i-hex',
+                 d:'Pollination and decomposition. Sustain plant reproduction and soil organic matter.'},
+                {id:'fauna',mn:'Fauna',x:790,y:432,c:P.bird,ic:'i-bird',
+                 d:'Seed dispersal, soil aeration and insect control. Large ungulates cannot enter the fenced site.'},
+                {id:'soil',mn:'Soil',x:230,y:612,c:P.soil,ic:'i-layers',
+                 d:'The root network binds the soil and slows sand movement.'},
+                {id:'land',mn:'Restored land',x:460,y:612,c:P.plant,ic:'i-leaf',
+                 d:'Restored hectares, stabilised soil, rising diversity.'},
+                {id:'spec',mn:'Local specialists',x:690,y:612,c:P.out,ic:'i-star',
+                 d:'Foresters, drone operators, MRV technicians, guides. The final aim of the project.'}
+              ],
+              E:[['desert','hub',0],['desert','refug',0],['refug','comm',0],
+                 ['hub','water',0],['hub','plants',0],
+                 ['lab','plants',0],['lab','insect',0],
+                 ['comm','hub',1],['comm','spec',0],
+                 ['water','plants',0],['plants','insect',0],['insect','fauna',0],
+                 ['plants','soil',0],['insect','soil',0],['fauna','soil',0],
+                 ['soil','water',1],['soil','land',0],
+                 ['insect','lab',1],['spec','hub',1],
+                 ['land','desert',1,-350]],
+              tour:[['desert','Desertification begins to weaken the soil, water and plant layers'],
+                    ['hub','Hub acts directly on the water and plant layers and plants seedlings'],
+                    ['plants','The plant layer recovers, creating habitat for insects and animals'],
+                    ['insect','Pollination and decomposition resume, enriching the soil'],
+                    ['lab','Lab measures the change and returns methodology to Hub'],
+                    ['comm','Children from displaced households study at Community'],
+                    ['spec','Graduates become specialists and work at Hub and Lab'],
+                    ['land','Restored land reduces desertification, closing the loop']]
+          }};
+
+          var R=38;
+          function hexPath(cx,cy,r){var d='';for(var i=0;i<6;i++){
+            var a=Math.PI/180*(60*i-90);
+            d+=(i?'L':'M')+(cx+r*Math.cos(a)).toFixed(1)+' '+(cy+r*Math.sin(a)).toFixed(1);}
+            return d+'Z';}
+
+          var cur=null, raf=null, pin=null, dead=new Set(), busy=false;
+
+          function build(key){
+            var V=VIEWS[key];
+            svg.setAttribute('viewBox',V.box);
+            while(svg.firstChild) svg.removeChild(svg.firstChild);
+            var gE=document.createElementNS(NS,'g'),gP=document.createElementNS(NS,'g'),gN=document.createElementNS(NS,'g');
+            svg.appendChild(gE);svg.appendChild(gP);svg.appendChild(gN);
+            var map={},out={},inn={};
+            V.N.forEach(function(n){map[n.id]=n;out[n.id]=[];inn[n.id]=[];});
+            V.E.forEach(function(e){out[e[0]].push(e[1]);inn[e[1]].push(e[0]);});
+            var paths=[];
+            V.E.forEach(function(e){
+              var a=e[0],b=e[1],fb=e[2],bw=e[3];
+              var A=map[a],B=map[b];
+              var dx=B.x-A.x,dy=B.y-A.y,len=Math.hypot(dx,dy),ux=dx/len,uy=dy/len;
+              var sx=A.x+ux*(R+6),sy=A.y+uy*(R+6),ex=B.x-ux*(R+6),ey=B.y-uy*(R+6);
+              var mx=(sx+ex)/2,my=(sy+ey)/2;
+              var bow=(bw!==undefined)?bw:(fb?26:-16);
+              var p=document.createElementNS(NS,'path');
+              p.setAttribute('d','M'+sx+' '+sy+' Q'+(mx-uy*bow)+' '+(my+ux*bow)+' '+ex+' '+ey);
+              p.setAttribute('class','eco-ed'+(fb?' fb':''));
+              gE.appendChild(p);
+              paths.push({el:p,a:a,b:b,fb:fb,len:0,dot:null,t:Math.random()});
+            });
+            paths.forEach(function(p){
+              p.len=p.el.getTotalLength();
+              var c=document.createElementNS(NS,'circle');
+              c.setAttribute('r',p.fb?1.9:2.4);
+              c.setAttribute('fill',p.fb?'#b2d135':'#35C9B8');
+              gP.appendChild(c);p.dot=c;
+            });
+            var els={};
+            V.N.forEach(function(n){
+              var g=document.createElementNS(NS,'g');
+              g.setAttribute('class','eco-nd'+(n.plant?' plant':''));
+              g.style.setProperty('--c',n.c); g.setAttribute('tabindex','0');
+              var gl=document.createElementNS(NS,'path');
+              gl.setAttribute('d',hexPath(n.x,n.y,R+13));gl.setAttribute('class','eco-gl');gl.setAttribute('fill',n.c);
+              var hx=document.createElementNS(NS,'path');
+              hx.setAttribute('d',hexPath(n.x,n.y,R));hx.setAttribute('class','eco-hx');
+              var u=document.createElementNS(NS,'use');
+              u.setAttribute('href','#'+n.ic);u.setAttribute('class','eco-ico');
+              u.setAttribute('x',n.x-11);u.setAttribute('y',n.y-13);
+              u.setAttribute('width','22');u.setAttribute('height','22');
+              var lb=document.createElementNS(NS,'text');
+              lb.setAttribute('class','eco-lb');lb.setAttribute('x',n.x);lb.setAttribute('y',n.y+R+16);
+              var w=n.mn.split(' ');
+              if(w.length>1&&n.mn.length>13){
+                w.forEach(function(wd,i){var t=document.createElementNS(NS,'tspan');
+                  t.setAttribute('x',n.x);t.setAttribute('dy',i?11:0);t.textContent=wd;lb.appendChild(t);});
+              } else lb.textContent=n.mn;
+              g.appendChild(gl);g.appendChild(hx);g.appendChild(u);g.appendChild(lb);gN.appendChild(g);els[n.id]=g;
+              g.addEventListener('mouseenter',function(){if(!dead.size&&!busy)focus(n.id);});
+              g.addEventListener('mouseleave',function(){if(!dead.size&&!busy&&!pin)clear();});
+              g.addEventListener('focus',function(){if(!dead.size&&!busy)focus(n.id);});
+              g.addEventListener('click',function(){
+                if(V.mode==='cascade'){collapse(n.id);}
+                else {pin=(pin===n.id)?null:n.id;play(n.id);}
+              });
+            });
+
+            function clear(){
+              Object.keys(els).forEach(function(k){els[k].classList.remove('hot','mute');});
+              paths.forEach(function(p){p.el.classList.remove('on','mute');});
+              if(msg) msg.innerHTML=V.hint;
+            }
+            function focus(id){
+              var kin={}; kin[id]=1; out[id].forEach(function(k){kin[k]=1;}); inn[id].forEach(function(k){kin[k]=1;});
+              Object.keys(els).forEach(function(k){
+                els[k].classList.toggle('hot',k===id);els[k].classList.toggle('mute',!kin[k]);});
+              paths.forEach(function(p){var rel=(p.a===id||p.b===id);
+                p.el.classList.toggle('on',rel);p.el.classList.toggle('mute',!rel);});
+              if(msg){
+                var n=map[id];
+                var gives=out[id].map(function(k){return map[k].mn;}).join(', ')||'—';
+                var takes=inn[id].map(function(k){return map[k].mn;}).join(', ')||'—';
+                msg.innerHTML='<b>'+n.mn+'</b>'+(n.d?'<br>'+n.d:'')+
+                  '<br>supports: <em>'+gives+'</em> · depends on: <em>'+takes+'</em>';
+              }
+            }
+            function play(id){
+              clear();
+              var related=paths.filter(function(p){return p.a===id||p.b===id;});
+              els[id].classList.add('hot');
+              Object.keys(els).forEach(function(k){if(k!==id) els[k].classList.add('mute');});
+              paths.forEach(function(p){var rel=(p.a===id||p.b===id); p.el.classList.toggle('mute',!rel);});
+              els[id].classList.add('pulse');
+              setTimeout(function(){els[id].classList.remove('pulse');},reduce?0:420);
+              related.forEach(function(p,i){
+                setTimeout(function(){
+                  p.el.classList.add('on');
+                  var otherId=(p.a===id)?p.b:p.a;
+                  els[otherId].classList.remove('mute');
+                  els[otherId].classList.add('pulse');
+                  setTimeout(function(){els[otherId].classList.remove('pulse');},reduce?0:380);
+                },reduce?0:180+i*160);
+              });
+              setTimeout(function(){
+                if(!msg) return;
+                var n=map[id];
+                var gives=out[id].map(function(k){return map[k].mn;}).join(', ')||'—';
+                var takes=inn[id].map(function(k){return map[k].mn;}).join(', ')||'—';
+                msg.innerHTML='<b>'+n.mn+'</b>'+(n.d?'<br>'+n.d:'')+
+                  '<br>supports: <em>'+gives+'</em> · depends on: <em>'+takes+'</em>';
+              },reduce?0:180+related.length*160+120);
+            }
+            function collapse(id){
+              dead=new Set();clear();
+              var order=[],seen=new Set([id]),front=[id],depth=0;
+              while(front.length&&depth<8){
+                order.push([depth,front.slice()]);
+                var nx=[];front.forEach(function(k){out[k].forEach(function(t){if(!seen.has(t)){seen.add(t);nx.push(t);}});});
+                front=nx;depth++;
+              }
+              order.forEach(function(pair){
+                var dp=pair[0],grp=pair[1];
+                setTimeout(function(){
+                  grp.forEach(function(k){dead.add(k);els[k].classList.add('dead');});
+                  paths.forEach(function(p){if(dead.has(p.a)||dead.has(p.b))p.el.classList.add('dead');});
+                  if(msg){
+                    var names=Array.from(dead).filter(function(k){return k!==id;}).map(function(k){return map[k].mn;});
+                    msg.innerHTML='<b>'+map[id].mn+'</b> lost · layers affected: <em>'+
+                      (names.length?names.join(', '):'—')+'</em> · total '+dead.size+'/'+V.N.length+' nodes';
+                  }
+                },reduce?0:dp*560);
+              });
+            }
+            function reset(){
+              dead=new Set();pin=null;busy=false;
+              Object.keys(els).forEach(function(k){els[k].classList.remove('dead');});
+              paths.forEach(function(p){p.el.classList.remove('dead');});
+              clear();
+            }
+            function tour(){
+              if(busy)return;busy=true;pin=null;
+              V.tour.forEach(function(step,i){setTimeout(function(){
+                focus(step[0]);
+                if(msg) msg.innerHTML='<b>'+(i+1)+'/'+V.tour.length+'</b> · '+step[1];
+                if(i===V.tour.length-1)setTimeout(function(){busy=false;clear();},2400);
+              },reduce?0:i*2300);});
+            }
+            function flow(){
+              paths.forEach(function(p){
+                p.t+=p.fb?0.0024:0.0034; if(p.t>1)p.t-=1;
+                var pt=p.el.getPointAtLength(p.t*p.len);
+                p.dot.setAttribute('cx',pt.x);p.dot.setAttribute('cy',pt.y);
+                var dim=p.el.classList.contains('mute')||p.el.classList.contains('dead');
+                p.dot.setAttribute('opacity',dim?0.06:0.75);
+              });
+              raf=requestAnimationFrame(flow);
+            }
+            clear();
+            if(actBtn) actBtn.textContent=V.btn;
+            cur={V:V,reset:reset,tour:tour,flow:flow,paths:paths,focus:focus,clear:clear};
+            if(reduce){paths.forEach(function(p){var pt=p.el.getPointAtLength(p.len*.5);
+              p.dot.setAttribute('cx',pt.x);p.dot.setAttribute('cy',pt.y);});}
+          }
+
+          function stop(){ if(raf){cancelAnimationFrame(raf);raf=null;} }
+          function start(){ if(!raf&&!reduce&&cur) raf=requestAnimationFrame(cur.flow); }
+
+          var autoTimer=null;
+          function autoTour(){
+            if(!cur) return;
+            if(autoTimer) autoTimer.forEach(clearTimeout);
+            autoTimer=[];
+            busy=true; pin=null; dead=new Set();
+            var ids=cur.V.N.map(function(n){return n.id;});
+            ids.forEach(function(id,i){
+              autoTimer.push(setTimeout(function(){ if(cur) cur.focus(id); }, reduce?0:i*1900));
+            });
+            autoTimer.push(setTimeout(function(){ busy=false; if(cur) cur.clear(); }, reduce?0:ids.length*1900+600));
+          }
+
+          function show(key){
+            stop(); dead=new Set(); pin=null; busy=false;
+            if(autoTimer) autoTimer.forEach(clearTimeout);
+            svg.classList.add('fade');
+            setTimeout(function(){ build(key); svg.classList.remove('fade'); start(); if(opts.autoPlay) autoTour(); }, reduce?0:220);
+            tabs.forEach(function(t){t.classList.toggle('act',t.dataset.v===key);});
+          }
+          tabs.forEach(function(t){t.addEventListener('click',function(){show(t.dataset.v);});});
+          if(actBtn) actBtn.addEventListener('click',function(){
+            if(!cur)return;
+            if(autoTimer) autoTimer.forEach(clearTimeout);
+            if(cur.V.mode==='cascade') cur.reset(); else cur.tour();
+          });
+
+          build(opts.defaultView||'integ');
+          new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?start():stop();});},{threshold:.05}).observe(svg);
+          return {show:show, playDemo:autoTour, focusNode:function(id){ if(cur && cur.focus) cur.focus(id); }};
+        }
+
+        window.ecoMiniHandle = mountEcoNetwork({svgId:'ecoWebMini', msgId:'ecoMiniMsg', defaultView:'eco', autoPlay:true});
+        setTimeout(function(){ if(window.ecoMiniHandle) window.ecoMiniHandle.playDemo(); }, 500);
+
+        (function(){
+          var tlHandle=null, pr5Handle=null;
+          var faq4=document.getElementById('faq-4'), faq5=document.getElementById('faq-5');
+          if(faq4){
+            faq4.addEventListener('shown.bs.collapse',function(){
+              if(!tlHandle) tlHandle=mountRestorationTimeline({canvasId:'tlMiniCv', tabsSelector:'#tlMiniTabs .tl-mini-tab', barId:'tlMiniBar', descId:'tlMiniDesc'});
+              if(tlHandle) tlHandle.start();
+            });
+            faq4.addEventListener('hidden.bs.collapse',function(){ if(tlHandle) tlHandle.stop(); });
+          }
+          if(faq5){
+            faq5.addEventListener('shown.bs.collapse',function(){
+              if(!pr5Handle) pr5Handle=mountGoverningPrinciples({canvasId:'pr5MiniCv', tabsSelector:'#pr5MiniTabs .pr5-mini-tab', keyId:'pr5MiniKey', readId:'pr5MiniRead', capId:'pr5MiniCap', barId:'pr5MiniBar'});
+              if(pr5Handle) pr5Handle.start();
+            });
+            faq5.addEventListener('hidden.bs.collapse',function(){ if(pr5Handle) pr5Handle.stop(); });
+          }
+        })();
+
+        function mountThreeChannel(svgId, panId){
+          var svg=document.getElementById(svgId); if(!svg) return null;
+          var NS='http://www.w3.org/2000/svg';
+          var pan=document.getElementById(panId);
+          var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+          var N={
+            hub:{x:210,y:86,c:'#b2d135',ic:'i-hex',tag:'Channel 01 · Hub',
+              h:'Restoration — production',
+              s:'Physically restores desertified land and creates local jobs.',
+              li:['Land art site, seedlings and irrigation system','Tree nursery','Carbon accounting and ESG reporting','Permanent local jobs']},
+            lab:{x:334,y:288,c:'#35C9B8',ic:'i-flask',tag:'Channel 02 · Lab',
+              h:'Research — evidence',
+              s:'Verifies restoration results in numbers and turns them into teaching material.',
+              li:['Baseline biodiversity monitoring','Species and geometry trial plots','MRV methodology and data systems','Field research with local students']},
+            comm:{x:86,y:288,c:'#D2E88A',ic:'i-people',tag:'Channel 03 · Community',
+              h:'Children — conditions to stay',
+              s:'The long-term aim of the project: educate local children and build the conditions for them to work in their home region.',
+              li:['Nature-based education against desertification','Vocational training: afforestation, drones, MRV, data','A path from training into Hub and Lab jobs']}
+          };
+          var LB={hub:'HUB', lab:'LAB', comm:'COMMUNITY'};
+          var E=[
+            ['hub','lab','site and data'],
+            ['lab','hub','methodology and evidence'],
+            ['lab','comm','teaching material'],
+            ['comm','lab','student research'],
+            ['comm','hub','trained people'],
+            ['hub','comm','funding and jobs']
+          ];
+          var R=44;
+
+          var gE=document.createElementNS(NS,'g'),gL=document.createElementNS(NS,'g'),
+              gP=document.createElementNS(NS,'g'),gN=document.createElementNS(NS,'g');
+          svg.innerHTML='';
+          svg.append(gE,gL,gP,gN);
+
+          var paths=[];
+          E.forEach(function(e){
+            var A=N[e[0]],B=N[e[1]];
+            var dx=B.x-A.x,dy=B.y-A.y,len=Math.hypot(dx,dy),ux=dx/len,uy=dy/len;
+            var sx=A.x+ux*(R+7)-uy*9, sy=A.y+uy*(R+7)+ux*9;
+            var ex=B.x-ux*(R+7)-uy*9, ey=B.y-uy*(R+7)+ux*9;
+            var mx=(sx+ex)/2,my=(sy+ey)/2, bow=26;
+            var cx=mx-uy*bow, cy=my+ux*bow;
+            var el=document.createElementNS(NS,'path');
+            el.setAttribute('d','M'+sx+' '+sy+' Q'+cx+' '+cy+' '+ex+' '+ey);
+            el.setAttribute('class','feat-sys-ed');
+            gE.appendChild(el);
+            var hd=document.createElementNS(NS,'path');
+            var ang=Math.atan2(ey-cy,ex-cx);
+            hd.setAttribute('d','M'+ex+' '+ey+
+              'L'+(ex-7*Math.cos(ang-0.42))+' '+(ey-7*Math.sin(ang-0.42))+
+              'L'+(ex-7*Math.cos(ang+0.42))+' '+(ey-7*Math.sin(ang+0.42))+'Z');
+            hd.setAttribute('class','feat-sys-ed'); hd.setAttribute('fill','#223349');
+            gE.appendChild(hd);
+            var lb=document.createElementNS(NS,'text');
+            lb.setAttribute('class','feat-sys-lb');
+            lb.setAttribute('x',(sx+2*cx+ex)/4); lb.setAttribute('y',(sy+2*cy+ey)/4+3);
+            lb.textContent=e[2];
+            gL.appendChild(lb);
+            var dot=document.createElementNS(NS,'circle');
+            dot.setAttribute('r',2.4); dot.setAttribute('fill','#5A616B');
+            gP.appendChild(dot);
+            paths.push({el:el,hd:hd,lb:lb,dot:dot,a:e[0],b:e[1],len:0,t:Math.random()});
+          });
+          paths.forEach(function(p){p.len=p.el.getTotalLength();});
+
+          function hexD(cx,cy,r){var d='';for(var i=0;i<6;i++){
+            var a=Math.PI/180*(60*i-90);
+            d+=(i?'L':'M')+(cx+r*Math.cos(a)).toFixed(1)+' '+(cy+r*Math.sin(a)).toFixed(1);}
+            return d+'Z';}
+
+          var els={};
+          Object.keys(N).forEach(function(k){
+            var n=N[k];
+            var g=document.createElementNS(NS,'g');
+            g.setAttribute('class','feat-sys-nd'); g.style.setProperty('--k',n.c);
+            g.setAttribute('tabindex','0'); g.setAttribute('role','button');
+            var hx=document.createElementNS(NS,'path');
+            hx.setAttribute('d',hexD(n.x,n.y,R)); hx.setAttribute('class','hx');
+            var u=document.createElementNS(NS,'use');
+            u.setAttribute('href','#'+n.ic); u.setAttribute('class','ic2');
+            u.setAttribute('x',n.x-12); u.setAttribute('y',n.y-16);
+            u.setAttribute('width','24'); u.setAttribute('height','24');
+            var tx=document.createElementNS(NS,'text');
+            tx.setAttribute('class','tx'); tx.setAttribute('x',n.x); tx.setAttribute('y',n.y+20);
+            tx.textContent=LB[k];
+            g.append(hx,u,tx); gN.appendChild(g); els[k]=g;
+            g.addEventListener('mouseenter',function(){auto=false;show(k);});
+            g.addEventListener('focus',function(){auto=false;show(k);});
+            g.addEventListener('click',function(){auto=false;show(k);});
+          });
+
+          var cur=null, auto=false, last=performance.now(), raf=null;
+
+          function show(k){
+            if(cur===k) return;
+            cur=k; var n=N[k];
+            Object.keys(els).forEach(function(j){els[j].classList.toggle('on',j===k);});
+            paths.forEach(function(p){
+              var out=p.a===k, inn=p.b===k;
+              p.el.classList.toggle('out',out); p.el.classList.toggle('inn',inn);
+              p.el.classList.toggle('dim',!out&&!inn);
+              p.hd.classList.toggle('out',out); p.hd.classList.toggle('inn',inn);
+              p.hd.classList.toggle('dim',!out&&!inn);
+              p.hd.setAttribute('fill',out?n.c:(inn?'#35C9B8':'#223349'));
+              p.lb.classList.toggle('show',out||inn);
+              p.dot.setAttribute('fill',out?n.c:(inn?'#35C9B8':'#223349'));
+            });
+            var gives=paths.filter(function(p){return p.a===k;}).map(function(p){return p.lb.textContent;}).join(' · ');
+            var takes=paths.filter(function(p){return p.b===k;}).map(function(p){return p.lb.textContent;}).join(' · ');
+            if(pan){
+              pan.classList.add('fade');
+              setTimeout(function(){
+                pan.style.setProperty('--k',n.c);
+                pan.innerHTML='<span class="feat-sys-tag"><svg><use href="#'+n.ic+'"/></svg>'+
+                  n.tag+'</span><h3>'+n.h+'</h3><p class="sub">'+n.s+'</p><ul>'+
+                  n.li.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>'+
+                  '<div class="feat-sys-io"><b>Gives →</b> '+gives+'<br><i>← Receives</i> '+takes+'</div>';
+                pan.classList.remove('fade');
+              }, reduce?0:180);
+            }
+          }
+
+          function flow(now){
+            paths.forEach(function(p){
+              p.t+=0.0032; if(p.t>1)p.t-=1;
+              var pt=p.el.getPointAtLength(p.t*p.len);
+              p.dot.setAttribute('cx',pt.x); p.dot.setAttribute('cy',pt.y);
+              p.dot.setAttribute('opacity',p.el.classList.contains('dim')?0.18:0.9);
+            });
+            raf=requestAnimationFrame(flow);
+          }
+          function start(){ if(!raf && !reduce){ last=performance.now(); raf=requestAnimationFrame(flow); } }
+          function stop(){ if(raf){ cancelAnimationFrame(raf); raf=null; } }
+
+          return {show:function(k){auto=false; show(k);}, start:start, stop:stop};
+        }
+
+        function mountFundFlow(canvasId){
+          var cv=document.getElementById(canvasId); if(!cv) return null;
+          var ctx=cv.getContext('2d');
+          var C={gold:'#b2d135', teal:'#35C9B8', sage:'#8AA828', clay:'#8C939B', violet:'#F9FAFB', dim:'#5A616B', mute:'#7C8CA0', ink:'#F9FAFB', line:'#223349'};
+          var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var CYCLE=15000;
+
+          function F(n){ return '600 '+n+'px Urbanist, sans-serif'; }
+          function rgba(hx,a){ var n=parseInt(hx.slice(1),16); return 'rgba('+(n>>16)+','+((n>>8)&255)+','+(n&255)+','+a+')'; }
+          function txt(t,px,py,col,size,align,bold){
+            ctx.font=(bold?'700 ':'600 ')+(size||9)+'px Urbanist, sans-serif'; ctx.fillStyle=col;
+            ctx.textAlign=align||'left'; ctx.fillText(t,px,py); ctx.textAlign='left';
+          }
+          function box(bx,by,bw,bh,col,fillA,dash){
+            ctx.save();
+            if(dash) ctx.setLineDash([4,4]);
+            ctx.fillStyle=rgba(col,fillA); ctx.fillRect(bx,by,bw,bh);
+            ctx.strokeStyle=rgba(col,.75); ctx.lineWidth=1.2; ctx.strokeRect(bx,by,bw,bh);
+            ctx.restore();
+          }
+          function hexTok(px,py,r,col,a){
+            ctx.fillStyle=rgba(col,a);
+            ctx.beginPath();
+            for(var i=0;i<6;i++){
+              var ang=Math.PI/180*(60*i-90);
+              var qx=px+r*Math.cos(ang), qy=py+r*Math.sin(ang);
+              i?ctx.lineTo(qx,qy):ctx.moveTo(qx,qy);
+            }
+            ctx.closePath(); ctx.fill();
+          }
+          function arrowH(x1,x2,y,col,a){
+            ctx.strokeStyle=rgba(col,a); ctx.lineWidth=1;
+            ctx.setLineDash([3,4]);
+            ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(x2-6,y); ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.beginPath(); ctx.moveTo(x2,y); ctx.lineTo(x2-6,y-3.5); ctx.lineTo(x2-6,y+3.5);
+            ctx.closePath(); ctx.fillStyle=rgba(col,a); ctx.fill();
+          }
+          function bez(sx,sy,cx1,cy1,cx2,cy2,ex,ey,u){
+            var iu=1-u;
+            return {
+              x: iu*iu*iu*sx+3*iu*iu*u*cx1+3*iu*u*u*cx2+u*u*u*ex,
+              y: iu*iu*iu*sy+3*iu*iu*u*cy1+3*iu*u*u*cy2+u*u*u*ey
+            };
+          }
+
+          function draw(w,h,t){
+            var cyc=(t%CYCLE)/CYCLE;
+            var p1=Math.min(1,cyc/0.34);
+            var p2=Math.max(0,Math.min(1,(cyc-0.34)/0.30));
+            var p3=Math.max(0,Math.min(1,(cyc-0.64)/0.28));
+
+            var midY=h*0.50;
+            var c1x=w*0.035, c1w=w*0.155;
+            var hubX=w*0.245, hubW=w*0.215;
+            var outX=w*0.525, outW=w*0.215;
+            var resX=w*0.795, resW=w*0.175;
+
+            var b1h=h*0.24, b1y=midY-b1h/2;
+            box(c1x,b1y,c1w,b1h,C.gold,.10);
+            txt('YOUR INVESTMENT',c1x+c1w/2,b1y+18,rgba(C.mute,.95),8.5,'center');
+            txt('$30',c1x+c1w/2,b1y+b1h/2+8,C.gold,20,'center',1);
+            txt('1 m² + NFC',c1x+c1w/2,b1y+b1h-12,rgba(C.dim,1),8.5,'center');
+
+            var bhH=h*0.50, bhY=midY-bhH/2;
+            box(hubX,bhY,hubW,bhH,C.gold,.05,true);
+            var bw=hubW*0.82, bx=hubX+hubW*0.09, bb=bhY+bhH-26, bt=bb-bhH*0.36;
+            ctx.save();
+            ctx.beginPath(); ctx.rect(bx,bb-(bb-bt)*p1,bw,(bb-bt)*p1); ctx.clip();
+            ctx.fillStyle=rgba(C.gold,.30); ctx.fillRect(bx,bt,bw,bb-bt);
+            ctx.restore();
+            ctx.strokeStyle=rgba(C.gold,.85); ctx.lineWidth=1.6;
+            ctx.strokeRect(bx,bt,bw,bb-bt);
+            hexTok(bx+bw/2,bt-11,10,C.gold,.35+p1*0.5);
+            ctx.strokeStyle=rgba(C.gold,.8); ctx.lineWidth=1.2;
+            ctx.beginPath();
+            for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-90);
+              var qx=bx+bw/2+10*Math.cos(a), qy=bt-11+10*Math.sin(a);
+              i?ctx.lineTo(qx,qy):ctx.moveTo(qx,qy);}
+            ctx.closePath(); ctx.stroke();
+            var wW=bw*0.155, wH=(bb-bt)*0.24;
+            for(var r=0;r<2;r++){ for(var c=0;c<4;c++){
+              var wx=bx+bw*0.075+c*bw*0.2125+(bw*0.2125-wW)/2;
+              var wy=bt+(bb-bt)*0.20+r*(bb-bt)*0.40;
+              var on=p1>(r*4+c)/8*0.95;
+              ctx.fillStyle=rgba(C.gold,on?.75:.12);
+              ctx.fillRect(wx,wy,wW,wH);
+            } }
+            ctx.strokeStyle=rgba(C.gold,.35); ctx.lineWidth=1;
+            ctx.beginPath(); ctx.moveTo(bx,bt+(bb-bt)*0.5); ctx.lineTo(bx+bw,bt+(bb-bt)*0.5); ctx.stroke();
+            txt('LAND ART HUB',hubX+hubW/2,bhY+20,C.gold,10,'center',1);
+            txt('PROJECT CORE · BUILDING',hubX+hubW/2,bhY+bhH-8,rgba(C.mute,.9),8.5,'center');
+            txt(Math.round(p1*100)+'%',hubX+hubW/2,bb+15,rgba(C.gold,.9),9,'center');
+
+            var oh=h*0.155, ogap=h*0.055;
+            var oys=[midY-oh*1.5-ogap, midY-oh*0.5, midY+oh*0.5+ogap];
+            var outs=[
+              [C.sage,'RESTORED LAND','10,000 m² Hive'],
+              [C.teal,'TRAINING','120 children / year'],
+              [C.clay,'JOBS','20 permanent']
+            ];
+            outs.forEach(function(o,i){
+              var a=Math.max(0,Math.min(1,(p2-i*0.12)/0.6));
+              box(outX,oys[i],outW,oh,o[0],.05+a*.12);
+              txt(o[1],outX+10,oys[i]+17,rgba(o[0],.55+a*.45),8.5);
+              txt(o[2],outX+10,oys[i]+oh-11,rgba(C.ink,.35+a*.6),10.5,'left',1);
+            });
+
+            var rh=h*0.30, ry=midY-rh/2;
+            box(resX,ry,resW,rh,C.violet,.05+p3*.13);
+            txt('RESULT',resX+resW/2,ry+18,rgba(C.mute,.9),8.5,'center');
+            txt('ECOLOGICAL',resX+resW/2,ry+rh/2-4,rgba(C.violet,.5+p3*.5),10,'center',1);
+            txt('DISPLACEMENT FALLS',resX+resW/2,ry+rh/2+11,rgba(C.violet,.5+p3*.5),10,'center',1);
+
+            arrowH(c1x+c1w+4,hubX-4,midY,C.gold,.35+p1*.5);
+            outs.forEach(function(o,i){
+              var a=Math.max(0,Math.min(1,(p2-i*0.12)/0.6));
+              ctx.strokeStyle=rgba(o[0],.15+a*.55); ctx.lineWidth=1; ctx.setLineDash([3,4]);
+              ctx.beginPath(); ctx.moveTo(hubX+hubW+4,midY);
+              ctx.bezierCurveTo(hubX+hubW+34,midY, outX-34,oys[i]+oh/2, outX-8,oys[i]+oh/2);
+              ctx.stroke(); ctx.setLineDash([]);
+              ctx.beginPath(); ctx.moveTo(outX-2,oys[i]+oh/2);
+              ctx.lineTo(outX-8,oys[i]+oh/2-3.5); ctx.lineTo(outX-8,oys[i]+oh/2+3.5);
+              ctx.closePath(); ctx.fillStyle=rgba(o[0],.2+a*.6); ctx.fill();
+              ctx.strokeStyle=rgba(C.violet,.12+p3*.45); ctx.lineWidth=1; ctx.setLineDash([3,4]);
+              ctx.beginPath(); ctx.moveTo(outX+outW+4,oys[i]+oh/2);
+              ctx.bezierCurveTo(outX+outW+30,oys[i]+oh/2, resX-30,midY, resX-8,midY);
+              ctx.stroke(); ctx.setLineDash([]);
+            });
+            arrowH(resX-14,resX-2,midY,C.violet,.2+p3*.6);
+
+            var N=7;
+            for(var i2=0;i2<N;i2++){
+              var ph=((cyc*2.6)+i2/N)%1;
+              if(cyc<0.40){
+                var px=c1x+c1w+4+ph*(hubX-c1x-c1w-8);
+                hexTok(px,midY,3.4,C.gold,.85*(1-Math.abs(ph-0.5)*0.6));
+              }
+            }
+            if(cyc>0.30&&cyc<0.70){
+              outs.forEach(function(o,i){
+                for(var k=0;k<3;k++){
+                  var ph=((cyc*2.2)+k/3+i*0.13)%1;
+                  var pt=bez(hubX+hubW+4,midY, hubX+hubW+38,midY, outX-42,oys[i]+oh/2, outX-8,oys[i]+oh/2, ph);
+                  hexTok(pt.x,pt.y,2.8,o[0],.8);
+                }
+              });
+            }
+            if(cyc>0.62){
+              outs.forEach(function(o,i){
+                for(var k=0;k<2;k++){
+                  var ph=((cyc*2.4)+k/2+i*0.17)%1;
+                  var pt=bez(outX+outW+4,oys[i]+oh/2, outX+outW+34,oys[i]+oh/2, resX-34,midY, resX-8,midY, ph);
+                  hexTok(pt.x,pt.y,2.6,C.violet,.8);
+                }
+              });
+            }
+          }
+
+          var raf=null, t0=performance.now();
+          function frame(now){
+            var rect=cv.getBoundingClientRect();
+            var dpr=window.devicePixelRatio||1;
+            if(cv.width!==Math.round(rect.width*dpr)){
+              cv.width=rect.width*dpr; cv.height=rect.height*dpr;
+              ctx.setTransform(dpr,0,0,dpr,0,0);
+            }
+            ctx.clearRect(0,0,rect.width,rect.height);
+            draw(rect.width,rect.height,now-t0);
+            raf=requestAnimationFrame(frame);
+          }
+          function start(){
+            if(raf) return;
+            if(reduce){
+              var rect=cv.getBoundingClientRect();
+              var dpr=window.devicePixelRatio||1;
+              cv.width=rect.width*dpr; cv.height=rect.height*dpr;
+              ctx.setTransform(dpr,0,0,dpr,0,0);
+              draw(rect.width,rect.height,CYCLE*0.95);
+              return;
+            }
+            t0=performance.now();
+            raf=requestAnimationFrame(frame);
+          }
+          function stop(){ if(raf){ cancelAnimationFrame(raf); raf=null; } }
+          return {start:start, stop:stop};
+        }
+
+        function mountRestorationTimeline(opts){
+          var cv=document.getElementById(opts.canvasId); if(!cv) return null;
+          var x=cv.getContext('2d');
+          var tabs=[].slice.call(document.querySelectorAll(opts.tabsSelector));
+          var bar=document.getElementById(opts.barId), desc=document.getElementById(opts.descId);
+          var C={sky:'#0C0E12',sand:'#1A1D22',soil:'#101318',elm:'#9BC47F',sage:'#8AA828',
+                 gold:'#b2d135',teal:'#35C9B8',clay:'#8C939B',mute:'#8C939B',dim:'#5A616B',
+                 water:'#6E7681',ink:'#F9FAFB'};
+          var TXT=[
+            '<b>Year 0–2 · Start</b> — Seedlings are planted in a hexagonal cell structure. Drip irrigation feeds each cell separately. Soil is bare and wind moves freely.',
+            '<b>Year 3–7 · Nebkha effect</b> — As the young trees begin to slow the wind, sand settles at their base and micro-dunes form. Soil builds and wild bees return.',
+            '<b>Year 8–15 · Moisture retention</b> — The root system deepens and draws on groundwater. Soil moisture stabilises and insects and rodents begin to nest.',
+            '<b>Year 15+ · Ecosystem network</b> — The canopy closes and birds nest. Pollination, decomposition and nutrient cycling become a self-sustaining network.'
+          ];
+          var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+          function cl(v,a,b){return Math.max(a,Math.min(b,v));}
+          function ease(v){return 1-Math.pow(1-v,2.2);}
+
+          var target=0, sp=0, auto=true, lastSwitch=performance.now(), raf=null;
+          function rnd(seed){var t=seed*16807%2147483647; return function(){return (t=t*16807%2147483647)/2147483647;};}
+
+          var TREES=(function(){var r=rnd(7),a=[];for(var i=0;i<7;i++)
+            a.push({fx:0.10+i*0.133+(r()-.5)*0.03,sc:0.82+r()*0.42,ph:r()*6.28});return a;})();
+
+          var flock=[];
+          for(var fi=0;fi<5;fi++) flock.push({p:Math.random(),y:0.10+Math.random()*0.20,
+            s:0.75+Math.random()*0.6, sp:0.00016+Math.random()*0.00016, ph:Math.random()*6.28});
+
+          function rodent(px,gy,sc,a,t,ph){
+            var c='rgba(166,174,182,'+a+')';
+            var hop=Math.abs(Math.sin(t*0.004+ph))*2.2*sc, by=gy-3.4*sc-hop;
+            x.fillStyle=c;
+            x.beginPath();x.ellipse(px,by,5*sc,3.4*sc,-0.12,0,7);x.fill();
+            x.beginPath();x.arc(px+5.2*sc,by-2.2*sc,2.3*sc,0,7);x.fill();
+            x.beginPath();x.ellipse(px+4.4*sc,by-4.7*sc,0.9*sc,2*sc,-0.3,0,7);x.fill();
+            x.fillStyle='rgba(6,7,10,'+a+')';
+            x.beginPath();x.arc(px+6.2*sc,by-2.6*sc,0.6*sc,0,7);x.fill();
+            x.strokeStyle=c;x.lineWidth=1.1*sc;x.lineCap='round';
+            x.beginPath();x.moveTo(px-4.6*sc,by);
+            x.quadraticCurveTo(px-11*sc,by-1*sc,px-12*sc,by-5*sc);x.stroke();
+            x.fillStyle=c;x.beginPath();x.arc(px-12.2*sc,by-5.6*sc,1.4*sc,0,7);x.fill();
+            x.strokeStyle=c;x.lineWidth=1.2*sc;
+            x.beginPath();x.moveTo(px-1*sc,by+3*sc);x.lineTo(px-2.4*sc,gy);x.stroke();
+            x.beginPath();x.moveTo(px+2.4*sc,by+3*sc);x.lineTo(px+3*sc,gy);x.stroke();
+            x.lineCap='butt';
+          }
+          function hare(px,gy,sc,a,t,ph){
+            var c='rgba(200,208,214,'+a+')';
+            var hop=Math.abs(Math.sin(t*0.0026+ph))*3*sc, by=gy-5.2*sc-hop;
+            x.fillStyle=c;
+            x.beginPath();x.ellipse(px,by,8*sc,5*sc,-0.08,0,7);x.fill();
+            x.beginPath();x.ellipse(px-6.2*sc,by+1*sc,3.2*sc,3.6*sc,0,0,7);x.fill();
+            x.beginPath();x.arc(px+7.6*sc,by-3.6*sc,3.2*sc,0,7);x.fill();
+            x.beginPath();x.ellipse(px+6.8*sc,by-8.6*sc,1.2*sc,3.7*sc,-0.24,0,7);x.fill();
+            x.beginPath();x.ellipse(px+9.4*sc,by-8.1*sc,1.1*sc,3.4*sc,-0.04,0,7);x.fill();
+            x.fillStyle='rgba(6,7,10,'+a+')';
+            x.beginPath();x.arc(px+9*sc,by-4*sc,0.7*sc,0,7);x.fill();
+            x.strokeStyle=c;x.lineWidth=1.4*sc;x.lineCap='round';
+            x.beginPath();x.moveTo(px-6.2*sc,by+4.4*sc);x.lineTo(px-6.8*sc,gy);x.stroke();
+            x.beginPath();x.moveTo(px+3*sc,by+4.6*sc);x.lineTo(px+3.4*sc,gy);x.stroke();
+            x.lineCap='butt';
+          }
+          function lizard(px,gy,sc,a,t,ph){
+            var c='rgba(140,147,155,'+a+')', wig=Math.sin(t*0.006+ph);
+            x.strokeStyle=c;x.lineWidth=2.3*sc;x.lineCap='round';
+            x.beginPath();x.moveTo(px-7*sc,gy-1.5*sc+wig*1.1*sc);
+            x.quadraticCurveTo(px,gy-2.8*sc,px+6*sc,gy-1.7*sc);x.stroke();
+            x.lineWidth=1*sc;
+            x.beginPath();x.moveTo(px-7*sc,gy-1.5*sc);
+            x.quadraticCurveTo(px-12*sc,gy-1*sc+wig*2*sc,px-15.5*sc,gy-2.8*sc+wig*3*sc);x.stroke();
+            x.fillStyle=c;x.beginPath();x.arc(px+7.2*sc,gy-2.1*sc,1.9*sc,0,7);x.fill();
+            x.strokeStyle=c;x.lineWidth=0.9*sc;
+            [-4,3].forEach(function(o){
+              x.beginPath();x.moveTo(px+o*sc,gy-1.7*sc);x.lineTo(px+(o-2.2)*sc,gy);x.stroke();
+              x.beginPath();x.moveTo(px+o*sc,gy-1.7*sc);x.lineTo(px+(o+2.2)*sc,gy);x.stroke();
+            });
+            x.lineCap='butt';
+          }
+          function beetle(px,gy,sc,a,t,ph){
+            var c='rgba(138,168,40,'+a+')', cr=Math.sin(t*0.005+ph)*0.7*sc;
+            x.fillStyle=c;
+            x.beginPath();x.ellipse(px+cr,gy-2.3*sc,3.2*sc,2.2*sc,0,0,7);x.fill();
+            x.strokeStyle='rgba(6,7,10,'+(a*0.85)+')';x.lineWidth=0.7*sc;
+            x.beginPath();x.moveTo(px+cr,gy-4.4*sc);x.lineTo(px+cr,gy-0.2*sc);x.stroke();
+            x.strokeStyle=c;x.lineWidth=0.8*sc;
+            for(var i=-1;i<=1;i++){
+              x.beginPath();x.moveTo(px+cr+i*1.6*sc,gy-2.7*sc);x.lineTo(px+cr+i*1.6*sc-2.3*sc,gy);x.stroke();
+              x.beginPath();x.moveTo(px+cr+i*1.6*sc,gy-2.7*sc);x.lineTo(px+cr+i*1.6*sc+2.3*sc,gy);x.stroke();
+            }
+            x.beginPath();x.moveTo(px+cr+2.7*sc,gy-3.6*sc);x.lineTo(px+cr+4.8*sc,gy-5.2*sc);x.stroke();
+          }
+          function butterfly(px,py,sc,a,t,ph){
+            var fl=Math.abs(Math.sin(t*0.011+ph)), wsp=0.32+fl*0.78;
+            x.fillStyle='rgba(178,209,53,'+(a*0.9)+')';
+            x.beginPath();x.ellipse(px-2.7*sc*wsp,py-1*sc,2.7*sc*wsp,2*sc,-0.5,0,7);x.fill();
+            x.beginPath();x.ellipse(px+2.7*sc*wsp,py-1*sc,2.7*sc*wsp,2*sc,0.5,0,7);x.fill();
+            x.fillStyle='rgba(210,232,138,'+(a*0.65)+')';
+            x.beginPath();x.ellipse(px-2.2*sc*wsp,py+1.7*sc,1.8*sc*wsp,1.4*sc,-0.3,0,7);x.fill();
+            x.beginPath();x.ellipse(px+2.2*sc*wsp,py+1.7*sc,1.8*sc*wsp,1.4*sc,0.3,0,7);x.fill();
+            x.strokeStyle='rgba(249,250,251,'+(a*0.85)+')';x.lineWidth=0.9*sc;
+            x.beginPath();x.moveTo(px,py-2.5*sc);x.lineTo(px,py+2.7*sc);x.stroke();
+          }
+          function flyBird(px,py,sc,a,t,ph){
+            var fl=Math.sin(t*0.009+ph), up=fl*3.4*sc;
+            var c='rgba(249,250,251,'+a+')';
+            x.strokeStyle=c;x.lineWidth=1.5*sc;x.lineCap='round';
+            x.beginPath();x.moveTo(px-8.5*sc,py+up*0.55);
+            x.quadraticCurveTo(px-4*sc,py-up,px,py);
+            x.quadraticCurveTo(px+4*sc,py-up,px+8.5*sc,py+up*0.55);x.stroke();
+            x.fillStyle=c;
+            x.beginPath();x.ellipse(px,py+0.7*sc,2.5*sc,1.3*sc,0,0,7);x.fill();
+            x.beginPath();x.moveTo(px+2.3*sc,py+0.4*sc);x.lineTo(px+4.6*sc,py+0.2*sc);
+            x.lineTo(px+2.3*sc,py+1.5*sc);x.closePath();x.fill();
+            x.lineCap='butt';
+          }
+          function perchBird(px,py,sc,a,t,ph){
+            var c='rgba(249,250,251,'+a+')', bob=Math.sin(t*0.0022+ph)*0.9*sc;
+            x.fillStyle=c;
+            x.beginPath();x.ellipse(px,py+bob,3.4*sc,2.4*sc,-0.25,0,7);x.fill();
+            x.beginPath();x.arc(px+3*sc,py-2.4*sc+bob,1.9*sc,0,7);x.fill();
+            x.beginPath();x.moveTo(px+4.6*sc,py-2.6*sc+bob);x.lineTo(px+6.6*sc,py-2*sc+bob);
+            x.lineTo(px+4.6*sc,py-1.6*sc+bob);x.closePath();x.fill();
+            x.strokeStyle=c;x.lineWidth=1*sc;
+            x.beginPath();x.moveTo(px-3*sc,py+1*sc+bob);x.lineTo(px-6.5*sc,py+2.6*sc+bob);x.stroke();
+            x.beginPath();x.moveTo(px-0.5*sc,py+2.4*sc+bob);x.lineTo(px-0.5*sc,py+4.4*sc+bob);x.stroke();
+          }
+          var sand=[];
+          for(var si=0;si<90;si++) sand.push({x:Math.random(),y:Math.random(),v:.5+Math.random()});
+
+          function tree(w,h,gy,t,T,g,neb){
+            var px=T.fx*w, sc=g*T.sc;
+            var th=h*0.30*sc, cr=h*0.115*sc;
+            if(neb>0.02){
+              var nw=cr*1.9*neb, nh=h*0.045*neb*T.sc;
+              x.fillStyle='rgba(60,66,74,'+(0.55*neb)+')';
+              x.beginPath();x.moveTo(px-nw,gy);
+              x.quadraticCurveTo(px,gy-nh*2.1,px+nw,gy);x.closePath();x.fill();
+            }
+            x.strokeStyle=C.elm;x.lineWidth=Math.max(1.1,2.4*sc);
+            x.beginPath();x.moveTo(px,gy);x.lineTo(px,gy-th);x.stroke();
+            var sw=Math.sin(t*0.0011+T.ph)*2.2*sc;
+            x.fillStyle='rgba(210,232,138,'+(0.14+0.16*g)+')';
+            x.strokeStyle=C.elm;x.lineWidth=1.5;
+            x.beginPath();x.ellipse(px+sw,gy-th-cr*0.55,cr,cr*0.88,0,0,7);x.fill();x.stroke();
+            return {px:px,gy:gy,th:th,cr:cr};
+          }
+
+          function roots(w,h,gy,T,g,rt){
+            if(rt<0.02) return;
+            var px=T.fx*w, d=h*0.26*rt*T.sc;
+            x.strokeStyle='rgba(210,232,138,'+(0.42*rt)+')';x.lineWidth=1.2;
+            [-1,0,1].forEach(function(k){
+              x.beginPath();x.moveTo(px,gy);
+              x.quadraticCurveTo(px+k*22*rt,gy+d*0.55,px+k*36*rt,gy+d);x.stroke();
+            });
+          }
+
+          function draw(now){
+            var r=cv.getBoundingClientRect();
+            var dpr=window.devicePixelRatio||1;
+            if(cv.width!==Math.round(r.width*dpr)){
+              cv.width=r.width*dpr;cv.height=r.height*dpr;
+              x.setTransform(dpr,0,0,dpr,0,0);
+            }
+            var w=r.width,h=r.height,t=now;
+            if(auto && now-lastSwitch>7000){ target=(target+1)%4; lastSwitch=now; sync(); }
+            sp+=(target-sp)*0.045;
+
+            var g=0.16+0.84*ease(cl(sp/3,0,1));
+            var neb=cl(sp-0.55,0,1), rt=cl(sp-1.5,0,1), gw=cl(sp-1.65,0,1);
+            var beeA=cl(sp-0.65,0,1), rodA=cl(sp-1.75,0,1);
+            var bigA=cl(sp-2.35,0,1), cyc=cl(sp-2.55,0,1);
+            var windA=Math.max(0,1-Math.abs(sp-1)*1.15);
+            var irr=Math.max(0,1-sp*0.85);
+            var gy=h*0.60;
+
+            x.clearRect(0,0,w,h);
+            var sky=x.createLinearGradient(0,0,0,gy);
+            sky.addColorStop(0,'rgba(12,14,18,1)');
+            sky.addColorStop(1,'rgba(20,23,28,'+(0.6+0.3*(1-g))+')');
+            x.fillStyle=sky;x.fillRect(0,0,w,gy);
+            x.fillStyle='rgba(16,19,24,1)';x.fillRect(0,gy,w,h-gy);
+
+            if(gw>0.02){
+              var wy=gy+h*0.30;
+              x.fillStyle='rgba(110,118,129,'+(0.20*gw)+')';
+              x.fillRect(0,wy,w,h-wy);
+              x.strokeStyle='rgba(110,118,129,'+(0.7*gw)+')';x.lineWidth=1.2;
+              x.beginPath();
+              for(var i=0;i<=w;i+=5){var y=wy+Math.sin(i*0.03+t*0.0016)*2.4;i?x.lineTo(i,y):x.moveTo(i,y);}
+              x.stroke();
+              for(var wi=0;wi<5;wi++){
+                var ax=w*(0.18+wi*0.17), ph=((t*0.05+wi*80)%120)/120;
+                x.strokeStyle='rgba(110,118,129,'+(0.5*gw*(1-ph))+')';x.lineWidth=1;
+                x.beginPath();x.moveTo(ax,wy-ph*h*0.22);x.lineTo(ax,wy-ph*h*0.22-7);x.stroke();
+              }
+              x.font='9px Urbanist, sans-serif';
+              x.fillStyle='rgba(110,118,129,'+(0.9*gw)+')';
+              x.fillText('GROUNDWATER',10,wy+14);
+            }
+
+            if(irr>0.02){
+              x.strokeStyle='rgba(214,222,228,'+(0.5*irr)+')';x.lineWidth=1.1;
+              for(var li=0;li<6;li++){
+                var ly=gy+6+li*3.5, off=(t*0.02+li*30)%w;
+                x.setLineDash([12,26]);x.lineDashOffset=-off;
+                x.beginPath();x.moveTo(0,ly);x.lineTo(w,ly);x.stroke();
+              }
+              x.setLineDash([]);
+              x.font='9px Urbanist, sans-serif';
+              x.fillStyle='rgba(214,222,228,'+(0.85*irr)+')';
+              x.fillText('DRIP IRRIGATION',10,gy+h*0.20);
+            }
+
+            x.strokeStyle='rgba(60,66,74,.85)';x.lineWidth=1.4;
+            x.beginPath();x.moveTo(0,gy);x.lineTo(w,gy);x.stroke();
+
+            TREES.forEach(function(T){roots(w,h,gy,T,g,rt);});
+            var nodes=TREES.map(function(T){return tree(w,h,gy,t,T,g,neb);});
+
+            if(windA>0.02){
+              sand.forEach(function(p){
+                p.x+=0.0022*p.v; if(p.x>1.05)p.x-=1.15;
+                var px=p.x*w, py=gy-h*0.34*p.y-4;
+                var near=nodes.some(function(n){return Math.abs(px-n.px)<n.cr*1.5&&py>n.gy-n.th-n.cr*1.6;});
+                x.fillStyle='rgba(150,157,165,'+(windA*(near?0.10:0.42))+')';
+                x.fillRect(px,py+Math.sin(px*0.05+t*0.004)*3,2.6,1.3);
+              });
+              x.font='9px Urbanist, sans-serif';
+              x.fillStyle='rgba(140,147,155,'+(0.9*windA)+')';
+              x.fillText('WIND · SAND TRANSPORT',10,h*0.13);
+            }
+
+            if(beeA>0.02){
+              for(var bi=0;bi<8;bi++){
+                var n=nodes[bi%nodes.length];
+                var a=t*0.0016+bi*1.4, rr=n.cr*(1.25+0.35*Math.sin(t*0.002+bi));
+                var bx=n.px+Math.cos(a)*rr, by=n.gy-n.th-n.cr*0.5+Math.sin(a*1.6)*rr*0.62;
+                x.fillStyle='rgba(178,209,53,'+(0.9*beeA)+')';
+                x.beginPath();x.arc(bx,by,1.9,0,7);x.fill();
+              }
+              x.font='9px Urbanist, sans-serif';
+              x.fillStyle='rgba(178,209,53,'+(0.9*beeA)+')';
+              x.fillText('WILD BEES',w-90,h*0.13);
+            }
+
+            if(rodA>0.02){
+              var n2=nodes[2];
+              rodent(n2.px+n2.cr*1.8+Math.sin(t*0.0009)*10,gy,1.0,0.85*rodA,t,0.4);
+              lizard(nodes[4].px-nodes[4].cr*1.5,gy,0.9,0.7*rodA,t,1.7);
+              beetle(nodes[1].px+nodes[1].cr*1.1,gy,1.0,0.75*rodA,t,2.4);
+            }
+
+            if(bigA>0.02){
+              rodent(nodes[1].px+nodes[1].cr*1.6+Math.sin(t*0.0008)*9,gy,1.0,0.8*bigA,t,0.2);
+              rodent(nodes[5].px+nodes[5].cr*1.4+Math.sin(t*0.0011+2)*8,gy,0.85,0.75*bigA,t,2.9);
+              hare(nodes[3].px+nodes[3].cr*2.0+Math.sin(t*0.0006)*14,gy,1.0,0.85*bigA,t,1.1);
+              lizard(nodes[0].px+nodes[0].cr*1.3,gy,0.95,0.7*bigA,t,0.8);
+              lizard(nodes[6].px-nodes[6].cr*1.6,gy,0.85,0.65*bigA,t,3.3);
+              beetle(nodes[2].px-nodes[2].cr*1.2,gy,1.0,0.7*bigA,t,1.5);
+              beetle(nodes[4].px+nodes[4].cr*1.3,gy,0.9,0.7*bigA,t,4.1);
+
+              for(var mi=0;mi<5;mi++){
+                var mn=nodes[mi], ma=t*0.0011+mi*1.6;
+                var mbx=mn.px+Math.cos(ma)*mn.cr*1.6, mby=mn.gy-mn.th-mn.cr*1.2+Math.sin(ma*1.3)*mn.cr*0.75;
+                butterfly(mbx,mby,1.0,0.85*bigA,t,mi*1.7);
+              }
+
+              perchBird(nodes[1].px+nodes[1].cr*0.35,nodes[1].gy-nodes[1].th-nodes[1].cr*1.05,1.0,0.85*bigA,t,0.5);
+              perchBird(nodes[5].px-nodes[5].cr*0.4,nodes[5].gy-nodes[5].th-nodes[5].cr*1.0,0.9,0.8*bigA,t,2.2);
+
+              flock.forEach(function(b,i){
+                b.p+=b.sp*(1+i*0.05)*16;
+                if(b.p>1.15) b.p-=1.3;
+                var bx=-40+b.p*(w+80);
+                var by=h*b.y+Math.sin(t*0.0009+b.ph)*h*0.035;
+                flyBird(bx,by,b.s,0.9*bigA,t,b.ph);
+              });
+
+              x.font='9px Urbanist, sans-serif';
+              x.fillStyle='rgba(249,250,251,'+(0.75*bigA)+')';
+              x.textAlign='right';
+              x.fillText('BIRDS · HARES · RODENTS · LIZARDS · INSECTS',w-12,h*0.20);
+              x.textAlign='left';
+            }
+
+            if(cyc>0.02){
+              x.strokeStyle='rgba(138,168,40,'+(0.45*cyc)+')';x.lineWidth=1.2;
+              x.setLineDash([4,5]);x.lineDashOffset=-(t*0.03)%40;
+              nodes.forEach(function(n,i){
+                if(i%2) return;
+                x.beginPath();
+                x.arc(n.px,n.gy-n.th*0.55,n.cr*1.65,-Math.PI*0.9,Math.PI*0.35);x.stroke();
+              });
+              x.setLineDash([]);
+              x.font='9px Urbanist, sans-serif';
+              x.fillStyle='rgba(138,168,40,'+(0.85*cyc)+')';
+              x.fillText('NUTRIENT CYCLING',10,h*0.13);
+            }
+
+            bar.style.width=((sp/3)*100).toFixed(1)+'%';
+            raf=requestAnimationFrame(draw);
+          }
+
+          function sync(){
+            tabs.forEach(function(b,i){b.classList.toggle('act',i===target);});
+            desc.innerHTML=TXT[target];
+          }
+          tabs.forEach(function(b,i){b.addEventListener('click',function(){
+            target=i; auto=false; lastSwitch=performance.now(); sync();
+          });});
+          sync();
+
+          function start(){ if(!raf && !reduce){ raf=requestAnimationFrame(draw); } if(reduce){ sp=0; target=0; sync(); draw(0); } }
+          function stop(){ if(raf){ cancelAnimationFrame(raf); raf=null; } }
+          return {start:start, stop:stop};
+        }
+
+        function mountGoverningPrinciples(opts){
+          var cv=document.getElementById(opts.canvasId); if(!cv) return null;
+          var x=cv.getContext('2d');
+          var items=[].slice.call(document.querySelectorAll(opts.tabsSelector));
+          var keyEl=document.getElementById(opts.keyId), readEl=document.getElementById(opts.readId),
+              capEl=document.getElementById(opts.capId), barEl=document.getElementById(opts.barId);
+          var C={teal:'#35C9B8',gold:'#b2d135',sage:'#8AA828',elm:'#9BC47F',clay:'#8C939B',
+                 red:'#FF5A36',dim:'#5A616B',mute:'#7C8CA0',ink:'#F9FAFB',line:'#223349'};
+          var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+          function F(n){return n+'px Urbanist, sans-serif';}
+          function rgba(hx,a){var n=parseInt(hx.slice(1),16); return 'rgba('+(n>>16)+','+((n>>8)&255)+','+(n&255)+','+a+')';}
+          var PAD=18;
+          var cap='';
+
+          function label(t,px,py,col,size,align){
+            x.font=F(size||9); x.fillStyle=col; x.textAlign=align||'left';
+            x.fillText(t,px,py); x.textAlign='left';
+          }
+          function arrow(x1,y1,x2,y2,col,wd){
+            x.strokeStyle=col; x.lineWidth=wd||1.2;
+            x.beginPath(); x.moveTo(x1,y1); x.lineTo(x2,y2); x.stroke();
+            var a=Math.atan2(y2-y1,x2-x1);
+            x.beginPath(); x.moveTo(x2,y2);
+            x.lineTo(x2-6*Math.cos(a-0.4),y2-6*Math.sin(a-0.4));
+            x.moveTo(x2,y2);
+            x.lineTo(x2-6*Math.cos(a+0.4),y2-6*Math.sin(a+0.4));
+            x.stroke();
+          }
+
+          function water(w,h,t){
+            var base=h-40, top=PAD+16;
+            var s=Math.sin(t*0.00048);
+            var lvl=0.35+0.32*(0.5+0.5*s);
+            var wy=base-(base-top)*lvl;
+            x.fillStyle=rgba(C.dim,.06); x.fillRect(PAD,top,w-PAD*2,wy-top);
+            label('UNAVAILABLE ZONE',PAD+6,top+11,rgba(C.dim,.85),8);
+            var n=7, span=w-PAD*2-20, gap=span/(n-1);
+            for(var i=0;i<n;i++){
+              var px=PAD+10+i*gap;
+              var jitter=Math.sin(i*1.7+t*0.0011)*4;
+              var topY=Math.min(base-6, wy+6+jitter);
+              x.strokeStyle=rgba(C.sage,.95); x.lineWidth=5; x.lineCap='round';
+              x.beginPath(); x.moveTo(px,base-3); x.lineTo(px,topY); x.stroke();
+              x.lineCap='butt';
+            }
+            x.fillStyle=rgba(C.teal,.08); x.fillRect(PAD,wy,w-PAD*2,base-wy);
+            x.strokeStyle=C.teal; x.lineWidth=2;
+            x.beginPath(); x.moveTo(PAD,wy); x.lineTo(w-PAD,wy); x.stroke();
+            label('WATER LEVEL = CEILING',w-PAD-4,wy-8,C.teal,8.5,'right');
+            x.strokeStyle=rgba(C.line,1); x.lineWidth=1;
+            x.beginPath(); x.moveTo(PAD,base); x.lineTo(w-PAD,base); x.stroke();
+            label('LIFE CAPACITY',PAD,base+14,rgba(C.mute,.9),8);
+            cap = s>0 ? 'More water means more room for life to grow'
+                      : 'Less water lowers the ceiling for every layer';
+            return 'Capacity '+Math.round(lvl*100)+'%';
+          }
+
+          function shelter(w,h,t){
+            var base=h-40, mid=w/2, flow=(t*0.06)%26;
+            x.setLineDash([5,4]); x.strokeStyle=rgba(C.line,1); x.lineWidth=1;
+            x.beginPath(); x.moveTo(mid,PAD); x.lineTo(mid,base+8); x.stroke(); x.setLineDash([]);
+            label('WITHOUT ENGINEER',PAD,PAD+8,rgba(C.mute,.9),8);
+            label('WITH ENGINEER',mid+12,PAD+8,C.elm,8);
+            x.strokeStyle=rgba(C.line,1); x.lineWidth=1;
+            x.beginPath(); x.moveTo(PAD,base); x.lineTo(w-PAD,base); x.stroke();
+
+            for(var i=0;i<4;i++){
+              var y=PAD+24+i*((base-PAD-36)/3.4);
+              x.setLineDash([14,10]); x.lineDashOffset=-flow;
+              x.strokeStyle=rgba(C.mute,.55); x.lineWidth=1.3;
+              x.beginPath(); x.moveTo(PAD,y); x.lineTo(mid-16,y); x.stroke(); x.setLineDash([]);
+              arrow(mid-22,y,mid-10,y,rgba(C.mute,.55),1.3);
+            }
+            label('WIND UNBROKEN',PAD,base+14,rgba(C.mute,.7),7.5);
+
+            var tx=mid+50, cr=Math.min(w,h)*0.12, cy=base-cr*1.5;
+            x.fillStyle=rgba(C.gold,.08);
+            x.fillRect(tx+cr*0.6,base-cr*1.5,w-PAD-(tx+cr*0.6),cr*1.5);
+            x.setLineDash([3,3]); x.strokeStyle=rgba(C.gold,.4); x.lineWidth=1;
+            x.strokeRect(tx+cr*0.6,base-cr*1.5,w-PAD-(tx+cr*0.6),cr*1.5); x.setLineDash([]);
+            label('SHELTERED ZONE',tx+cr*0.6+5,base-cr*1.5+11,C.gold,7.5);
+            for(var j=0;j<4;j++){
+              var yy=PAD+24+j*((base-PAD-36)/3.4);
+              var near=Math.max(0,1-Math.abs(yy-cy)/(cr*2.1));
+              x.setLineDash([14,10]); x.lineDashOffset=-flow;
+              x.strokeStyle=rgba(C.mute,near>0.35?.16:.55); x.lineWidth=1.3;
+              x.beginPath(); x.moveTo(mid+8,yy);
+              x.bezierCurveTo(tx-cr,yy, tx-cr*0.4,yy-near*cr*1.15, tx+cr*0.9,yy-near*cr*0.9);
+              x.lineTo(w-PAD,yy-near*cr*0.9); x.stroke(); x.setLineDash([]);
+            }
+            x.strokeStyle=C.elm; x.lineWidth=2.2;
+            x.beginPath(); x.moveTo(tx,base); x.lineTo(tx,cy+cr*0.6); x.stroke();
+            x.fillStyle=rgba(C.elm,.22); x.strokeStyle=C.elm; x.lineWidth=1.8;
+            x.beginPath(); x.ellipse(tx,cy,cr,cr*0.85,0,0,7); x.fill(); x.stroke();
+            for(var k=0;k<3;k++){
+              var sx=tx+cr*1.4+k*20, g=Math.sin(t*0.0018+k*1.4)*0.5+0.5, sh=6+g*10;
+              x.strokeStyle=rgba(C.sage,.45+g*.45); x.lineWidth=1.5;
+              x.beginPath(); x.moveTo(sx,base); x.lineTo(sx,base-sh); x.stroke();
+              x.beginPath(); x.moveTo(sx,base-sh); x.lineTo(sx+4,base-sh-4); x.stroke();
+            }
+            cap='The canopy slows the wind, creating a moist habitable zone behind it';
+            return 'Wind slowed · seedlings growing';
+          }
+
+          function windowP(w,h,t){
+            var cyc=(t%10000)/10000;
+            var x0=PAD, x1=w-PAD, bw=x1-x0, by=h*0.42, bh=26;
+            var seg=[[0,.30,rgba(C.dim,.22),'DRY'],
+                     [.30,.36,rgba(C.teal,.42),'RAIN'],
+                     [.36,.58,rgba(C.gold,.55),'FLOWERING'],
+                     [.58,1,rgba(C.dim,.22),'DRY']];
+            seg.forEach(function(sg){
+              x.fillStyle=sg[2];
+              x.fillRect(x0+bw*sg[0],by,bw*(sg[1]-sg[0]),bh);
+              x.strokeStyle=rgba(C.line,1); x.lineWidth=1;
+              x.strokeRect(x0+bw*sg[0],by,bw*(sg[1]-sg[0]),bh);
+            });
+            label('ANNUAL CYCLE',x0,by-30,rgba(C.mute,.85),8);
+            var wx1=x0+bw*.36, wx2=x0+bw*.58;
+            x.strokeStyle=rgba(C.gold,.7); x.lineWidth=1.2;
+            x.beginPath(); x.moveTo(wx1,by-8); x.lineTo(wx1,by-14);
+            x.lineTo(wx2,by-14); x.lineTo(wx2,by-8); x.stroke();
+            label('ACTIVE WINDOW · 22%',(wx1+wx2)/2,by-18,C.gold,8,'center');
+            label('DRY',x0+bw*.15,by+bh+14,rgba(C.mute,.7),7.5,'center');
+            label('RAIN',x0+bw*.33,by+bh+14,C.teal,7.5,'center');
+            label('FLOWERING',(wx1+wx2)/2,by+bh+14,C.gold,7.5,'center');
+            label('DRY',x0+bw*.79,by+bh+14,rgba(C.mute,.7),7.5,'center');
+            var px=x0+bw*cyc;
+            x.strokeStyle=C.ink; x.lineWidth=1.6;
+            x.beginPath(); x.moveTo(px,by-6); x.lineTo(px,by+bh+6); x.stroke();
+            x.fillStyle=C.ink; x.beginPath();
+            x.moveTo(px,by-6); x.lineTo(px-4,by-12); x.lineTo(px+4,by-12); x.closePath(); x.fill();
+            var phase;
+            if(cyc<.30){phase='Dry season'; cap='Plants are dormant and pollinators inactive';}
+            else if(cyc<.36){phase='Rain fell'; cap='Rainfall triggers the entire cycle';}
+            else if(cyc<.58){phase='Window open'; cap='A brief burst of flowering, pollination and seed set';}
+            else {phase='Window closed'; cap='Activity halts until the next rain';}
+            return phase;
+          }
+
+          var herd=[];
+          function link(w,h,t){
+            var cyc=(t%13000)/13000, cut=cyc>0.45;
+            var cy=h*0.48, ax=PAD+50, bx=w-PAD-50, rr=Math.min(40,h*0.18);
+            var vitB=cut?Math.max(.18,1-(cyc-0.45)*2.0):1;
+            x.strokeStyle=rgba(C.line,1); x.lineWidth=1; x.setLineDash([4,4]);
+            x.beginPath(); x.moveTo(ax+rr,cy); x.lineTo(bx-rr,cy); x.stroke(); x.setLineDash([]);
+            [[ax,1,'PASTURE A'],[bx,vitB,'PASTURE B']].forEach(function(q){
+              x.fillStyle=rgba(C.sage,.11*q[1]);
+              x.beginPath(); x.arc(q[0],cy,rr,0,7); x.fill();
+              x.strokeStyle=rgba(C.sage,.25+.45*q[1]); x.lineWidth=1.4;
+              x.beginPath(); x.arc(q[0],cy,rr,0,7); x.stroke();
+              for(var i=0;i<7;i++){
+                var a=i/7*6.28;
+                x.fillStyle=rgba(C.sage,.25*q[1]+.12);
+                x.beginPath(); x.arc(q[0]+Math.cos(a)*rr*.55,cy+Math.sin(a)*rr*.55,2,0,7); x.fill();
+              }
+              label(q[2],q[0],cy+rr+15,q[1]<.6?rgba(C.red,.9):rgba(C.mute,.9),8,'center');
+            });
+            if(vitB<.6) label('DEGRADATION',bx,cy+rr+27,rgba(C.red,.8),7.5,'center');
+            if(herd.length<7) herd.push({p:Math.random(),d:1,s:.0028+Math.random()*.002,o:(Math.random()-.5)*rr*0.9});
+            herd.forEach(function(a){
+              a.p+=a.s*a.d;
+              if(cut&&a.d>0&&a.p>0.47){a.p=0.47-Math.random()*0.04;a.d=-1;}
+              if(a.p>1){a.p=1;a.d=-1;} if(a.p<0){a.p=0;a.d=1;}
+              var px=ax+a.p*(bx-ax), py=cy+a.o;
+              x.strokeStyle=rgba(C.clay,.22); x.lineWidth=1;
+              x.beginPath(); x.moveTo(px,py); x.lineTo(px-a.d*10,py); x.stroke();
+              x.fillStyle=C.clay; x.beginPath(); x.arc(px,py,2.6,0,7); x.fill();
+            });
+            if(cut){
+              var mx=(ax+bx)/2, a2=Math.min(1,(cyc-0.45)*5);
+              var y1=cy-rr-20+(1-a2)*-24, y2=cy+rr+20;
+              x.strokeStyle=rgba(C.red,.9*a2); x.lineWidth=2.2;
+              x.beginPath(); x.moveTo(mx,y1); x.lineTo(mx,y2); x.stroke();
+              x.lineWidth=1.1;
+              for(var y=y1+5;y<y2;y+=9){x.beginPath();x.moveTo(mx-6,y);x.lineTo(mx+6,y);x.stroke();}
+              label('RAILWAY · FENCE',mx,y1-7,rgba(C.red,a2),8,'center');
+            }
+            label('MIGRATION',(ax+bx)/2,cy-rr-30,rgba(C.mute,.75),8,'center');
+            cap=cut?'A barrier cuts migration and one patch degrades'
+                   :'With free migration both patches are sustained';
+            return cut?'Connection cut':'Connection intact';
+          }
+
+          function climate(w,h,t){
+            var cyc=(t%12000)/12000, warm=cyc<0.72?cyc/0.72:1-(cyc-0.72)/0.28;
+            var top=PAD+14, bot=h-40, L=PAD+54, R2=w-PAD-48;
+            var full=(bot-top)*0.44;
+            var bh=full*(1-warm*0.52), by=top+(bot-top)*(0.48-warm*0.48);
+            x.strokeStyle=rgba(C.line,1); x.lineWidth=1;
+            x.beginPath(); x.moveTo(L-10,top); x.lineTo(L-10,bot); x.stroke();
+            label('HIGH',L-14,top+8,rgba(C.mute,.8),7.5,'right');
+            label('LOW',L-14,bot,rgba(C.mute,.8),7.5,'right');
+            var lost=Math.max(0,top-by);
+            if(lost>1){
+              x.fillStyle=rgba(C.red,.18); x.fillRect(L,top,R2-L,Math.min(lost,24));
+              x.strokeStyle=rgba(C.red,.6); x.lineWidth=1;
+              x.strokeRect(L,top,R2-L,Math.min(lost,24));
+              label('RANGE LOST',L+5,top+15,rgba(C.red,.95),7.5);
+            }
+            x.save(); x.beginPath(); x.rect(L,top+(lost>1?Math.min(lost,24)+4:0),R2-L,bot-top); x.clip();
+            x.fillStyle=rgba(C.sage,.18); x.fillRect(L,by,R2-L,bh);
+            x.strokeStyle=rgba(C.sage,.8); x.lineWidth=1.5; x.strokeRect(L,by,R2-L,bh);
+            x.restore();
+            label('SUITABLE RANGE',L+5,Math.max(by+15,top+(lost>1?42:15)),rgba(C.sage,.95),7.5);
+            if(warm>0.12) arrow(R2-22,by+bh*0.5+16,R2-22,by+bh*0.5-4,rgba(C.clay,.8),1.3);
+            var bw=10, bx=R2+16;
+            x.fillStyle=rgba(C.line,1); x.fillRect(bx,top,bw,bot-top);
+            x.fillStyle=rgba(C.clay,.9); x.fillRect(bx,bot-(bot-top)*warm,bw,(bot-top)*warm);
+            x.strokeStyle=rgba(C.line,1); x.lineWidth=1; x.strokeRect(bx,top,bw,bot-top);
+            label('WARMING',bx+bw/2,bot+15,rgba(C.clay,.9),7.5,'center');
+            var remain=Math.max(0,Math.round((bh)/full*100));
+            cap='As it warms, the suitable zone shifts upward and narrows';
+            return 'Range '+remain+'% · +'+(warm*4).toFixed(1)+'°';
+          }
+
+          var FN=[water,shelter,windowP,link,climate];
+          var KEYS=[
+            [[C.sage,'Life capacity'],[C.teal,'Water level']],
+            [[C.mute,'Wind'],[C.elm,'Engineer species'],[C.gold,'Sheltered zone']],
+            [[C.teal,'Rain'],[C.gold,'Active window'],[C.dim,'Dry season']],
+            [[C.sage,'Pasture'],[C.clay,'Migration'],[C.red,'Barrier']],
+            [[C.sage,'Suitable range'],[C.red,'Lost'],[C.clay,'Warming']]
+          ];
+          var idx=0, auto=true, last=performance.now(), t0=performance.now(), raf=null;
+          var DUR=9000;
+
+          function setKey(){
+            if(keyEl) keyEl.innerHTML=KEYS[idx].map(function(k){
+              return '<span><i style="background:'+k[0]+'"></i>'+k[1]+'</span>';
+            }).join('');
+            items.forEach(function(it,i){it.classList.toggle('act',i===idx);});
+          }
+          items.forEach(function(it,i){it.addEventListener('click',function(){
+            idx=i; auto=false; t0=performance.now(); setKey(); if(barEl) barEl.style.width='0%';
+          });});
+
+          function paint(now){
+            var r=cv.getBoundingClientRect();
+            var dpr=window.devicePixelRatio||1;
+            if(cv.width!==Math.round(r.width*dpr)){
+              cv.width=r.width*dpr; cv.height=r.height*dpr;
+              x.setTransform(dpr,0,0,dpr,0,0);
+            }
+            x.clearRect(0,0,r.width,r.height);
+            var readout=FN[idx](r.width,r.height,now-t0)||'';
+            if(readEl) readEl.textContent=readout;
+            if(capEl) capEl.textContent=cap;
+          }
+          function frame(now){
+            if(auto&&now-last>DUR){ idx=(idx+1)%FN.length; last=now; t0=now; setKey(); }
+            if(auto && barEl) barEl.style.width=Math.min(100,(now-last)/DUR*100).toFixed(1)+'%';
+            paint(now);
+            raf=requestAnimationFrame(frame);
+          }
+          setKey();
+
+          function start(){ if(!raf && !reduce){ last=performance.now(); t0=last; raf=requestAnimationFrame(frame); } if(reduce){ paint(performance.now()+4000); } }
+          function stop(){ if(raf){ cancelAnimationFrame(raf); raf=null; } }
+          return {start:start, stop:stop};
+        }
+
+        (function(){
+          var modal=document.getElementById('featModal'); if(!modal) return;
+          var sysSvg=document.getElementById('featSysSvg');
+          if(sysSvg) window.featSysHandle = mountThreeChannel('featSysSvg','featSysPan');
+          var ffCanvas=document.getElementById('featFfCanvas');
+          if(ffCanvas) window.featFfHandle = mountFundFlow('featFfCanvas');
+          var diagramWrap=document.getElementById('featModalDiagram');
+          var textWrap=document.getElementById('featModalTextWrap');
+          var ffStage=document.getElementById('featFfStage');
+
+          var FEAT={
+            hub:{diagramUnit:'hub'},
+            lab:{diagramUnit:'lab'},
+            community:{diagramUnit:'comm'},
+            fund:{title:'Where Your Payment Goes', hasFund:true, html:
+              '<p>Investment is not an abstract donation — it converts into land. Using land art to restore desertified regions reduces the number of ecological refugees displaced by drought and dzud, and the restored land supports education for local children and the conditions for them to work at home afterwards.</p>'
+              +'<div class="inv-stats">'
+              +'<div class="inv-stat"><div class="v">10,000 m²</div><span class="k">Area restored — The Hive artwork</span></div>'
+              +'<div class="inv-stat"><div class="v text-brand">120</div><span class="k">Local children in training each year</span></div>'
+              +'<div class="inv-stat"><div class="v">20</div><span class="k">Permanent local jobs created</span></div>'
+              +'<div class="inv-stat"><div class="v">1</div><span class="k">Land Art Hub building — the project core</span></div>'
+              +'</div>'},
+            summer:{title:'Summer Programme', stages:[
+              {name:'Know', ph:'Stage 01 · Weeks 1–4', out:'Output: baseline site record', items:[
+                'Desertification, safety, site survey',
+                'Soil — structure, moisture, sand movement',
+                'Water — rainfall, groundwater, evaporation',
+                'Keystone species and pollinator survey'
+              ]},
+              {name:'Build', ph:'Stage 02 · Weeks 5–8', out:'Output: 400 m² · 2,000 seedlings', items:[
+                'Nursery — from seed to seedling',
+                'The Hive geometry and cell mapping',
+                'Planting — 100 m² per group',
+                'Drip irrigation and maintenance rota'
+              ]},
+              {name:'Prove', ph:'Stage 03 · Weeks 9–12', out:'Output: data set and public opening', items:[
+                'Drone flying, aerial mapping, GPS',
+                'Survival, height and moisture measurement',
+                'Land art composition and storytelling',
+                'Graduation — for parents and district officials'
+              ]}
+            ]},
+            tiers:{title:'Investment Tiers', html:
+              '<div class="inv-tiers"><table><thead><tr><th>Tier</th><th>Amount · USD</th><th>Area</th><th>Partner benefits</th></tr></thead><tbody>'
+              +'<tr><td class="tier-n">Entry</td><td>$30</td><td>1 m² · small cell</td><td>Name engraved on the cell, NFC card</td></tr>'
+              +'<tr><td class="tier-n">Supporter</td><td>$300</td><td>10 m²</td><td>NFC card, cell location, growth report</td></tr>'
+              +'<tr><td class="tier-n">Partner</td><td>$3,000</td><td>100 m² · 1 cell</td><td>Named cell, drone documentation, annual report</td></tr>'
+              +'</tbody></table></div>'}
+          };
+
+          var cards={};
+          [].slice.call(document.querySelectorAll('.feat-click')).forEach(function(c){ cards[c.dataset.feat]=c; });
+          var titleEl=document.getElementById('featModalTitle');
+          var bodyEl=document.getElementById('featModalBody');
+          var closeBtn=document.getElementById('featModalClose');
+          var backdrop=document.getElementById('featModalBackdrop');
+          var openKey=null;
+          var summerTimer=null;
+
+          function renderSummer(stages){
+            bodyEl.innerHTML =
+              '<span class="sp-sub">3 months · 12 weeks · 120 children · 120 hours</span>'
+              +'<div class="sp-tabs" id="spTabs">'
+              +stages.map(function(s,i){return '<button class="sp-tab'+(i===0?' act':'')+'" data-stage="'+i+'"><span class="ph">'+s.ph+'</span><span class="nm">'+s.name+'</span></button>';}).join('')
+              +'</div>'
+              +'<div class="sp-desc-box" id="spDescBox"><h5 id="spDescTitle"></h5><ul id="spDescList"></ul><div class="out" id="spDescOutput"></div></div>';
+            var tabs=[].slice.call(bodyEl.querySelectorAll('.sp-tab'));
+            var stageTitleEl=document.getElementById('spDescTitle');
+            var listEl=document.getElementById('spDescList');
+            var outEl=document.getElementById('spDescOutput');
+            var boxEl=document.getElementById('spDescBox');
+            var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var current=0;
+            function render(i){
+              current=i;
+              var s=stages[i];
+              tabs.forEach(function(t){t.classList.toggle('act',+t.dataset.stage===i);});
+              boxEl.style.opacity=0;
+              setTimeout(function(){
+                stageTitleEl.textContent=s.name;
+                listEl.innerHTML=s.items.map(function(it){return '<li>'+it+'</li>';}).join('');
+                outEl.textContent=s.out;
+                boxEl.style.opacity=1;
+              },150);
+            }
+            function scheduleNext(){
+              if(summerTimer) clearTimeout(summerTimer);
+              if(reduce) return;
+              summerTimer=setTimeout(function(){ render((current+1)%stages.length); scheduleNext(); },4200);
+            }
+            tabs.forEach(function(t){
+              t.addEventListener('click',function(){ render(+t.dataset.stage); scheduleNext(); });
+            });
+            render(0);
+            scheduleNext();
+          }
+
+          function openModal(key){
+            var f=FEAT[key]; if(!f) return;
+            openKey=key;
+            if(summerTimer){ clearTimeout(summerTimer); summerTimer=null; }
+            if(window.featFfHandle) window.featFfHandle.stop();
+            Object.keys(cards).forEach(function(k){cards[k].classList.toggle('act',k===key);});
+            var isDiagram=!!f.diagramUnit;
+            modal.classList.toggle('has-diagram', isDiagram);
+            if(diagramWrap) diagramWrap.style.display = isDiagram ? '' : 'none';
+            if(textWrap) textWrap.style.display = isDiagram ? 'none' : '';
+            if(isDiagram){
+              if(window.featSysHandle){ window.featSysHandle.show(f.diagramUnit); window.featSysHandle.start(); }
+            } else {
+              if(window.featSysHandle) window.featSysHandle.stop();
+              titleEl.textContent=f.title;
+              if(f.stages) renderSummer(f.stages); else bodyEl.innerHTML=f.html;
+              if(ffStage) ffStage.style.display = f.hasFund ? 'block' : 'none';
+              if(f.hasFund && window.featFfHandle) window.featFfHandle.start();
+            }
+            modal.classList.add('show');
+            modal.setAttribute('aria-hidden','false');
+            document.body.style.overflow='hidden';
+            requestAnimationFrame(function(){ modal.classList.add('anim-in'); });
+          }
+
+          function closeModal(){
+            if(!openKey) return;
+            modal.classList.remove('anim-in');
+            document.body.style.overflow='';
+            if(window.featSysHandle) window.featSysHandle.stop();
+            if(window.featFfHandle) window.featFfHandle.stop();
+            if(summerTimer){ clearTimeout(summerTimer); summerTimer=null; }
+            setTimeout(function(){
+              modal.classList.remove('show');
+              modal.setAttribute('aria-hidden','true');
+              if(openKey) cards[openKey].classList.remove('act');
+              openKey=null;
+            },300);
+          }
+
+          Object.keys(cards).forEach(function(key){
+            var c=cards[key];
+            c.addEventListener('click',function(){ openModal(key); });
+            c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault(); openModal(key);}});
+          });
+          closeBtn.addEventListener('click',closeModal);
+          backdrop.addEventListener('click',closeModal);
+          document.addEventListener('keydown',function(e){ if(e.key==='Escape' && modal.classList.contains('show')) closeModal(); });
+        })();
+
+        (function(){
+          var svg=document.getElementById('pmap'); if(!svg) return;
+          var NS='http://www.w3.org/2000/svg';
+          var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+          var T=[
+            {r:30, m2:1000, p:30000, n:60,  cls:'t4'},
+            {r:20, m2:100,  p:3000,  n:80,  cls:'t3'},
+            {r:13, m2:10,   p:300,   n:130, cls:'t2'},
+            {r:7,  m2:1,    p:30,    n:300, cls:'t1'}
+          ];
+          var hexArea=function(r){return 2.598*r*r;};
+          var acc=0; var bands=[];
+          T.forEach(function(t){
+            var rIn=Math.sqrt(acc/Math.PI);
+            acc+=hexArea(t.r)*t.n*1.25;
+            bands.push({r:t.r,m2:t.m2,p:t.p,n:t.n,rIn:rIn,rOut:Math.sqrt(acc/Math.PI)});
+          });
+          var S=bands[bands.length-1].rOut+40;
+          svg.setAttribute('viewBox','0 0 '+(S*2).toFixed(0)+' '+(S*2).toFixed(0));
+
+          function hexD(cx,cy,r){
+            var d='';
+            for(var i=0;i<6;i++){
+              var a=Math.PI/180*(60*i-90);
+              d+=(i?'L':'M')+(cx+r*0.94*Math.cos(a)).toFixed(1)+' '+(cy+r*0.94*Math.sin(a)).toFixed(1);
+            }
+            return d+'Z';
+          }
+          function pick(b){
+            var dx=b.r*Math.sqrt(3), dy=b.r*1.5;
+            var rOut=b.rOut, pool=[];
+            for(var k=0;k<40;k++){
+              pool=[];
+              var reach=Math.ceil((rOut+b.r*2)/Math.min(dx,dy))+2;
+              for(var row=-reach;row<=reach;row++)for(var col=-reach;col<=reach;col++){
+                var cx=S+dx*col+(row&1?dx/2:0), cy=S+dy*row;
+                var d=Math.hypot(cx-S,cy-S);
+                if(d>=b.rIn+b.r*0.35 && d<=rOut-b.r*0.15) pool.push({cx:cx,cy:cy,d:d});
+              }
+              if(pool.length>=b.n) break;
+              rOut*=1.05;
+            }
+            pool.sort(function(a,z){return a.d-z.d;});
+            return pool.slice(0,b.n);
+          }
+
+          var cells=[]; var id=0;
+          bands.forEach(function(b,bi){
+            var sel=pick(b);
+            var far=sel.length?Math.max.apply(null,sel.map(function(q){return q.d;})):b.rOut;
+            if(bands[bi+1]) bands[bi+1].rIn=Math.max(bands[bi+1].rIn, far+b.r*0.55);
+            sel.forEach(function(q){
+              var el=document.createElementNS(NS,'path');
+              el.setAttribute('d',hexD(q.cx,q.cy,b.r));
+              el.setAttribute('class','cell');
+              el.dataset.i=id;
+              var ti=document.createElementNS(NS,'title');
+              ti.textContent=b.m2+' m² · $'+b.p.toLocaleString('en-US');
+              el.appendChild(ti);
+              svg.appendChild(el);
+              cells.push({el:el,ti:ti,cx:q.cx,cy:q.cy,r:b.r,m2:b.m2,p:b.p,sel:false,name:null,txt:null});
+              id++;
+            });
+          });
+
+          var el={c:document.getElementById('pCells'),a:document.getElementById('pArea'),
+                    s:document.getElementById('pShare'),p:document.getElementById('pPrice'),
+                    info:document.getElementById('pInfo')};
+          var nameIn=document.getElementById('pName');
+          var fmt=function(n){return Math.round(n).toLocaleString('en-US');};
+          var TOTAL_M2=cells.reduce(function(a,c){return a+c.m2;},0);
+          var baseInfo='Click cells to select, enter a name and press Engrave · total '+cells.length+
+            ' cells = '+fmt(TOTAL_M2)+' m² = $'+fmt(cells.reduce(function(a,c){return a+c.p;},0))+
+            ' · small cells are shown enlarged for legibility';
+          el.info.textContent=baseInfo;
+
+          function tier(n,m2){
+            if(!n) return '—';
+            if(m2<=10) return 'Entry';
+            if(m2<=100) return 'Supporter';
+            if(m2<=1000) return 'Partner';
+            return 'Lead partner';
+          }
+          function update(){
+            var sel=cells.filter(function(c){return c.sel;});
+            var m2=sel.reduce(function(a,c){return a+c.m2;},0), pr=sel.reduce(function(a,c){return a+c.p;},0);
+            el.c.textContent=sel.length;
+            el.a.textContent=fmt(m2);
+            el.s.textContent=(m2/TOTAL_M2*100).toFixed(m2/TOTAL_M2*100<10?1:0)+'%';
+            el.p.textContent='$'+fmt(pr);
+            el.info.innerHTML=sel.length
+              ? 'Tier: <b>'+tier(sel.length,m2)+'</b> · '+sel.length+' cells · '+fmt(m2)+' m² · $'+fmt(pr)
+              : baseInfo;
+          }
+
+          svg.addEventListener('click',function(e){
+            var t=e.target.closest('.cell'); if(!t) return;
+            var c=cells[+t.dataset.i];
+            c.sel=!c.sel; t.classList.toggle('sel',c.sel);
+            update();
+          });
+
+          function engrave(c,name){
+            c.name=name;
+            c.el.classList.remove('sel'); c.el.classList.add('sold');
+            c.ti.textContent=name+' · '+c.m2+' m² · $'+c.p.toLocaleString('en-US');
+            if(c.txt){c.txt.remove();c.txt=null;}
+            if(c.r>=13){
+              var max=c.r>=30?11:(c.r>=20?8:5);
+              var show=name.length>max?name.slice(0,max-1)+'…':name;
+              var t=document.createElementNS(NS,'text');
+              t.setAttribute('class','nm'); t.setAttribute('x',c.cx); t.setAttribute('y',c.cy);
+              t.setAttribute('font-size',(c.r*0.30).toFixed(1));
+              t.textContent=show;
+              svg.appendChild(t); c.txt=t;
+            }
+            c.sel=false;
+          }
+
+          var applyBtn = document.getElementById('pApply');
+          if (applyBtn) applyBtn.addEventListener('click',function(){
+            var nm=(nameIn.value||'').trim().toUpperCase();
+            var sel=cells.filter(function(c){return c.sel;});
+            if(!nm||!sel.length){
+              el.info.innerHTML='<b>Select cells and enter a name</b>';
+              setTimeout(update,1800); return;
+            }
+            sel.forEach(function(c,i){setTimeout(function(){engrave(c,nm);update();}, reduce?0:i*45);});
+            nameIn.value='';
+          });
+
+          var clearBtn = document.getElementById('pClear');
+          if (clearBtn) clearBtn.addEventListener('click',function(){
+            cells.forEach(function(c){
+              c.sel=false; c.name=null;
+              c.el.classList.remove('sel','sold');
+              c.ti.textContent=c.m2+' m² · $'+c.p.toLocaleString('en-US');
+              if(c.txt){c.txt.remove();c.txt=null;}
+            });
+            update();
+          });
+
+          update();
+        })();
 </script>
 
 </body>

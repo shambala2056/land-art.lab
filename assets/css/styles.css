@@ -36,7 +36,7 @@
   --black: #000000;
   --primary: #09090B;
   --secondary: #71717A;
-  --brand: #FD3A25;
+  --brand: #b2d135;
   --neutral-50: #FAFAFA;
   --neutral-100: #F4F4F5;
   --neutral-200: #E4E4E7;
@@ -52,7 +52,7 @@
 }
 
 [data-color-primary=color-primary-1] {
-  --brand: #FD3A25;
+  --brand: #b2d135;
 }
 
 [data-color-primary=color-primary-2] {
@@ -4706,8 +4706,8 @@ button.animate-btn::after,
   width: 255px;
   height: 80px;
   border-radius: 999px;
-  background: linear-gradient(180deg, #EA2B16 0%, #FF3B26 100%);
-  box-shadow: 0px 3.44px 5.57px 0px rgba(0, 0, 0, 0.0862745098), 0px 22.91px 37.08px 0px rgba(255, 59, 0, 0.1647058824), 0px 76px 123px 0px rgba(255, 59, 0, 0.0509803922), 0px 5.05px 8.18px 0px rgba(255, 59, 0, 0.1019607843), 0px 16.98px 27.47px 0px rgba(255, 59, 0, 0.0470588235), 0px 56px 83px 0px rgba(255, 59, 0, 0.2509803922), 0px 14px 34px 0px rgba(255, 59, 0, 0.2509803922), 0px 1px 2px 0px rgba(255, 59, 0, 0.4);
+  background: linear-gradient(180deg, #8bae22 0%, #b2d135 100%);
+  box-shadow: 0px 3.44px 5.57px 0px rgba(0, 0, 0, 0.0862745098), 0px 22.91px 37.08px 0px rgba(178, 209, 53, 0.1647058824), 0px 76px 123px 0px rgba(178, 209, 53, 0.0509803922), 0px 5.05px 8.18px 0px rgba(178, 209, 53, 0.1019607843), 0px 16.98px 27.47px 0px rgba(178, 209, 53, 0.0470588235), 0px 56px 83px 0px rgba(178, 209, 53, 0.2509803922), 0px 14px 34px 0px rgba(178, 209, 53, 0.2509803922), 0px 1px 2px 0px rgba(178, 209, 53, 0.4);
 }
 .section-hero .content-wrap .title-icon .title-icon-wrap {
   position: absolute;
@@ -5095,9 +5095,11 @@ button.animate-btn::after,
 }
 
 .services-image {
+  width: 416px;
   max-width: 416px;
   height: 240px;
   position: absolute;
+  right: 0;
   bottom: 0;
 }
 .services-image img {
@@ -5321,8 +5323,8 @@ button.animate-btn::after,
   font-size: 32px;
   color: var(--white);
   border-radius: 16px;
-  background: linear-gradient(180deg, #EA2B16 0%, #FF3B26 100%);
-  box-shadow: 0px 3.44px 5.57px 0px rgba(0, 0, 0, 0.0862745098), 0px 22.91px 37.08px 0px rgba(255, 59, 0, 0.1647058824), 0px 76px 123px 0px rgba(255, 59, 0, 0.0509803922), 0px 5.05px 8.18px 0px rgba(255, 59, 0, 0.1019607843), 0px 16.98px 27.47px 0px rgba(255, 59, 0, 0.0470588235), 0px 56px 83px 0px rgba(255, 59, 0, 0.2509803922), 0px 14px 34px 0px rgba(255, 59, 0, 0.2509803922), 0px 1px 2px 0px rgba(255, 59, 0, 0.4), 0px -3px 0px 0px rgba(0, 0, 0, 0.0588235294) inset, 0px 1px 0px 0px rgba(255, 255, 255, 0.6) inset;
+  background: linear-gradient(180deg, #8bae22 0%, #b2d135 100%);
+  box-shadow: 0px 3.44px 5.57px 0px rgba(0, 0, 0, 0.0862745098), 0px 22.91px 37.08px 0px rgba(178, 209, 53, 0.1647058824), 0px 76px 123px 0px rgba(178, 209, 53, 0.0509803922), 0px 5.05px 8.18px 0px rgba(178, 209, 53, 0.1019607843), 0px 16.98px 27.47px 0px rgba(178, 209, 53, 0.0470588235), 0px 56px 83px 0px rgba(178, 209, 53, 0.2509803922), 0px 14px 34px 0px rgba(178, 209, 53, 0.2509803922), 0px 1px 2px 0px rgba(178, 209, 53, 0.4), 0px -3px 0px 0px rgba(0, 0, 0, 0.0588235294) inset, 0px 1px 0px 0px rgba(255, 255, 255, 0.6) inset;
   margin-bottom: 96px;
 }
 .process-card .content {
@@ -7813,7 +7815,7 @@ button.animate-btn::after,
   bottom: 0;
   width: 0;
   background-color: var(--brand);
-  box-shadow: 0px 2px 12px 0px #FD3A25;
+  box-shadow: 0px 2px 12px 0px #b2d135;
   animation: progressbar 2s infinite;
 }
 
@@ -8449,7 +8451,7 @@ button.animate-btn::after,
   position: relative;
 }
 .settings-color .choose-item:nth-child(1) {
-  background: #FD3A25;
+  background: #b2d135;
 }
 .settings-color .choose-item:nth-child(2) {
   background: #f8c736;
@@ -8724,8 +8726,8 @@ button.animate-btn::after,
   width: 208px;
   height: 160px;
   border-radius: 32px;
-  background: linear-gradient(180deg, #EA2B16 0%, #FF3B26 100%), radial-gradient(62.56% 62.56% at 28.14% -10.42%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
-  box-shadow: 0px -3px 0px 0px rgba(0, 0, 0, 0.0588235294) inset, 0px 1px 0px 0px rgba(255, 255, 255, 0.6) inset, 0px 3.44px 5.57px 0px rgba(0, 0, 0, 0.0862745098), 0px 22.91px 37.08px 0px rgba(255, 59, 0, 0.1647058824), 0px 76px 123px 0px rgba(255, 59, 0, 0.0509803922), 0px 5.05px 8.18px 0px rgba(255, 59, 0, 0.1019607843), 0px 16.98px 27.47px 0px rgba(255, 59, 0, 0.0470588235), 0px 56px 83px 0px rgba(255, 59, 0, 0.2509803922), 0px 14px 34px 0px rgba(255, 59, 0, 0.2509803922), 0px 1px 2px 0px rgba(255, 59, 0, 0.4);
+  background: linear-gradient(180deg, #8bae22 0%, #b2d135 100%), radial-gradient(62.56% 62.56% at 28.14% -10.42%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+  box-shadow: 0px -3px 0px 0px rgba(0, 0, 0, 0.0588235294) inset, 0px 1px 0px 0px rgba(255, 255, 255, 0.6) inset, 0px 3.44px 5.57px 0px rgba(0, 0, 0, 0.0862745098), 0px 22.91px 37.08px 0px rgba(178, 209, 53, 0.1647058824), 0px 76px 123px 0px rgba(178, 209, 53, 0.0509803922), 0px 5.05px 8.18px 0px rgba(178, 209, 53, 0.1019607843), 0px 16.98px 27.47px 0px rgba(178, 209, 53, 0.0470588235), 0px 56px 83px 0px rgba(178, 209, 53, 0.2509803922), 0px 14px 34px 0px rgba(178, 209, 53, 0.2509803922), 0px 1px 2px 0px rgba(178, 209, 53, 0.4);
 }
 
 .team-item {
@@ -9002,8 +9004,8 @@ button.animate-btn::after,
   transition: 0.2s;
 }
 .tf-switch-check:checked {
-  background: linear-gradient(180deg, #EA2B16 0%, #FF3B26 100%);
-  box-shadow: 0px 3.44px 5.57px 0px rgba(0, 0, 0, 0.0862745098), 0px 22.91px 37.08px 0px rgba(255, 59, 0, 0.1647058824), 0px 76px 123px 0px rgba(255, 59, 0, 0.0509803922), 0px 5.05px 8.18px 0px rgba(255, 59, 0, 0.1019607843), 0px 16.98px 27.47px 0px rgba(255, 59, 0, 0.0470588235), 0px 56px 83px 0px rgba(255, 59, 0, 0.2509803922), 0px 14px 34px 0px rgba(255, 59, 0, 0.2509803922), 0px 1px 2px 0px rgba(255, 59, 0, 0.4);
+  background: linear-gradient(180deg, #8bae22 0%, #b2d135 100%);
+  box-shadow: 0px 3.44px 5.57px 0px rgba(0, 0, 0, 0.0862745098), 0px 22.91px 37.08px 0px rgba(178, 209, 53, 0.1647058824), 0px 76px 123px 0px rgba(178, 209, 53, 0.0509803922), 0px 5.05px 8.18px 0px rgba(178, 209, 53, 0.1019607843), 0px 16.98px 27.47px 0px rgba(178, 209, 53, 0.0470588235), 0px 56px 83px 0px rgba(178, 209, 53, 0.2509803922), 0px 14px 34px 0px rgba(178, 209, 53, 0.2509803922), 0px 1px 2px 0px rgba(178, 209, 53, 0.4);
 }
 .tf-switch-check:checked::before {
   left: 88px;
