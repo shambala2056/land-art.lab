@@ -72,9 +72,17 @@
         .site-logo-img { height: 34px; width: auto; display: block; }
         .site-logo-img.footer { height: 44px; }
         .hero-logo-standalone { height: 190px; width: auto; display: block; margin: 0 auto; }
-        /* Land art poster images are portrait (5315x7087 ≈ 3:4) — old cards assumed landscape */
+        /* Land art poster images are portrait (5315x7087 ≈ 3:4) — old cards assumed landscape.
+           Full-width made them enormous, so lay out as a 2-column grid of smaller cards instead. */
         .featured-works-item .image { aspect-ratio: 3 / 4; }
         .featured-works-item .image img { object-fit: contain; background: #09111C; }
+        .featured-works-list { grid-template-columns: repeat(2, 1fr); }
+        .featured-works-item .content { padding: 24px 24px 16px; }
+        .featured-works-item .content .bot { flex-direction: column; gap: 12px; }
+        .featured-works-item .content .bot .heading { width: 100%; font-size: 20px; }
+        .featured-works-item .content .grid-text { width: 100%; flex-direction: column; gap: 10px; }
+        .featured-works-item .content .grid-text .item { width: 100% !important; }
+        @media (max-width: 767px) { .featured-works-list { grid-template-columns: 1fr; } }
         @media (max-width: 991px) { .hero-logo-standalone { height: 120px; } }
         @media (max-width: 767px) { .hero-logo-standalone { height: 78px; } }
         .features-center-logo { width: 76%; height: auto; object-fit: contain; }
@@ -402,6 +410,9 @@
                                 <li class="sub-menu-item">
                                     <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalMongolz">MONGOLZ#1</a>
                                 </li>
+                                <li class="sub-menu-item">
+                                    <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalHexagon">HEXAGON</a>
+                                </li>
                             </ul>
                         </li>
                         <li class="menu-item">
@@ -456,7 +467,7 @@
                     <div class="col-12">
                         <div class="heading-section">
                             <div class="heading-sub fw-semibold effectFade fadeUp">About Us</div>
-                            <div class="heading-title text-gradient-2 effectFade fadeRotateX">Human-Centered AI, <br> Built for Production</div>
+                            <div class="heading-title text-gradient-2 effectFade fadeRotateX">HEXAGON — The Hive of<br>those who stay.</div>
                         </div>
                     </div>
                     <div class="col-xxl-7 col-lg-6 lg-mb-24">
@@ -466,7 +477,7 @@
                                     <span class="dot"></span>
                                     Available for worldwide project
                                 </div>
-                                <h5 class="title fw-semibold text-white">Based in <span class="text-brand">Montréal, Canada</span></h5>
+                                <h5 class="title fw-semibold text-white">Based in <span class="text-brand">Dornogovi, Mongolia</span></h5>
                                 <a href="#contact" class="tf-btn">
                                     Start a Project
                                 </a>
@@ -782,6 +793,7 @@
                                         <span class="active"></span>
                                         <span></span>
                                         <span></span>
+                                        <span></span>
                                     </div>
                                     <div class="bot">
                                         <h4 class="heading fw-semibold">BE HUMAN <br> Land Art</h4>
@@ -816,6 +828,7 @@
                                     <div class="pagi-dot">
                                         <span></span>
                                         <span class="active"></span>
+                                        <span></span>
                                         <span></span>
                                     </div>
                                     <div class="bot">
@@ -852,6 +865,7 @@
                                         <span></span>
                                         <span></span>
                                         <span class="active"></span>
+                                        <span></span>
                                     </div>
                                     <div class="bot">
                                         <h4 class="heading fw-semibold">Mongolz #1 <br> Land Art</h4>
@@ -867,6 +881,42 @@
                                             <div class="item">
                                                 <div class="title text-secondary">STATUS</div>
                                                 <div class="fw-semibold text-body-3">Active — In progress</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="featured-works-item ">
+                                <div class="image main-mouse-hover">
+                                    <img src="assets/images/section/featured-works-poster-hexagon.jpg" alt="HEXAGON land art aerial view">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalHexagon" class="tf-mouse view-project h6">
+                                        View Project
+                                        <i class="icon icon-arrow-top-right"></i>
+                                    </a>
+                                </div>
+                                <div class="content">
+                                    <div class="pagi-dot">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span class="active"></span>
+                                    </div>
+                                    <div class="bot">
+                                        <h4 class="heading fw-semibold">HEXAGON <br> Land Art</h4>
+                                        <div class="grid-text">
+                                            <div class="item">
+                                                <div class="title text-secondary">DESCRIPTION</div>
+                                                <div class="text-body-3 fw-semibold">A cluster of hexagonal cells echoing the Hive itself — restoration built one parcel at a time.</div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="title text-secondary">SCALE</div>
+                                                <div class="fw-semibold text-body-3">27,000 trees across <br> 30,000 m²</div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="title text-secondary">STATUS</div>
+                                                <div class="fw-semibold text-body-3">Planned — 2026</div>
                                             </div>
                                         </div>
                                     </div>
@@ -1616,6 +1666,7 @@
                                                 <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalBeHuman">BE HUMAN</a></li>
                                                 <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalArtNTech">ATE</a></li>
                                                 <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalMongolz">MONGOLZ#1</a></li>
+                                                <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalHexagon">HEXAGON</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -1769,6 +1820,41 @@
                                     <div class="item">
                                         <div class="title text-secondary">STATUS</div>
                                         <div class="fw-semibold text-body-3">Active — In progress</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade modalCentered" id="modalHexagon" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <span class="icon-close-popup" data-bs-dismiss="modal">
+                    <i class="icon-times-solid"></i>
+                </span>
+                <div class="modal-body">
+                    <div class="featured-works-item">
+                        <div class="image">
+                            <img src="assets/images/section/featured-works-poster-hexagon.jpg" alt="HEXAGON land art aerial view">
+                        </div>
+                        <div class="content">
+                            <div class="bot">
+                                <h4 class="heading fw-semibold">HEXAGON <br> Land Art</h4>
+                                <div class="grid-text">
+                                    <div class="item">
+                                        <div class="title text-secondary">DESCRIPTION</div>
+                                        <div class="text-body-3 fw-semibold">A cluster of hexagonal cells echoing the Hive itself — restoration built one parcel at a time.</div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="title text-secondary">SCALE</div>
+                                        <div class="fw-semibold text-body-3">27,000 trees across <br> 30,000 m²</div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="title text-secondary">STATUS</div>
+                                        <div class="fw-semibold text-body-3">Planned — 2026</div>
                                     </div>
                                 </div>
                             </div>
