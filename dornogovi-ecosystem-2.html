@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дорноговь — Экосистемийн бүтэц | Ecosystem Structure Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#050A12; --deep:#09111C; --layer:#0D1826; --line:#16232F; --line2:#1F3040;
+  --teal:#35C9B8; --gold:#D9A441; --sage:#7FA86B; --clay:#B8763F; --violet:#7268C4;
+  --ink:#E6EDF3; --mute:#8296AB; --dim:#4B5D71;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--ink);font-family:'Montserrat',sans-serif;
+  font-weight:300;line-height:1.68;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:var(--teal);color:var(--void)}
+#field{position:fixed;inset:0;z-index:0;opacity:.34}
+.wrap{position:relative;z-index:2}
+
+/* ---- meta bar ---- */
+.metabar{position:fixed;top:0;left:0;right:0;z-index:20;background:rgba(5,10,18,.88);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  padding:.75rem clamp(1.2rem,5vw,3.4rem);
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim)}
+.metabar b{color:var(--ink);font-weight:500}
+.metabar .r{display:flex;gap:1.6rem}
+@media(max-width:720px){.metabar .r span:nth-child(2){display:none}}
+
+/* ---- type ---- */
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.64rem;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--teal);display:flex;align-items:center;
+  gap:.9rem;margin-bottom:1.3rem}
+.eyebrow i{display:block;width:26px;height:1px;background:var(--teal);flex:none}
+h1{font-size:clamp(2.3rem,7.4vw,5.9rem);font-weight:900;line-height:.94;
+  letter-spacing:-.032em;text-transform:uppercase}
+h2{font-size:clamp(1.55rem,3.6vw,2.7rem);font-weight:700;line-height:1.08;
+  letter-spacing:-.018em;text-transform:uppercase;margin-bottom:.5rem}
+.h2en{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:1.5rem;display:block}
+h3{font-size:.98rem;font-weight:600;letter-spacing:.03em}
+p{color:var(--mute);font-size:.97rem;max-width:64ch}
+strong{color:var(--ink);font-weight:500}
+.lede{font-size:clamp(.98rem,1.6vw,1.16rem);color:#A3B4C6;max-width:58ch;font-weight:300}
+section{padding:clamp(4.4rem,10vh,7.6rem) clamp(1.2rem,5vw,3.4rem);position:relative}
+.rule{height:1px;background:linear-gradient(90deg,var(--line2),transparent)}
+sup.ref{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--teal);
+  font-weight:500;vertical-align:super;margin-left:.15em}
+
+/* ---- icons ---- */
+.ic{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.4;
+  stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic-sm{width:14px;height:14px}
+.ic-lg{width:28px;height:28px}
+
+/* ---- hero ---- */
+#hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  padding-top:6rem}
+.hero-mark{display:flex;align-items:center;gap:1rem;margin-bottom:2.2rem}
+.hex-mark{width:30px;height:34px;background:var(--gold);
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  animation:mk 3.6s ease-in-out infinite}
+@keyframes mk{0%,100%{opacity:.55}50%{opacity:1}}
+.hero-mark span{font-family:'IBM Plex Mono',monospace;font-size:.66rem;
+  letter-spacing:.26em;text-transform:uppercase;color:var(--mute)}
+h1 .l{display:inline-block;opacity:0;transform:translateY(.44em);
+  animation:rise .78s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+h1 .accent{color:var(--gold)}
+.hero-en{font-family:'IBM Plex Mono',monospace;font-size:clamp(.7rem,1.3vw,.86rem);
+  letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-top:1.4rem;
+  opacity:0;animation:rise .9s .8s forwards}
+.hero-sub{margin-top:2rem;opacity:0;animation:rise .9s 1s forwards}
+
+/* ---- reveal ---- */
+.rv{opacity:0;transform:translateY(22px);
+  transition:opacity .82s cubic-bezier(.2,.8,.2,1),transform .82s cubic-bezier(.2,.8,.2,1)}
+.rv.on{opacity:1;transform:none}
+
+/* ---- chain ---- */
+.chain{margin-top:3rem;max-width:1000px}
+.node{display:grid;grid-template-columns:74px 1fr 130px;
+  gap:clamp(.9rem,2.6vw,2rem);align-items:center;padding:1.45rem 0;
+  border-top:1px solid var(--line);cursor:pointer;transition:padding-left .38s ease}
+.node:last-child{border-bottom:1px solid var(--line)}
+.node:hover{padding-left:.7rem}
+.hexcell{width:62px;height:70px;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  background:var(--layer);display:grid;place-items:center;color:var(--dim);
+  transition:background .5s ease,color .5s ease}
+.node.lit .hexcell{background:var(--c);color:var(--void)}
+.node h3{margin-bottom:.18rem;transition:color .45s ease}
+.node.lit h3{color:var(--c)}
+.node .en{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);display:block;margin-bottom:.5rem}
+.node p{font-size:.88rem;max-width:56ch}
+.node .fn{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);text-align:right;line-height:1.9}
+.node .fn b{display:block;color:var(--mute);font-weight:500}
+@media(max-width:820px){.node{grid-template-columns:56px 1fr}.node .fn{display:none}
+  .hexcell{width:48px;height:54px}}
+
+/* ---- taxa table ---- */
+.taxa{margin-top:3rem;border:1px solid var(--line);overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:720px}
+thead th{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dim);text-align:left;font-weight:500;
+  padding:1rem 1.2rem;border-bottom:1px solid var(--line2);background:var(--deep)}
+tbody td{padding:1.15rem 1.2rem;border-bottom:1px solid var(--line);
+  font-size:.88rem;color:var(--mute);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{transition:background .35s ease}
+tbody tr:hover{background:var(--deep)}
+td .nm{color:var(--ink);font-weight:500;font-size:.93rem;display:flex;
+  align-items:center;gap:.6rem;margin-bottom:.2rem}
+td .lat{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--dim);
+  font-style:italic}
+.pill{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.14em;
+  text-transform:uppercase;padding:.28rem .6rem;border:1px solid currentColor;
+  display:inline-block;white-space:nowrap}
+.p-nt{color:var(--gold)}.p-lc{color:var(--sage)}.p-vu{color:var(--clay)}
+.p-na{color:var(--dim)}
+.role-tag{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--teal)}
+
+/* ---- laws ---- */
+.laws{margin-top:3rem;max-width:960px}
+.law{display:grid;grid-template-columns:58px 1fr;gap:clamp(.9rem,2.6vw,2rem);
+  padding:1.7rem 0;border-top:1px solid var(--line)}
+.law:last-child{border-bottom:1px solid var(--line)}
+.law .n{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--gold);
+  letter-spacing:.14em;display:flex;flex-direction:column;gap:.5rem;padding-top:.15rem}
+.law h3{margin-bottom:.15rem}
+.law .en{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);display:block;margin-bottom:.5rem}
+.law p{font-size:.9rem}
+@media(max-width:640px){.law{grid-template-columns:38px 1fr}}
+
+
+/* ---- interaction web ---- */
+.web-wrap{margin-top:2.6rem;border:1px solid var(--line);background:var(--deep);
+  position:relative;overflow:hidden}
+#web{display:block;width:100%;height:auto}
+.web-bar{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;
+  align-items:center;padding:1rem 1.4rem;border-top:1px solid var(--line);
+  background:var(--void)}
+.web-msg{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--mute);line-height:1.9;max-width:62ch}
+.web-msg b{color:var(--gold);font-weight:500}
+.web-msg em{color:var(--teal);font-style:normal}
+.web-btn{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--mute);background:none;border:1px solid var(--line2);
+  padding:.55rem 1.1rem;cursor:pointer;transition:color .3s,border-color .3s;white-space:nowrap}
+.web-btn:hover{color:var(--teal);border-color:var(--teal)}
+.legend{display:flex;flex-wrap:wrap;gap:1.4rem;margin-top:1.3rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim)}
+.legend span{display:flex;align-items:center;gap:.5rem}
+.legend i{width:16px;height:1.5px;background:var(--teal);display:block}
+.legend i.fb{background:var(--gold);
+  background-image:linear-gradient(90deg,var(--gold) 55%,transparent 55%);
+  background-size:5px 100%}
+.legend i.dn{background:var(--clay)}
+.nd{cursor:pointer}
+.nd .hx{fill:var(--layer);stroke:var(--line2);stroke-width:1;
+  transition:fill .45s ease,stroke .45s ease,opacity .5s ease}
+.nd .gl{opacity:0;transition:opacity .45s ease}
+.nd .lb{fill:var(--mute);font-family:'IBM Plex Mono',monospace;font-size:9px;
+  letter-spacing:.12em;text-transform:uppercase;text-anchor:middle;
+  transition:fill .45s ease,opacity .5s ease}
+.nd .ico{stroke:var(--dim);fill:none;stroke-width:1.4;stroke-linecap:round;
+  stroke-linejoin:round;transition:stroke .45s ease,opacity .5s ease}
+.nd.plant .hx{stroke:var(--gold);stroke-dasharray:5 4}
+.nd.plant .lb{fill:var(--gold)}
+.nd.hot .hx{fill:var(--c);stroke:var(--c)}
+.nd.hot .ico{stroke:var(--void)}
+.nd.hot .lb{fill:var(--ink)}
+.nd.hot .gl{opacity:.16}
+.nd.dead .hx{fill:#1A1216;stroke:var(--clay);stroke-dasharray:3 3}
+.nd.dead .ico,.nd.dead .lb{opacity:.32}
+.nd.mute{opacity:.22}
+.ed{fill:none;stroke:var(--line2);stroke-width:1.1;transition:stroke .45s ease,opacity .5s ease}
+.ed.fb{stroke-dasharray:4 4}
+.ed.on{stroke:var(--teal);stroke-width:1.4}
+.ed.on.fb{stroke:var(--gold)}
+.ed.mute{opacity:.14}
+.ed.dead{stroke:var(--clay);opacity:.4}
+@media(max-width:640px){.nd .lb{font-size:11px}}
+
+
+
+/* ---- restoration timeline ---- */
+.tl-wrap{margin-top:2.6rem;border:1px solid var(--line);background:var(--deep)}
+.tl-tabs{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}
+.tl-tab{background:none;border:none;border-right:1px solid var(--line);cursor:pointer;
+  padding:1rem .8rem;text-align:left;transition:background .4s ease}
+.tl-tab:last-child{border-right:none}
+.tl-tab:hover{background:rgba(53,201,184,.05)}
+.tl-tab .yr{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.16em;
+  color:var(--dim);display:block;margin-bottom:.35rem}
+.tl-tab .ti{font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--mute);
+  transition:color .4s ease;display:block;line-height:1.4}
+.tl-tab.act{background:rgba(217,164,65,.07)}
+.tl-tab.act .ti{color:var(--gold)}
+.tl-tab.act .yr{color:var(--gold)}
+.tl-bar{height:2px;background:var(--line);position:relative;overflow:hidden}
+.tl-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--gold);width:0}
+.tl-stage{position:relative;aspect-ratio:16/7.6}
+.tl-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tl-foot{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;
+  align-items:center;padding:1.05rem 1.4rem;border-top:1px solid var(--line);
+  background:var(--void)}
+.tl-desc{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--mute);line-height:1.9;max-width:64ch}
+.tl-desc b{color:var(--gold);font-weight:500}
+@media(max-width:760px){
+  .tl-tabs{grid-template-columns:repeat(2,1fr)}
+  .tl-tab:nth-child(2){border-right:none}
+  .tl-tab:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .tl-stage{aspect-ratio:4/3.4}
+}
+
+/* ---- animated principles ---- */
+.prin{margin-top:2.4rem}
+.pr{display:grid;grid-template-columns:1fr 1.18fr;gap:clamp(1.6rem,4vw,3.2rem);
+  align-items:center;padding:2.8rem 0;border-top:1px solid var(--line)}
+.pr:last-child{border-bottom:1px solid var(--line)}
+.pr-txt{max-width:46ch}
+.pr-head{display:flex;gap:1.1rem;align-items:flex-start;margin-bottom:1rem}
+.pr-n{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--gold);
+  letter-spacing:.14em;display:flex;flex-direction:column;align-items:center;
+  gap:.5rem;padding-top:.2rem;flex:none;width:26px}
+.pr h3{margin-bottom:.18rem}
+.pr .en{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);display:block}
+.pr p{font-size:.9rem}
+.pr-viz{position:relative;border:1px solid var(--line);background:var(--deep);
+  aspect-ratio:16/8;overflow:hidden}
+.pr-viz canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.pr-key{position:absolute;left:.95rem;top:.85rem;z-index:2;display:flex;
+  flex-direction:column;gap:.34rem;pointer-events:none}
+.pr-key span{font-family:'IBM Plex Mono',monospace;font-size:.56rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--mute);display:flex;align-items:center;gap:.45rem}
+.pr-key i{width:9px;height:9px;flex:none;border-radius:50%}
+.pr-state{position:absolute;right:.95rem;bottom:.8rem;z-index:2;
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gold);text-align:right}
+@media(max-width:860px){
+  .pr{grid-template-columns:1fr;gap:1.5rem}
+  .pr-viz{order:2}
+  .pr-txt{order:1}
+}
+
+/* ---- metrics ---- */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:1px;background:var(--line);margin-top:3rem;border:1px solid var(--line)}
+.metric{background:var(--void);padding:2rem 1.5rem}
+.metric .ic{color:var(--gold);margin-bottom:1rem;opacity:.8}
+.metric .v{font-family:'IBM Plex Mono',monospace;font-weight:500;
+  font-size:clamp(1.7rem,3.9vw,2.5rem);color:var(--teal);line-height:1;
+  letter-spacing:-.02em}
+.metric .u{font-size:.82rem;color:var(--gold);margin-left:.22rem}
+.metric .k{font-size:.8rem;color:var(--mute);margin-top:.75rem;display:block;max-width:27ch}
+.metric .src{font-family:'IBM Plex Mono',monospace;font-size:.58rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-top:.7rem;display:block}
+
+/* ---- swarm ---- */
+.swarm-box{margin-top:2.6rem;border:1px solid var(--line);background:var(--deep);
+  position:relative;height:min(42vh,300px);overflow:hidden}
+#swarm{position:absolute;inset:0;width:100%;height:100%}
+.swarm-cap{position:absolute;left:1.4rem;bottom:1.2rem;z-index:2;
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.16em;
+  color:var(--dim);text-transform:uppercase;max-width:34ch;line-height:1.9}
+
+/* ---- notes / refs ---- */
+.note{margin-top:2.6rem;border-left:2px solid var(--gold);padding:1.1rem 0 1.1rem 1.5rem;
+  max-width:62ch}
+.note .role{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold);display:flex;align-items:center;
+  gap:.55rem;margin-bottom:.55rem}
+.note p{font-size:.88rem}
+.refs{margin-top:2.4rem;display:grid;gap:.85rem;max-width:820px}
+.ref-item{display:grid;grid-template-columns:32px 1fr;gap:.9rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;line-height:1.85;color:var(--dim)}
+.ref-item b{color:var(--teal);font-weight:500}
+.ref-item span{color:var(--mute)}
+
+/* ---- footer ---- */
+footer{padding:3.4rem clamp(1.2rem,5vw,3.4rem) 4.4rem;border-top:1px solid var(--line)}
+.f-row{display:flex;flex-wrap:wrap;gap:2rem;justify-content:space-between;align-items:flex-end}
+.f-row .brand{font-weight:900;text-transform:uppercase;font-size:1.2rem;letter-spacing:-.01em}
+.f-row .brand em{color:var(--gold);font-style:normal}
+.f-meta{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.16em;
+  color:var(--dim);text-transform:uppercase;line-height:2.1;text-align:right}
+@media(max-width:640px){.f-meta{text-align:left}}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+  h1 .l,.hero-sub,.hero-en{opacity:1}
+}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.5 18 12a6.5 6.5 0 1 1-12 0z"/></symbol>
+<symbol id="i-flower" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><circle cx="12" cy="6.5" r="2.5"/><circle cx="12" cy="17.5" r="2.5"/><circle cx="6.5" cy="12" r="2.5"/><circle cx="17.5" cy="12" r="2.5"/></symbol>
+<symbol id="i-paw" viewBox="0 0 24 24"><ellipse cx="6.5" cy="10" rx="1.8" ry="2.5"/><ellipse cx="10.5" cy="6.9" rx="1.8" ry="2.5"/><ellipse cx="15" cy="6.9" rx="1.8" ry="2.5"/><ellipse cx="18.5" cy="10.4" rx="1.8" ry="2.5"/><path d="M12.5 13c3 0 5.5 2 5.5 4.4 0 1.6-1.4 2.6-3 2.2-1.7-.5-3.3-.5-5 0-1.6.4-3-.6-3-2.2C7 15 9.5 13 12.5 13z"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3.5 20.5 8 12 12.5 3.5 8z"/><path d="M3.5 13 12 17.5 20.5 13"/></symbol>
+<symbol id="i-hex" viewBox="0 0 24 24"><path d="M12 2.8 20 7.4v9.2L12 21.2 4 16.6V7.4z"/><path d="M12 8.6 15.4 10.6v3.8L12 16.4 8.6 14.4v-3.8z"/></symbol>
+<symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19 9.5 8l3.5 5.4 2-2.8L21 19z"/><path d="M8 10.2h3"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4.2 21 19.5H3z"/><path d="M12 10v4"/><path d="M12 16.8h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.4V12l3.2 2"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="18" r="2.2"/><circle cx="19" cy="18" r="2.2"/><path d="M10.6 6.9 6.4 16.1M13.4 6.9l4.2 9.2M7.2 18h9.6"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.6v2M12 19.4v2M2.6 12h2M19.4 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M18.7 5.3l-1.4 1.4M6.7 17.3l-1.4 1.4"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21.5s7-6.4 7-11.2a7 7 0 1 0-14 0c0 4.8 7 11.2 7 11.2z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+<symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19.5c-1-8.5 5.5-14 15-14 .5 8.5-5 14.5-13 14.5-1.2 0-1.9-.1-2-.5z"/><path d="M5.5 19.5C8 15 11.5 11.8 16 10"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.7 5.6 6.1.8-4.5 4.2 1.2 6-5.5-3-5.5 3 1.2-6-4.5-4.2 6.1-.8z"/></symbol>
+<symbol id="i-elm" viewBox="0 0 24 24"><path d="M12 3.4c4 0 7 2.8 7 6.2 0 3.1-2.5 5.7-5.8 6.1V21h-2.4v-5.3C7.5 15.3 5 12.7 5 9.6c0-3.4 3-6.2 7-6.2z"/><path d="M12 15.7 9.6 13.3M12 18l2.4-2.2"/></symbol>
+<symbol id="i-bird" viewBox="0 0 24 24"><path d="M3 13.4c3.7 0 6.6-1.9 8.6-5.4"/><path d="M21 13.4c-3.7 0-6.6-1.9-8.6-5.4"/><path d="M11.3 7.9h1.4"/></symbol>
+<symbol id="i-bug" viewBox="0 0 24 24"><path d="M12 7.6c2.2 0 3.8 2 3.8 4.5S14.2 17.2 12 17.2s-3.8-2.6-3.8-5.1S9.8 7.6 12 7.6z"/><path d="M8.3 10.6 5.2 9M8.3 12.9H5.2M8.7 15.2 6.2 17.2M15.7 10.6 18.8 9M15.7 12.9h3.1M15.3 15.2l2.5 2M10.9 7.7 9.7 5.5M13.1 7.7l1.2-2.2"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a1.5 1.5 0 0 0-1.5 1.5v15A1.5 1.5 0 0 0 7 21h10a1.5 1.5 0 0 0 1.5-1.5V7.5z"/><path d="M14 3v4.5h4.5M9 12h6M9 16h4"/></symbol>
+</svg>
+
+<div class="metabar">
+  <span><b>Дорноговь</b> · Экосистемийн бүтэц</span>
+  <span class="r">
+    <span>Ecosystem structure brief</span>
+    <span>Land Art Lab · Shambala 2056</span>
+  </span>
+</div>
+
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="wrap">
+
+<section id="hero">
+  <div class="hero-mark">
+    <div class="hex-mark" aria-hidden="true"></div>
+    <span>Дорноговь аймаг · Дорнод Гоби · Монгол улс</span>
+  </div>
+  <h1 id="title"></h1>
+  <div class="hero-en">Ecosystem structure of Dornogovi province — a functional brief</div>
+  <div class="hero-sub">
+    <p class="lede">Цөлөрхөг хээрээс цөл рүү шилжих завсрын бүс. Экосистемийн бүтцийг зүйлийн жагсаалтаар биш, <strong>үүргийн хамаарлаар</strong> тайлбарлав — давхарга бүр өмнөхөөсөө хамаарна.</p>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow rv"><i></i>01 — Хамаарлын гинж</span>
+  <h2 class="rv">Үүргийн давхарга</h2>
+  <span class="h2en rv">Functional dependency chain</span>
+  <p class="rv">Экосистемийн зүй тогтол бол жагсаалт биш, дараалал. Давхарга бүр өөрийн үүрэгтэй; нэг нь тасрахад дээрх бүх давхарга задарна.</p>
+
+  <div class="chain" id="chain">
+    <div class="node" style="--c:#35C9B8"><div class="hexcell"><svg class="ic ic-lg"><use href="#i-drop"/></svg></div>
+      <div><h3>Ус ба чийг</h3><span class="en">Water · limiting factor</span>
+      <p>Хур тунадас, тойром, гүний ус. Бүх дараагийн давхаргын дээд хязгаарыг тогтоодог хязгаарлагч нөөц.</p></div>
+      <div class="fn">01<b>Хязгаарлагч</b>Limiting</div></div>
+
+    <div class="node" style="--c:#7FA86B"><div class="hexcell"><svg class="ic ic-lg"><use href="#i-elm"/></svg></div>
+      <div><h3>Экосистемийн инженер</h3><span class="en">Ecosystem engineers</span>
+      <p>Харгана, бударгана болон хайлаасны тарьц. Салхи барьж, элс тогтоож, бичил цаг уур үүсгэснээр өөр зүйлүүдэд амьдрах орон бүрдүүлнэ.</p></div>
+      <div class="fn">02<b>Орчин бүтээгч</b>Engineering</div></div>
+
+    <div class="node" style="--c:#D9A441"><div class="hexcell"><svg class="ic ic-lg"><use href="#i-flower"/></svg></div>
+      <div><h3>Тоос хүртээлтийн үйлчилгээ</h3><span class="en">Pollination service</span>
+      <p>Зэрлэг зөгий, эрвээхэй, шонхор эрвээхэй, цох. Бороо орсны дараах богино цэцэглэлтийн цонхонд ургамлын үрийн үйлдвэрлэлийг баталгаажуулна.</p></div>
+      <div class="fn">03<b>Үржлийн холбоос</b>Reproductive</div></div>
+
+    <div class="node" style="--c:#B8763F"><div class="hexcell"><svg class="ic ic-lg"><use href="#i-bug"/></svg></div>
+      <div><h3>Хэрэглэгч ба задлагч</h3><span class="en">Consumers · decomposers</span>
+      <p>Задлагч шавьж, жижиг мэрэгч, модонд үүрлэх шувууд. Навчны хог задалж, үр тараах, хөрс агааржуулах, шавьж-мэрэгчийн тоог хянах үүрэгтэй. Хашаатай талбайд биологийн олон янз байдал эдгээр бүлгээр хэмжигдэнэ.</p></div>
+      <div class="fn">04<b>Задлагч</b>Recycling</div></div>
+
+    <div class="node" style="--c:#7268C4"><div class="hexcell"><svg class="ic ic-lg"><use href="#i-layers"/></svg></div>
+      <div><h3>Хөрсний тогтвор</h3><span class="en">Soil stability · LDN outcome</span>
+      <p>Үндэсний сүлжээ хөрсийг бэхжүүлж, элсний нүүдэл саарна. Газрын доройтлыг тэглэх (LDN) зорилтын хэмжигдэхүйц үр дүн.</p></div>
+      <div class="fn">05<b>Үр дүн</b>Outcome</div></div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<section>
+  <span class="eyebrow rv"><i></i>02 — Түлхүүр зүйлүүд</span>
+  <h2 class="rv">Таксон ба үүрэг</h2>
+  <span class="h2en rv">Key taxa and functional roles</span>
+  <p class="rv">Түлхүүр зүйл (keystone species) гэдэг нь тухайн зүйл алдагдвал экосистемийн бүтэц үндсээрээ өөрчлөгддөг зүйлүүд.</p>
+
+  <div class="taxa rv">
+    <table>
+      <thead><tr>
+        <th>Зүйл / Species</th><th>Овог / Family</th>
+        <th>Үүрэг / Function</th><th>Статус</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="nm"><svg class="ic ic-sm"><use href="#i-flower"/></svg>Харгана</span>
+            <span class="lat">Caragana spp.</span></td>
+          <td>Fabaceae</td>
+          <td><span class="role-tag">Азот тогтоогч · нектарын эх</span><br>Хөрс баяжуулах, тоос хүртээгч тэжээх<sup class="ref">1</sup></td>
+          <td><span class="pill p-na">Үнэлээгүй</span></td>
+        </tr>
+        <tr>
+          <td><span class="nm"><svg class="ic ic-sm"><use href="#i-elm"/></svg>Хайлаас</span>
+            <span class="lat">Ulmus pumila</span></td>
+          <td>Ulmaceae</td>
+          <td><span class="role-tag">Инженер зүйл · тарьц</span><br>Ган, давсархаг хөрсөнд тэсвэртэй; өтгөн навчит титэм салхины хаалт үүсгэнэ</td>
+          <td><span class="pill p-na">Үнэлээгүй</span></td>
+        </tr>
+        <tr>
+          <td><span class="nm"><svg class="ic ic-sm"><use href="#i-bug"/></svg>Задлагч шавьж</span>
+            <span class="lat">Coleoptera · Formicidae</span></td>
+          <td>Олон овог</td>
+          <td><span class="role-tag">Задлагч · хөрс боловсруулагч</span><br>Навчны хог задалж, хөрсний органик бодис үүсгэнэ</td>
+          <td><span class="pill p-na">Судлагдаагүй</span></td>
+        </tr>
+        <tr>
+          <td><span class="nm"><svg class="ic ic-sm"><use href="#i-flower"/></svg>Эрвээхэй, шонхор эрвээхэй</span>
+            <span class="lat">Lepidoptera · Sphingidae</span></td>
+          <td>Олон овог</td>
+          <td><span class="role-tag">Тоос хүртээгч · шөнийн</span><br>Үдэш, шөнө идэвхтэй; өдрийн халуунаас зайлна</td>
+          <td><span class="pill p-na">Судлагдаагүй</span></td>
+        </tr>
+        <tr>
+          <td><span class="nm"><svg class="ic ic-sm"><use href="#i-paw"/></svg>Жижиг мэрэгч</span>
+            <span class="lat">Rodentia</span></td>
+          <td>Олон овог</td>
+          <td><span class="role-tag">Үр тархаагч · хөрс хөдөлгөгч</span><br>Нүх ухаж хөрсийг агааржуулна; үрийг зөөнө</td>
+          <td><span class="pill p-na">Үнэлээгүй</span></td>
+        </tr>
+        <tr>
+          <td><span class="nm"><svg class="ic ic-sm"><use href="#i-bird"/></svg>Модонд үүрлэх шувууд</span>
+            <span class="lat">Passeriformes · Strigiformes</span></td>
+          <td>Олон овог</td>
+          <td><span class="role-tag">Хэрэглэгч · тархаагч</span><br>Шавьж, мэрэгчийн тоог хянана; титэм үүсмэгц үүрлэнэ</td>
+          <td><span class="pill p-na">Үнэлээгүй</span></td>
+        </tr>
+        <tr>
+          <td><span class="nm"><svg class="ic ic-sm"><use href="#i-hex"/></svg>Зэрлэг зөгий</span>
+            <span class="lat">Apoidea (Anthophila)</span></td>
+          <td>Олон овог</td>
+          <td><span class="role-tag">Тоос хүртээгч</span><br>Хөрсөнд үүрлэдэг ганцаардмал зүйлүүд</td>
+          <td><span class="pill p-na">Судлагдаагүй</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note rv">
+    <span class="role"><svg class="ic ic-sm"><use href="#i-network"/></svg>Хашааны нөлөө · exclosure</span>
+    <p>Талбай хашаатай тул <strong>цагаан зээр, хар сүүлт, аргаль, хулан зэрэг том туурайтан дотогш нэвтрэхгүй</strong>. Энэ бол зориудын шийдэл: залуу тарьцыг бэлчээрлэлтээс хамгаална. Иймд биологийн олон янз байдлын өсөлтийг том хөхтнөөр биш, <strong>тоос хүртээгч шавьж, задлагч сээр нуруугүйтэн, жижиг мэрэгч, модонд үүрлэх шувуудаар</strong> хэмжинэ. Том туурайтны нүүдэл нь талбайн гадна, ландшафтын түвшний асуудал хэвээр үлдэнэ<sup class="ref">3</sup>.</p>
+  </div>
+
+  <div class="note rv">
+    <span class="role"><svg class="ic ic-sm"><use href="#i-alert"/></svg>Баталгаажуулалт шаардлагатай</span>
+    <p>Хүснэгтэд зүйлийн нэр биш, <strong>үүргийн бүлгээр</strong> жагсаав — талбайд аль зүйл бодитоор нутагшихыг суурь судалгаагаар тогтоох ёстой. Дорноговийн зэрлэг зөгийн зүйлийн бүрдэл тусгайлан судлагдаагүй: аймагт бүртгэгдсэн 55 зүйл шавьж нь ногоон байгууламжийн хөнөөлт шавьжид чиглэсэн судалгааных<sup class="ref">4</sup>. Энэ цоорхой нь тарихаас өмнөх суурь мониторинг хийх боломж юм.</p>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<section>
+  <span class="eyebrow rv"><i></i>03 — Уялдаа холбоо</span>
+  <h2 class="rv">Хамаарлын сүлжээ</h2>
+  <span class="h2en rv">Interaction network · cascade simulation</span>
+  <p class="rv">Экосистем бол нэг чиглэлт гинж биш, эргэх холбоотой сүлжээ. Ургамал тоос хүртээгчээс, тоос хүртээгч ургамлаас — харилцан хамаардаг. Зангилаа дээр дарж <strong>тухайн зүйл алдагдвал юу болохыг</strong> загварчилна уу. Тасархай хүрээтэй зангилаа нь тарьцаар нэмэгдэж буй зүйл.</p>
+
+  <div class="web-wrap rv">
+    <svg id="web" viewBox="0 0 900 620" role="img" aria-label="Дорноговийн экосистемийн хамаарлын сүлжээ"></svg>
+    <div class="web-bar">
+      <div class="web-msg" id="webmsg">Зангилаа дээр хулганаа аваачиж холбоог нь харна уу · дарвал задралыг загварчилна</div>
+      <button class="web-btn" id="webreset">Сэргээх / Reset</button>
+    </div>
+  </div>
+  <div class="legend">
+    <span><i></i>Нэг чиглэлт хамаарал</span>
+    <span><i class="fb"></i>Эргэх холбоо · feedback</span>
+    <span><i class="dn"></i>Задралын нөлөө</span>
+    <span><i style="background:none;border-top:1.5px dashed var(--gold)"></i>Тарьц · нэмэгдсэн зүйл</span>
+  </div>
+
+  <div class="note rv">
+    <span class="role"><svg class="ic ic-sm"><use href="#i-network"/></svg>Загварчлалын хязгаар</span>
+    <p>Энэ бол экосистемийн бүтцийг тайлбарлах <strong>үзэл баримтлалын загвар</strong> бөгөөд тоон таамаглалын загвар биш. Бодит задралын явц зүйлийн нөөц, орлуулах чадвар, орон зайн хэмжээнээс хамаарч өөр байна.</p>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<section>
+  <span class="eyebrow rv"><i></i>04 — Сэргэлтийн үе шат</span>
+  <h2 class="rv">Цаг хугацааны загвар</h2>
+  <span class="h2en rv">Restoration sequence · year 0 to 15+</span>
+  <p class="rv">Экосистем нэг дор сэргэдэггүй. Тарьц суулгаснаас эхлээд бүрэн сүлжээ үүсэх хүртэл дөрвөн үе дамжина — үе бүр өмнөхийнхөө бүтээсэн нөхцөл дээр тогтоно.</p>
+
+  <div class="tl-wrap rv">
+    <div class="tl-tabs" id="tltabs">
+      <button class="tl-tab act" data-st="0"><span class="yr">Year 0–2</span><span class="ti">Эхлэл<br>Суулгац тарих</span></button>
+      <button class="tl-tab" data-st="1"><span class="yr">Year 3–7</span><span class="ti">Nebkha effect<br>Хөрс бүрэлдэх</span></button>
+      <button class="tl-tab" data-st="2"><span class="yr">Year 8–15</span><span class="ti">Чийг тогтох<br>Био-бүтэц</span></button>
+      <button class="tl-tab" data-st="3"><span class="yr">Year 15+</span><span class="ti">Экосистемийн<br>сүлжээ</span></button>
+    </div>
+    <div class="tl-bar"><i id="tlbar"></i></div>
+    <div class="tl-stage"><canvas id="tlcv"></canvas></div>
+    <div class="tl-foot"><div class="tl-desc" id="tldesc"></div></div>
+  </div>
+
+  <div class="note rv">
+    <span class="role"><svg class="ic ic-sm"><use href="#i-clock"/></svg>Nebkha effect</span>
+    <p><strong>Nebkha</strong> (небха) гэдэг нь ургамлын суурьт салхиар зөөгдсөн элс хуримтлагдаж үүсэх бичил манхан. Ургамал салхийг сааруулахад элс тунадаг — ингэснээр хөрс бүрэлдэж, чийг хадгалагдах эхний нөхцөл үүсдэг. Энэ бол цөлжсөн газарт хөрс сэргээх байгалийн үндсэн механизм.</p>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<section>
+  <span class="eyebrow rv"><i></i>05 — Тоон дүр зураг</span>
+  <h2 class="rv">Хэмжигдэхүйц үзүүлэлт</h2>
+  <span class="h2en rv">Baseline indicators</span>
+  <div class="metrics" id="metrics">
+    <div class="metric"><svg class="ic"><use href="#i-pin"/></svg>
+      <div class="v" data-to="667.69" data-dec="2">0<span class="u">км²</span></div>
+      <span class="k">Их Нартын Чулуу байгалийн нөөц газрын талбай</span>
+      <span class="src">Эх сурвалж 2</span></div>
+    <div class="metric"><svg class="ic"><use href="#i-paw"/></svg>
+      <div class="v" data-to="25">0<span class="u">%</span></div>
+      <span class="k">Монголын нийт хөхтний зүйлийн энд тохиолдох хувь</span>
+      <span class="src">Эх сурвалж 2</span></div>
+    <div class="metric"><svg class="ic"><use href="#i-leaf"/></svg>
+      <div class="v" data-to="78">0</div>
+      <span class="k">Гобийн бүсэд бүртгэгдсэн судасжсан ургамлын зүйл</span>
+      <span class="src">Эх сурвалж 1</span></div>
+    <div class="metric"><svg class="ic"><use href="#i-star"/></svg>
+      <div class="v" data-to="41">0</div>
+      <span class="k">Дорноговь багтах бүлэгт бүртгэгдсэн нэн ховор ургамал</span>
+      <span class="src">Эх сурвалж 5</span></div>
+  </div>
+
+  <div class="swarm-box rv">
+    <canvas id="swarm" aria-hidden="true"></canvas>
+    <span class="swarm-cap">Загварчлал — тоос хүртээгчийн идэвхийн цонх, бороо орсны дараах богино хугацаа. Бодит хэмжилтийн өгөгдөл биш.</span>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<section>
+  <span class="eyebrow rv"><i></i>06 — Зүй тогтол</span>
+  <h2 class="rv">Системийн зарчим</h2>
+  <span class="h2en rv">Governing principles</span>
+  <div class="prin" id="prin">
+    <article class="pr rv">
+      <div class="pr-txt">
+        <div class="pr-head"><span class="pr-n"><svg class="ic"><use href="#i-drop"/></svg>I</span>
+          <div><h3>Ус бол хязгаарлагч нөөц</h3><span class="en">Water as the limiting resource</span></div></div>
+        <p>Бүх амьдрал хур тунадас, тойром, голын татмаас хамаарна. Усны хэмжээ бүх зүйлийн тоо, идэвхийн дээд хязгаарыг тогтооно.</p>
+      </div>
+      <div class="pr-viz">
+        <canvas data-anim="water"></canvas>
+        <div class="pr-key"><span><i style="background:#35C9B8"></i>Усны төвшин</span><span><i style="background:#7FA86B"></i>Идэвхтэй амьдрал</span><span><i style="background:#4B5D71"></i>Идэвхгүй</span></div>
+        <div class="pr-state" data-state="water"></div>
+      </div>
+    </article>
+    <article class="pr rv">
+      <div class="pr-txt">
+        <div class="pr-head"><span class="pr-n"><svg class="ic"><use href="#i-elm"/></svg>II</span>
+          <div><h3>Инженер зүйл орчноо бүтээдэг</h3><span class="en">Engineers create habitat</span></div></div>
+        <p>Өтгөн навчит титэм сүүдэр, салхины хаалт, чийг үүсгэснээр өөр олон зүйлд амьдрах боломж бүрдэнэ. Инженер зүйл алдагдвал түүнээс хамаарсан бүх давхарга задарна — системийн хамгийн эмзэг цэг.</p>
+      </div>
+      <div class="pr-viz">
+        <canvas data-anim="shelter"></canvas>
+        <div class="pr-key"><span><i style="background:#8296AB"></i>Салхи</span><span><i style="background:#9BC47F"></i>Инженер зүйл</span><span><i style="background:#D9A441"></i>Хамгаалагдсан бүс</span></div>
+        <div class="pr-state" data-state="shelter"></div>
+      </div>
+    </article>
+    <article class="pr rv">
+      <div class="pr-txt">
+        <div class="pr-head"><span class="pr-n"><svg class="ic"><use href="#i-clock"/></svg>III</span>
+          <div><h3>Богино идэвхийн цонх</h3><span class="en">Narrow phenological window</span></div></div>
+        <p>Бороо орсны дараа ургамал богино хугацаанд цэцэглэж, тоос хүртээгч идэвхжиж, амьтад үрждэг. Бүх амьдралын мөчлөг энэ цонхонд зохицсон.</p>
+      </div>
+      <div class="pr-viz">
+        <canvas data-anim="window"></canvas>
+        <div class="pr-key"><span><i style="background:#35C9B8"></i>Хур тунадас</span><span><i style="background:#7FA86B"></i>Цэцэглэлт</span><span><i style="background:#D9A441"></i>Тоос хүртээлт</span></div>
+        <div class="pr-state" data-state="window"></div>
+      </div>
+    </article>
+    <article class="pr rv">
+      <div class="pr-txt">
+        <div class="pr-head"><span class="pr-n"><svg class="ic"><use href="#i-network"/></svg>IV</span>
+          <div><h3>Орон зайн холболт</h3><span class="en">Landscape connectivity</span></div></div>
+        <p>Зээр, хулан тэжээл, ус хайж нүүдэллэдэг тул ландшафт өргөн, тасралтгүй байх ёстой. Төмөр зам, хашаа, уул уурхайн дэд бүтэц энэ холболтыг таслах нь Дорноговийн гол эрсдэл<sup class="ref">3</sup>. Хамгаалалттай тарьцын талбай өөрөө хаалт болдог тул нөхөн сэргээлтийг ландшафтын түвшинд төлөвлөх шаардлагатай.</p>
+      </div>
+      <div class="pr-viz">
+        <canvas data-anim="link"></canvas>
+        <div class="pr-key"><span><i style="background:#7FA86B"></i>Бэлчээрийн талбай</span><span><i style="background:#B8763F"></i>Нүүдэл</span><span><i style="background:#B84A4A"></i>Тасалдал</span></div>
+        <div class="pr-state" data-state="link"></div>
+      </div>
+    </article>
+    <article class="pr rv">
+      <div class="pr-txt">
+        <div class="pr-head"><span class="pr-n"><svg class="ic"><use href="#i-sun"/></svg>V</span>
+          <div><h3>Уур амьсгалын эмзэг байдал</h3><span class="en">Climate vulnerability</span></div></div>
+        <p>Цөлжилт зүйлийн тархцыг шилжүүлж, генетик олон янз байдлыг алдагдуулна. Монголд дулаарал дэлхийн дунджаас хурдан явагдаж байгаа бөгөөд Гобийн бүс хамгийн өртөмтгий.</p>
+      </div>
+      <div class="pr-viz">
+        <canvas data-anim="climate"></canvas>
+        <div class="pr-key"><span><i style="background:#7FA86B"></i>Тохиромжтой тархац</span><span><i style="background:#B8763F"></i>Дулаарал</span><span><i style="background:#4B5D71"></i>Алдагдсан талбай</span></div>
+        <div class="pr-state" data-state="climate"></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<section>
+  <span class="eyebrow rv"><i></i>07 — Эх сурвалж</span>
+  <h2 class="rv">Ашигласан материал</h2>
+  <span class="h2en rv">References and data provenance</span>
+  <div class="refs">
+    <div class="ref-item rv"><b>01</b><span>Гобийн өмнөд ба зүүн бүсийн эмийн ургамлын олон янз байдал — <em>Journal of Ecology and Environment</em>, 2018. 23 овог, 57 төрөл, 78 зүйл судасжсан ургамал.</span></div>
+    <div class="ref-item rv"><b>02</b><span>Их Нартын Чулуу байгалийн нөөц газар — Даланжаргалан, Айраг сумдын заагт 667.69 км²; Монголын хөхтний зүйлийн дөрөвний нэг.</span></div>
+    <div class="ref-item rv"><b>03</b><span>Их Нартын туурайтны бүрдэл — аргаль (Ovis ammon), янгир (Capra ibex), цагаан зээр, хар сүүлт, хулан (Equus hemionus).</span></div>
+    <div class="ref-item rv"><b>04</b><span>Дорноговь аймгийн заган ой, ногоон байгууламжийн хөнөөлт шавьжийн судалгаа — 6 баг, 23 овог, 55 зүйл шавьж.</span></div>
+    <div class="ref-item rv"><b>05</b><span>БОЯ-ны ховор ургамлын хээрийн экспедиц — Дундговь, Дорноговь, Сүхбаатар, Дорнод, Хэнтий аймгийн нутагт 41 зүйл нэн ховор ургамал.</span></div>
+    <div class="ref-item rv"><b>06</b><span>Гобь ба Монголын хээрийн цохны тархцын өөрчлөлт — уур амьсгалын өөрчлөлт, генетик олон янз байдлын алдагдал.</span></div>
+  </div>
+
+  <div class="note rv">
+    <span class="role"><svg class="ic ic-sm"><use href="#i-doc"/></svg>Аргазүйн тэмдэглэл</span>
+    <p>Энэхүү товхимол нь нийтлэгдсэн судалгаа болон төрийн байгууллагын нээлттэй мэдээлэлд тулгуурласан <strong>нэгтгэсэн тойм</strong> бөгөөд анхдагч хээрийн судалгааны үр дүн биш. Тоон үзүүлэлт бүрийн эх сурвалжийг заав. Албан ёсны танилцуулгад ашиглахын өмнө ШУА-ийн Биологийн хүрээлэн, аймгийн Байгаль орчин, аялал жуулчлалын газартай баталгаажуулахыг зөвлөж байна.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="f-row">
+    <div class="brand">Үүр<em>.</em></div>
+    <div class="f-meta">
+      Land Art Lab · Shambala 2056<br>
+      Сайншанд, Дорноговь, Монгол улс<br>
+      Ecosystem structure brief · v1.0
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<script>
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+(function(){
+  const el=document.getElementById('title');
+  const words=[{t:'Экосистемийн',a:false},{t:'бүтэц',a:true}];
+  let i=0;
+  words.forEach((w,wi)=>{
+    [...w.t].forEach(ch=>{
+      const s=document.createElement('span');
+      s.className='l'+(w.a?' accent':''); s.textContent=ch;
+      s.style.animationDelay=(0.14+i*0.026)+'s'; el.appendChild(s); i++;
+    });
+    if(wi<words.length-1) el.appendChild(document.createElement('br'));
+  });
+})();
+
+(function(){
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});},{threshold:.14});
+  document.querySelectorAll('.rv').forEach((el,i)=>{
+    el.style.transitionDelay=(i%6)*0.06+'s'; io.observe(el);});
+})();
+
+(function(){
+  const nodes=[...document.querySelectorAll('#chain .node')];
+  let fired=false;
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{
+    if(e.isIntersecting&&!fired){fired=true;
+      nodes.forEach((n,i)=>setTimeout(()=>n.classList.add('lit'),reduce?0:i*340));}});},{threshold:.25});
+  const c=document.getElementById('chain'); if(c) io.observe(c);
+  nodes.forEach(n=>n.addEventListener('click',()=>{
+    n.classList.remove('lit'); void n.offsetWidth; n.classList.add('lit');}));
+})();
+
+(function(){
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{
+    if(!e.isIntersecting)return; io.unobserve(e.target);
+    const to=parseFloat(e.target.dataset.to), dec=parseInt(e.target.dataset.dec||'0');
+    const unit=e.target.querySelector('.u'), dur=reduce?0:1400, t0=performance.now();
+    function step(t){
+      const p=dur===0?1:Math.min((t-t0)/dur,1), ea=1-Math.pow(1-p,3);
+      e.target.textContent=(to*ea).toFixed(dec);
+      if(unit) e.target.appendChild(unit);
+      if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);});},{threshold:.5});
+  document.querySelectorAll('.metric .v').forEach(v=>io.observe(v));
+})();
+
+(function(){
+  const c=document.getElementById('field'), x=c.getContext('2d');
+  let cells=[]; const R=48;
+  function build(){
+    c.width=innerWidth*devicePixelRatio; c.height=innerHeight*devicePixelRatio;
+    c.style.width=innerWidth+'px'; c.style.height=innerHeight+'px';
+    x.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    cells=[]; const dx=R*1.732, dy=R*1.5;
+    for(let r=-1;r*dy<innerHeight+R;r++)
+      for(let q=-1;q*dx<innerWidth+dx;q++)
+        cells.push({cx:q*dx+(r%2?dx/2:0),cy:r*dy,ph:Math.random()*6.28,sp:.0003+Math.random()*.0007});
+  }
+  function hex(cx,cy,r){x.beginPath();
+    for(let i=0;i<6;i++){const a=Math.PI/180*(60*i-90);
+      const px=cx+r*Math.cos(a), py=cy+r*Math.sin(a); i?x.lineTo(px,py):x.moveTo(px,py);}
+    x.closePath();}
+  function draw(t){
+    x.clearRect(0,0,innerWidth,innerHeight); x.lineWidth=.55;
+    cells.forEach(cl=>{
+      const p=(Math.sin(t*cl.sp+cl.ph)+1)/2;
+      x.strokeStyle='rgba(53,201,184,'+(.025+p*.07)+')';
+      hex(cl.cx,cl.cy,R*.9); x.stroke();
+    });
+    if(!reduce) requestAnimationFrame(draw);
+  }
+  build(); addEventListener('resize',build);
+  reduce?draw(0):requestAnimationFrame(draw);
+})();
+
+(function(){
+  const c=document.getElementById('swarm'); if(!c) return;
+  const x=c.getContext('2d'); let w,h,ps=[],fl=[];
+  function size(){
+    const r=c.getBoundingClientRect();
+    c.width=r.width*devicePixelRatio; c.height=r.height*devicePixelRatio;
+    x.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    w=r.width; h=r.height;
+    fl=Array.from({length:9},()=>({x:30+Math.random()*(w-60),y:30+Math.random()*(h-60)}));
+    ps=Array.from({length:30},()=>({x:Math.random()*w,y:Math.random()*h,vx:0,vy:0,
+      tgt:Math.floor(Math.random()*9),hue:Math.random()>.42?'217,164,65':'53,201,184',r:1+Math.random()*1.4}));
+  }
+  function step(){
+    x.clearRect(0,0,w,h);
+    fl.forEach(f=>{
+      x.fillStyle='rgba(127,168,107,.20)'; x.beginPath(); x.arc(f.x,f.y,3.6,0,7); x.fill();
+      x.strokeStyle='rgba(127,168,107,.09)'; x.lineWidth=1;
+      x.beginPath(); x.arc(f.x,f.y,12,0,7); x.stroke();});
+    ps.forEach(p=>{
+      const f=fl[p.tgt], dx=f.x-p.x, dy=f.y-p.y, d=Math.hypot(dx,dy)||1;
+      p.vx+=dx/d*.055+(Math.random()-.5)*.2; p.vy+=dy/d*.055+(Math.random()-.5)*.2;
+      p.vx*=.94; p.vy*=.94; p.x+=p.vx; p.y+=p.vy;
+      if(d<12) p.tgt=Math.floor(Math.random()*fl.length);
+      x.fillStyle='rgba('+p.hue+',.82)'; x.beginPath(); x.arc(p.x,p.y,p.r,0,7); x.fill();
+      x.strokeStyle='rgba('+p.hue+',.12)';
+      x.beginPath(); x.moveTo(p.x,p.y); x.lineTo(p.x-p.vx*5,p.y-p.vy*5); x.stroke();});
+    if(!reduce) requestAnimationFrame(step);
+  }
+  size(); addEventListener('resize',size);
+  reduce?step():requestAnimationFrame(step);
+})();
+
+/* ================= interaction network ================= */
+(function(){
+  const svg=document.getElementById('web'); if(!svg) return;
+  const NS='http://www.w3.org/2000/svg';
+  const msg=document.getElementById('webmsg');
+
+  const N=[
+    {id:'water', mn:'Ус',            en:'Water',        x:450,y:64,  c:'#35C9B8', ic:'i-drop'},
+    {id:'elm',   mn:'Хайлаас',       en:'Elm · planted',x:300,y:200, c:'#9BC47F', ic:'i-elm', plant:1},
+    {id:'carag', mn:'Харгана',       en:'Caragana',     x:600,y:200, c:'#7FA86B', ic:'i-flower'},
+    {id:'invert',mn:'Задлагч шавьж', en:'Decomposers',  x:190,y:330, c:'#C0894F', ic:'i-bug'},
+    {id:'polli', mn:'Тоос хүртээгч', en:'Pollinators',  x:710,y:330, c:'#D9A441', ic:'i-hex'},
+    {id:'rodent',mn:'Жижиг мэрэгч',  en:'Rodents',      x:330,y:455, c:'#B8763F', ic:'i-paw'},
+    {id:'birds', mn:'Шувууд',        en:'Birds',        x:610,y:455, c:'#8F86D8', ic:'i-bird'},
+    {id:'soil',  mn:'Хөрс',          en:'Soil',         x:450,y:558, c:'#7268C4', ic:'i-layers'}
+  ];
+  const E=[
+    ['water','elm',0],['water','carag',0],
+    ['elm','polli',0],['elm','invert',0],['elm','birds',0],['elm','soil',0],
+    ['carag','polli',0],['carag','invert',0],['carag','soil',0],
+    ['polli','elm',1],['polli','carag',1],
+    ['invert','soil',0],['invert','rodent',0],
+    ['rodent','soil',1],['rodent','birds',0],
+    ['birds','rodent',1],['birds','invert',1],
+    ['soil','water',1]
+  ];
+  const map={}; N.forEach(n=>map[n.id]=n);
+  const out={}, inn={};
+  N.forEach(n=>{out[n.id]=[];inn[n.id]=[];});
+  E.forEach(([a,b])=>{out[a].push(b);inn[b].push(a);});
+
+  const gE=document.createElementNS(NS,'g');
+  const gP=document.createElementNS(NS,'g');
+  const gN=document.createElementNS(NS,'g');
+  svg.append(gE,gP,gN);
+
+  const R=38;
+  function hexPath(cx,cy,r){
+    let d='';
+    for(let i=0;i<6;i++){
+      const a=Math.PI/180*(60*i-90);
+      const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
+      d+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);
+    }
+    return d+'Z';
+  }
+  const paths=[];
+  E.forEach(([a,b,fb,bw],i)=>{
+    const A=map[a],B=map[b];
+    const dx=B.x-A.x, dy=B.y-A.y, len=Math.hypot(dx,dy);
+    const ux=dx/len, uy=dy/len;
+    const sx=A.x+ux*(R+5), sy=A.y+uy*(R+5);
+    const ex=B.x-ux*(R+5), ey=B.y-uy*(R+5);
+    const mx=(sx+ex)/2, my=(sy+ey)/2;
+    const bow=(bw!==undefined)?bw:(fb?26:-16);
+    const cx=mx-uy*bow, cy=my+ux*bow;
+    const pth=document.createElementNS(NS,'path');
+    pth.setAttribute('d','M'+sx+' '+sy+' Q'+cx+' '+cy+' '+ex+' '+ey);
+    pth.setAttribute('class','ed'+(fb?' fb':''));
+    pth.dataset.a=a; pth.dataset.b=b;
+    gE.appendChild(pth);
+    paths.push({el:pth,a,b,fb,len:0,dot:null,t:Math.random()});
+  });
+  paths.forEach(p=>{
+    p.len=p.el.getTotalLength();
+    const d=document.createElementNS(NS,'circle');
+    d.setAttribute('r',p.fb?1.9:2.4);
+    d.setAttribute('fill',p.fb?'#D9A441':'#35C9B8');
+    d.setAttribute('opacity','.75');
+    gP.appendChild(d); p.dot=d;
+  });
+
+  const nodeEls={};
+  N.forEach(n=>{
+    const g=document.createElementNS(NS,'g');
+    g.setAttribute('class','nd'+(n.plant?' plant':'')); g.style.setProperty('--c',n.c);
+    g.dataset.id=n.id; g.setAttribute('tabindex','0');
+    const gl=document.createElementNS(NS,'path');
+    gl.setAttribute('d',hexPath(n.x,n.y,R+13));
+    gl.setAttribute('class','gl'); gl.setAttribute('fill',n.c);
+    const hx=document.createElementNS(NS,'path');
+    hx.setAttribute('d',hexPath(n.x,n.y,R)); hx.setAttribute('class','hx');
+    const use=document.createElementNS(NS,'use');
+    use.setAttribute('href','#'+n.ic); use.setAttribute('class','ico');
+    use.setAttribute('x',n.x-11); use.setAttribute('y',n.y-13);
+    use.setAttribute('width','22'); use.setAttribute('height','22');
+    const lb=document.createElementNS(NS,'text');
+    lb.setAttribute('class','lb'); lb.setAttribute('x',n.x); lb.setAttribute('y',n.y+R+17);
+    lb.textContent=n.mn;
+    g.append(gl,hx,use,lb); gN.appendChild(g); nodeEls[n.id]=g;
+
+    g.addEventListener('mouseenter',()=>{if(!dead.size) focus(n.id);});
+    g.addEventListener('mouseleave',()=>{if(!dead.size) clear();});
+    g.addEventListener('focus',()=>{if(!dead.size) focus(n.id);});
+    g.addEventListener('blur',()=>{if(!dead.size) clear();});
+    g.addEventListener('click',()=>collapse(n.id));
+    g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();collapse(n.id);}});
+  });
+
+  function clear(){
+    Object.values(nodeEls).forEach(g=>g.classList.remove('hot','mute'));
+    paths.forEach(p=>p.el.classList.remove('on','mute'));
+    msg.innerHTML='Зангилаа дээр хулганаа аваачиж холбоог нь харна уу · дарвал задралыг загварчилна';
+  }
+  function focus(id){
+    const kin=new Set([id,...out[id],...inn[id]]);
+    Object.entries(nodeEls).forEach(([k,g])=>{
+      g.classList.toggle('hot',k===id);
+      g.classList.toggle('mute',!kin.has(k));
+    });
+    paths.forEach(p=>{
+      const rel=(p.a===id||p.b===id);
+      p.el.classList.toggle('on',rel);
+      p.el.classList.toggle('mute',!rel);
+    });
+    const n=map[id];
+    const gives=out[id].map(k=>map[k].mn).join(', ')||'—';
+    const takes=inn[id].map(k=>map[k].mn).join(', ')||'—';
+    msg.innerHTML='<b>'+n.mn+'</b> ('+n.en+') · дэмждэг: <em>'+gives+'</em> · хамаардаг: <em>'+takes+'</em>';
+  }
+
+  let dead=new Set();
+  function collapse(id){
+    dead=new Set(); clear();
+    const order=[]; const seen=new Set([id]); let front=[id]; let depth=0;
+    while(front.length && depth<8){
+      order.push([depth,front.slice()]);
+      const nxt=[];
+      front.forEach(k=>out[k].forEach(t=>{if(!seen.has(t)){seen.add(t);nxt.push(t);}}));
+      front=nxt; depth++;
+    }
+    order.forEach(([d,grp])=>{
+      setTimeout(()=>{
+        grp.forEach(k=>{dead.add(k);nodeEls[k].classList.add('dead');});
+        paths.forEach(p=>{if(dead.has(p.a)||dead.has(p.b)) p.el.classList.add('dead');});
+        const names=[...dead].filter(k=>k!==id).map(k=>map[k].mn);
+        msg.innerHTML='<b>'+map[id].mn+'</b> алдагдвал · өртөх давхарга: <em>'+
+          (names.length?names.join(', '):'—')+'</em> · нийт '+dead.size+'/'+N.length+' зангилаа';
+      }, reduce?0:d*620);
+    });
+  }
+  document.getElementById('webreset').addEventListener('click',()=>{
+    dead=new Set();
+    Object.values(nodeEls).forEach(g=>g.classList.remove('dead'));
+    paths.forEach(p=>p.el.classList.remove('dead'));
+    clear();
+  });
+
+  let raf;
+  function flow(){
+    paths.forEach(p=>{
+      p.t+=p.fb?0.0024:0.0034;
+      if(p.t>1) p.t-=1;
+      const pt=p.el.getPointAtLength(p.t*p.len);
+      p.dot.setAttribute('cx',pt.x); p.dot.setAttribute('cy',pt.y);
+      const vis=p.el.classList.contains('mute')||p.el.classList.contains('dead');
+      p.dot.setAttribute('opacity',vis?0.06:0.75);
+    });
+    raf=requestAnimationFrame(flow);
+  }
+  if(!reduce){
+    const io=new IntersectionObserver(es=>es.forEach(e=>{
+      if(e.isIntersecting){ if(!raf) raf=requestAnimationFrame(flow); }
+      else { cancelAnimationFrame(raf); raf=null; }
+    }),{threshold:.05});
+    io.observe(svg);
+  } else {
+    paths.forEach(p=>{const pt=p.el.getPointAtLength(p.len*.5);
+      p.dot.setAttribute('cx',pt.x);p.dot.setAttribute('cy',pt.y);});
+  }
+})();
+
+/* ================= principle animations ================= */
+(function(){
+  const C={teal:'#35C9B8',gold:'#D9A441',sage:'#7FA86B',elm:'#9BC47F',clay:'#B8763F',
+           red:'#B84A4A',dim:'#4B5D71',mute:'#8296AB',ink:'#E6EDF3',line:'#16232F'};
+  const mono='11px "IBM Plex Mono", monospace';
+  function rgba(hex,a){const n=parseInt(hex.slice(1),16);
+    return 'rgba('+(n>>16)+','+((n>>8)&255)+','+(n&255)+','+a+')';}
+
+  const A={};
+
+  /* --- I. water as ceiling --- */
+  A.water=(x,w,h,t,st)=>{
+    const lvl=0.30+0.30*(0.5+0.5*Math.sin(t*0.00055));
+    const wy=h-(h*0.14+lvl*h*0.66);
+    const cols=13, rows=5, padX=w*0.10, padB=h*0.16;
+    for(let c=0;c<cols;c++)for(let r=0;r<rows;r++){
+      const px=padX+c*((w-padX*2)/(cols-1));
+      const py=h-padB-r*((h*0.62)/(rows-1));
+      const alive=py>wy;
+      x.fillStyle=alive?rgba(C.sage,.9):rgba(C.dim,.32);
+      x.beginPath();x.arc(px,py,alive?3.2:2.2,0,7);x.fill();
+    }
+    x.beginPath();
+    for(let i=0;i<=w;i+=4){
+      const y=wy+Math.sin((i*0.022)+t*0.0022)*3.2;
+      i?x.lineTo(i,y):x.moveTo(i,y);
+    }
+    x.lineTo(w,h);x.lineTo(0,h);x.closePath();
+    x.fillStyle=rgba(C.teal,.10);x.fill();
+    x.beginPath();
+    for(let i=0;i<=w;i+=4){
+      const y=wy+Math.sin((i*0.022)+t*0.0022)*3.2;
+      i?x.lineTo(i,y):x.moveTo(i,y);
+    }
+    x.strokeStyle=C.teal;x.lineWidth=1.4;x.stroke();
+    x.setLineDash([4,4]);x.strokeStyle=rgba(C.gold,.55);x.lineWidth=1;
+    x.beginPath();x.moveTo(0,wy);x.lineTo(w,wy);x.stroke();x.setLineDash([]);
+    x.font=mono;x.fillStyle=C.gold;x.textAlign='right';
+    x.fillText('ДЭЭД ХЯЗГААР',w-12,wy-8);x.textAlign='left';
+    st.textContent='Багтаамж '+Math.round(lvl*100)+'%';
+  };
+
+  /* --- II. engineer creates shelter --- */
+  const wind=[];
+  A.shelter=(x,w,h,t,st)=>{
+    const tx=w*0.42, base=h*0.84, cr=Math.min(w,h)*0.17;
+    x.fillStyle=rgba(C.gold,.07);
+    x.fillRect(tx,base-cr*2.1,w-tx,cr*2.1+ (h-base));
+    x.setLineDash([3,4]);x.strokeStyle=rgba(C.gold,.35);x.lineWidth=1;
+    x.strokeRect(tx,base-cr*2.1,w-tx-6,cr*2.1);x.setLineDash([]);
+    if(wind.length<70) wind.push({x:-10,y:Math.random()*h*0.9,v:.9+Math.random()*1.5,len:8+Math.random()*16});
+    wind.forEach(p=>{
+      const dy=p.y-(base-cr*0.9), dx=p.x-tx;
+      if(dx>-cr*1.5&&dx<cr*1.2&&Math.abs(dy)<cr*1.3) p.y-=0.9*(dy>0?-1:1)*-1;
+      p.x+=p.v;
+      if(p.x>w+20){p.x=-10;p.y=Math.random()*h*0.9;}
+      const shielded=p.x>tx&&Math.abs(dy)<cr*1.2;
+      x.strokeStyle=rgba(C.mute,shielded?.10:.42);x.lineWidth=1;
+      x.beginPath();x.moveTo(p.x,p.y);x.lineTo(p.x-p.len,p.y);x.stroke();
+    });
+    x.strokeStyle=C.elm;x.lineWidth=2;
+    x.beginPath();x.moveTo(tx,base);x.lineTo(tx,base-cr*1.1);x.stroke();
+    x.fillStyle=rgba(C.elm,.22);x.strokeStyle=C.elm;x.lineWidth=1.6;
+    x.beginPath();x.arc(tx,base-cr*1.5,cr,0,7);x.fill();x.stroke();
+    for(let i=0;i<5;i++){
+      const sx=tx+cr*0.9+i*((w-tx-cr)/5.4)+10;
+      const g=(Math.sin(t*0.0018+i)*0.5+0.5);
+      const sh=6+g*12;
+      x.strokeStyle=rgba(C.sage,.35+g*0.5);x.lineWidth=1.4;
+      x.beginPath();x.moveTo(sx,base);x.lineTo(sx,base-sh);x.stroke();
+      x.beginPath();x.moveTo(sx,base-sh);x.lineTo(sx+4,base-sh-4);x.stroke();
+      x.beginPath();x.moveTo(sx,base-sh+3);x.lineTo(sx-4,base-sh-1);x.stroke();
+    }
+    x.strokeStyle=rgba(C.line,1);x.lineWidth=1;
+    x.beginPath();x.moveTo(0,base);x.lineTo(w,base);x.stroke();
+    st.textContent='Салхи −70% · чийг хадгалагдана';
+  };
+
+  /* --- III. narrow window --- */
+  A.window=(x,w,h,t,st)=>{
+    const cyc=(t%9000)/9000, padL=w*0.07, padR=w*0.05, base=h*0.80;
+    const X=v=>padL+v*(w-padL-padR);
+    x.strokeStyle=rgba(C.line,1);x.lineWidth=1;
+    x.beginPath();x.moveTo(0,base);x.lineTo(w,base);x.stroke();
+    const gauss=(v,m,s)=>Math.exp(-Math.pow(v-m,2)/(2*s*s));
+    function curve(mu,sg,col,fill){
+      x.beginPath();
+      let started=false;
+      for(let v=0;v<=Math.min(cyc,1);v+=0.005){
+        const px=X(v), py=base-gauss(v,mu,sg)*(h*0.52);
+        started?x.lineTo(px,py):(x.moveTo(px,py),started=true);
+      }
+      x.strokeStyle=col;x.lineWidth=1.8;x.stroke();
+      if(started){x.lineTo(X(Math.min(cyc,1)),base);x.lineTo(X(0),base);x.closePath();
+        x.fillStyle=fill;x.fill();}
+    }
+    curve(0.34,0.075,C.sage,rgba(C.sage,.13));
+    curve(0.42,0.055,C.gold,rgba(C.gold,.13));
+    if(cyc>0.16){
+      const a=Math.max(0,1-(cyc-0.16)*3);
+      x.fillStyle=rgba(C.teal,.5+a*.5);
+      for(let i=0;i<7;i++){
+        const dx=X(0.16)+ (i-3)*7, dy=h*0.13+((cyc-0.16)*380+i*9)%(base-h*0.13);
+        x.fillRect(dx,dy,1.4,7);
+      }
+      x.font=mono;x.fillStyle=rgba(C.teal,.9);x.textAlign='center';
+      x.fillText('БОРОО',X(0.16),h*0.10);x.textAlign='left';
+    }
+    if(cyc<1){
+      x.strokeStyle=rgba(C.ink,.30);x.lineWidth=1;
+      x.beginPath();x.moveTo(X(cyc),h*0.06);x.lineTo(X(cyc),base);x.stroke();
+    }
+    x.font=mono;x.fillStyle=C.dim;
+    x.fillText('ХУГАЦАА →',padL,base+16);
+    st.textContent=cyc<0.16?'Хуурай үе':cyc<0.55?'Идэвхийн цонх нээлттэй':'Цонх хаагдав';
+  };
+
+  /* --- IV. connectivity --- */
+  const herd=[];
+  A.link=(x,w,h,t,st)=>{
+    const cyc=(t%14000)/14000, cut=cyc>0.45;
+    const py=h*0.5, pw=w*0.19, ph=h*0.46;
+    [[w*0.11,1],[w*0.89,cut?Math.max(.18,1-(cyc-0.45)*2.4):1]].forEach(([px,vit])=>{
+      x.fillStyle=rgba(C.sage,.10*vit);
+      x.beginPath();x.ellipse(px,py,pw*0.5,ph*0.5,0,0,7);x.fill();
+      x.strokeStyle=rgba(C.sage,.28+.4*vit);x.lineWidth=1.2;
+      x.beginPath();x.ellipse(px,py,pw*0.5,ph*0.5,0,0,7);x.stroke();
+      for(let i=0;i<9;i++){
+        const a=i/9*6.28, r=pw*0.30;
+        x.fillStyle=rgba(C.sage,.30*vit+.12);
+        x.beginPath();x.arc(px+Math.cos(a)*r,py+Math.sin(a)*r*1.1,2,0,7);x.fill();
+      }
+    });
+    if(herd.length<11) herd.push({p:Math.random(),d:1,s:.0016+Math.random()*.0018,o:(Math.random()-.5)*h*0.26});
+    herd.forEach(a=>{
+      a.p+=a.s*a.d*16;
+      if(cut){
+        if(a.d>0&&a.p>0.47){a.p=0.47-Math.random()*0.04;a.d=-1;}
+      }
+      if(a.p>1){a.p=1;a.d=-1;} if(a.p<0){a.p=0;a.d=1;}
+      const ax=w*0.11+a.p*(w*0.78), ay=py+a.o;
+      x.fillStyle=C.clay;x.beginPath();x.arc(ax,ay,2.6,0,7);x.fill();
+      x.strokeStyle=rgba(C.clay,.20);x.lineWidth=1;
+      x.beginPath();x.moveTo(ax,ay);x.lineTo(ax-a.d*9,ay);x.stroke();
+    });
+    if(cut){
+      const bx=w*0.5, a=Math.min(1,(cyc-0.45)*5);
+      x.strokeStyle=rgba(C.red,.85*a);x.lineWidth=2;
+      x.beginPath();x.moveTo(bx,h*0.14);x.lineTo(bx,h*0.86);x.stroke();
+      x.lineWidth=1;
+      for(let y=h*0.16;y<h*0.86;y+=11){
+        x.beginPath();x.moveTo(bx-5,y);x.lineTo(bx+5,y);x.stroke();
+      }
+      x.font=mono;x.fillStyle=rgba(C.red,a);x.textAlign='center';
+      x.fillText('ТАСАЛДАЛ',bx,h*0.10);x.textAlign='left';
+    }
+    st.textContent=cut?'Нүүдэл тасарч, нэг талбай доройтож эхлэв':'Холболт бүрэн · нүүдэл чөлөөтэй';
+  };
+
+  /* --- V. climate shift --- */
+  A.climate=(x,w,h,t,st)=>{
+    const cyc=(t%13000)/13000;
+    const warm=cyc<0.75?cyc/0.75:1-(cyc-0.75)/0.25;
+    const padL=w*0.17, top=h*0.12, bot=h*0.88;
+    const bandH=(bot-top)*(0.42-warm*0.24);
+    const bandY=top+(bot-top)*(0.46-warm*0.44);
+    const lost=Math.max(0,top-bandY);
+    x.strokeStyle=rgba(C.line,1);x.lineWidth=1;
+    x.beginPath();x.moveTo(padL,top);x.lineTo(padL,bot);x.stroke();
+    x.font=mono;x.fillStyle=C.dim;x.textAlign='right';
+    x.fillText('ӨНДӨР',padL-8,top+10); x.fillText('НАМ',padL-8,bot);
+    x.textAlign='left';
+    x.save();x.beginPath();x.rect(padL,top,w-padL-14,bot-top);x.clip();
+    x.fillStyle=rgba(C.sage,.16);
+    x.fillRect(padL,bandY,w-padL-14,bandH);
+    x.strokeStyle=rgba(C.sage,.75);x.lineWidth=1.4;
+    x.strokeRect(padL,bandY,w-padL-14,bandH);
+    x.restore();
+    if(lost>0){
+      x.fillStyle=rgba(C.dim,.30);
+      x.fillRect(padL,top-1,w-padL-14,2);
+      x.setLineDash([3,3]);x.strokeStyle=rgba(C.dim,.6);
+      x.beginPath();x.moveTo(padL,top);x.lineTo(w-14,top);x.stroke();x.setLineDash([]);
+    }
+    const bw=10, bx=w-bw-14;
+    x.fillStyle=rgba(C.line,1);x.fillRect(bx,top,bw,bot-top);
+    x.fillStyle=rgba(C.clay,.85);
+    x.fillRect(bx,bot-(bot-top)*warm,bw,(bot-top)*warm);
+    const remain=Math.round((bandH-lost)/((bot-top)*0.42)*100);
+    st.textContent='Тархац '+Math.max(0,remain)+'% · дулаарал +'+(warm*4).toFixed(1)+'°';
+  };
+
+  /* --- runner --- */
+  document.querySelectorAll('.pr-viz canvas').forEach(cv=>{
+    const fn=A[cv.dataset.anim];
+    const st=cv.parentElement.querySelector('.pr-state');
+    if(!fn) return;
+    const x=cv.getContext('2d');
+    let w=0,h=0,raf=null,t0=performance.now();
+    function size(){
+      const r=cv.getBoundingClientRect();
+      cv.width=r.width*devicePixelRatio; cv.height=r.height*devicePixelRatio;
+      x.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+      w=r.width; h=r.height;
+    }
+    function frame(now){
+      x.clearRect(0,0,w,h);
+      fn(x,w,h,now-t0,st);
+      raf=requestAnimationFrame(frame);
+    }
+    size(); addEventListener('resize',size);
+    if(reduce){ fn(x,w,h,4200,st); return; }
+    new IntersectionObserver(es=>es.forEach(e=>{
+      if(e.isIntersecting){ if(!raf) raf=requestAnimationFrame(frame); }
+      else if(raf){ cancelAnimationFrame(raf); raf=null; }
+    }),{threshold:.12}).observe(cv);
+  });
+})();
+
+/* ================= restoration timeline ================= */
+(function(){
+  const cv=document.getElementById('tlcv'); if(!cv) return;
+  const x=cv.getContext('2d');
+  const tabs=[...document.querySelectorAll('.tl-tab')];
+  const bar=document.getElementById('tlbar'), desc=document.getElementById('tldesc');
+  const C={sky:'#0A1220',sand:'#2A2118',soil:'#1B1710',elm:'#9BC47F',sage:'#7FA86B',
+           gold:'#D9A441',teal:'#35C9B8',clay:'#B8763F',mute:'#8296AB',dim:'#4B5D71',
+           water:'#2E7C9A',ink:'#E6EDF3'};
+  const TXT=[
+    '<b>Жил 0–2 · Эхлэл</b> — Зургаан өнцөгт эсийн бүтцээр суулгац тарина. Дусал усалгаа эс бүрийг тусад нь тэжээнэ. Хөрс нүцгэн, салхи чөлөөтэй.',
+    '<b>Жил 3–7 · Nebkha effect</b> — Тарьц салхийг сааруулж эхэлмэгц суурьт нь элс тунаж бичил манхан үүснэ. Хөрс бүрэлдэж, зэрлэг зөгий эргэн ирнэ.',
+    '<b>Жил 8–15 · Чийг тогтох</b> — Үндэсний систем гүнзгийрч гүний усыг татна. Хөрсний чийг тогтвортой болж, шавьж, мэрэгчид үүрлэж эхэлнэ.',
+    '<b>Жил 15+ · Экосистемийн сүлжээ</b> — Титэм бүрэлдэж, шувууд үүрлэнэ. Тоос хүртээлт, задрал, тэжээлийн эргэлт бие даан ажиллах сүлжээ болно. Хашаа том туурайтныг гадуурхах тул олон янз байдал шавьж, мэрэгч, шувуугаар хэмжигдэнэ.'
+  ];
+  const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const ease=v=>1-Math.pow(1-v,2.2);
+
+  let target=0, sp=0, auto=true, lastSwitch=performance.now(), raf=null;
+  const rnd=(seed)=>{let t=seed*16807%2147483647;return()=>((t=t*16807%2147483647)/2147483647);};
+
+  const TREES=(()=>{const r=rnd(7),a=[];for(let i=0;i<7;i++)
+    a.push({fx:0.10+i*0.133+(r()-.5)*0.03,sc:0.82+r()*0.42,ph:r()*6.28});return a;})();
+  const sand=[],bees=[],birds=[];
+  for(let i=0;i<90;i++) sand.push({x:Math.random(),y:Math.random(),v:.5+Math.random()});
+
+  function tree(w,h,gy,t,T,g,neb){
+    const px=T.fx*w, sc=g*T.sc;
+    const th=h*0.30*sc, cr=h*0.115*sc;
+    if(neb>0.02){
+      const nw=cr*1.9*neb, nh=h*0.045*neb*T.sc;
+      x.fillStyle='rgba(122,98,66,'+(0.55*neb)+')';
+      x.beginPath();x.moveTo(px-nw,gy);
+      x.quadraticCurveTo(px,gy-nh*2.1,px+nw,gy);x.closePath();x.fill();
+    }
+    x.strokeStyle=C.elm;x.lineWidth=Math.max(1.1,2.4*sc);
+    x.beginPath();x.moveTo(px,gy);x.lineTo(px,gy-th);x.stroke();
+    const sw=Math.sin(t*0.0011+T.ph)*2.2*sc;
+    x.fillStyle='rgba(155,196,127,'+(0.14+0.16*g)+')';
+    x.strokeStyle=C.elm;x.lineWidth=1.5;
+    x.beginPath();x.ellipse(px+sw,gy-th-cr*0.55,cr,cr*0.88,0,0,7);x.fill();x.stroke();
+    return {px,gy,th,cr};
+  }
+
+  function roots(w,h,gy,T,g,rt){
+    if(rt<0.02) return;
+    const px=T.fx*w, d=h*0.26*rt*T.sc;
+    x.strokeStyle='rgba(155,196,127,'+(0.42*rt)+')';x.lineWidth=1.2;
+    [-1,0,1].forEach((k,i)=>{
+      x.beginPath();x.moveTo(px,gy);
+      x.quadraticCurveTo(px+k*22*rt,gy+d*0.55,px+k*36*rt,gy+d);x.stroke();
+    });
+  }
+
+  function draw(now){
+    const r=cv.getBoundingClientRect();
+    if(cv.width!==r.width*devicePixelRatio){
+      cv.width=r.width*devicePixelRatio;cv.height=r.height*devicePixelRatio;
+      x.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    }
+    const w=r.width,h=r.height,t=now;
+    if(auto && now-lastSwitch>7000){ target=(target+1)%4; lastSwitch=now; sync(); }
+    sp+=(target-sp)*0.045;
+
+    const g=0.16+0.84*ease(cl(sp/3,0,1));
+    const neb=cl(sp-0.55,0,1), rt=cl(sp-1.5,0,1), gw=cl(sp-1.65,0,1);
+    const beeA=cl(sp-0.65,0,1), rodA=cl(sp-1.75,0,1);
+    const bigA=cl(sp-2.35,0,1), cyc=cl(sp-2.55,0,1);
+    const windA=Math.max(0,1-Math.abs(sp-1)*1.15);
+    const irr=Math.max(0,1-sp*0.85);
+    const gy=h*0.60;
+
+    x.clearRect(0,0,w,h);
+    const sky=x.createLinearGradient(0,0,0,gy);
+    sky.addColorStop(0,'rgba(10,18,32,1)');
+    sky.addColorStop(1,'rgba(26,30,34,'+(0.6+0.3*(1-g))+')');
+    x.fillStyle=sky;x.fillRect(0,0,w,gy);
+    x.fillStyle='rgba(27,23,16,1)';x.fillRect(0,gy,w,h-gy);
+
+    if(gw>0.02){
+      const wy=gy+h*0.30;
+      x.fillStyle='rgba(46,124,154,'+(0.20*gw)+')';
+      x.fillRect(0,wy,w,h-wy);
+      x.strokeStyle='rgba(46,124,154,'+(0.7*gw)+')';x.lineWidth=1.2;
+      x.beginPath();
+      for(let i=0;i<=w;i+=5){const y=wy+Math.sin(i*0.03+t*0.0016)*2.4;i?x.lineTo(i,y):x.moveTo(i,y);}
+      x.stroke();
+      for(let i=0;i<5;i++){
+        const ax=w*(0.18+i*0.17), ph=((t*0.05+i*80)%120)/120;
+        x.strokeStyle='rgba(46,124,154,'+(0.5*gw*(1-ph))+')';x.lineWidth=1;
+        x.beginPath();x.moveTo(ax,wy-ph*h*0.22);x.lineTo(ax,wy-ph*h*0.22-7);x.stroke();
+      }
+      x.font='10px "IBM Plex Mono",monospace';
+      x.fillStyle='rgba(46,124,154,'+(0.9*gw)+')';
+      x.fillText('ГҮНИЙ УС',12,wy+16);
+    }
+
+    if(irr>0.02){
+      x.strokeStyle='rgba(53,201,184,'+(0.5*irr)+')';x.lineWidth=1.1;
+      for(let i=0;i<6;i++){
+        const y=gy+6+i*3.5, off=(t*0.02+i*30)%w;
+        x.setLineDash([12,26]);x.lineDashOffset=-off;
+        x.beginPath();x.moveTo(0,y);x.lineTo(w,y);x.stroke();
+      }
+      x.setLineDash([]);
+      x.font='10px "IBM Plex Mono",monospace';
+      x.fillStyle='rgba(53,201,184,'+(0.85*irr)+')';
+      x.fillText('ДУСАЛ УСАЛГАА',12,gy+h*0.20);
+    }
+
+    x.strokeStyle='rgba(122,98,66,.85)';x.lineWidth=1.4;
+    x.beginPath();x.moveTo(0,gy);x.lineTo(w,gy);x.stroke();
+
+    TREES.forEach(T=>roots(w,h,gy,T,g,rt));
+    const nodes=TREES.map(T=>tree(w,h,gy,t,T,g,neb));
+
+    if(windA>0.02){
+      sand.forEach(p=>{
+        p.x+=0.0022*p.v; if(p.x>1.05)p.x-=1.15;
+        const px=p.x*w, py=gy-h*0.34*p.y-4;
+        const near=nodes.some(n=>Math.abs(px-n.px)<n.cr*1.5&&py>n.gy-n.th-n.cr*1.6);
+        x.fillStyle='rgba(190,170,140,'+(windA*(near?0.10:0.42))+')';
+        x.fillRect(px,py+Math.sin(px*0.05+t*0.004)*3,2.6,1.3);
+      });
+      x.font='10px "IBM Plex Mono",monospace';
+      x.fillStyle='rgba(130,150,171,'+(0.9*windA)+')';
+      x.fillText('САЛХИ · ЭЛС ТЭЭВЭРЛЭЛТ',12,h*0.13);
+      x.strokeStyle='rgba(130,150,171,'+(0.5*windA)+')';x.lineWidth=1;
+      x.beginPath();x.moveTo(12,h*0.17);x.lineTo(w*0.30,h*0.17);
+      x.lineTo(w*0.30-6,h*0.17-4);x.moveTo(w*0.30,h*0.17);x.lineTo(w*0.30-6,h*0.17+4);x.stroke();
+    }
+
+    if(beeA>0.02){
+      for(let i=0;i<8;i++){
+        const n=nodes[i%nodes.length];
+        const a=t*0.0016+i*1.4, rr=n.cr*(1.25+0.35*Math.sin(t*0.002+i));
+        const bx=n.px+Math.cos(a)*rr, by=n.gy-n.th-n.cr*0.5+Math.sin(a*1.6)*rr*0.62;
+        x.fillStyle='rgba(217,164,65,'+(0.9*beeA)+')';
+        x.beginPath();x.arc(bx,by,1.9,0,7);x.fill();
+      }
+      x.font='10px "IBM Plex Mono",monospace';
+      x.fillStyle='rgba(217,164,65,'+(0.9*beeA)+')';
+      x.fillText('ЗЭРЛЭГ ЗӨГИЙ',w-108,h*0.13);
+    }
+
+    if(rodA>0.02){
+      const n=nodes[2], bx=n.px+n.cr*1.7+Math.sin(t*0.0009)*10;
+      x.fillStyle='rgba(184,118,63,'+(0.85*rodA)+')';
+      x.beginPath();x.ellipse(bx,gy-4,5,3.4,0,0,7);x.fill();
+      x.beginPath();x.arc(bx+5,gy-6,2.2,0,7);x.fill();
+      x.strokeStyle='rgba(184,118,63,'+(0.5*rodA)+')';x.lineWidth=1;
+      x.beginPath();x.moveTo(bx-5,gy-4);x.lineTo(bx-11,gy-7);x.stroke();
+    }
+
+    if(bigA>0.02){
+      for(let i=0;i<2;i++){
+        const n=nodes[i?5:1];
+        const by=n.gy-n.th-n.cr*1.7-Math.sin(t*0.0012+i)*4;
+        x.strokeStyle='rgba(230,237,243,'+(0.75*bigA)+')';x.lineWidth=1.4;
+        x.beginPath();x.moveTo(n.px-7,by);x.quadraticCurveTo(n.px,by-4,n.px+7,by);x.stroke();
+      }
+      for(let i=0;i<3;i++){
+        const n=nodes[i*2+1], bx=n.px+n.cr*(1.5+i*0.3)+Math.sin(t*0.0008+i*2)*9;
+        x.fillStyle='rgba(184,118,63,'+(0.75*bigA)+')';
+        x.beginPath();x.ellipse(bx,gy-4,4.4,3,0,0,7);x.fill();
+        x.beginPath();x.arc(bx+4.4,gy-5.6,2,0,7);x.fill();
+      }
+      for(let i=0;i<4;i++){
+        const n=nodes[i+1], a=t*0.0012+i*1.9;
+        const bx=n.px+Math.cos(a)*n.cr*1.5, by=n.gy-n.th-n.cr*1.15+Math.sin(a*1.3)*n.cr*0.7;
+        const fl=Math.sin(t*0.012+i*2)*0.5+0.5;
+        x.strokeStyle='rgba(217,164,65,'+(0.7*bigA)+')';x.lineWidth=1.2;
+        x.beginPath();x.moveTo(bx-3.4,by);x.quadraticCurveTo(bx,by-2.4-fl*2,bx,by);
+        x.quadraticCurveTo(bx,by-2.4-fl*2,bx+3.4,by);x.stroke();
+      }
+      x.font='10px "IBM Plex Mono",monospace';
+      x.fillStyle='rgba(230,237,243,'+(0.75*bigA)+')';
+      x.fillText('ШУВУУ · МЭРЭГЧ · ЭРВЭЭХЭЙ',w-186,h*0.20);
+      x.strokeStyle='rgba(130,150,171,'+(0.30*bigA)+')';x.lineWidth=1;
+      x.setLineDash([2,4]);
+      x.beginPath();x.moveTo(w-8,gy);x.lineTo(w-8,gy-h*0.20);x.stroke();
+      x.beginPath();x.moveTo(6,gy);x.lineTo(6,gy-h*0.20);x.stroke();
+      x.setLineDash([]);
+    }
+
+    if(cyc>0.02){
+      x.strokeStyle='rgba(127,168,107,'+(0.45*cyc)+')';x.lineWidth=1.2;
+      x.setLineDash([4,5]);x.lineDashOffset=-(t*0.03)%40;
+      nodes.forEach((n,i)=>{
+        if(i%2) return;
+        x.beginPath();
+        x.arc(n.px,n.gy-n.th*0.55,n.cr*1.65,-Math.PI*0.9,Math.PI*0.35);x.stroke();
+      });
+      x.setLineDash([]);
+      x.font='10px "IBM Plex Mono",monospace';
+      x.fillStyle='rgba(127,168,107,'+(0.85*cyc)+')';
+      x.fillText('ТЭЖЭЭЛИЙН ЭРГЭЛТ',12,h*0.13);
+    }
+
+    bar.style.width=((sp/3)*100).toFixed(1)+'%';
+    raf=requestAnimationFrame(draw);
+  }
+
+  function sync(){
+    tabs.forEach((b,i)=>b.classList.toggle('act',i===target));
+    desc.innerHTML=TXT[target];
+  }
+  tabs.forEach((b,i)=>b.addEventListener('click',()=>{
+    target=i; auto=false; lastSwitch=performance.now(); sync();
+  }));
+  sync();
+
+  if(reduce){ sp=3; target=3; sync(); draw(4000); cancelAnimationFrame(raf); return; }
+  new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){ if(!raf) raf=requestAnimationFrame(draw); }
+    else if(raf){ cancelAnimationFrame(raf); raf=null; }
+  }),{threshold:.1}).observe(cv);
+})();
+</script>
+</body>
+</html>
