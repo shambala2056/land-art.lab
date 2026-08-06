@@ -88,11 +88,28 @@
         .site-logo-img { height: 34px; width: auto; display: block; }
         .site-logo-img.footer { height: 44px; }
         .hero-logo-standalone { height: 190px; width: auto; display: block; margin: 0 auto; }
-        /* Subtle ambient motion on the static hero photo: slow breathing zoom. */
+        /* Hero photo is held still — the only motion in the hero is the green light wash below. */
         .hero-image { overflow: hidden; }
-        .hero-image .hero-bg-img { animation: heroZoom 16s ease-in-out infinite; will-change: transform; transition: opacity .6s ease; }
-        @keyframes heroZoom { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
-        @media (prefers-reduced-motion: reduce) { .hero-image .hero-bg-img { animation: none; } }
+        .hero-image .hero-bg-img { animation: none; transition: opacity .6s ease; }
+        /* Brand-green light wash over the hero photo. The photo is near-white, so this
+           multiplies (screen/soft-light would vanish into the white) — green tint, texture intact. */
+        .hero-light { position: absolute; inset: 0; border-radius: 40px; overflow: hidden; pointer-events: none; mix-blend-mode: multiply; }
+        .hero-light i { position: absolute; display: block; border-radius: 50%; filter: blur(50px); will-change: transform, opacity; }
+        .hero-light .l1 { width: 46%; padding-bottom: 46%; left: -6%;  top: -12%; background: radial-gradient(circle, rgba(178,209,53,.55) 0%, rgba(178,209,53,.22) 42%, rgba(178,209,53,0) 70%); animation: heroGlow 14s ease-in-out infinite; }
+        .hero-light .l2 { width: 40%; padding-bottom: 40%; right: -5%; top: 20%;  background: radial-gradient(circle, rgba(178,209,53,.48) 0%, rgba(178,209,53,.18) 45%, rgba(178,209,53,0) 72%); animation: heroGlow 18s ease-in-out infinite 3s; }
+        .hero-light .l3 { width: 55%; padding-bottom: 36%; left: 24%;  bottom: -14%; background: radial-gradient(ellipse at center, rgba(178,209,53,.42) 0%, rgba(178,209,53,.16) 48%, rgba(178,209,53,0) 74%); animation: heroGlow 22s ease-in-out infinite 7s; }
+        @keyframes heroGlow {
+            0%, 100% { opacity: .4; transform: translate3d(0, 0, 0) scale(1); }
+            50%      { opacity: .8;  transform: translate3d(2%, -3%, 0) scale(1.15); }
+        }
+        /* A single soft beam raking across the photo, tinted the same green. */
+        .hero-light .beam { width: 26%; padding-bottom: 130%; left: 8%; top: -25%; border-radius: 0; filter: blur(45px); background: linear-gradient(90deg, rgba(178,209,53,0) 0%, rgba(178,209,53,.28) 45%, rgba(178,209,53,.38) 55%, rgba(178,209,53,0) 100%); animation: heroBeam 26s ease-in-out infinite; }
+        @keyframes heroBeam {
+            0%, 100% { opacity: .25; transform: rotate(18deg) translateX(-20%); }
+            50%      { opacity: .6;  transform: rotate(18deg) translateX(230%); }
+        }
+        @media (max-width: 767px) { .hero-light i { filter: blur(38px); } .hero-light .beam { display: none; } }
+        @media (prefers-reduced-motion: reduce) { .hero-light i { animation: none; opacity: .5; } }
         /* Land art poster images are portrait (5315x7087 ≈ 3:4) — old cards assumed landscape.
            Full-width made them enormous, so lay out as a 2-column grid of smaller cards instead. */
         .featured-works-item .image { aspect-ratio: 3 / 4; }
@@ -301,8 +318,6 @@
             .diag-sheet-stage .tl-mini-tabs, .diag-sheet-stage .pr5-mini-tabs { display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch; }
             .diag-sheet-stage .tl-mini-tab, .diag-sheet-stage .pr5-mini-tab { flex: 0 0 auto; min-width: 128px; }
             .diag-sheet-stage .tl-mini-tab .ti, .diag-sheet-stage .pr5-mini-tab .t { display: block; }
-            /* Ambient hero zoom is battery cost with no narrative value on a phone. */
-            .hero-image .hero-bg-img { animation: none; }
         }
         /* Touch devices have no hover — the diagrams must say "tap". */
         @media (prefers-reduced-motion: reduce) {
@@ -569,7 +584,10 @@
         <!-- Hero Banner -->
         <div class="section-hero">
             <div class="hero-image">
-                <img class="hero-bg-img" src="assets/images/section/hero-light-hexagon.jpg" alt="" fetchpriority="high">
+                <img class="hero-bg-img" src="assets/images/section/hero-sl-091920-35320-03.jpg" alt="" fetchpriority="high">
+                <div class="hero-light" aria-hidden="true">
+                    <i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="beam"></i>
+                </div>
             </div>
             <div class="container">
                 <div class="content-wrap text-center">
