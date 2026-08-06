@@ -216,6 +216,61 @@
         .pr5-mini-bar i { position: absolute; left: 0; top: 0; bottom: 0; background: #b2d135; width: 0; display: block; }
         @media (max-width: 575px) { .pr5-mini { height: 380px; } .pr5-mini-tab .t { display: none; } }
 
+        /* ---- Light theme for the six Ecosystem diagrams ----------------------------------
+           The widgets were authored dark-on-black. On white, the brand lime (#b2d135) drops
+           to ~1.6:1 against the surface, so text and hairlines use darkened stand-ins
+           (--dg-gold/--dg-teal) and #b2d135 survives only as a fill behind dark ink.
+           Overrides sit after the originals and reuse their selectors, so reverting is a
+           matter of deleting this block. */
+        .eco-mini-wrap, .tl-mini, .pr5-mini, .eco-web-wrap {
+            --dg-surface: #FFFFFF; --dg-panel: #F5F8FB; --dg-line: #DFE6EE; --dg-line-soft: #EDF1F6;
+            --dg-ink: #16202C; --dg-mute: #47566A; --dg-dim: #77869A;
+            --dg-gold: #8bc63f; --dg-teal: #0E8577;
+        }
+        .eco-mini-wrap, .tl-mini, .pr5-mini { background: var(--dg-surface); border: 1px solid var(--dg-line); }
+        .eco-web-wrap { background: var(--dg-surface); border-color: var(--dg-line); }
+        .eco-mini-msg, .tl-mini-desc, .eco-web-bar { background: var(--dg-panel); border-top-color: var(--dg-line); color: var(--dg-mute); }
+        .eco-mini-msg b, .tl-mini-desc b, .eco-web-msg b { color: var(--dg-gold); }
+        .eco-mini-msg em, .eco-web-msg em { color: var(--dg-teal); }
+        .eco-web-msg { color: var(--dg-mute); }
+        .eco-web-btn { color: var(--dg-mute); border-color: var(--dg-line); }
+        .eco-web-btn:hover { color: #fff; border-color: var(--dg-teal); background: var(--dg-teal); }
+        /* tab strips */
+        .tl-mini-tabs, .pr5-mini-tabs { border-bottom-color: var(--dg-line); background: var(--dg-panel); }
+        .tl-mini-tab, .pr5-mini-tab { border-right-color: var(--dg-line); }
+        .tl-mini-tab .yr, .pr5-mini-tab .n { color: var(--dg-dim); }
+        .tl-mini-tab .ti, .pr5-mini-tab .t { color: var(--dg-mute); }
+        .tl-mini-tab:hover, .pr5-mini-tab:hover { background: rgba(139,198,63,.14); }
+        .tl-mini-tab.act, .pr5-mini-tab.act { background: rgba(139,198,63,.20); }
+        .tl-mini-tab.act .yr, .tl-mini-tab.act .ti,
+        .pr5-mini-tab.act .n, .pr5-mini-tab.act .t { color: var(--dg-gold); }
+        .tl-mini-bar, .pr5-mini-bar { background: var(--dg-line); }
+        .tl-mini-bar i, .pr5-mini-bar i { background: var(--dg-gold); }
+        /* overlays painted on top of the canvas */
+        .pr5-mini-key span, .pr5-mini-cap { color: var(--dg-mute); }
+        .pr5-mini-read { color: var(--dg-dim); }
+        /* ecological-network SVG */
+        /* Each node keeps its own hue on the ring — on black the fill alone read as identity,
+           on white a pale fill needs the coloured outline to carry it. */
+        .eco-nd .eco-hx { fill: #F7FAFC; stroke: var(--c, #C7D2DF); stroke-width: 1.6;
+            filter: drop-shadow(0 0 4px var(--c, #C7D2DF)) drop-shadow(0 0 11px var(--c, #C7D2DF)); }
+        /* Labels sit over the halos, so they carry a white one of their own to stay crisp. */
+        .eco-nd .eco-lb { fill: var(--dg-ink); filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 2px #fff); }
+        .eco-nd .eco-ico { stroke: #55647A; }
+        .eco-nd.plant .eco-hx { stroke: var(--dg-gold); }
+        .eco-nd.plant .eco-lb { fill: var(--dg-gold); }
+        .eco-nd.hot .eco-ico { stroke: #FFFFFF; }
+        .eco-nd.hot .eco-lb { fill: var(--dg-ink); }
+        .eco-nd.hot .eco-gl { opacity: 0.22; }
+        .eco-nd.hot .eco-hx { filter: drop-shadow(0 0 6px var(--c)) drop-shadow(0 0 16px var(--c)); }
+        .eco-nd.dead .eco-hx { fill: #FBEFE9; stroke: #D06A45; }
+        .eco-nd.mute { opacity: 0.3; }
+        .eco-ed { stroke: #A9B7C7; opacity: 0.9; }
+        .eco-ed.on { stroke: var(--dg-teal); filter: drop-shadow(0 0 4px var(--dg-teal)); }
+        .eco-ed.on.fb { stroke: var(--dg-gold); filter: drop-shadow(0 0 4px var(--dg-gold)); }
+        .eco-ed.mute { opacity: 0.2; }
+        .eco-ed.dead { stroke: #D06A45; opacity: 0.5; }
+
         /* ── Measurement & assurance table (accordion 05) ─────────────────── */
         .mrv-table { border: 1px solid #1F3040; border-radius: 16px; overflow: hidden; background: #09111C; margin-bottom: 20px; }
         .mrv-row { display: grid; grid-template-columns: 1.1fr 1.6fr 0.7fr; gap: 14px; padding: 13px 18px; border-bottom: 1px solid #16232F;
@@ -302,6 +357,25 @@
         /* Inside the sheet the widget takes the whole stage instead of its fixed 460px box. */
         .diag-sheet-stage > * { width: 100%; height: 100% !important; }
         body.diag-locked { overflow: hidden; }
+
+        /* full-screen sheet hosting the same widgets */
+        .diag-sheet { background: #FFFFFF; }
+        .diag-sheet-bar { border-bottom-color: #DFE6EE; }
+        .diag-sheet-title { color: #16202C; }
+        .diag-sheet-close { border-color: #DFE6EE; color: #47566A; }
+        .diag-sheet-close:hover { background: #8bc63f; color: #16202C; border-color: #8bc63f; }
+        .diag-ghost { border-color: #DFE6EE; color: #77869A; }
+        /* Measurement & Assurance is a table rather than a canvas, but it is one of the six
+           panels and would be the only dark surface left in the set. */
+        .mrv-table { background: #FFFFFF; border-color: #DFE6EE; }
+        .mrv-row { border-bottom-color: #EDF1F6; color: #47566A; }
+        .mrv-row span:first-child { color: #16202C; }
+        .mrv-head { background: #F5F8FB; color: #6E7C8D; }
+        .mrv-head span:first-child { color: #6E7C8D; }
+        @media (max-width: 767px) {
+            .mrv-row span:nth-child(2) { color: #5A6879; }
+            .mrv-row span:nth-child(3) { color: #8bc63f; }
+        }
 
         /* Phones: no live animation inline — preview card + explicit full-screen entry. */
         @media (max-width: 767px) {
@@ -2272,10 +2346,12 @@
           var tabs=opts.tabsSelector?[].slice.call(document.querySelectorAll(opts.tabsSelector)):[];
           var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+          /* Node colours, darkened for the white diagram surface — each is a hex fill that
+             carries white icon strokes and dark ink labels, so they need ~4.5:1 on #fff. */
           var P={
-            water:'#35C9B8', elm:'#9BC47F', plant:'#7FA86B', bug:'#A6AEB6', poll:'#b2d135',
-            rod:'#8F86D8', bird:'#8F86D8', soil:'#7268C4', hub:'#b2d135', lab:'#35C9B8',
-            comm:'#9BC47F', prob:'#FF5A36', prob2:'#8C939B', out:'#F9FAFB'
+            water:'#0E8577', elm:'#8bc63f', plant:'#8bc63f', bug:'#6B7787', poll:'#8bc63f',
+            rod:'#C4923F', bird:'#4099ff', soil:'#7A5230', hub:'#8bc63f', lab:'#0E8577',
+            comm:'#8bc63f', prob:'#CC3A14', prob2:'#5B6879', out:'#16202C'
           };
 
           var VIEWS={
@@ -3053,14 +3129,36 @@
           return {start:start, stop:stop};
         }
 
+        /* Light on every colour: wraps a 2D context so each paint emits a halo in its own
+           fill/stroke colour. Gradients (the sky, the ground) are skipped — only solid colour
+           strings glow, which keeps the backdrop flat and the signal shapes lit. shadowBlur is
+           reset immediately so nothing leaks into the next call. */
+        function glowContext(ctx, blur){
+          /* Text is deliberately absent: a halo in the glyph's own colour just blurs it. */
+          ['fill','stroke','fillRect','strokeRect'].forEach(function(m){
+            var orig = ctx[m];
+            if (typeof orig !== 'function') return;
+            var isStroke = m.indexOf('stroke') === 0;
+            ctx[m] = function(){
+              var col = isStroke ? this.strokeStyle : this.fillStyle;
+              if (typeof col === 'string'){ this.shadowColor = col; this.shadowBlur = blur; }
+              var r = orig.apply(this, arguments);
+              this.shadowBlur = 0; this.shadowColor = 'transparent';
+              return r;
+            };
+          });
+          return ctx;
+        }
+
         function mountRestorationTimeline(opts){
           var cv=document.getElementById(opts.canvasId); if(!cv) return null;
-          var x=cv.getContext('2d');
+          var x=cv.getContext('2d'); glowContext(x, 7);
           var tabs=[].slice.call(document.querySelectorAll(opts.tabsSelector));
           var bar=document.getElementById(opts.barId), desc=document.getElementById(opts.descId);
-          var C={sky:'#0C0E12',sand:'#1A1D22',soil:'#101318',elm:'#9BC47F',sage:'#8AA828',
-                 gold:'#b2d135',teal:'#35C9B8',clay:'#8C939B',mute:'#8C939B',dim:'#5A616B',
-                 water:'#6E7681',ink:'#F9FAFB'};
+          /* Daylight palette: the scene reads as a lit desert rather than a night one. */
+          var C={sky:'#E8F1F9',sand:'#E4D9C4',soil:'#CFC2A6',elm:'#8bc63f',sage:'#8bc63f',
+                 gold:'#8bc63f',teal:'#0E8577',clay:'#6B7787',mute:'#47566A',dim:'#77869A',
+                 water:'#26749E',ink:'#16202C'};
           var TXT=[
             '<b>Year 0–2 · Start</b> — Seedlings are planted in a hexagonal cell structure. Drip irrigation feeds each cell separately. Soil is bare and wind moves freely.',
             '<b>Year 3–7 · Nebkha effect</b> — As the young trees begin to slow the wind, sand settles at their base and micro-dunes form. Soil builds and wild bees return.',
@@ -3082,13 +3180,13 @@
             s:0.75+Math.random()*0.6, sp:0.00016+Math.random()*0.00016, ph:Math.random()*6.28});
 
           function rodent(px,gy,sc,a,t,ph){
-            var c='rgba(166,174,182,'+a+')';
+            var c='rgba(108,120,134,'+a+')';
             var hop=Math.abs(Math.sin(t*0.004+ph))*2.2*sc, by=gy-3.4*sc-hop;
             x.fillStyle=c;
             x.beginPath();x.ellipse(px,by,5*sc,3.4*sc,-0.12,0,7);x.fill();
             x.beginPath();x.arc(px+5.2*sc,by-2.2*sc,2.3*sc,0,7);x.fill();
             x.beginPath();x.ellipse(px+4.4*sc,by-4.7*sc,0.9*sc,2*sc,-0.3,0,7);x.fill();
-            x.fillStyle='rgba(6,7,10,'+a+')';
+            x.fillStyle='rgba(28,38,50,'+a+')';
             x.beginPath();x.arc(px+6.2*sc,by-2.6*sc,0.6*sc,0,7);x.fill();
             x.strokeStyle=c;x.lineWidth=1.1*sc;x.lineCap='round';
             x.beginPath();x.moveTo(px-4.6*sc,by);
@@ -3100,7 +3198,7 @@
             x.lineCap='butt';
           }
           function hare(px,gy,sc,a,t,ph){
-            var c='rgba(200,208,214,'+a+')';
+            var c='rgba(118,130,144,'+a+')';
             var hop=Math.abs(Math.sin(t*0.0026+ph))*3*sc, by=gy-5.2*sc-hop;
             x.fillStyle=c;
             x.beginPath();x.ellipse(px,by,8*sc,5*sc,-0.08,0,7);x.fill();
@@ -3108,7 +3206,7 @@
             x.beginPath();x.arc(px+7.6*sc,by-3.6*sc,3.2*sc,0,7);x.fill();
             x.beginPath();x.ellipse(px+6.8*sc,by-8.6*sc,1.2*sc,3.7*sc,-0.24,0,7);x.fill();
             x.beginPath();x.ellipse(px+9.4*sc,by-8.1*sc,1.1*sc,3.4*sc,-0.04,0,7);x.fill();
-            x.fillStyle='rgba(6,7,10,'+a+')';
+            x.fillStyle='rgba(28,38,50,'+a+')';
             x.beginPath();x.arc(px+9*sc,by-4*sc,0.7*sc,0,7);x.fill();
             x.strokeStyle=c;x.lineWidth=1.4*sc;x.lineCap='round';
             x.beginPath();x.moveTo(px-6.2*sc,by+4.4*sc);x.lineTo(px-6.8*sc,gy);x.stroke();
@@ -3116,7 +3214,7 @@
             x.lineCap='butt';
           }
           function lizard(px,gy,sc,a,t,ph){
-            var c='rgba(140,147,155,'+a+')', wig=Math.sin(t*0.006+ph);
+            var c='rgba(92,104,118,'+a+')', wig=Math.sin(t*0.006+ph);
             x.strokeStyle=c;x.lineWidth=2.3*sc;x.lineCap='round';
             x.beginPath();x.moveTo(px-7*sc,gy-1.5*sc+wig*1.1*sc);
             x.quadraticCurveTo(px,gy-2.8*sc,px+6*sc,gy-1.7*sc);x.stroke();
@@ -3132,10 +3230,10 @@
             x.lineCap='butt';
           }
           function beetle(px,gy,sc,a,t,ph){
-            var c='rgba(138,168,40,'+a+')', cr=Math.sin(t*0.005+ph)*0.7*sc;
+            var c='rgba(139,198,63,'+a+')', cr=Math.sin(t*0.005+ph)*0.7*sc;
             x.fillStyle=c;
             x.beginPath();x.ellipse(px+cr,gy-2.3*sc,3.2*sc,2.2*sc,0,0,7);x.fill();
-            x.strokeStyle='rgba(6,7,10,'+(a*0.85)+')';x.lineWidth=0.7*sc;
+            x.strokeStyle='rgba(28,38,50,'+(a*0.85)+')';x.lineWidth=0.7*sc;
             x.beginPath();x.moveTo(px+cr,gy-4.4*sc);x.lineTo(px+cr,gy-0.2*sc);x.stroke();
             x.strokeStyle=c;x.lineWidth=0.8*sc;
             for(var i=-1;i<=1;i++){
@@ -3146,18 +3244,18 @@
           }
           function butterfly(px,py,sc,a,t,ph){
             var fl=Math.abs(Math.sin(t*0.011+ph)), wsp=0.32+fl*0.78;
-            x.fillStyle='rgba(178,209,53,'+(a*0.9)+')';
+            x.fillStyle='rgba(139,198,63,'+(a*0.9)+')';
             x.beginPath();x.ellipse(px-2.7*sc*wsp,py-1*sc,2.7*sc*wsp,2*sc,-0.5,0,7);x.fill();
             x.beginPath();x.ellipse(px+2.7*sc*wsp,py-1*sc,2.7*sc*wsp,2*sc,0.5,0,7);x.fill();
-            x.fillStyle='rgba(210,232,138,'+(a*0.65)+')';
+            x.fillStyle='rgba(139,198,63,'+(a*0.65)+')';
             x.beginPath();x.ellipse(px-2.2*sc*wsp,py+1.7*sc,1.8*sc*wsp,1.4*sc,-0.3,0,7);x.fill();
             x.beginPath();x.ellipse(px+2.2*sc*wsp,py+1.7*sc,1.8*sc*wsp,1.4*sc,0.3,0,7);x.fill();
-            x.strokeStyle='rgba(249,250,251,'+(a*0.85)+')';x.lineWidth=0.9*sc;
+            x.strokeStyle='rgba(22,32,44,'+(a*0.85)+')';x.lineWidth=0.9*sc;
             x.beginPath();x.moveTo(px,py-2.5*sc);x.lineTo(px,py+2.7*sc);x.stroke();
           }
           function flyBird(px,py,sc,a,t,ph){
             var fl=Math.sin(t*0.009+ph), up=fl*3.4*sc;
-            var c='rgba(249,250,251,'+a+')';
+            var c='rgba(22,32,44,'+a+')';
             x.strokeStyle=c;x.lineWidth=1.5*sc;x.lineCap='round';
             x.beginPath();x.moveTo(px-8.5*sc,py+up*0.55);
             x.quadraticCurveTo(px-4*sc,py-up,px,py);
@@ -3169,7 +3267,7 @@
             x.lineCap='butt';
           }
           function perchBird(px,py,sc,a,t,ph){
-            var c='rgba(249,250,251,'+a+')', bob=Math.sin(t*0.0022+ph)*0.9*sc;
+            var c='rgba(22,32,44,'+a+')', bob=Math.sin(t*0.0022+ph)*0.9*sc;
             x.fillStyle=c;
             x.beginPath();x.ellipse(px,py+bob,3.4*sc,2.4*sc,-0.25,0,7);x.fill();
             x.beginPath();x.arc(px+3*sc,py-2.4*sc+bob,1.9*sc,0,7);x.fill();
@@ -3187,14 +3285,14 @@
             var th=h*0.30*sc, cr=h*0.115*sc;
             if(neb>0.02){
               var nw=cr*1.9*neb, nh=h*0.045*neb*T.sc;
-              x.fillStyle='rgba(60,66,74,'+(0.55*neb)+')';
+              x.fillStyle='rgba(150,134,108,'+(0.55*neb)+')';
               x.beginPath();x.moveTo(px-nw,gy);
               x.quadraticCurveTo(px,gy-nh*2.1,px+nw,gy);x.closePath();x.fill();
             }
             x.strokeStyle=C.elm;x.lineWidth=Math.max(1.1,2.4*sc);
             x.beginPath();x.moveTo(px,gy);x.lineTo(px,gy-th);x.stroke();
             var sw=Math.sin(t*0.0011+T.ph)*2.2*sc;
-            x.fillStyle='rgba(210,232,138,'+(0.14+0.16*g)+')';
+            x.fillStyle='rgba(139,198,63,'+(0.14+0.16*g)+')';
             x.strokeStyle=C.elm;x.lineWidth=1.5;
             x.beginPath();x.ellipse(px+sw,gy-th-cr*0.55,cr,cr*0.88,0,0,7);x.fill();x.stroke();
             return {px:px,gy:gy,th:th,cr:cr};
@@ -3203,7 +3301,7 @@
           function roots(w,h,gy,T,g,rt){
             if(rt<0.02) return;
             var px=T.fx*w, d=h*0.26*rt*T.sc;
-            x.strokeStyle='rgba(210,232,138,'+(0.42*rt)+')';x.lineWidth=1.2;
+            x.strokeStyle='rgba(139,198,63,'+(0.42*rt)+')';x.lineWidth=1.2;
             [-1,0,1].forEach(function(k){
               x.beginPath();x.moveTo(px,gy);
               x.quadraticCurveTo(px+k*22*rt,gy+d*0.55,px+k*36*rt,gy+d);x.stroke();
@@ -3231,31 +3329,31 @@
 
             x.clearRect(0,0,w,h);
             var sky=x.createLinearGradient(0,0,0,gy);
-            sky.addColorStop(0,'rgba(12,14,18,1)');
-            sky.addColorStop(1,'rgba(20,23,28,'+(0.6+0.3*(1-g))+')');
+            sky.addColorStop(0,'rgba(232,241,249,1)');
+            sky.addColorStop(1,'rgba(244,248,252,'+(0.6+0.3*(1-g))+')');
             x.fillStyle=sky;x.fillRect(0,0,w,gy);
-            x.fillStyle='rgba(16,19,24,1)';x.fillRect(0,gy,w,h-gy);
+            x.fillStyle='rgba(228,217,196,1)';x.fillRect(0,gy,w,h-gy);
 
             if(gw>0.02){
               var wy=gy+h*0.30;
-              x.fillStyle='rgba(110,118,129,'+(0.20*gw)+')';
+              x.fillStyle='rgba(126,112,90,'+(0.20*gw)+')';
               x.fillRect(0,wy,w,h-wy);
-              x.strokeStyle='rgba(110,118,129,'+(0.7*gw)+')';x.lineWidth=1.2;
+              x.strokeStyle='rgba(126,112,90,'+(0.7*gw)+')';x.lineWidth=1.2;
               x.beginPath();
               for(var i=0;i<=w;i+=5){var y=wy+Math.sin(i*0.03+t*0.0016)*2.4;i?x.lineTo(i,y):x.moveTo(i,y);}
               x.stroke();
               for(var wi=0;wi<5;wi++){
                 var ax=w*(0.18+wi*0.17), ph=((t*0.05+wi*80)%120)/120;
-                x.strokeStyle='rgba(110,118,129,'+(0.5*gw*(1-ph))+')';x.lineWidth=1;
+                x.strokeStyle='rgba(126,112,90,'+(0.5*gw*(1-ph))+')';x.lineWidth=1;
                 x.beginPath();x.moveTo(ax,wy-ph*h*0.22);x.lineTo(ax,wy-ph*h*0.22-7);x.stroke();
               }
               x.font='9px Urbanist, sans-serif';
-              x.fillStyle='rgba(110,118,129,'+(0.9*gw)+')';
+              x.fillStyle='rgba(126,112,90,'+(0.9*gw)+')';
               x.fillText('GROUNDWATER',10,wy+14);
             }
 
             if(irr>0.02){
-              x.strokeStyle='rgba(214,222,228,'+(0.5*irr)+')';x.lineWidth=1.1;
+              x.strokeStyle='rgba(38,116,158,'+(0.5*irr)+')';x.lineWidth=1.1;
               for(var li=0;li<6;li++){
                 var ly=gy+6+li*3.5, off=(t*0.02+li*30)%w;
                 x.setLineDash([12,26]);x.lineDashOffset=-off;
@@ -3263,11 +3361,11 @@
               }
               x.setLineDash([]);
               x.font='9px Urbanist, sans-serif';
-              x.fillStyle='rgba(214,222,228,'+(0.85*irr)+')';
+              x.fillStyle='rgba(38,116,158,'+(0.85*irr)+')';
               x.fillText('DRIP IRRIGATION',10,gy+h*0.20);
             }
 
-            x.strokeStyle='rgba(60,66,74,.85)';x.lineWidth=1.4;
+            x.strokeStyle='rgba(150,134,108,.85)';x.lineWidth=1.4;
             x.beginPath();x.moveTo(0,gy);x.lineTo(w,gy);x.stroke();
 
             TREES.forEach(function(T){roots(w,h,gy,T,g,rt);});
@@ -3278,11 +3376,11 @@
                 p.x+=0.0022*p.v; if(p.x>1.05)p.x-=1.15;
                 var px=p.x*w, py=gy-h*0.34*p.y-4;
                 var near=nodes.some(function(n){return Math.abs(px-n.px)<n.cr*1.5&&py>n.gy-n.th-n.cr*1.6;});
-                x.fillStyle='rgba(150,157,165,'+(windA*(near?0.10:0.42))+')';
+                x.fillStyle='rgba(150,134,108,'+(windA*(near?0.10:0.42))+')';
                 x.fillRect(px,py+Math.sin(px*0.05+t*0.004)*3,2.6,1.3);
               });
               x.font='9px Urbanist, sans-serif';
-              x.fillStyle='rgba(140,147,155,'+(0.9*windA)+')';
+              x.fillStyle='rgba(92,104,118,'+(0.9*windA)+')';
               x.fillText('WIND · SAND TRANSPORT',10,h*0.13);
             }
 
@@ -3291,11 +3389,11 @@
                 var n=nodes[bi%nodes.length];
                 var a=t*0.0016+bi*1.4, rr=n.cr*(1.25+0.35*Math.sin(t*0.002+bi));
                 var bx=n.px+Math.cos(a)*rr, by=n.gy-n.th-n.cr*0.5+Math.sin(a*1.6)*rr*0.62;
-                x.fillStyle='rgba(178,209,53,'+(0.9*beeA)+')';
+                x.fillStyle='rgba(139,198,63,'+(0.9*beeA)+')';
                 x.beginPath();x.arc(bx,by,1.9,0,7);x.fill();
               }
               x.font='9px Urbanist, sans-serif';
-              x.fillStyle='rgba(178,209,53,'+(0.9*beeA)+')';
+              x.fillStyle='rgba(139,198,63,'+(0.9*beeA)+')';
               x.fillText('WILD BEES',w-90,h*0.13);
             }
 
@@ -3333,14 +3431,14 @@
               });
 
               x.font='9px Urbanist, sans-serif';
-              x.fillStyle='rgba(249,250,251,'+(0.75*bigA)+')';
+              x.fillStyle='rgba(22,32,44,'+(0.75*bigA)+')';
               x.textAlign='right';
               x.fillText('BIRDS · HARES · RODENTS · LIZARDS · INSECTS',w-12,h*0.20);
               x.textAlign='left';
             }
 
             if(cyc>0.02){
-              x.strokeStyle='rgba(138,168,40,'+(0.45*cyc)+')';x.lineWidth=1.2;
+              x.strokeStyle='rgba(139,198,63,'+(0.45*cyc)+')';x.lineWidth=1.2;
               x.setLineDash([4,5]);x.lineDashOffset=-(t*0.03)%40;
               nodes.forEach(function(n,i){
                 if(i%2) return;
@@ -3349,7 +3447,7 @@
               });
               x.setLineDash([]);
               x.font='9px Urbanist, sans-serif';
-              x.fillStyle='rgba(138,168,40,'+(0.85*cyc)+')';
+              x.fillStyle='rgba(139,198,63,'+(0.85*cyc)+')';
               x.fillText('NUTRIENT CYCLING',10,h*0.13);
             }
 
@@ -3373,12 +3471,13 @@
 
         function mountGoverningPrinciples(opts){
           var cv=document.getElementById(opts.canvasId); if(!cv) return null;
-          var x=cv.getContext('2d');
+          var x=cv.getContext('2d'); glowContext(x, 7);
           var items=[].slice.call(document.querySelectorAll(opts.tabsSelector));
           var keyEl=document.getElementById(opts.keyId), readEl=document.getElementById(opts.readId),
               capEl=document.getElementById(opts.capId), barEl=document.getElementById(opts.barId);
-          var C={teal:'#35C9B8',gold:'#b2d135',sage:'#8AA828',elm:'#9BC47F',clay:'#8C939B',
-                 red:'#FF5A36',dim:'#5A616B',mute:'#7C8CA0',ink:'#F9FAFB',line:'#223349'};
+          /* Same hues as the dark widget, darkened to clear 4.5:1 on the white canvas. */
+          var C={teal:'#0E8577',gold:'#8bc63f',sage:'#8bc63f',elm:'#8bc63f',clay:'#6B7787',
+                 red:'#CC3A14',dim:'#9AA7B6',mute:'#47566A',ink:'#16202C',line:'#DFE6EE'};
           var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
           function F(n){return n+'px Urbanist, sans-serif';}
           function rgba(hx,a){var n=parseInt(hx.slice(1),16); return 'rgba('+(n>>16)+','+((n>>8)&255)+','+(n&255)+','+a+')';}
