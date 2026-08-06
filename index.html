@@ -12,10 +12,9 @@
     <!-- maximum-scale removed: visitors must be able to pinch-zoom the diagrams and the cell map on a phone. -->
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="description"
-        content="Land-Art  is an art-and-technology driven reforestation initiative fighting desertification in Mongolia's Gobi Desert through large-scale land art, satellite-monitored tree planting, and community-powered restoration.">
-    <meta property="og:title" content="Land-Art">
-    <meta property="og:description" content="Art and technology driven reforestation, fighting desertification in Mongolia's Gobi Desert.">
-    <meta property="og:site_name" content="Land-Art">
+    <meta property="og:title" content="Land-Art Space">
+    <meta property="og:description" content="An art-and-technology driven reforestation initiative fighting desertification in Mongolia's Gobi Desert.">
+    <meta property="og:site_name" content="Land-Art Space">
 
     <!-- font -->
     <link rel="stylesheet" href="assets/fonts/fonts.css">
@@ -35,6 +34,16 @@
 
     <style>
         html, :root { scroll-behavior: auto !important; }
+        .story-flow { margin-top: 8px; border: 1px solid #1F3040; background: #09111C; border-radius: 24px; overflow: hidden; }
+        .story-row { display: grid; grid-template-columns: 200px 1fr; gap: 24px; padding: 22px 32px; border-bottom: 1px solid #1F3040; }
+        .story-row:last-child { border-bottom: none; }
+        .story-q { font-family: 'Urbanist', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; color: #b2d135; }
+        .story-a { color: #B8C4D4; line-height: 1.7; font-size: 15px; }
+        .story-more { color: #b2d135; font-weight: 600; white-space: nowrap; }
+        .story-more:hover { color: #fff; }
+        @media (max-width: 767px) {
+            .story-row { grid-template-columns: 1fr; gap: 8px; padding: 18px 20px; }
+        }
         .partner-wrap .infiniteSlide_partner { gap: 48px; align-items: center; }
         /* Fixed slot width, not auto: the marquee has to know its travel distance before the
            lazy-loaded logos decode, and uniform slots read tidier than ragged ones. */
@@ -81,9 +90,9 @@
         .hero-logo-standalone { height: 190px; width: auto; display: block; margin: 0 auto; }
         /* Subtle ambient motion on the static hero photo: slow breathing zoom. */
         .hero-image { overflow: hidden; }
-        .hero-image img { animation: heroZoom 16s ease-in-out infinite; will-change: transform; }
+        .hero-image .hero-bg-img { animation: heroZoom 16s ease-in-out infinite; will-change: transform; transition: opacity .6s ease; }
         @keyframes heroZoom { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
-        @media (prefers-reduced-motion: reduce) { .hero-image img { animation: none; } }
+        @media (prefers-reduced-motion: reduce) { .hero-image .hero-bg-img { animation: none; } }
         /* Land art poster images are portrait (5315x7087 ≈ 3:4) — old cards assumed landscape.
            Full-width made them enormous, so lay out as a 2-column grid of smaller cards instead. */
         .featured-works-item .image { aspect-ratio: 3 / 4; }
@@ -293,7 +302,7 @@
             .diag-sheet-stage .tl-mini-tab, .diag-sheet-stage .pr5-mini-tab { flex: 0 0 auto; min-width: 128px; }
             .diag-sheet-stage .tl-mini-tab .ti, .diag-sheet-stage .pr5-mini-tab .t { display: block; }
             /* Ambient hero zoom is battery cost with no narrative value on a phone. */
-            .hero-image img { animation: none; }
+            .hero-image .hero-bg-img { animation: none; }
         }
         /* Touch devices have no hover — the diagrams must say "tap". */
         @media (prefers-reduced-motion: reduce) {
@@ -518,17 +527,10 @@
         <!-- Header -->
         <header class="tf-header header2">
             <div class="header-inner">
-                <!-- Static logo that stays with the sticky header — no motion, institutional read. -->
-                <a href="index.html" class="header-logo" aria-label="Land-Art Lab home">
-                    <img src="assets/images/logo/land-art-logo.png" alt="Land-Art Lab">
-                </a>
                 <div class="box-navigation">
                     <ul class="nav-menu-main">
                         <li class="menu-item">
-                            <a href="index.html" class="item-link link1">Home</a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="#about" class="item-link link1">HEXAGON</a>
+                            <a href="#about" class="item-link link1">Hexagon</a>
                         </li>
                         <li class="menu-item">
                             <a href="#services" class="item-link link1">Ecosystem</a>
@@ -540,7 +542,7 @@
                                     <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalBeHuman">BE HUMAN</a>
                                 </li>
                                 <li class="sub-menu-item">
-                                    <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalArtNTech">ATE</a>
+                                    <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalArtNTech">ART N TECH</a>
                                 </li>
                                 <li class="sub-menu-item">
                                     <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalMongolz">MONGOLZ#1</a>
@@ -567,7 +569,7 @@
         <!-- Hero Banner -->
         <div class="section-hero">
             <div class="hero-image">
-                <img src="assets/images/section/hero-light-hexagon.jpg" alt="" fetchpriority="high">
+                <img class="hero-bg-img" src="assets/images/section/hero-light-hexagon.jpg" alt="" fetchpriority="high">
             </div>
             <div class="container">
                 <div class="content-wrap text-center">
@@ -575,13 +577,15 @@
                         <img loading="lazy" class="hero-logo-standalone" src="assets/images/logo/land-art-logo.png" alt="Land-art space">
                     </div>
                     <p class="text effectFade fadeUp">
+                        An art-and-technology driven reforestation initiative fighting desertification in Mongolia's Gobi Desert through large-scale land art, satellite-monitored tree planting, and community-powered restoration.
                     </p>
                     <div class="bot-btns effectFade fadeRotateX">
                         <a href="#services" class="tf-btn">
-                            Explore ecosystem
+                            Explore Ecosystem
                         </a>
                         <a href="#works" class="tf-btn-2">
                             Projects
+                        </a>
                         </a>
                     </div>
                 </div>
@@ -592,6 +596,54 @@
             </a>
         </div>
         <!-- /Hero Banner -->
+        <!-- section-story -->
+        <div id="story" class="section-story flat-spacing">
+            <div class="container">
+                <div class="heading-section center mb-64">
+                    <div class="heading-sub fw-semibold mx-auto effectFade fadeUp">Overview</div>
+                    <div class="heading-title text-gradient-3 effectFade fadeRotateX">Programme Summary</div>
+                </div>
+                <div class="story-flow">
+                    <div class="story-row">
+                        <div class="story-q">Organisation</div>
+                        <div class="story-a">A small technical team based in the Gobi Desert, delivering land art installations that function simultaneously as reforestation infrastructure. Each planted tree forms part of both the artwork and the restoration effort — the two are not separate activities.</div>
+                    </div>
+                    <div class="story-row">
+                        <div class="story-q">Methodology</div>
+                        <div class="story-a">Land art is composed from the landscape itself: soil, water, and living vegetation, arranged at a scale legible chiefly from altitude or by satellite observation.</div>
+                    </div>
+                    <div class="story-row">
+                        <div class="story-q">Rationale</div>
+                        <div class="story-a">A conventional row planting is difficult to monitor, difficult to fund transparently, and easily overlooked. A defined shape is not: it is visible by satellite, so growth constitutes verifiable evidence rather than an unverified claim. Divided into hexagonal cells, each contribution is assigned a fixed, named, and publicly viewable location.</div>
+                    </div>
+                    <div class="story-row">
+                        <div class="story-q">Location</div>
+                        <div class="story-a"><span class="text-brand fw-semibold">Erdene sum, Dornogovi aimag, Mongolia</span> — within the Gobi Desert, one of the regions most severely affected by desertification. <a href="#impact" class="story-more">See the satellite audit →</a></div>
+                    </div>
+                    <div class="story-row">
+                        <div class="story-q">Delivered to date</div>
+                        <div class="story-a">Four installations to date: three completed or active, one scheduled for 2026. A cumulative 157,857 trees planted across 108,970 m². <a href="#works" class="story-more">See all projects →</a></div>
+                    </div>
+                    <div class="story-row">
+                        <div class="story-q">Measured outcomes</div>
+                        <div class="story-a">Independently audited by Martensite Analytica: a net carbon gain of 7,551 kg relative to an unrestored control site, with vegetation and water indices consistently outperforming the control. <a href="#impact" class="story-more">See the full audit →</a></div>
+                    </div>
+                    <div class="story-row">
+                        <div class="story-q">Forthcoming work</div>
+                        <div class="story-a">HEXAGON, scheduled for 2026: 56 cells corresponding precisely to the geometry of the artwork, currently open for sponsorship. <a href="#pricing" class="story-more">See the investment structure →</a></div>
+                    </div>
+                    <div class="story-row">
+                        <div class="story-q">Risk assessment</div>
+                        <div class="story-a">Water availability is the limiting factor in every site decision. Consecutive drought years, a narrow planting window, and survival rates below target each present a material risk to individual cells. Baselines are established prior to planting, and the resulting data is published in full, regardless of outcome. <a href="#services" class="story-more">Read the full risk framework →</a></div>
+                    </div>
+                    <div class="story-row">
+                        <div class="story-q">Basis for participation</div>
+                        <div class="story-a">Contributions are not anonymous donations. Each USD 30 corresponds to one square metre with a fixed, named location — a specific, verifiable unit of restoration rather than an entry in a general ledger. <a href="#pricing" class="story-more">Sponsor a cell →</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /section-story -->
         <!-- section-about-us -->
         <div class="section-about-us flat-spacing" id="about">
             <div class="container">
@@ -609,7 +661,7 @@
                                     <span class="dot"></span>
                                     In progress
                                 </div>
-                                <h5 class="title fw-semibold text-white">Based in <span class="text-brand">Dornogovi, Mongolia</span></h5>
+                                <h5 class="title fw-semibold text-white">Based in <span class="text-brand">Erdene sum, Dornogovi aimag</span></h5>
                                 <a href="#pricing" class="tf-btn">
                                     Start a Project
                                 </a>
@@ -900,7 +952,7 @@
                         <div class="">
                             <div class="featured-works-item ">
                                 <div class="image main-mouse-hover">
-                                    <img loading="lazy" src="assets/images/section/featured-works-poster-mongolz.jpg" alt="Mongolz #1 land art aerial view">
+                                    <img loading="lazy" src="assets/images/section/featured-works-poster-mongolz.jpg" alt="MONGOLZ #1 land art aerial view">
                                 </div>
                                 <div class="content">
                                     <div class="pagi-dot">
@@ -910,11 +962,11 @@
                                         <span></span>
                                     </div>
                                     <div class="bot">
-                                        <h4 class="heading fw-semibold">Mongolz #1 <br> Land Art</h4>
+                                        <h4 class="heading fw-semibold">MONGOLZ #1 <br> Land Art</h4>
                                         <div class="grid-text">
                                             <div class="item">
                                                 <div class="title text-secondary">DESCRIPTION</div>
-                                                <div class="text-body-3 fw-semibold">Our largest installation yet — a living tribute to Mongolian identity, growing across the Gobi Desert.</div>
+                                                <div class="text-body-3 fw-semibold">Our largest installation to date — a large-scale tribute to Mongolian cultural identity across the Gobi Desert.</div>
                                             </div>
                                             <div class="item">
                                                 <div class="title text-secondary">SCALE</div>
@@ -946,7 +998,7 @@
                                         <div class="grid-text">
                                             <div class="item">
                                                 <div class="title text-secondary">DESCRIPTION</div>
-                                                <div class="text-body-3 fw-semibold">A cluster of hexagonal cells echoing the Hive itself — restoration built one parcel at a time.</div>
+                                                <div class="text-body-3 fw-semibold">A cluster of hexagonal cells mirroring the site's investment structure — restoration delivered one parcel at a time.</div>
                                             </div>
                                             <div class="item">
                                                 <div class="title text-secondary">SCALE</div>
@@ -969,7 +1021,7 @@
             <div id="impact" class="section-impact flat-spacing pt-0">
                 <div class="container">
                     <div class="heading-section center mb-64">
-                        <div class="heading-sub fw-semibold mx-auto effectFade fadeUp">Verified Impact</div>
+                        <div class="heading-sub fw-semibold mx-auto effectFade fadeUp">Climate Contribution</div>
                         <div class="heading-title text-gradient-3 effectFade fadeRotateX">Independently Audited by Satellite</div>
                         <p class="inv-intro effectFade fadeUp">Since 2024, tree growth at the site has been monitored via NASA MODIS, Sentinel-5P, and Sentinel-2 — independently audited by Martensite Analytica against an unrestored control site.</p>
                     </div>
@@ -1242,7 +1294,7 @@
                     <div class="cost-stack effectFade fadeUp">
                         <div class="cost-stack-head">
                             <span class="cs-t">What one USD 30 cell pays for</span>
-                            <span class="cs-n">Placeholder figures — replace with audited budget lines</span>
+                            <span class="cs-n">Indicative cost breakdown, pending independent audit</span>
                         </div>
                         <ul class="cost-stack-list">
                             <li><span class="cs-k">Seedling, planting labour, 5-year maintenance to survival target</span><span class="cs-v">$11.00</span></li>
@@ -1257,7 +1309,7 @@
                     <div class="pm-top">
                         <div class="pm-name">
                             <input id="pName" type="text" maxlength="18" placeholder="Steward name">
-                            <button class="pm-btn" id="pApply">Reserve cell</button>
+                            <button class="pm-btn" id="pApply">Reserve Cell</button>
                         </div>
                         <div class="pm-name">
                             <button class="pm-btn clr" id="pClear">Clear</button>
@@ -1300,7 +1352,7 @@
                         </table>
                     </div>
                     <div class="inst-cta">
-                        <a href="#contact" class="inst-btn">Request the partnership pack</a>
+                        <a href="#contact" class="inst-btn">Request the Partnership Pack</a>
                         <span class="inst-note">Theory of change, five-year budget, verification methodology and letter-of-intent template. Meetings during COP17 can be booked directly.</span>
                     </div>
                 </div>
@@ -1308,7 +1360,7 @@
         </div>
         <!-- /section-pricing -->
 
-        <div class="box-black">
+        <div id="team" class="box-black">
             <div class="light-box"></div>
 
             <!-- section-team -->
@@ -1442,8 +1494,8 @@
                     </div>
                     <div class="col-lg-4 col-md-6 mb-24" id="doc-3">
                         <div class="doc-card effectFade fadeUp" data-delay="0.2">
-                            <div class="doc-image film-trigger" data-video="assets/videos/doc-3-art-n-tech.mp4" role="button" tabindex="0" aria-label="Play ATE">
-                                <img loading="lazy" src="assets/images/blog/blog-doc-3-art-n-tech.jpg" alt="ATE">
+                            <div class="doc-image film-trigger" data-video="assets/videos/doc-3-art-n-tech.mp4" role="button" tabindex="0" aria-label="Play ART N TECH">
+                                <img loading="lazy" src="assets/images/blog/blog-doc-3-art-n-tech.jpg" alt="ART N TECH">
                                 <span class="film-play-btn"><i class="icon icon-play-filled"></i></span>
                             </div>
                             <div class="doc-content">
@@ -1575,7 +1627,7 @@
                         </div>
                         <div class="col-lg-6">
                             <form id="contactForm" class="form-contact effectFade fadeUp">
-                                <h4 class="heading fw-semibold">Fill this form below</h4>
+                                <h4 class="heading fw-semibold">Send an Inquiry</h4>
                                 <fieldset class="mb-21">
                                     <label class="fw-semibold text-body-3 mb-20">Your Name</label>
                                     <input name="name" class="" type="text" placeholder="Enter your full name" required>
@@ -1614,7 +1666,7 @@
                 <div class="footer-bottom">
                     <ul class="footer-links d-flex gap-24 align-items-center">
                         <li>
-                            <a href="#about" class="fw-semibold link-underline link1">HEXAGON</a>
+                            <a href="#about" class="fw-semibold link-underline link1">Hexagon</a>
                         </li>
                         <li>
                             <a href="#services" class="fw-semibold link-underline link1">Services</a>
@@ -1626,8 +1678,7 @@
                             <a href="#contact" class="fw-semibold link-underline link1">Contact</a>
                         </li>
                     </ul>
-                    <p class="text-secondary coppy-rights text-center">© 2026 Shambala Engineering Campus LLC
-                        . All Rights Reserved.</p>
+                    <p class="text-secondary coppy-rights text-center">© 2026 Shambala Engineering Campus LLC. All Rights Reserved.</p>
                     <a href="#" class="action-go-top d-flex gap-8 align-items-center justify-content-end link1">
                         <span class="fw-semibold">Back to top</span>
                         <i class="icon icon-long-arrow-alt-up-solid fs-20"></i>
@@ -1657,15 +1708,15 @@
                         <ul class="nav-ul-mb" id="mobile-menu">
                             <li>
                                 <div class="item">
-                                    <a href="index.html" class="mb-menu-link text-display-1">
-                                        <span class="text">Home</span>
+                                    <a href="#about" class="mb-menu-link text-display-1">
+                                        <span class="text">Hexagon</span>
                                     </a>
                                 </div>
                             </li>
                             <li>
                                 <div class="item">
-                                    <a href="#about" class="mb-menu-link text-display-1">
-                                        <span class="text">HEXAGON</span>
+                                    <a href="#services" class="mb-menu-link text-display-1">
+                                        <span class="text">Ecosystem</span>
                                     </a>
                                 </div>
                             </li>
@@ -1674,12 +1725,12 @@
                                     <div class="has-sub-menu">
                                         <a href="#dropdown-menu-1" class="mb-menu-link text-display-1 collapsed" data-bs-toggle="collapse"
                                             aria-expanded="false" aria-controls="dropdown-menu-1">
-                                            <span class="text">Land art</span>
+                                            <span class="text">Projects</span>
                                         </a>
                                         <div id="dropdown-menu-1" class="collapse" data-bs-parent="#mobile-menu">
                                             <ul class="sub-nav-menu">
                                                 <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalBeHuman">BE HUMAN</a></li>
-                                                <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalArtNTech">ATE</a></li>
+                                                <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalArtNTech">ART N TECH</a></li>
                                                 <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalMongolz">MONGOLZ#1</a></li>
                                                 <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalHexagon">HEXAGON</a></li>
                                             </ul>
@@ -1689,15 +1740,15 @@
                             </li>
                             <li>
                                 <div class="item">
-                                    <a href="#services" class="mb-menu-link text-display-1">
-                                        <span class="text">Services</span>
+                                    <a href="#documentaries" class="mb-menu-link text-display-1">
+                                        <span class="text">Documentaries</span>
                                     </a>
                                 </div>
                             </li>
                             <li>
                                 <div class="item">
-                                    <a href="#documentaries" class="mb-menu-link text-display-1">
-                                        <span class="text">Blog</span>
+                                    <a href="#pricing" class="mb-menu-link text-display-1">
+                                        <span class="text">Start Project</span>
                                     </a>
                                 </div>
                             </li>
@@ -1707,7 +1758,7 @@
                         <div class="left">
                             <a href="mailto:hello@shambala.today" class="text-caption text-neutral-200">hello@shambala.today</a>
                             <p class="text-caption text-neutral-200">
-                                CUP <span class="clock"></span>
+                                LOCAL TIME <span class="clock"></span>
                             </p>
                         </div>
                         <div class="right">
@@ -1776,11 +1827,11 @@
                 <div class="modal-body">
                     <div class="featured-works-item">
                         <div class="image">
-                            <img loading="lazy" src="assets/images/section/featured-works-poster-artntech.jpg" alt="ATE land art aerial view">
+                            <img loading="lazy" src="assets/images/section/featured-works-poster-artntech.jpg" alt="ART N TECH land art aerial view">
                         </div>
                         <div class="content">
                             <div class="bot">
-                                <h4 class="heading fw-semibold">ATE <br> Land Art</h4>
+                                <h4 class="heading fw-semibold">ART N TECH <br> Land Art</h4>
                                 <div class="grid-text">
                                     <div class="item">
                                         <div class="title text-secondary">DESCRIPTION</div>
@@ -1811,15 +1862,15 @@
                 <div class="modal-body">
                     <div class="featured-works-item">
                         <div class="image">
-                            <img loading="lazy" src="assets/images/section/featured-works-poster-mongolz.jpg" alt="Mongolz #1 land art aerial view">
+                            <img loading="lazy" src="assets/images/section/featured-works-poster-mongolz.jpg" alt="MONGOLZ #1 land art aerial view">
                         </div>
                         <div class="content">
                             <div class="bot">
-                                <h4 class="heading fw-semibold">Mongolz #1 <br> Land Art</h4>
+                                <h4 class="heading fw-semibold">MONGOLZ #1 <br> Land Art</h4>
                                 <div class="grid-text">
                                     <div class="item">
                                         <div class="title text-secondary">DESCRIPTION</div>
-                                        <div class="text-body-3 fw-semibold">Our largest installation yet — a living tribute to Mongolian identity, growing across the Gobi Desert.</div>
+                                        <div class="text-body-3 fw-semibold">Our largest installation to date — a large-scale tribute to Mongolian cultural identity across the Gobi Desert.</div>
                                     </div>
                                     <div class="item">
                                         <div class="title text-secondary">SCALE</div>
@@ -1854,7 +1905,7 @@
                                 <div class="grid-text">
                                     <div class="item">
                                         <div class="title text-secondary">DESCRIPTION</div>
-                                        <div class="text-body-3 fw-semibold">A cluster of hexagonal cells echoing the Hive itself — restoration built one parcel at a time.</div>
+                                        <div class="text-body-3 fw-semibold">A cluster of hexagonal cells mirroring the site's investment structure — restoration delivered one parcel at a time.</div>
                                     </div>
                                     <div class="item">
                                         <div class="title text-secondary">SCALE</div>
@@ -2271,7 +2322,7 @@
                 {id:'desert',mn:'Desertification',x:330,y:78,c:P.prob2,ic:'i-sun',
                  d:'The starting point: pasture degrades and the soil, water and plant layers weaken.'},
                 {id:'refug',mn:'Eco-migration',x:590,y:78,c:P.prob,ic:'i-alert',
-                 d:'Households leaving their land because of degradation. the target group for Community.'},
+                 d:'Households leaving their land because of degradation — the target group for Community.'},
                 {id:'hub',mn:'HUB',x:230,y:250,c:P.hub,ic:'i-hex',
                  d:'Site, seedlings, irrigation, land art. Acts directly on the water and plant layers of the ecosystem.'},
                 {id:'lab',mn:'LAB',x:460,y:250,c:P.lab,ic:'i-flask',
@@ -3715,20 +3766,10 @@
           var NS='http://www.w3.org/2000/svg';
           var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-          var T=[
-            {r:30, m2:1000, p:30000, n:60,  cls:'t4'},
-            {r:20, m2:100,  p:3000,  n:80,  cls:'t3'},
-            {r:13, m2:10,   p:300,   n:130, cls:'t2'},
-            {r:7,  m2:1,    p:30,    n:300, cls:'t1'}
-          ];
-          var hexArea=function(r){return 2.598*r*r;};
-          var acc=0; var bands=[];
-          T.forEach(function(t){
-            var rIn=Math.sqrt(acc/Math.PI);
-            acc+=hexArea(t.r)*t.n*1.25;
-            bands.push({r:t.r,m2:t.m2,p:t.p,n:t.n,rIn:rIn,rOut:Math.sqrt(acc/Math.PI)});
-          });
-          var S=bands[bands.length-1].rOut+40;
+          // Exact hexagon positions/sizes traced from the real HEXAGON land art piece
+          // (assets/images/section/HEXAGON.jpg), not a procedural layout.
+          var CELLS_DATA=[{cx:134.2,cy:418.0,r:56.6,m2:1000,p:30000},{cx:290.5,cy:512.0,r:56.0,m2:1000,p:30000},{cx:453.3,cy:432.8,r:55.8,m2:1000,p:30000},{cx:46.0,cy:361.7,r:46.3,m2:100,p:3000},{cx:362.0,cy:386.8,r:46.0,m2:100,p:3000},{cx:298.3,cy:616.3,r:45.5,m2:100,p:3000},{cx:551.6,cy:188.9,r:43.8,m2:100,p:3000},{cx:118.0,cy:329.8,r:31.5,m2:10,p:300},{cx:324.3,cy:234.5,r:31.3,m2:10,p:300},{cx:377.0,cy:591.1,r:31.3,m2:10,p:300},{cx:439.4,cy:344.4,r:30.9,m2:10,p:300},{cx:429.6,cy:242.8,r:30.7,m2:10,p:300},{cx:191.9,cy:612.2,r:30.3,m2:10,p:300},{cx:296.9,cy:425.3,r:26.8,m2:10,p:300},{cx:440.1,cy:181.7,r:26.0,m2:10,p:300},{cx:209.9,cy:376.4,r:25.8,m2:10,p:300},{cx:580.2,cy:459.8,r:25.7,m2:10,p:300},{cx:560.6,cy:113.2,r:25.4,m2:10,p:300},{cx:527.8,cy:389.1,r:25.2,m2:10,p:300},{cx:541.8,cy:263.6,r:24.9,m2:10,p:300},{cx:499.7,cy:517.6,r:24.8,m2:10,p:300},{cx:395.8,cy:537.6,r:19.7,m2:1,p:30},{cx:366.0,cy:490.4,r:19.3,m2:1,p:30},{cx:376.2,cy:255.6,r:19.3,m2:1,p:30},{cx:275.7,cy:256.8,r:19.2,m2:1,p:30},{cx:576.6,cy:408.7,r:19.2,m2:1,p:30},{cx:360.1,cy:318.5,r:19.1,m2:1,p:30},{cx:499.1,cy:337.6,r:19.1,m2:1,p:30},{cx:625.2,cy:267.6,r:19.0,m2:1,p:30},{cx:330.7,cy:180.2,r:19.0,m2:1,p:30},{cx:625.5,cy:196.4,r:18.8,m2:1,p:30},{cx:473.8,cy:277.5,r:18.5,m2:1,p:30},{cx:537.8,cy:316.4,r:18.2,m2:1,p:30},{cx:255.2,cy:396.8,r:17.1,m2:1,p:30},{cx:517.5,cy:80.7,r:16.7,m2:1,p:30},{cx:237.0,cy:585.3,r:14.7,m2:1,p:30},{cx:236.9,cy:568.5,r:10.2,m2:1,p:30},{cx:398.5,cy:477.2,r:10.1,m2:1,p:30},{cx:396.2,cy:212.6,r:9.9,m2:1,p:30},{cx:335.1,cy:144.8,r:9.8,m2:1,p:30},{cx:291.7,cy:201.8,r:9.7,m2:1,p:30},{cx:617.1,cy:121.8,r:9.7,m2:1,p:30},{cx:653.5,cy:219.5,r:9.5,m2:1,p:30},{cx:56.2,cy:449.0,r:9.5,m2:1,p:30},{cx:286.8,cy:383.2,r:9.5,m2:1,p:30},{cx:499.9,cy:302.4,r:9.4,m2:1,p:30},{cx:440.8,cy:288.8,r:9.4,m2:1,p:30},{cx:547.3,cy:509.9,r:9.4,m2:1,p:30},{cx:654.8,cy:245.6,r:9.2,m2:1,p:30},{cx:219.2,cy:256.4,r:9.2,m2:1,p:30},{cx:56.1,cy:422.5,r:9.2,m2:1,p:30},{cx:176.3,cy:656.5,r:9.2,m2:1,p:30},{cx:512.1,cy:48.7,r:9.0,m2:1,p:30},{cx:242.0,cy:270.4,r:8.9,m2:1,p:30},{cx:520.0,cy:124.3,r:8.3,m2:1,p:30},{cx:517.1,cy:98.3,r:7.1,m2:1,p:30}];
+          var S=350;
           svg.setAttribute('viewBox','0 0 '+(S*2).toFixed(0)+' '+(S*2).toFixed(0));
 
           function hexD(cx,cy,r){
@@ -3739,41 +3780,19 @@
             }
             return d+'Z';
           }
-          function pick(b){
-            var dx=b.r*Math.sqrt(3), dy=b.r*1.5;
-            var rOut=b.rOut, pool=[];
-            for(var k=0;k<40;k++){
-              pool=[];
-              var reach=Math.ceil((rOut+b.r*2)/Math.min(dx,dy))+2;
-              for(var row=-reach;row<=reach;row++)for(var col=-reach;col<=reach;col++){
-                var cx=S+dx*col+(row&1?dx/2:0), cy=S+dy*row;
-                var d=Math.hypot(cx-S,cy-S);
-                if(d>=b.rIn+b.r*0.35 && d<=rOut-b.r*0.15) pool.push({cx:cx,cy:cy,d:d});
-              }
-              if(pool.length>=b.n) break;
-              rOut*=1.05;
-            }
-            pool.sort(function(a,z){return a.d-z.d;});
-            return pool.slice(0,b.n);
-          }
 
           var cells=[]; var id=0;
-          bands.forEach(function(b,bi){
-            var sel=pick(b);
-            var far=sel.length?Math.max.apply(null,sel.map(function(q){return q.d;})):b.rOut;
-            if(bands[bi+1]) bands[bi+1].rIn=Math.max(bands[bi+1].rIn, far+b.r*0.55);
-            sel.forEach(function(q){
-              var el=document.createElementNS(NS,'path');
-              el.setAttribute('d',hexD(q.cx,q.cy,b.r));
-              el.setAttribute('class','cell');
-              el.dataset.i=id;
-              var ti=document.createElementNS(NS,'title');
-              ti.textContent=b.m2+' m² · $'+b.p.toLocaleString('en-US');
-              el.appendChild(ti);
-              svg.appendChild(el);
-              cells.push({el:el,ti:ti,cx:q.cx,cy:q.cy,r:b.r,m2:b.m2,p:b.p,sel:false,name:null,txt:null});
-              id++;
-            });
+          CELLS_DATA.forEach(function(q){
+            var el=document.createElementNS(NS,'path');
+            el.setAttribute('d',hexD(q.cx,q.cy,q.r));
+            el.setAttribute('class','cell');
+            el.dataset.i=id;
+            var ti=document.createElementNS(NS,'title');
+            ti.textContent=q.m2+' m² · $'+q.p.toLocaleString('en-US');
+            el.appendChild(ti);
+            svg.appendChild(el);
+            cells.push({el:el,ti:ti,cx:q.cx,cy:q.cy,r:q.r,m2:q.m2,p:q.p,sel:false,name:null,txt:null});
+            id++;
           });
 
           var el={c:document.getElementById('pCells'),a:document.getElementById('pArea'),
@@ -3782,7 +3801,7 @@
           var nameIn=document.getElementById('pName');
           var fmt=function(n){return Math.round(n).toLocaleString('en-US');};
           var TOTAL_M2=cells.reduce(function(a,c){return a+c.m2;},0);
-          var baseInfo='Click cells to select, enter a name and press Engrave · total '+cells.length+
+          var baseInfo='Click cells to select, enter a name and press Reserve · total '+cells.length+
             ' cells = '+fmt(TOTAL_M2)+' m² = $'+fmt(cells.reduce(function(a,c){return a+c.p;},0))+
             ' · small cells are shown enlarged for legibility';
           el.info.textContent=baseInfo;
