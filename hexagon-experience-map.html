@@ -340,13 +340,18 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
       matching what they paid: L = ₮20,000,000 (200 m²), M = ₮10,000,000
       (100 m²), S = ₮5,000,000 (50 m²). Example: EFES-GROUP_L.png.
    2. Drop it in assets/images/partner/hexagon-cells/.
-   3. Add one line below: 'CELL-ID': { name:'Company Name', logo:'assets/images/partner/hexagon-cells/CompanyName_TIER.png' }
+   3. Add one line below: 'CELL-ID': { name:'Company Name', logo:'...png', aspect:W/H }
       — pick any free cell whose ID prefix matches the tier (L-, M-, or S-;
       see the map for open cells). The cell ID is a placement choice, not
-      something the filename can determine on its own.
+      something the filename can determine on its own. `aspect` is the
+      logo file's own width/height ratio (e.g. a 1209×708 file is 1.71) —
+      it keeps wide wordmark logos from being cropped or shrunk oddly;
+      leave it out only for roughly square/icon logos, where 1 is fine.
    The logo then renders centered inside that cell automatically. ────── */
 var PARTNERS = {
-  'L-04': { name:'EFES GROUP', logo:'assets/images/partner/hexagon-cells/EFES-GROUP_L.png' }
+  'L-04': { name:'EFES GROUP', logo:'assets/images/partner/hexagon-cells/EFES-GROUP_L.png', aspect:1.41 },
+  'M-01': { name:'ROC', logo:'assets/images/partner/hexagon-cells/ROC_M.png', aspect:1.71 },
+  'M-03': { name:'STEPPE LINK HOLDING', logo:'assets/images/partner/hexagon-cells/STEPPE-LINK-HOLDING_M.png', aspect:4.63 }
 };
 var HELD     = [];
 
@@ -409,7 +414,8 @@ slots.forEach(function(s,i){
   CELLS.push({x:s.x,y:s.y,cls:cls,id:id,R:SLOT*SIZES[cls].r,tier:Math.floor(rnd()*3),
     status:PARTNERS[id]?'taken':(HELD.indexOf(id)>-1?'held':'free'),
     partner:PARTNERS[id]?PARTNERS[id].name:null,
-    logo:PARTNERS[id]?PARTNERS[id].logo:null});
+    logo:PARTNERS[id]?PARTNERS[id].logo:null,
+    logoAspect:PARTNERS[id]&&PARTNERS[id].aspect?PARTNERS[id].aspect:1});
 });
 
 /* ══════════ 5. DEFS: хайрга, гурван тарилтын хээ ══════════ */
@@ -484,7 +490,12 @@ CELLS.forEach(function(c){
     clip.appendChild(el('polygon',{points:hexPts(c.x,c.y,lr)}));
     defs.appendChild(clip);
     g.appendChild(el('polygon',{points:hexPts(c.x,c.y,lr),fill:'#fff',opacity:'.92','pointer-events':'none'}));
-    g.appendChild(el('image',{href:c.logo,x:c.x-lr,y:c.y-lr,width:lr*2,height:lr*2,
+    /* Size the image box to the logo's own aspect ratio, capped by the
+       hex's inscribed circle (lr*0.86) so every corner stays inside the
+       hex — no cropping, no shrink-to-fit-in-a-square distortion. */
+    var ar=c.logoAspect||1, diag=lr*0.86*2*0.98;
+    var ih=diag/Math.sqrt(1+ar*ar), iw=ih*ar;
+    g.appendChild(el('image',{href:c.logo,x:c.x-iw/2,y:c.y-ih/2,width:iw,height:ih,
       preserveAspectRatio:'xMidYMid meet','clip-path':'url(#clip-'+c.id+')','pointer-events':'none'}));
   }
   if(c.cls!=='S'&&!c.logo){var t=el('text',{'class':'lab',x:c.x,y:c.y+3});t.textContent=c.id;g.appendChild(t);}
