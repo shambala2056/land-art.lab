@@ -91,6 +91,12 @@
         @media (max-width: 767px) { .price-number-fixed { font-size: 40px; line-height: 48px; } }
         .site-logo-img { height: 34px; width: auto; display: block; }
         .site-logo-img.footer { height: 44px; }
+        /* #land-arts now holds only a heading (the two-column hero content moved into the
+           poster carousel below), but the base stylesheet still forces .section-about-us to
+           min-height:100vh under 1439px — built for the old full-height hero layout. Left
+           unset, that reserves a near-full-screen blank gap under the heading on every
+           laptop/mobile width. */
+        #land-arts.section-about-us { min-height: 0; }
         .hero-logo-standalone { height: 190px; width: auto; display: block; margin: 0 auto; }
         /* Hero photo is held still — no motion effects in the hero. */
         .hero-image { overflow: hidden; }
@@ -793,6 +799,7 @@
                                         <span class="active"></span>
                                         <span></span>
                                         <span></span>
+                                        <span></span>
                                     </div>
                                     <div class="bot">
                                         <h4 class="heading fw-semibold">BE HUMAN <br> Land Art</h4>
@@ -823,6 +830,7 @@
                                     <div class="pagi-dot">
                                         <span></span>
                                         <span class="active"></span>
+                                        <span></span>
                                         <span></span>
                                     </div>
                                     <div class="bot">
@@ -855,6 +863,7 @@
                                         <span></span>
                                         <span></span>
                                         <span class="active"></span>
+                                        <span></span>
                                     </div>
                                     <div class="bot">
                                         <h4 class="heading fw-semibold">MONGOLZ #1 <br> Land Art</h4>
@@ -876,43 +885,46 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="">
+                            <div class="featured-works-item ">
+                                <div class="image main-mouse-hover">
+                                    <img loading="lazy" src="assets/images/section/featured-works-poster-hexagon.jpg" alt="HEXAGON land art aerial view">
+                                </div>
+                                <div class="content">
+                                    <div class="pagi-dot">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span class="active"></span>
+                                    </div>
+                                    <div class="bot">
+                                        <h4 class="heading fw-semibold">HEXAGON <br> Land Art</h4>
+                                        <div class="grid-text">
+                                            <div class="item">
+                                                <div class="title text-secondary">DESCRIPTION</div>
+                                                <div class="text-body-3 fw-semibold">A cluster of hexagonal cells mirroring the site's investment structure — restoration delivered one parcel at a time.</div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="title text-secondary">SCALE</div>
+                                                <div class="fw-semibold text-body-3">27,000 trees across <br> 30,000 m²</div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="title text-secondary">STATUS</div>
+                                                <div class="fw-semibold text-body-3">In progress</div>
+                                            </div>
+                                        </div>
+                                        <a href="#pricing" class="tf-btn">
+                                            Claim a Cell
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <!-- /section-featured-works -->
         </div>
-
-        <!-- section-about-us -->
-        <div class="section-about-us flat-spacing">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="heading-section">
-                            <div class="heading-sub fw-semibold effectFade fadeUp">Land Arts</div>
-                            <div class="heading-title text-gradient-3 effectFade fadeRotateX">HEXAGON — The Hive of<br>those who stay.</div>
-                        </div>
-                    </div>
-                    <div class="col-xxl-7 col-lg-6 lg-mb-24 mx-auto">
-                        <div class="col-left">
-                            <div class="position-relative z-5">
-                                <div class="sub text-white">
-                                    <span class="dot"></span>
-                                    In progress
-                                </div>
-                                <h5 class="title fw-semibold text-white">Based in <span class="text-brand">Mongolia</span></h5>
-                                <p class="text-white">3 hectares · 27,000 Siberian elm trees</p>
-                                <a href="#pricing" class="tf-btn">
-                                    Claim a Cell
-                                </a>
-                            </div>
-                            <img loading="lazy" class="effectFade fadeRotateX" src="assets/images/section/HEXAGON.jpg" alt="Hexagon cell pattern">
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <!-- /section-about-us -->
 
         <!-- section-satellite: was "Documentaries" in the nav; the satellite audit
              content that used to live in #impact was consolidated here so the nav
