@@ -700,7 +700,7 @@ function frame(ts){
   if(!last)last=ts;
   var dt=Math.min(0.05,(ts-last)/1000); last=ts;
   if(playing){
-    T+=dt*0.85;                          /* жилд ~1.2 секунд */
+    T+=dt*0.28;                          /* ~3.6 seconds per year */
     if(T>=2036.99){T=2036.99; setPlay(false);}
     slider.value=T.toFixed(2);
     render(T);
