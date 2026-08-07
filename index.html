@@ -325,6 +325,44 @@
             .inst-btn { width: 100%; text-align: center; }
         }
 
+        /* ── Bio-sonification ─────────────────────────────────────────────── */
+        .bio-panel { max-width: 900px; margin: 0 auto; border: 1px solid #1F3040; border-radius: 20px; background: #09111C; padding: 28px; font-family: 'Urbanist', sans-serif; }
+        .bio-panel + .bio-panel { margin-top: 24px; }
+        .bio-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+        .bio-btn { font-family: 'Urbanist', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: #B8C4D4; background: #050A12; border: 1px solid #29405A; border-radius: 999px; padding: 14px 22px; cursor: pointer; transition: color .3s ease, border-color .3s ease, background .3s ease; }
+        .bio-btn:hover { border-color: #b2d135; color: #fff; }
+        .bio-btn.primary { background: #b2d135; border-color: #b2d135; color: #050A12; }
+        .bio-btn.primary:hover { background: #c6e34a; color: #050A12; }
+        .bio-btn[aria-pressed="true"] { background: #b2d135; border-color: #b2d135; color: #050A12; }
+        .bio-vol { display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6B7F97; margin-left: auto; }
+        .bio-vol input[type=range] { width: 120px; }
+        .bio-meters { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-top: 22px; }
+        .bio-mt { background: #050A12; border: 1px solid #16232F; border-radius: 14px; padding: 16px 16px 14px; }
+        .bio-mt .k { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #6B7F97; }
+        .bio-mt .v { font-size: 18px; font-weight: 700; color: #fff; margin-top: 5px; }
+        .bio-mt .bar { height: 5px; border-radius: 99px; background: #16232F; margin-top: 10px; overflow: hidden; }
+        .bio-mt .bar i { display: block; height: 100%; background: #b2d135; border-radius: 99px; width: 0; transition: width .18s linear; }
+        .bio-mt .bar i.warm { background: #F0C93D; }
+        .bio-mt .bar i.dust { background: #6B7F97; }
+        .bio-note { font-size: 12.5px; line-height: 1.65; color: #6B7F97; margin-top: 18px; }
+        .bio-score { position: relative; }
+        .bio-lanes { display: grid; grid-template-columns: 76px 1fr; gap: 10px; align-items: center; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; color: #6B7F97; }
+        .bio-lanes + .bio-lanes { margin-top: 8px; }
+        .bio-lane { display: grid; grid-template-columns: repeat(11,1fr); gap: 3px; height: 26px; }
+        .bio-lane b { display: block; align-self: end; border-radius: 4px 4px 2px 2px; background: #1F3040; transition: background .2s; }
+        .bio-lane.on b { background: #b2d135; }
+        .bio-lane.wind b { background: #6B7F97; }
+        .bio-lane.soc b { background: #7FA33A; }
+        .bio-lane.crown b { background: #8FBF2E; }
+        .bio-playhead { position: absolute; top: 0; bottom: 22px; width: 2px; background: #fff; opacity: 0; border-radius: 2px; transition: opacity .2s; }
+        .bio-yrscale { display: grid; grid-template-columns: 76px 1fr; gap: 10px; margin-top: 10px; font-size: 10px; color: #6B7F97; }
+        .bio-yrscale div:last-child { display: grid; grid-template-columns: repeat(11,1fr); gap: 3px; text-align: center; }
+        @media (max-width: 767px) {
+            .bio-panel { padding: 20px; }
+            .bio-meters { grid-template-columns: 1fr 1fr; }
+            .bio-vol { margin-left: 0; width: 100%; }
+        }
+
         /* ── Fullscreen diagram sheet ─────────────────────────────────────────
            Phones get a static, legible preview card inline; the live widget is
            moved into a 100dvh sheet on demand, then moved back on close. The
@@ -618,6 +656,9 @@
                         </li>
                         <li class="menu-item">
                             <a href="#satellite" class="item-link link1">Satellite Data</a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#biosonification" class="item-link link1">Bio-sonification</a>
                         </li>
                     </ul>
                 </div>
@@ -1580,6 +1621,52 @@
         </div>
         <!-- /section-satellite -->
 
+        <!-- section-biosonification: standalone port of the Ambient Forest / Data
+             Symphony tools from hexagon-experience-map.html. That page drives its
+             audio from its own live growth simulation (canopy, soil, wind state
+             tied to the map's timeline); this section has no map to read from, so
+             the same growth formulas (HE heights, leaf/growth curves) run locally
+             on a free-running clock to drive the meters and the ambient audio. -->
+        <div id="biosonification" class="section-documentaries flat-spacing">
+            <div class="container">
+                <div class="heading-section center mb-64">
+                    <div class="heading-sub fw-semibold mx-auto effectFade fadeUp">Bio-sonification</div>
+                    <div class="heading-title text-gradient-3 effectFade fadeRotateX">The Forest, Audible</div>
+                    <p class="inv-intro effectFade fadeUp">Every tree in the HEXAGON planting generates measurable electrical signals. As leaf stomata open and sap is drawn upward through the trunk, the plant's cell membrane potential shifts — bioelectric potential. Converting this alongside chlorophyll fluorescence and sap flow into sound lets the forest compose its own music, live.</p>
+                </div>
+
+                <div class="bio-panel effectFade fadeUp">
+                    <div class="bio-row">
+                        <button class="bio-btn primary" id="bioAmbBtn" type="button" aria-pressed="false">▶ Listen to the Forest</button>
+                        <button class="bio-btn" id="bioSymBtn" type="button" aria-pressed="false">♪ Data Symphony · 2026–2036</button>
+                        <label class="bio-vol">Volume
+                            <input type="range" id="bioVol" min="0" max="100" value="55" aria-label="Volume">
+                        </label>
+                    </div>
+                    <div class="bio-meters">
+                        <div class="bio-mt"><div class="k">Bioelectric Potential</div><div class="v" id="bioMBio">0.0 mV</div><div class="bar"><i id="bioBBio"></i></div></div>
+                        <div class="bio-mt"><div class="k">Chlorophyll Fluorescence</div><div class="v" id="bioMFlu">Fv/Fm 0.00</div><div class="bar"><i id="bioBFlu"></i></div></div>
+                        <div class="bio-mt"><div class="k">Sap Flow</div><div class="v" id="bioMSap">0.00</div><div class="bar"><i id="bioBSap" class="warm"></i></div></div>
+                        <div class="bio-mt"><div class="k">Wind Noise</div><div class="v" id="bioMWnd">100%</div><div class="bar"><i id="bioBWnd" class="dust"></i></div></div>
+                    </div>
+                    <p class="bio-note">When leaves drop in winter, fluorescence falls to zero and the music quiets to wind alone. When buds break in spring, the melody returns — the forest's annual cycle, made audible. "Listen to the Forest" free-runs an 11-year cycle (2026–2036) so the soundscape keeps evolving as long as it plays.</p>
+                </div>
+
+                <div class="bio-panel effectFade fadeUp">
+                    <div class="bio-score" id="bioScore">
+                        <div class="bio-lanes"><span>CANOPY</span><div class="bio-lane on" id="bioLaneCan"></div></div>
+                        <div class="bio-lanes"><span>CROWN</span><div class="bio-lane crown" id="bioLaneCrw"></div></div>
+                        <div class="bio-lanes"><span>SOIL · SOC</span><div class="bio-lane soc" id="bioLaneSoc"></div></div>
+                        <div class="bio-lanes"><span>SAND</span><div class="bio-lane wind" id="bioLaneWnd"></div></div>
+                        <div class="bio-yrscale"><div></div><div id="bioYrRow"></div></div>
+                        <div class="bio-playhead" id="bioPh"></div>
+                    </div>
+                    <p class="bio-note">The Data Symphony renders eleven years of change as a four-voice score: canopy sets the melody, crown size the harmony, soil carbon the bass, sand movement the percussion.</p>
+                </div>
+            </div>
+        </div>
+        <!-- /section-biosonification -->
+
         <!-- section-partner -->
         <div class="section-partner">
             <div class="container">
@@ -1813,6 +1900,13 @@
                                 <div class="item">
                                     <a href="#satellite" class="mb-menu-link text-display-1">
                                         <span class="text">Satellite Data</span>
+                                    </a>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item">
+                                    <a href="#biosonification" class="mb-menu-link text-display-1">
+                                        <span class="text">Bio-sonification</span>
                                     </a>
                                 </div>
                             </li>
@@ -3855,6 +3949,242 @@
           closeBtn.addEventListener('click',closeModal);
           backdrop.addEventListener('click',closeModal);
           document.addEventListener('keydown',function(e){ if(e.key==='Escape' && modal.classList.contains('show')) closeModal(); });
+        })();
+
+        /* ── Bio-sonification: ported from hexagon-experience-map.html's Ambient
+           Forest / Data Symphony tools. That page reads canopy/soil/wind state
+           from its own live map simulation; here there is no map, so the same
+           growth formulas run on a free-running local clock instead. ── */
+        (function(){
+          var root = document.getElementById('biosonification');
+          if (!root) return;
+
+          var UPM = 3.858;
+          var HE = [0.4,0.9,1.4,1.9,2.4,2.9,3.4,3.8,4.2,4.6,5.0];
+          function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
+          function leafOf(p){
+            if(p<0.30)return 0;
+            if(p<0.40)return (p-0.30)/0.10;
+            if(p<0.70)return 1;
+            if(p<0.80)return 1-(p-0.70)/0.10;
+            return 0;
+          }
+          function growOf(p){ return clamp((p-0.30)/0.45,0,1); }
+          function stateAt(t){
+            var y=Math.floor(t), p=t-y, i=clamp(y-2026,0,10);
+            var prev = i===0?0.25:HE[i-1];
+            var h = prev+(HE[i]-prev)*growOf(p);
+            var leaf=leafOf(p);
+            var crownM=0.22*h;
+            var struct=Math.min(.96,Math.PI*Math.pow(Math.min(3.6,crownM*UPM),2)/16);
+            var canopy=struct*(0.22+0.78*leaf);
+            return { t:t, y:y, p:p, h:h, leaf:leaf, canopy:canopy, struct:struct, open:1-clamp(canopy*1.05,0,0.96) };
+          }
+          function setTxt(el,v){ if(el.textContent!==v) el.textContent=v; }
+
+          /* ═════ audio engine (identical to the map's) ═════ */
+          var AC=null, MASTER=null, DRONE=[], DFILT=null, NOISE=null, NGAIN=null, NFILT=null;
+          var ambOn=false, symOn=false, pluckTimer=null;
+          var PENT_MAJ=[62,64,66,69,71,74,76], PENT_MIN=[62,65,67,69,72,74,77];
+          function mtof(m){ return 440*Math.pow(2,(m-69)/12); }
+
+          function bootAudio(){
+            if(AC)return;
+            AC=new (window.AudioContext||window.webkitAudioContext)();
+            MASTER=AC.createGain(); MASTER.gain.value=0; MASTER.connect(AC.destination);
+
+            DFILT=AC.createBiquadFilter(); DFILT.type='lowpass'; DFILT.frequency.value=420; DFILT.Q.value=0.7;
+            var dg=AC.createGain(); dg.gain.value=0.16; DFILT.connect(dg); dg.connect(MASTER);
+            [0,7,12].forEach(function(iv,k){
+              var o=AC.createOscillator(); o.type=k===2?'triangle':'sine';
+              o.frequency.value=mtof(38+iv); o.detune.value=(k-1)*6;
+              var g=AC.createGain(); g.gain.value=k===2?0.22:0.5;
+              o.connect(g); g.connect(DFILT); o.start();
+              DRONE.push({o:o,g:g,iv:iv});
+            });
+
+            var len=AC.sampleRate*2, buf=AC.createBuffer(1,len,AC.sampleRate), d=buf.getChannelData(0);
+            for(var i=0;i<len;i++) d[i]=(Math.random()*2-1)*0.4;
+            NOISE=AC.createBufferSource(); NOISE.buffer=buf; NOISE.loop=true;
+            NFILT=AC.createBiquadFilter(); NFILT.type='bandpass'; NFILT.frequency.value=900; NFILT.Q.value=0.6;
+            NGAIN=AC.createGain(); NGAIN.gain.value=0.0;
+            NOISE.connect(NFILT); NFILT.connect(NGAIN); NGAIN.connect(MASTER); NOISE.start();
+          }
+          function fadeMaster(v,ms){
+            if(!AC)return;
+            MASTER.gain.cancelScheduledValues(AC.currentTime);
+            MASTER.gain.setTargetAtTime(v, AC.currentTime, (ms||400)/3000);
+          }
+          function volNow(){ return (parseInt(document.getElementById('bioVol').value,10)/100)*0.42; }
+
+          function pluck(midi,when,amp,dur){
+            if(!AC)return;
+            var t=when||AC.currentTime;
+            var o=AC.createOscillator(), g=AC.createGain(), f=AC.createBiquadFilter();
+            o.type='sine'; o.frequency.value=mtof(midi);
+            f.type='lowpass'; f.frequency.value=mtof(midi)*4.5;
+            g.gain.setValueAtTime(0.0001,t);
+            g.gain.exponentialRampToValueAtTime(Math.max(0.001,amp),t+0.012);
+            g.gain.exponentialRampToValueAtTime(0.0001,t+(dur||1.6));
+            o.connect(f); f.connect(g); g.connect(MASTER);
+            o.start(t); o.stop(t+(dur||1.6)+0.05);
+          }
+          function thud(when,amp){
+            if(!AC)return;
+            var t=when||AC.currentTime, o=AC.createOscillator(), g=AC.createGain();
+            o.type='sine'; o.frequency.setValueAtTime(110,t); o.frequency.exponentialRampToValueAtTime(42,t+0.25);
+            g.gain.setValueAtTime(amp,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.4);
+            o.connect(g); g.connect(MASTER); o.start(t); o.stop(t+0.45);
+          }
+          function gust(when,amp,dur){
+            if(!AC)return;
+            var t=when||AC.currentTime, len=AC.sampleRate*(dur||0.7);
+            var b=AC.createBuffer(1,len,AC.sampleRate), d=b.getChannelData(0);
+            for(var i=0;i<len;i++) d[i]=(Math.random()*2-1);
+            var s=AC.createBufferSource(); s.buffer=b;
+            var f=AC.createBiquadFilter(); f.type='bandpass'; f.frequency.value=1400; f.Q.value=0.8;
+            var g=AC.createGain();
+            g.gain.setValueAtTime(0.0001,t);
+            g.gain.exponentialRampToValueAtTime(amp,t+0.12);
+            g.gain.exponentialRampToValueAtTime(0.0001,t+(dur||0.7));
+            s.connect(f); f.connect(g); g.connect(MASTER); s.start(t); s.stop(t+(dur||0.7));
+          }
+
+          function sensors(s){
+            var jitter=(Math.sin(performance.now()/430)*0.5+Math.sin(performance.now()/1170)*0.5);
+            var growth=Math.max(0,Math.min(1,(s.p-0.30)/0.45))*s.leaf;
+            return {
+              bio: (0.6+growth*11.5)+jitter*0.9*(0.3+growth),
+              flu: s.leaf*(0.34+0.44*Math.min(1,s.struct*1.4)),
+              sap: s.leaf*Math.min(1,s.struct*1.25),
+              wind: s.open
+            };
+          }
+
+          function updateAmbient(s){
+            var sn=sensors(s);
+            var setB=function(id,v){ document.getElementById(id).style.width=(Math.max(0,Math.min(1,v))*100).toFixed(1)+'%'; };
+            setTxt(document.getElementById('bioMBio'),sn.bio.toFixed(1)+' mV');    setB('bioBBio',sn.bio/13);
+            setTxt(document.getElementById('bioMFlu'),'Fv/Fm '+sn.flu.toFixed(2)); setB('bioBFlu',sn.flu/0.8);
+            setTxt(document.getElementById('bioMSap'),sn.sap.toFixed(2));          setB('bioBSap',sn.sap);
+            setTxt(document.getElementById('bioMWnd'),Math.round(sn.wind*100)+'%');setB('bioBWnd',sn.wind);
+            if(!ambOn||!AC||symOn)return;
+
+            var tc=AC.currentTime;
+            DFILT.frequency.setTargetAtTime(300+sn.flu*2600, tc, 0.25);
+            var base=38-Math.round(s.h*1.1);
+            DRONE.forEach(function(d){ d.o.frequency.setTargetAtTime(mtof(base+d.iv), tc, 0.6); });
+            NGAIN.gain.setTargetAtTime(sn.wind*0.11, tc, 0.4);
+            NFILT.frequency.setTargetAtTime(700+sn.wind*1500, tc, 0.4);
+          }
+
+          function ambientLoop(){
+            if(!ambOn||symOn){ pluckTimer=setTimeout(ambientLoop,300); return; }
+            var s=curState, sn=sensors(s);
+            var density=0.08+sn.sap*0.72;
+            if(Math.random()<density){
+              var scale = (s.p<0.55)?PENT_MAJ:PENT_MIN;
+              var n=scale[Math.floor(Math.random()*scale.length)] + (Math.random()<0.28?12:0);
+              pluck(n, AC.currentTime+Math.random()*0.08, 0.02+sn.sap*0.07, 1.4+Math.random()*1.8);
+            }
+            if(Math.random()<sn.wind*0.10) gust(AC.currentTime, 0.012+sn.wind*0.02, 0.9);
+            pluckTimer=setTimeout(ambientLoop, 190+Math.random()*260);
+          }
+
+          /* ═════ free-running local clock (stands in for the map's timeline) ═════ */
+          var curState = stateAt(2026.25), clockT = 2026.25, lastFrame = 0;
+          function clockLoop(ts){
+            if(!lastFrame) lastFrame = ts;
+            var dt = Math.min(0.05,(ts-lastFrame)/1000); lastFrame = ts;
+            if(ambOn){
+              clockT += dt*0.28;
+              if(clockT>=2036.99) clockT=2026;
+              curState = stateAt(clockT);
+              updateAmbient(curState);
+            }
+            requestAnimationFrame(clockLoop);
+          }
+          requestAnimationFrame(clockLoop);
+          updateAmbient(curState);
+
+          var bioAmbBtn=document.getElementById('bioAmbBtn');
+          bioAmbBtn.addEventListener('click',function(){
+            bootAudio(); if(AC.state==='suspended')AC.resume();
+            ambOn=!ambOn;
+            this.setAttribute('aria-pressed',String(ambOn));
+            this.textContent = ambOn?'❚❚ Stop':'▶ Listen to the Forest';
+            if(ambOn){ fadeMaster(volNow(),600); if(!pluckTimer)ambientLoop(); }
+            else if(!symOn){ fadeMaster(0,500); clearTimeout(pluckTimer); pluckTimer=null; }
+          });
+          document.getElementById('bioVol').addEventListener('input',function(){
+            if(AC&&(ambOn||symOn)) fadeMaster(volNow(),120);
+          });
+
+          /* ═════ Data Symphony (independent of the live clock) ═════ */
+          function yearState(i){
+            var h=HE[i], crownM=0.22*h;
+            var struct=Math.min(.96,Math.PI*Math.pow(Math.min(3.6,crownM*UPM),2)/16);
+            return { h:h, crown:crownM, canopy:struct, wind:1-Math.min(.96,struct*1.05),
+                     soc:0.35+1.15*Math.min(1,(i+1)/11*1.05) };
+          }
+          var SCORE=[]; for(var i=0;i<11;i++) SCORE.push(yearState(i));
+
+          (function buildScore(){
+            var maxCrown=Math.max.apply(null,SCORE.map(function(d){return d.crown;}));
+            function fill(id,get){
+              var lane=document.getElementById(id), h='';
+              for(var i=0;i<11;i++) h+='<b style="height:'+(8+get(SCORE[i])*92).toFixed(0)+'%"></b>';
+              lane.innerHTML=h;
+            }
+            fill('bioLaneCan',function(d){return d.canopy;});
+            fill('bioLaneCrw',function(d){return d.crown/maxCrown;});
+            fill('bioLaneSoc',function(d){return (d.soc-0.35)/1.15;});
+            fill('bioLaneWnd',function(d){return d.wind;});
+            var yr=''; for(var i=0;i<11;i++) yr+='<span>'+((2026+i)%100)+'</span>';
+            document.getElementById('bioYrRow').innerHTML=yr;
+          })();
+
+          var bioSymBtn=document.getElementById('bioSymBtn'), bioPh=document.getElementById('bioPh'), symTimer=null;
+          function stopSymphony(){
+            symOn=false; bioSymBtn.setAttribute('aria-pressed','false');
+            bioSymBtn.textContent='♪ Data Symphony · 2026–2036';
+            bioPh.style.opacity='0'; clearTimeout(symTimer); symTimer=null;
+            if(!ambOn) fadeMaster(0,600);
+          }
+          bioSymBtn.addEventListener('click',function(){
+            bootAudio(); if(AC.state==='suspended')AC.resume();
+            if(symOn){ stopSymphony(); return; }
+            symOn=true; this.setAttribute('aria-pressed','true'); this.textContent='■ Stop';
+            bioPh.style.opacity='1';
+            fadeMaster(volNow(),300);
+            var BAR=1.55, t0=AC.currentTime+0.12;
+            for(var i=0;i<11;i++){
+              var d=SCORE[i], t=t0+i*BAR;
+              thud(t, 0.05+d.soc*0.05);
+              var root2=36+Math.round(d.soc*4);
+              pluck(root2, t, 0.05, BAR*1.5);
+              var voices=1+Math.round(d.canopy*4);
+              for(var v=0;v<voices;v++){
+                var sc=(i<5)?PENT_MIN:PENT_MAJ;
+                pluck(sc[v%sc.length]+(v>2?12:0), t+0.05+v*0.11, 0.028+d.canopy*0.04, 1.5+v*0.2);
+              }
+              var hits=Math.round(d.wind*5);
+              for(var k=0;k<hits;k++) gust(t+k*(BAR/Math.max(1,hits)), 0.016+d.wind*0.03, 0.34);
+              var mel=(i<5?PENT_MIN:PENT_MAJ)[(i*2)%7]+12;
+              pluck(mel, t+BAR*0.55, 0.03+d.canopy*0.05, 1.8);
+            }
+            var lane=document.getElementById('bioLaneCan').getBoundingClientRect();
+            var box=document.getElementById('bioScore').getBoundingClientRect();
+            var x0=lane.left-box.left, w=lane.width;
+            var start=performance.now();
+            (function sweep(){
+              if(!symOn)return;
+              var el2=(performance.now()-start)/1000, k=el2/(11*BAR);
+              if(k>=1){ stopSymphony(); return; }
+              bioPh.style.left=(x0+k*w).toFixed(1)+'px';
+              symTimer=setTimeout(sweep,40);
+            })();
+          });
         })();
 </script>
 
