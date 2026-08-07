@@ -325,7 +325,7 @@
             .inst-btn { width: 100%; text-align: center; }
         }
 
-        /* ── Bio-sonification ─────────────────────────────────────────────── */
+        /* ── Data-sonification ─────────────────────────────────────────────── */
         .bio-panel { max-width: 900px; margin: 0 auto; border: 1px solid #1F3040; border-radius: 20px; background: #09111C; padding: 28px; font-family: 'Urbanist', sans-serif; }
         .bio-panel + .bio-panel { margin-top: 24px; }
         .bio-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
@@ -658,7 +658,7 @@
                             <a href="#satellite" class="item-link link1">Satellite Data</a>
                         </li>
                         <li class="menu-item">
-                            <a href="#biosonification" class="item-link link1">Bio-sonification</a>
+                            <a href="#datasonification" class="item-link link1">Data-sonification</a>
                         </li>
                     </ul>
                 </div>
@@ -1484,7 +1484,11 @@
         <!-- section-satellite: was "Documentaries" in the nav; the satellite audit
              content that used to live in #impact was consolidated here so the nav
              label and the section it points to match. Documentary films kept as a
-             second block in the same section. -->
+             second block in the same section. Wrapped in .box-white because the
+             satellite-audit content was originally inside that light wrapper
+             (as #impact); merging it into the dark #documentaries section
+             without carrying that over left its heading unreadable. -->
+        <div class="box-white">
         <div id="satellite" class="section-documentaries flat-spacing">
             <div class="container">
                 <div class="heading-section center mb-64">
@@ -1593,6 +1597,7 @@
                 </div>
             </div>
         </div>
+        </div>
         <!-- /section-satellite -->
 
         <!-- section-biosonification: standalone port of the Ambient Forest / Data
@@ -1605,7 +1610,7 @@
         <div id="biosonification" class="section-documentaries flat-spacing">
             <div class="container">
                 <div class="heading-section center mb-64">
-                    <div class="heading-sub fw-semibold mx-auto effectFade fadeUp">Bio-sonification</div>
+                    <div class="heading-sub fw-semibold mx-auto effectFade fadeUp">Data-sonification</div>
                     <div class="heading-title text-gradient-3 effectFade fadeRotateX">The Forest, Audible</div>
                     <p class="inv-intro effectFade fadeUp">Every tree in the HEXAGON planting generates measurable electrical signals. As leaf stomata open and sap is drawn upward through the trunk, the plant's cell membrane potential shifts — bioelectric potential. Converting this alongside chlorophyll fluorescence and sap flow into sound lets the forest compose its own music, live.</p>
                 </div>
@@ -1643,7 +1648,11 @@
         </div>
         <!-- /section-biosonification -->
 
-        <!-- section-partner -->
+        <!-- section-partner: wrapped in .box-white — the logo fade CSS
+             (.infiniteslide_wrap::after) hardcodes a light background color,
+             and the logos are brightness(0)-filtered near-black at low
+             opacity, both of which only read correctly on a light section. -->
+        <div class="box-white">
         <div class="section-partner">
             <div class="container">
                 <div class="row">
@@ -1722,6 +1731,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
         <!-- /section-partner -->
 
@@ -1882,7 +1892,7 @@
                             <li>
                                 <div class="item">
                                     <a href="#biosonification" class="mb-menu-link text-display-1">
-                                        <span class="text">Bio-sonification</span>
+                                        <span class="text">Data-sonification</span>
                                     </a>
                                 </div>
                             </li>
@@ -3927,7 +3937,7 @@
           document.addEventListener('keydown',function(e){ if(e.key==='Escape' && modal.classList.contains('show')) closeModal(); });
         })();
 
-        /* ── Bio-sonification: ported from hexagon-experience-map.html's Ambient
+        /* ── Data-sonification: ported from hexagon-experience-map.html's Ambient
            Forest / Data Symphony tools. That page reads canopy/soil/wind state
            from its own live map simulation; here there is no map, so the same
            growth formulas run on a free-running local clock instead. ── */
