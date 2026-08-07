@@ -13,7 +13,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="description"
     <meta property="og:title" content="Land-Art Space">
-    <meta property="og:description" content="An art-and-technology driven reforestation initiative fighting desertification in Mongolia's Gobi.">
     <meta property="og:site_name" content="Land-Art Space">
 
     <!-- font -->
@@ -95,7 +94,11 @@
         .hero-logo-standalone { height: 190px; width: auto; display: block; margin: 0 auto; }
         /* Hero photo is held still — no motion effects in the hero. */
         .hero-image { overflow: hidden; }
+        /* Match the container's radius exactly — the base stylesheet rounds .hero-image tighter
+           on mobile (24px vs 40px) but never updates the img's own radius, so the old stock
+           background-image on .hero-image peeked out as a second frame around the corners. */
         .hero-image .hero-bg-img { animation: none; transition: opacity .6s ease; filter: brightness(.8); }
+        .section-hero .hero-image img.hero-bg-img { border-radius: inherit; }
         /* Dark hero photo needs light text/logo — the base template assumed a near-white photo. */
         .section-hero .content-wrap .text { color: rgba(255,255,255,.82); }
         /* Land art poster images are portrait (5315x7087 ≈ 3:4) — old cards assumed landscape.
@@ -691,7 +694,6 @@
                         <img loading="lazy" class="hero-logo-standalone" src="assets/images/logo/land-art-logo-white.png" alt="Land-art space">
                     </div>
                     <p class="text effectFade fadeUp">
-                        An art-and-technology driven reforestation initiative fighting desertification in Mongolia's Gobi through large-scale land art, satellite-monitored tree planting, and community-powered restoration.
                     </p>
                     <div class="bot-btns effectFade fadeRotateX">
                         <a href="#services" class="tf-btn">
