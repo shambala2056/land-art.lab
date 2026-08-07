@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="description"
     <meta property="og:title" content="Land-Art Space">
-    <meta property="og:description" content="An art-and-technology driven reforestation initiative fighting desertification in Mongolia's Gobi Desert.">
+    <meta property="og:description" content="An art-and-technology driven reforestation initiative fighting desertification in Mongolia's Gobi.">
     <meta property="og:site_name" content="Land-Art Space">
 
     <!-- font -->
@@ -546,33 +546,8 @@
         .pr-item.act .pr-n, .pr-item.act .pr-t { color: #b2d135; }
 
         /* Hive parcel map (investment structure) */
-        .hive-pm-wrap { margin-top: 40px; border: 1px solid #1F3040; background: #09111C; border-radius: 20px; overflow: hidden; font-family: 'Urbanist', sans-serif; }
-        .hive-pm-wrap .pm-top { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center; padding: 18px 22px; border-bottom: 1px solid #1F3040; }
-        .hive-pm-wrap .pm-name { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-        .hive-pm-wrap .pm-name input { font-family: 'Urbanist', sans-serif; font-size: 13px; background: #050A12; border: 1px solid #29405A; color: #fff; padding: 9px 12px; width: 190px; outline: none; border-radius: 8px; transition: border-color .3s; }
-        .hive-pm-wrap .pm-name input:focus { border-color: #b2d135; }
-        .hive-pm-wrap .pm-name input::placeholder { color: #7C8CA0; }
-        .hive-pm-wrap .pm-btn { font-family: 'Urbanist', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: #B8C4D4; background: none; border: 1px solid #29405A; border-radius: 999px; padding: 9px 16px; cursor: pointer; transition: color .3s, border-color .3s; white-space: nowrap; }
-        .hive-pm-wrap .pm-btn:hover { color: #09111C; border-color: #b2d135; background: #b2d135; }
-        .hive-pm-wrap .pm-btn.clr:hover { color: #09111C; border-color: #8296AB; background: #8296AB; }
-        .hive-pm-wrap .pm-legend { display: flex; flex-wrap: wrap; gap: 18px; padding: 14px 22px; border-bottom: 1px solid #1F3040; font-size: 12px; letter-spacing: 0.02em; text-transform: uppercase; color: #7C8CA0; }
-        .hive-pm-wrap .pm-legend span { display: flex; align-items: center; gap: 8px; }
-        .hive-pm-wrap .pm-legend i { background: #101D2E; border: 1px solid #2A4058; display: block; clip-path: polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%); }
-        .hive-pm-wrap .pm-stage { padding: 20px; display: grid; place-items: center; }
-        .hive-pm-wrap .pm-stage svg { width: 100%; max-width: 900px; height: auto; display: block; }
-        .hive-pm-wrap #pmap .cell { fill: #101D2E; stroke: #2A4058; stroke-width: .8; cursor: pointer; transition: fill .3s ease, stroke .3s ease; }
-        .hive-pm-wrap #pmap .cell:hover { fill: #16233A; stroke: #35C9B8; }
-        .hive-pm-wrap #pmap .cell.sel { fill: #6E8A1E; stroke: #b2d135; }
-        .hive-pm-wrap #pmap .cell.sold { fill: #b2d135; stroke: #C6E05C; }
-        .hive-pm-wrap #pmap .cell.sold:hover { fill: #93B22A; }
-        .hive-pm-wrap #pmap text.nm { fill: #06070A; font-family: 'Urbanist', sans-serif; font-weight: 700; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
-        .hive-pm-wrap .pm-out { display: grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap: 1px; background: #1F3040; border-top: 1px solid #1F3040; }
-        .hive-pm-wrap .pm-cell { background: #050A12; padding: 20px 18px; }
-        .hive-pm-wrap .pm-cell .v { font-weight: 700; color: #B8C4D4; font-size: 26px; line-height: 1; letter-spacing: -0.02em; }
-        .hive-pm-wrap .pm-cell .v.gold { color: #b2d135; }
-        .hive-pm-wrap .pm-cell .k { font-size: 13px; color: #7C8CA0; margin-top: 8px; display: block; }
-        .hive-pm-wrap .pm-tier { padding: 14px 22px; border-top: 1px solid #1F3040; font-size: 12px; letter-spacing: 0.02em; text-transform: uppercase; color: #7C8CA0; line-height: 1.7; }
-        .hive-pm-wrap .pm-tier b { color: #b2d135; font-weight: 700; }
+        .hex-map-embed { margin-top: 40px; border: 1px solid #1F3040; background: #09111C; border-radius: 20px; overflow: hidden; }
+        .hex-map-embed iframe { display: block; width: 100%; height: 1700px; border: 0; }
         .hive-intro { max-width: 62ch; margin: 0 auto 8px; }
     </style>
 </head>
@@ -669,7 +644,7 @@
                         <img loading="lazy" class="hero-logo-standalone" src="assets/images/logo/land-art-logo.png" alt="Land-art space">
                     </div>
                     <p class="text effectFade fadeUp">
-                        An art-and-technology driven reforestation initiative fighting desertification in Mongolia's Gobi Desert through large-scale land art, satellite-monitored tree planting, and community-powered restoration.
+                        An art-and-technology driven reforestation initiative fighting desertification in Mongolia's Gobi through large-scale land art, satellite-monitored tree planting, and community-powered restoration.
                     </p>
                     <div class="bot-btns effectFade fadeRotateX">
                         <a href="#services" class="tf-btn">
@@ -699,7 +674,7 @@
                 <div class="story-flow">
                     <div class="story-row">
                         <div class="story-q">Organisation</div>
-                        <div class="story-a">A small technical team based in the Gobi Desert, delivering land art installations that function simultaneously as reforestation infrastructure. Each planted tree forms part of both the artwork and the restoration effort — the two are not separate activities.</div>
+                        <div class="story-a">A small technical team based in the Gobi, delivering land art installations that function simultaneously as reforestation infrastructure. Each planted tree forms part of both the artwork and the restoration effort — the two are not separate activities.</div>
                     </div>
                     <div class="story-row">
                         <div class="story-q">Methodology</div>
@@ -711,7 +686,7 @@
                     </div>
                     <div class="story-row">
                         <div class="story-q">Location</div>
-                        <div class="story-a"><span class="text-brand fw-semibold">Erdene sum, Dornogovi aimag, Mongolia</span> — within the Gobi Desert, one of the regions most severely affected by desertification. <a href="#impact" class="story-more">See the satellite audit →</a></div>
+                        <div class="story-a"><span class="text-brand fw-semibold">Mongolia</span> — within the Gobi, one of the regions most severely affected by desertification. <a href="#impact" class="story-more">See the satellite audit →</a></div>
                     </div>
                     <div class="story-row">
                         <div class="story-q">Delivered to date</div>
@@ -755,7 +730,8 @@
                                     <span class="dot"></span>
                                     In progress
                                 </div>
-                                <h5 class="title fw-semibold text-white">Based in <span class="text-brand">Erdene sum, Dornogovi aimag</span></h5>
+                                <h5 class="title fw-semibold text-white">Based in <span class="text-brand">Mongolia</span></h5>
+                                <p class="text-white">3 hectares · 27,000 Siberian elm trees</p>
                                 <a href="#pricing" class="tf-btn">
                                     Start a Project
                                 </a>
@@ -996,7 +972,7 @@
                                         <div class="grid-text">
                                             <div class="item">
                                                 <div class="title text-secondary">DESCRIPTION</div>
-                                                <div class="text-body-3 fw-semibold">Our inaugural land art installation in the Gobi Desert — a message written in trees, visible from satellite.</div>
+                                                <div class="text-body-3 fw-semibold">Our inaugural land art installation in the Gobi — a message written in trees, visible from satellite.</div>
                                             </div>
                                             <div class="item">
                                                 <div class="title text-secondary">SCALE</div>
@@ -1060,7 +1036,7 @@
                                         <div class="grid-text">
                                             <div class="item">
                                                 <div class="title text-secondary">DESCRIPTION</div>
-                                                <div class="text-body-3 fw-semibold">Our largest installation to date — a large-scale tribute to Mongolian cultural identity across the Gobi Desert.</div>
+                                                <div class="text-body-3 fw-semibold">Our largest installation to date — a large-scale tribute to Mongolian cultural identity across the Gobi.</div>
                                             </div>
                                             <div class="item">
                                                 <div class="title text-secondary">SCALE</div>
@@ -1208,7 +1184,7 @@
                                     <div class="swiper-wrapper">
                                         <div class="swiper-slide">
                                             <div class="process-card" data-bs-toggle="modal" data-bs-target="#modalProcess0">
-                                                <div class="icon icon-photo"><img loading="lazy" src="assets/images/process/step-01.webp" alt="Hydrological survey in the Gobi Desert"></div>
+                                                <div class="icon icon-photo"><img loading="lazy" src="assets/images/process/step-01.webp" alt="Hydrological survey in the Gobi"></div>
                                                 <div class="content">
                                                     <h4 class="title fw-semibold">Survey & Design</h4>
                                                     <p class="text text-secondary">Hydrological and soil surveys, working drawings, and organic composting lay the groundwork before anything is built.</p>
@@ -1406,31 +1382,27 @@
                     </div>
                 </div>
                 -->
-                <div class="hive-pm-wrap effectFade fadeUp">
-                    <div class="pm-top">
-                        <div class="pm-name">
-                            <input id="pName" type="text" maxlength="18" placeholder="Steward name">
-                            <button class="pm-btn" id="pApply">Reserve Cell</button>
-                        </div>
-                        <div class="pm-name">
-                            <button class="pm-btn clr" id="pClear">Clear</button>
-                        </div>
-                    </div>
-                    <div class="pm-legend">
-                        <span><i style="width:9px;height:10px"></i>1 m² · $30</span>
-                        <span><i style="width:13px;height:15px"></i>10 m² · $300</span>
-                        <span><i style="width:18px;height:20px"></i>100 m² · $3,000</span>
-                        <span><i style="width:24px;height:27px"></i>1,000 m² · $30,000</span>
-                    </div>
-                    <div class="pm-stage"><svg id="pmap" role="img" aria-label="Cell map of the Hive site"></svg></div>
-                    <div class="pm-out">
-                        <div class="pm-cell"><div class="v" id="pCells">0</div><span class="k">Cells selected</span></div>
-                        <div class="pm-cell"><div class="v" id="pArea">0</div><span class="k">Area, m²</span></div>
-                        <div class="pm-cell"><div class="v" id="pShare">0%</div><span class="k">Share of the artwork sponsored</span></div>
-                        <div class="pm-cell"><div class="v gold" id="pPrice">$0</div><span class="k">Total, USD</span></div>
-                    </div>
-                    <div class="pm-tier" id="pInfo">Tap cells to select, enter a name and press Reserve · 4 plot sizes: $30 · $300 · $3,000 · $30,000 · small cells are shown enlarged for legibility · sponsorship confers stewardship and recognition, not title to land</div>
+                <div class="hex-map-embed effectFade fadeUp">
+                    <iframe id="hexMapFrame" src="hexagon-experience-map.html" title="HEXAGON Experience Map" loading="lazy" scrolling="no"></iframe>
                 </div>
+                <script>
+                (function(){
+                    var frame = document.getElementById('hexMapFrame');
+                    function fit(){
+                        try {
+                            var doc = frame.contentDocument;
+                            if (doc && doc.documentElement) frame.style.height = doc.documentElement.scrollHeight + 'px';
+                        } catch (e) {}
+                    }
+                    frame.addEventListener('load', function(){
+                        fit();
+                        if (frame.contentWindow) frame.contentWindow.addEventListener('resize', fit);
+                        if (frame.contentDocument && window.ResizeObserver) {
+                            new ResizeObserver(fit).observe(frame.contentDocument.documentElement);
+                        }
+                    });
+                })();
+                </script>
 
                 <!-- Institutional ladder: the cell map is a retail instrument; COP17 partners commit against programme components. -->
                 <div class="inst-tiers effectFade fadeUp">
@@ -1901,7 +1873,7 @@
                                 <div class="grid-text">
                                     <div class="item">
                                         <div class="title text-secondary">DESCRIPTION</div>
-                                        <div class="text-body-3 fw-semibold">Our inaugural land art installation in the Gobi Desert — a message written in trees, visible from satellite.</div>
+                                        <div class="text-body-3 fw-semibold">Our inaugural land art installation in the Gobi — a message written in trees, visible from satellite.</div>
                                     </div>
                                     <div class="item">
                                         <div class="title text-secondary">SCALE</div>
@@ -1971,7 +1943,7 @@
                                 <div class="grid-text">
                                     <div class="item">
                                         <div class="title text-secondary">DESCRIPTION</div>
-                                        <div class="text-body-3 fw-semibold">Our largest installation to date — a large-scale tribute to Mongolian cultural identity across the Gobi Desert.</div>
+                                        <div class="text-body-3 fw-semibold">Our largest installation to date — a large-scale tribute to Mongolian cultural identity across the Gobi.</div>
                                     </div>
                                     <div class="item">
                                         <div class="title text-secondary">SCALE</div>
@@ -3885,120 +3857,6 @@
           closeBtn.addEventListener('click',closeModal);
           backdrop.addEventListener('click',closeModal);
           document.addEventListener('keydown',function(e){ if(e.key==='Escape' && modal.classList.contains('show')) closeModal(); });
-        })();
-
-        (function(){
-          var svg=document.getElementById('pmap'); if(!svg) return;
-          var NS='http://www.w3.org/2000/svg';
-          var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-          // Exact hexagon positions/sizes traced from the real HEXAGON land art piece
-          // (assets/images/section/HEXAGON.jpg), not a procedural layout.
-          var CELLS_DATA=[{cx:134.2,cy:418.0,r:56.6,m2:1000,p:30000},{cx:290.5,cy:512.0,r:56.0,m2:1000,p:30000},{cx:453.3,cy:432.8,r:55.8,m2:1000,p:30000},{cx:46.0,cy:361.7,r:46.3,m2:100,p:3000},{cx:362.0,cy:386.8,r:46.0,m2:100,p:3000},{cx:298.3,cy:616.3,r:45.5,m2:100,p:3000},{cx:551.6,cy:188.9,r:43.8,m2:100,p:3000},{cx:118.0,cy:329.8,r:31.5,m2:10,p:300},{cx:324.3,cy:234.5,r:31.3,m2:10,p:300},{cx:377.0,cy:591.1,r:31.3,m2:10,p:300},{cx:439.4,cy:344.4,r:30.9,m2:10,p:300},{cx:429.6,cy:242.8,r:30.7,m2:10,p:300},{cx:191.9,cy:612.2,r:30.3,m2:10,p:300},{cx:296.9,cy:425.3,r:26.8,m2:10,p:300},{cx:440.1,cy:181.7,r:26.0,m2:10,p:300},{cx:209.9,cy:376.4,r:25.8,m2:10,p:300},{cx:580.2,cy:459.8,r:25.7,m2:10,p:300},{cx:560.6,cy:113.2,r:25.4,m2:10,p:300},{cx:527.8,cy:389.1,r:25.2,m2:10,p:300},{cx:541.8,cy:263.6,r:24.9,m2:10,p:300},{cx:499.7,cy:517.6,r:24.8,m2:10,p:300},{cx:395.8,cy:537.6,r:19.7,m2:1,p:30},{cx:366.0,cy:490.4,r:19.3,m2:1,p:30},{cx:376.2,cy:255.6,r:19.3,m2:1,p:30},{cx:275.7,cy:256.8,r:19.2,m2:1,p:30},{cx:576.6,cy:408.7,r:19.2,m2:1,p:30},{cx:360.1,cy:318.5,r:19.1,m2:1,p:30},{cx:499.1,cy:337.6,r:19.1,m2:1,p:30},{cx:625.2,cy:267.6,r:19.0,m2:1,p:30},{cx:330.7,cy:180.2,r:19.0,m2:1,p:30},{cx:625.5,cy:196.4,r:18.8,m2:1,p:30},{cx:473.8,cy:277.5,r:18.5,m2:1,p:30},{cx:537.8,cy:316.4,r:18.2,m2:1,p:30},{cx:255.2,cy:396.8,r:17.1,m2:1,p:30},{cx:517.5,cy:80.7,r:16.7,m2:1,p:30},{cx:237.0,cy:585.3,r:14.7,m2:1,p:30},{cx:236.9,cy:568.5,r:10.2,m2:1,p:30},{cx:398.5,cy:477.2,r:10.1,m2:1,p:30},{cx:396.2,cy:212.6,r:9.9,m2:1,p:30},{cx:335.1,cy:144.8,r:9.8,m2:1,p:30},{cx:291.7,cy:201.8,r:9.7,m2:1,p:30},{cx:617.1,cy:121.8,r:9.7,m2:1,p:30},{cx:653.5,cy:219.5,r:9.5,m2:1,p:30},{cx:56.2,cy:449.0,r:9.5,m2:1,p:30},{cx:286.8,cy:383.2,r:9.5,m2:1,p:30},{cx:499.9,cy:302.4,r:9.4,m2:1,p:30},{cx:440.8,cy:288.8,r:9.4,m2:1,p:30},{cx:547.3,cy:509.9,r:9.4,m2:1,p:30},{cx:654.8,cy:245.6,r:9.2,m2:1,p:30},{cx:219.2,cy:256.4,r:9.2,m2:1,p:30},{cx:56.1,cy:422.5,r:9.2,m2:1,p:30},{cx:176.3,cy:656.5,r:9.2,m2:1,p:30},{cx:512.1,cy:48.7,r:9.0,m2:1,p:30},{cx:242.0,cy:270.4,r:8.9,m2:1,p:30},{cx:520.0,cy:124.3,r:8.3,m2:1,p:30},{cx:517.1,cy:98.3,r:7.1,m2:1,p:30}];
-          var S=350;
-          svg.setAttribute('viewBox','0 0 '+(S*2).toFixed(0)+' '+(S*2).toFixed(0));
-
-          function hexD(cx,cy,r){
-            var d='';
-            for(var i=0;i<6;i++){
-              var a=Math.PI/180*(60*i-90);
-              d+=(i?'L':'M')+(cx+r*0.94*Math.cos(a)).toFixed(1)+' '+(cy+r*0.94*Math.sin(a)).toFixed(1);
-            }
-            return d+'Z';
-          }
-
-          var cells=[]; var id=0;
-          CELLS_DATA.forEach(function(q){
-            var el=document.createElementNS(NS,'path');
-            el.setAttribute('d',hexD(q.cx,q.cy,q.r));
-            el.setAttribute('class','cell');
-            el.dataset.i=id;
-            var ti=document.createElementNS(NS,'title');
-            ti.textContent=q.m2+' m² · $'+q.p.toLocaleString('en-US');
-            el.appendChild(ti);
-            svg.appendChild(el);
-            cells.push({el:el,ti:ti,cx:q.cx,cy:q.cy,r:q.r,m2:q.m2,p:q.p,sel:false,name:null,txt:null});
-            id++;
-          });
-
-          var el={c:document.getElementById('pCells'),a:document.getElementById('pArea'),
-                    s:document.getElementById('pShare'),p:document.getElementById('pPrice'),
-                    info:document.getElementById('pInfo')};
-          var nameIn=document.getElementById('pName');
-          var fmt=function(n){return Math.round(n).toLocaleString('en-US');};
-          var TOTAL_M2=cells.reduce(function(a,c){return a+c.m2;},0);
-          var baseInfo='Click cells to select, enter a name and press Reserve · total '+cells.length+
-            ' cells = '+fmt(TOTAL_M2)+' m² = $'+fmt(cells.reduce(function(a,c){return a+c.p;},0))+
-            ' · small cells are shown enlarged for legibility';
-          el.info.textContent=baseInfo;
-
-          function tier(n,m2){
-            if(!n) return '—';
-            if(m2<=10) return 'Entry';
-            if(m2<=100) return 'Supporter';
-            if(m2<=1000) return 'Partner';
-            return 'Lead partner';
-          }
-          function update(){
-            var sel=cells.filter(function(c){return c.sel;});
-            var m2=sel.reduce(function(a,c){return a+c.m2;},0), pr=sel.reduce(function(a,c){return a+c.p;},0);
-            el.c.textContent=sel.length;
-            el.a.textContent=fmt(m2);
-            el.s.textContent=(m2/TOTAL_M2*100).toFixed(m2/TOTAL_M2*100<10?1:0)+'%';
-            el.p.textContent='$'+fmt(pr);
-            el.info.innerHTML=sel.length
-              ? 'Tier: <b>'+tier(sel.length,m2)+'</b> · '+sel.length+' cells · '+fmt(m2)+' m² · $'+fmt(pr)
-              : baseInfo;
-          }
-
-          svg.addEventListener('click',function(e){
-            var t=e.target.closest('.cell'); if(!t) return;
-            var c=cells[+t.dataset.i];
-            c.sel=!c.sel; t.classList.toggle('sel',c.sel);
-            update();
-          });
-
-          function engrave(c,name){
-            c.name=name;
-            c.el.classList.remove('sel'); c.el.classList.add('sold');
-            c.ti.textContent=name+' · '+c.m2+' m² · $'+c.p.toLocaleString('en-US');
-            if(c.txt){c.txt.remove();c.txt=null;}
-            if(c.r>=13){
-              var max=c.r>=30?11:(c.r>=20?8:5);
-              var show=name.length>max?name.slice(0,max-1)+'…':name;
-              var t=document.createElementNS(NS,'text');
-              t.setAttribute('class','nm'); t.setAttribute('x',c.cx); t.setAttribute('y',c.cy);
-              t.setAttribute('font-size',(c.r*0.30).toFixed(1));
-              t.textContent=show;
-              svg.appendChild(t); c.txt=t;
-            }
-            c.sel=false;
-          }
-
-          var applyBtn = document.getElementById('pApply');
-          if (applyBtn) applyBtn.addEventListener('click',function(){
-            var nm=(nameIn.value||'').trim().toUpperCase();
-            var sel=cells.filter(function(c){return c.sel;});
-            if(!nm||!sel.length){
-              el.info.innerHTML='<b>Select cells and enter a name</b>';
-              setTimeout(update,1800); return;
-            }
-            sel.forEach(function(c,i){setTimeout(function(){engrave(c,nm);update();}, reduce?0:i*45);});
-            nameIn.value='';
-          });
-
-          var clearBtn = document.getElementById('pClear');
-          if (clearBtn) clearBtn.addEventListener('click',function(){
-            cells.forEach(function(c){
-              c.sel=false; c.name=null;
-              c.el.classList.remove('sel','sold');
-              c.ti.textContent=c.m2+' m² · $'+c.p.toLocaleString('en-US');
-              if(c.txt){c.txt.remove();c.txt=null;}
-            });
-            update();
-          });
-
-          update();
         })();
 </script>
 

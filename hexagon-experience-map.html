@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HEXAGON — Experience Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EFEFEA; --card:#F6F6F2; --ink:#15160F; --muted:#7B7D72; --line:#E0E0D8;
+  --lime:#C3F03C; --yellow:#FFD300;
+  --shadow-out: 6px 6px 16px rgba(21,22,15,.09), -6px -6px 16px rgba(255,255,255,.95);
+  --shadow-in: inset 4px 4px 10px rgba(21,22,15,.09), inset -4px -4px 10px rgba(255,255,255,.95);
+  --r:22px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:28px 18px 56px}
+
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:7px 15px 7px 12px;
+  font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;box-shadow:var(--shadow-out)}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--lime);display:block}
+h1{font-size:clamp(30px,7vw,42px);line-height:1.06;font-weight:600;letter-spacing:-.02em;margin:18px 0 0}
+h1 span{color:var(--muted);display:block}
+.lead{color:var(--muted);font-size:14px;margin:12px 0 0;max-width:58ch}
+
+/* ---- map ---- */
+.mapbox{position:relative;background:var(--card);border-radius:var(--r);box-shadow:var(--shadow-out);padding:14px;margin-top:22px}
+.mapinner{position:relative;border-radius:16px;overflow:hidden;box-shadow:var(--shadow-in);background:#E7DCC5}
+svg.map{width:100%;height:auto;display:block}
+canvas#wind{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;pointer-events:none}
+.stamp{background:var(--yellow);border-radius:12px;padding:7px 12px;font-size:18px;font-weight:700;line-height:1.05;min-width:78px}
+.stamp small{display:block;font-size:9px;font-weight:600;letter-spacing:.1em}
+.right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.chip{background:var(--ink);color:#fff;border-radius:12px;padding:7px 11px;font-size:10px;font-weight:600;letter-spacing:.06em;text-align:right;line-height:1.3}
+.chip b{display:block;color:var(--lime);font-size:11px}
+.chip.season{background:#fff;color:var(--ink);box-shadow:var(--shadow-out)}
+.chip.season b{color:var(--muted);font-weight:500}
+.chip.flash{animation:chipflash .7s ease both}
+@keyframes chipflash{0%{background:var(--lime);color:var(--ink)}100%{background:var(--ink);color:#fff}}
+
+.zoomout{position:absolute;left:12px;bottom:12px;background:#fff;border:0;border-radius:12px;padding:9px 13px;
+  font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--ink);box-shadow:var(--shadow-out);
+  cursor:pointer;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .3s,transform .3s}
+.zoomout.on{opacity:1;transform:none;pointer-events:auto}
+
+.tip{position:absolute;pointer-events:none;z-index:6;background:var(--ink);color:#fff;border-radius:12px;padding:8px 12px;font-size:11px;line-height:1.55;opacity:0;transition:opacity .15s;white-space:nowrap}
+.tip.show{opacity:1}
+.tip b{color:var(--lime)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:11.5px;color:var(--muted);font-weight:500}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:13px;height:13px;border-radius:4px;background:#DED3BC;border:1.5px solid #B9A882}
+.sw.taken{background:#D8EEA6;border-color:#5E8F0C}
+.sw.held{background:var(--yellow);border-color:var(--ink)}
+
+/* ---- controls ---- */
+.panel{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow-out);padding:20px;margin-top:14px}
+.trow{display:flex;align-items:center;gap:14px}
+.play{width:52px;height:52px;flex:none;border:0;border-radius:16px;background:var(--bg);box-shadow:var(--shadow-out);font-size:17px;color:var(--ink);cursor:pointer;font-family:inherit;line-height:1}
+.play:active{box-shadow:var(--shadow-in)}
+.play:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:8px;border-radius:99px;background:#E5E5DD;box-shadow:var(--shadow-in);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:var(--card);border:5px solid var(--lime);box-shadow:var(--shadow-out);cursor:grab}
+input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--card);border:5px solid var(--lime);box-shadow:var(--shadow-out)}
+.ticks{display:flex;justify-content:space-between;margin-top:12px;font-size:11px;color:var(--muted);font-weight:500}
+.ticks .now{color:var(--ink)}
+.stagebar{display:flex;gap:3px;margin-top:14px}
+.stagebar div{flex:1;height:6px;border-radius:99px;background:#E5E5DD;transition:background .25s}
+.stagebar div.lit{background:var(--lime);animation:litpop .45s cubic-bezier(.3,1.4,.5,1) both;transform-origin:left}
+@keyframes litpop{from{transform:scaleX(.15)}to{transform:scaleX(1)}}
+.stagenote{margin-top:12px;font-size:12.5px;color:var(--muted)}
+.stagenote b{color:var(--ink);font-weight:600}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:1px;background:var(--line);margin-top:18px;border-radius:16px;overflow:hidden}
+.out div{background:var(--card);padding:14px}
+.out .k{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.out .v{font-size:19px;font-weight:600;margin-top:2px}
+.note{font-size:12px;color:var(--muted);margin-top:12px}
+
+/* ---- detail ---- */
+.detail{margin-top:14px;background:var(--card);border-radius:var(--r);box-shadow:var(--shadow-out);padding:20px}
+.d-tag{display:inline-block;background:var(--lime);border-radius:999px;padding:5px 12px;font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase}
+.d-title{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:12px 0 0;line-height:1.25}
+.d-title span{display:block;font-size:13px;font-weight:400;color:var(--muted);margin-top:4px}
+.d-body{font-size:13.5px;color:var(--muted);margin:12px 0 0}
+.d-stats{list-style:none;margin:16px 0 0;padding:0}
+.d-stats li{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid var(--line);font-size:13px}
+.d-stats li span:first-child{color:var(--muted)}
+.d-stats li span:last-child{font-weight:600;text-align:right}
+.grand{background:var(--ink);color:#fff;border-radius:18px;padding:16px 18px;margin-top:16px;display:flex;justify-content:space-between;align-items:baseline}
+.grand .k{font-size:12px;color:#B9BBAE;letter-spacing:.1em;text-transform:uppercase}
+.grand .v{font-size:24px;font-weight:700;color:var(--lime)}
+
+/* ---- svg ---- */
+.cell{cursor:pointer;transform-box:fill-box;transform-origin:center;outline:none}
+.plot{stroke:rgba(48,40,24,.32);stroke-width:1;transition:stroke .15s,stroke-width .15s}
+.cell.taken .plot{stroke:#5E8F0C;stroke-width:2}
+.cell.held .plot{stroke:#C9A400;stroke-width:2}
+.cell:hover .plot,.cell.on .plot,.cell:focus-visible .plot{stroke:var(--ink);stroke-width:2.4}
+.lab{font-size:7.5px;fill:rgba(24,22,14,.6);text-anchor:middle;pointer-events:none;font-weight:600;
+  paint-order:stroke;stroke:rgba(255,255,255,.5);stroke-width:1.6}
+.fence{fill:none;stroke:#8E846E;stroke-width:1.2;stroke-dasharray:1.5 5.5}
+.track{fill:none;stroke:#CFC0A2;stroke-width:5;stroke-linecap:round;opacity:.9}
+.wash{fill:none;stroke:#D9CBAE;stroke-width:4;stroke-linecap:round;opacity:.8}
+.mapcap{font-size:10px;fill:rgba(48,40,24,.5);letter-spacing:.1em;font-weight:600}
+.nbk{fill:#C4A97C;opacity:0}
+
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.reveal{opacity:0}.reveal.in{animation:rise .7s cubic-bezier(.22,.85,.25,1) both}
+@keyframes sow{0%{opacity:0;transform:scale(.5)}62%{transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+.cell.presow{opacity:0}
+.cell.seeded{animation:sow .5s cubic-bezier(.3,1.45,.5,1) both}
+/* ───── modules ───── */
+.mhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:4px}
+.mhead h2{font-size:19px;font-weight:600;letter-spacing:-.01em;margin:0}
+.mhead .num{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.12em}
+.msub{font-size:13px;color:var(--muted);margin:8px 0 18px;max-width:56ch}
+
+.arow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.abtn{border:0;border-radius:16px;padding:14px 18px;font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;
+  background:var(--bg);box-shadow:var(--shadow-out);color:var(--ink);transition:box-shadow .15s,background .15s}
+.abtn:active{box-shadow:var(--shadow-in)}
+.abtn[aria-pressed="true"]{background:var(--ink);color:var(--lime);box-shadow:var(--shadow-in)}
+.abtn:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.abtn.primary{background:var(--lime)}
+.vol{display:flex;align-items:center;gap:9px;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.08em}
+.vol input[type=range]{width:108px;flex:none}
+
+.meters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px}
+.mt{background:var(--bg);border-radius:16px;padding:13px 15px;box-shadow:var(--shadow-in)}
+.mt .k{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.mt .v{font-size:17px;font-weight:600;margin-top:3px}
+.mt .bar{height:5px;border-radius:99px;background:#E2E2DA;margin-top:9px;overflow:hidden}
+.mt .bar i{display:block;height:100%;background:var(--lime);border-radius:99px;width:0;transition:width .18s linear}
+.mt .bar i.warm{background:var(--yellow)}
+.mt .bar i.dust{background:#B0A488}
+
+.score{margin-top:18px;background:var(--bg);border-radius:16px;box-shadow:var(--shadow-in);padding:14px 12px 10px;position:relative;overflow:hidden}
+.lanes{display:grid;grid-template-columns:64px 1fr;gap:8px;align-items:center;font-size:10px;color:var(--muted);font-weight:600}
+.lanes+.lanes{margin-top:6px}
+.lane{display:grid;grid-template-columns:repeat(11,1fr);gap:3px;height:22px}
+.lane b{display:block;align-self:end;border-radius:4px 4px 2px 2px;background:#D6D6CC;transition:background .2s}
+.lane.on b{background:var(--lime)}
+.lane.wind b{background:#CFC3A6}
+.lane.soc b{background:#9FBF63}
+.lane.crown b{background:#7DB222}
+.playhead{position:absolute;top:8px;bottom:8px;width:2px;background:var(--ink);opacity:0;border-radius:2px;transition:opacity .2s}
+.yrscale{display:grid;grid-template-columns:64px 1fr;gap:8px;margin-top:8px;font-size:9.5px;color:var(--muted)}
+.yrscale div:last-child{display:grid;grid-template-columns:repeat(11,1fr);gap:3px;text-align:center}
+
+/* soil */
+.soilwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:22px;align-items:center}
+@media(max-width:640px){.soilwrap{grid-template-columns:1fr}}
+.tiles{background:var(--bg);border-radius:18px;box-shadow:var(--shadow-in);padding:14px}
+.tiles svg{width:100%;height:auto;display:block}
+.phline{display:flex;height:14px;border-radius:99px;overflow:hidden;margin-top:16px;box-shadow:var(--shadow-in)}
+.phline i{flex:1}
+.phmark{position:relative;height:0}
+.phmark span{position:absolute;top:-24px;transform:translateX(-50%);font-size:10px;font-weight:700;
+  background:var(--ink);color:#fff;border-radius:6px;padding:2px 7px;transition:left .25s}
+.rowk{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid var(--line);font-size:13px}
+.rowk span:first-child{color:var(--muted)}
+.rowk span:last-child{font-weight:600}
+
+/* ai */
+.aictl{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+@media(max-width:560px){.aictl{grid-template-columns:1fr}}
+.fld{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.seg{display:flex;gap:6px;margin-top:8px}
+.seg button{flex:1;border:0;border-radius:12px;padding:10px 6px;font-family:inherit;font-size:12px;font-weight:600;
+  background:var(--bg);box-shadow:var(--shadow-out);color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--lime);box-shadow:var(--shadow-in)}
+.mix{display:grid;gap:9px;margin-top:6px}
+.sp{display:grid;grid-template-columns:1fr 46px;gap:10px;align-items:center;font-size:13px}
+.sp .nm b{font-weight:600}
+.sp .nm em{font-style:italic;color:var(--muted);font-size:11.5px;margin-left:5px}
+.sp .track{height:7px;border-radius:99px;background:#E2E2DA;margin-top:6px;overflow:hidden}
+.sp .track i{display:block;height:100%;background:var(--lime);border-radius:99px;width:0;transition:width .5s cubic-bezier(.2,.8,.25,1)}
+.sp .pc{text-align:right;font-weight:600;font-size:13px}
+.grovebox{margin-top:16px;background:var(--bg);border-radius:18px;box-shadow:var(--shadow-in);padding:8px}
+.grovebox svg{width:100%;height:auto;display:block}
+.aiout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-radius:16px;overflow:hidden;margin-top:16px}
+.aiout div{background:var(--card);padding:13px}
+.aiout .k{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.aiout .v{font-size:18px;font-weight:600;margin-top:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.reveal{opacity:1}.cell.presow{opacity:1}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="eyebrow"><i></i>Erdene Sum · Dornogovi · 44.0754 N / 111.1958 E</span>
+  <h1>HEXAGON<span>Experience map</span></h1>
+  <p class="lead">A fenced 30,000 m² site divided into 50 hexagonal cells, with 6,750 m² under active planting. The map is drawn to scale — every point marks a single pot, every row a drip line. The timeline runs continuously: seasons turn, trees grow only through summer, and when leaves drop each winter the sand begins to move again.</p>
+
+  <div class="mapbox">
+    <div class="mapinner" id="mapinner">
+      <svg class="map" id="map" viewBox="0 0 940 860" role="img" aria-label="Scaled map of the HEXAGON site"></svg>
+      <canvas id="wind"></canvas>
+      <div class="hud">
+        <div class="stamp"><span id="yr">2026</span><small id="mon">APR</small></div>
+        <div class="right">
+          <div class="chip" id="stgChip"><span id="stgNum">STAGE I</span><b id="stgName">Initial Planting</b></div>
+          <div class="chip season"><span id="seaName">SPRING</span><b id="seaSub">leaves unfolding</b></div>
+        </div>
+      </div>
+      <button class="zoomout" id="zoomout" type="button">⤢ Full Site</button>
+    </div>
+    <div class="legend">
+      <span><i class="sw"></i>Available cell</span>
+      <span><i class="sw held"></i>In discussion</span>
+      <span><i class="sw taken"></i>Partnered</span>
+      <span>↘ wind · from the northwest</span>
+    </div>
+    <div class="tip" id="tip"></div>
+  </div>
+
+  <div class="panel">
+    <div class="trow">
+      <button class="play" id="play" type="button" aria-label="Play">▶</button>
+      <input type="range" id="slider" min="2026" max="2036.99" step="0.01" value="2026.25" aria-label="Select year">
+    </div>
+    <div class="ticks"><span class="now">2026 planting</span><span>2029</span><span>2032</span><span>2036</span></div>
+    <div class="stagebar" id="stagebar"><div></div><div></div><div></div><div></div></div>
+    <p class="stagenote" id="stageNote"></p>
+
+    <div class="out">
+      <div><div class="k">Tree height</div><div class="v" id="r1">0.3 m</div></div>
+      <div><div class="k">Crown radius</div><div class="v" id="r5">0.06 m</div></div>
+      <div><div class="k">Canopy cover · now</div><div class="v" id="r2">1%</div></div>
+      <div><div class="k">Wind reduction</div><div class="v" id="r6">2%</div></div>
+      <div><div class="k">Sand movement</div><div class="v" id="r3">High</div></div>
+      <div><div class="k">Care remaining</div><div class="v" id="r4">10 years</div></div>
+    </div>
+    <p class="note">Canopy cover isn't a manually entered figure — it's the geometric result of crowns expanding across a 1-metre planting grid, scaled by seasonal leaf state. That's why cover drops every winter and sand movement naturally returns each spring, without being scripted.</p>
+  </div>
+
+  <div class="detail" id="detail"></div>
+
+  <!-- ══ AMBIENT FOREST ══ -->
+  <section class="panel">
+    <div class="mhead"><h2>Ambient Forest</h2><span class="num">TOOL 01</span></div>
+    <p class="msub">Every tree generates electrical signals. As leaf stomata open, sap is drawn upward through the trunk, and the plant responds to stress, its cell membrane potential shifts — this is bioelectric potential. Sensors across the site measure this alongside chlorophyll fluorescence and sap flow. Converting these three signals into sound lets the forest compose its own music. Moving the timeline above changes the music in real time.</p>
+
+    <div class="arow">
+      <button class="abtn primary" id="ambBtn" type="button" aria-pressed="false">▶ Listen to the Forest</button>
+      <button class="abtn" id="symBtn" type="button" aria-pressed="false">♪ Data Symphony · 2026–2036</button>
+      <label class="vol">VOLUME
+        <input type="range" id="vol" min="0" max="100" value="55" aria-label="Volume">
+      </label>
+    </div>
+
+    <div class="meters">
+      <div class="mt"><div class="k">Bioelectric Potential</div><div class="v" id="mBio">0.0 mV</div><div class="bar"><i id="bBio"></i></div></div>
+      <div class="mt"><div class="k">Chlorophyll Fluorescence</div><div class="v" id="mFlu">Fv/Fm 0.00</div><div class="bar"><i id="bFlu"></i></div></div>
+      <div class="mt"><div class="k">Sap Flow</div><div class="v" id="mSap">0.00</div><div class="bar"><i id="bSap" class="warm"></i></div></div>
+      <div class="mt"><div class="k">Wind Noise</div><div class="v" id="mWnd">100%</div><div class="bar"><i id="bWnd" class="dust"></i></div></div>
+    </div>
+    <p class="note">When leaves drop in winter, fluorescence falls to zero and the music quiets to wind alone. When buds break in spring, the melody returns — the forest's annual cycle, made audible.</p>
+  </section>
+
+  <!-- ══ SONIFICATION SCORE ══ -->
+  <section class="panel">
+    <div class="mhead"><h2>Data Symphony</h2><span class="num">TOOL 02</span></div>
+    <p class="msub">Eleven years of change become a four-voice score: canopy sets the melody, crown size the harmony, soil carbon the bass, sand movement the percussion. Rather than reducing desertification reversal to a chart, this renders it as an audible structure — noise dominates at the start, resolving into harmony by the end.</p>
+
+    <div class="score" id="score">
+      <div class="lanes"><span>CANOPY</span><div class="lane on" id="laneCan"></div></div>
+      <div class="lanes"><span>CROWN</span><div class="lane crown" id="laneCrw"></div></div>
+      <div class="lanes"><span>SOIL · SOC</span><div class="lane soc" id="laneSoc"></div></div>
+      <div class="lanes"><span>SAND</span><div class="lane wind" id="laneWnd"></div></div>
+      <div class="yrscale"><div></div><div id="yrRow"></div></div>
+      <div class="playhead" id="ph"></div>
+    </div>
+  </section>
+
+  <!-- ══ SOIL INDICATOR ══ -->
+  <section class="panel">
+    <div class="mhead"><h2>Soil Indicator</h2><span class="num">TOOL 03</span></div>
+    <p class="msub">Glazed ceramic tiles embedded in the site's soil. The glaze is mixed with an anthocyanin-based indicator pigment that shifts colour with the soil solution's pH. Gobi soil is alkaline — pale olive at first. As organic matter accumulates, pH falls and the tiles shift from green toward blue-violet. The colour is itself the measurement: a passerby sees the soil recovering, no lab required.</p>
+
+    <div class="soilwrap">
+      <div class="tiles"><svg id="tileSvg" viewBox="0 0 300 240" aria-label="Soil indicator tiles"></svg></div>
+      <div>
+        <div class="rowk"><span>Year</span><span id="sYear">2026</span></div>
+        <div class="rowk"><span>Soil solution pH</span><span id="sPh">8.60</span></div>
+        <div class="rowk"><span>Organic carbon</span><span id="sSoc">0.35%</span></div>
+        <div class="rowk"><span>Pigment response</span><span id="sHue">Pale olive · strongly alkaline</span></div>
+        <div class="phline" id="phLine"></div>
+        <div class="phmark"><span id="phMark" style="left:0%">pH 8.6</span></div>
+        <p class="note">Drag the slider to see the indicator's full range — this is how the tiles are calibrated during production.</p>
+        <input type="range" id="phSlider" min="4" max="10" step="0.05" value="8.6" aria-label="pH scale" style="width:100%">
+        <button class="abtn" id="phReset" type="button" style="margin-top:12px">↺ Reset to Field Reading</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ AI PLANTING MODEL ══ -->
+  <section class="panel">
+    <div class="mhead"><h2>Water-Minimal Planting Model</h2><span class="num">TOOL 04</span></div>
+    <p class="msub">Given a water budget, an optimisation algorithm tests thousands of species combinations to find the best mix within that constraint. It balances three goals at once: canopy cover, species diversity, and vertical structure. The resulting mix is rendered below as a planting diagram — the less water available, the sparser the branches and the deeper the roots.</p>
+
+    <div class="aictl">
+      <div>
+        <div class="fld">Water budget · relative</div>
+        <input type="range" id="wBudget" min="10" max="100" step="1" value="45" style="width:100%;margin-top:12px" aria-label="Water budget">
+        <div class="note" style="margin-top:6px">Current: <b id="wVal">45</b> / 100</div>
+      </div>
+      <div>
+        <div class="fld">Primary goal</div>
+        <div class="seg" id="goalSeg">
+          <button type="button" data-g="cover" aria-pressed="true">Cover</button>
+          <button type="button" data-g="div" aria-pressed="false">Diversity</button>
+          <button type="button" data-g="struct" aria-pressed="false">Structure</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mix" id="mix"></div>
+    <div class="grovebox"><svg id="groveSvg" viewBox="0 0 720 260" aria-label="Generated planting diagram"></svg></div>
+    <div class="aiout">
+      <div><div class="k">Water use</div><div class="v" id="aWater">—</div></div>
+      <div><div class="k">Projected cover</div><div class="v" id="aCover">—</div></div>
+      <div><div class="k">Species count</div><div class="v" id="aSpec">—</div></div>
+      <div><div class="k">Vertical layers</div><div class="v" id="aLayer">—</div></div>
+    </div>
+    <p class="note">Water use and growth rate are relative indices between species — kept as separate parameters so they can be replaced with on-site measurements.</p>
+  </section>
+</div>
+
+<script>
+/* ══════════ 1. БҮРТГЭЛ ══════════ */
+/* ── How to add a new sponsor logo ──────────────────────────────────────
+   1. Name the file  CompanyName_TIER.png  where TIER is L, M, or S —
+      matching what they paid: L = ₮20,000,000 (200 m²), M = ₮10,000,000
+      (100 m²), S = ₮5,000,000 (50 m²). Example: EFES-GROUP_L.png.
+   2. Drop it in assets/images/partner/hexagon-cells/.
+   3. Add one line below: 'CELL-ID': { name:'Company Name', logo:'assets/images/partner/hexagon-cells/CompanyName_TIER.png' }
+      — pick any free cell whose ID prefix matches the tier (L-, M-, or S-;
+      see the map for open cells). The cell ID is a placement choice, not
+      something the filename can determine on its own.
+   The logo then renders centered inside that cell automatically. ────── */
+var PARTNERS = {
+  'L-04': { name:'EFES GROUP', logo:'assets/images/partner/hexagon-cells/EFES-GROUP_L.png' }
+};
+var HELD     = [];
+
+/* ══════════ 2. МАСШТАБ ══════════
+   200 м² зургаан өнцөгтийн радиус = 8.77 м → зурагт 33.84 нэгж.
+   1 метр = 3.858 нэгж. Хээний нүд 4 нэгж = 1 метр = 1 бортого.    */
+var UPM=3.858, SLOT=36, CX=470, CY=420;
+var R_SITE=Math.sqrt(30000/2.598)*UPM;
+var SIZES={
+  L:{area:200,pots:200,price:'₮20,000,000',r:.940,count:20},
+  M:{area:100,pots:100,price:'₮10,000,000',r:.665,count:25},
+  S:{area:50, pots:50, price:'₮5,000,000', r:.470,count:5}
+};
+var TREES_PER_M2=4;
+var WIND={x:0.80,y:0.60};                       /* баруун хойноос зүүн урагш */
+
+var STAGES=[
+{n:'STAGE I',t:'Initial Planting',y:'Year 0–2',
+ note:'<b>Initial planting.</b> Saplings enter the ground and fight to establish root systems. This is the most vulnerable stage — irrigation determines survival here.'},
+{n:'STAGE II',t:'Nebkha Formation',y:'Year 3–7',
+ note:'<b>Nebkha formation.</b> Trees begin slowing the wind; sand carried by the airflow settles on their leeward side and builds into small dunes — the land starts anchoring itself.'},
+{n:'STAGE III',t:'Moisture Retention',y:'Year 8–15',
+ note:'<b>Moisture retention.</b> Canopy closes and shade reduces evaporation. A low understory of grasses begins to form along the cell edges.'},
+{n:'STAGE IV',t:'Ecosystem Network',y:'Year 15+',
+ note:'<b>Ecosystem network.</b> Vegetation, pollinators and soil microbiota close into a self-sustaining network. From 2041 onward — beyond this timeline.'}
+];
+var HE=[0.4,0.9,1.4,1.9,2.4,2.9,3.4,3.8,4.2,4.6,5.0];   /* end-of-year height, m */
+var MON=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+/* ══════════ 3. ТУСЛАХ ══════════ */
+var NS='http://www.w3.org/2000/svg', map=document.getElementById('map');
+function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+function hexPts(cx,cy,r){var p=[];for(var i=0;i<6;i++){var a=Math.PI/180*(60*i);p.push((cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1));}return p.join(' ');}
+var seed=20261122; function rnd(){seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff;}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return v<a?a:(v>b?b:v);}
+function mixRGB(c1,c2,t){return 'rgb('+Math.round(lerp(c1[0],c2[0],t))+','+Math.round(lerp(c1[1],c2[1],t))+','+Math.round(lerp(c1[2],c2[2],t))+')';}
+function setTxt(el,v){if(el.textContent!==v)el.textContent=v;}
+function $(id){return document.getElementById(id);}
+
+/* ══════════ 4. ЭСҮҮД ══════════ */
+var slots=[];
+for(var q=-4;q<=4;q++) for(var r=Math.max(-4,-q-4);r<=Math.min(4,-q+4);r++){
+  var x=CX+SLOT*1.5*q, y=CY+SLOT*Math.sqrt(3)*(r+q/2);
+  slots.push({x:x,y:y,d:Math.hypot(x-CX,y-CY)+rnd()*34});
+}
+slots.sort(function(a,b){return a.d-b.d;}); slots=slots.slice(0,50);
+
+var classes=[];
+for(var i=0;i<20;i++)classes.push('L');
+for(var i=0;i<25;i++)classes.push('M');
+for(var i=0;i<5;i++)classes.push('S');
+for(var i=classes.length-1;i>0;i--){var j=Math.floor(rnd()*(i+1));var t=classes[i];classes[i]=classes[j];classes[j]=t;}
+
+var VIG=[0.84,1.0,1.14];                       /* эсийн өсөлтийн ялгаа */
+var counters={L:0,M:0,S:0}, CELLS=[];
+slots.forEach(function(s,i){
+  var cls=classes[i]; counters[cls]++;
+  var id=cls+'-'+String(counters[cls]).replace(/^(\d)$/,'0$1');
+  CELLS.push({x:s.x,y:s.y,cls:cls,id:id,R:SLOT*SIZES[cls].r,tier:Math.floor(rnd()*3),
+    status:PARTNERS[id]?'taken':(HELD.indexOf(id)>-1?'held':'free'),
+    partner:PARTNERS[id]?PARTNERS[id].name:null,
+    logo:PARTNERS[id]?PARTNERS[id].logo:null});
+});
+
+/* ══════════ 5. DEFS: хайрга, гурван тарилтын хээ ══════════ */
+var defs=el('defs');
+var pat='';
+for(var v=0;v<3;v++){
+  pat+='<pattern id="grove'+v+'" patternUnits="userSpaceOnUse" width="4" height="4">'+
+       '<rect id="pSoil'+v+'" x="0" y="0" width="4" height="4" fill="#DED3BC"/>'+
+       '<line id="pDrip'+v+'" x1="0" y1="0.45" x2="4" y2="0.45" stroke="#B5A78B" stroke-width="0.22"/>'+
+       '<circle id="pShade'+v+'" cx="2.5" cy="2.5" r="0.25" fill="#4A6414" opacity="0.35"/>'+
+       '<circle id="pCrown'+v+'" cx="2" cy="2" r="0.25" fill="#7DB222"/>'+
+       '</pattern>';
+}
+defs.innerHTML=
+  '<filter id="grit" x="0" y="0" width="100%" height="100%">'+
+    '<feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="7"/>'+
+    '<feColorMatrix type="matrix" values="0 0 0 0 0.42  0 0 0 0 0.36  0 0 0 0 0.24  0 0 0 0.15 0"/>'+
+  '</filter>'+
+  '<filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="8"/></filter>'+
+  pat;
+map.appendChild(defs);
+
+/* ══════════ 6. ГАЗАР ══════════ */
+var groundRect=el('rect',{x:0,y:0,width:940,height:860,fill:'#E7DCC5',id:'ground'});
+map.appendChild(groundRect);
+map.appendChild(el('rect',{x:0,y:0,width:940,height:860,filter:'url(#grit)'}));
+map.appendChild(el('path',{'class':'wash',d:'M 20 690 C 190 640, 300 720, 470 668 S 760 590, 930 640'}));
+map.appendChild(el('path',{'class':'wash',d:'M 60 120 C 210 190, 330 130, 452 196 S 700 250, 900 190',opacity:'.55'}));
+
+var shrubs=el('g',{opacity:'.5'});
+for(var i=0;i<170;i++){
+  var a=rnd()*Math.PI*2, rr=Math.sqrt(rnd())*520;
+  var sx=CX+Math.cos(a)*rr, sy=CY+Math.sin(a)*rr*0.94;
+  if(sx<8||sx>932||sy<8||sy>852)continue;
+  shrubs.appendChild(el('circle',{cx:sx.toFixed(1),cy:sy.toFixed(1),r:(1+rnd()*1.8).toFixed(1),fill:'#A9A184'}));
+}
+map.appendChild(shrubs);
+
+map.appendChild(el('polygon',{'class':'fence',points:hexPts(CX,CY,R_SITE)}));
+map.appendChild(el('path',{'class':'track',d:'M 470 860 L 470 '+(CY+R_SITE*0.866+4).toFixed(0)}));
+map.appendChild(el('circle',{cx:CX,cy:(CY+R_SITE*0.866).toFixed(1),r:6,fill:'none',stroke:'#8E846E','stroke-width':1.6}));
+
+/* доод давхаргын халих */
+var halo=el('g',{id:'halo',filter:'url(#soft)',opacity:'0'});
+CELLS.forEach(function(c){halo.appendChild(el('polygon',{points:hexPts(c.x,c.y,c.R*1.34),fill:'#93AF56'}));});
+map.appendChild(halo);
+
+/* небха — салхин доод талд хуримтлагдах элсний сүүл */
+var nebk=el('g',{id:'nebk'});
+CELLS.forEach(function(c){
+  if(c.cls==='S')return;
+  var ang=Math.atan2(WIND.y,WIND.x)*180/Math.PI;
+  for(var k=-1;k<=1;k++){
+    var a=Math.atan2(WIND.y,WIND.x)+k*0.62, rr=c.R*1.02;
+    var e=el('ellipse',{'class':'nbk',cx:(c.x+Math.cos(a)*rr).toFixed(1),cy:(c.y+Math.sin(a)*rr).toFixed(1),
+      rx:0.1,ry:2.2,transform:'rotate('+ang.toFixed(1)+' '+(c.x+Math.cos(a)*rr).toFixed(1)+' '+(c.y+Math.sin(a)*rr).toFixed(1)+')'});
+    nebk.appendChild(e);
+  }
+});
+map.appendChild(nebk);
+
+/* эсүүд */
+var field=el('g');
+CELLS.forEach(function(c){
+  var g=el('g',{'class':'cell'+(c.status==='free'?'':' '+c.status),tabindex:'0',role:'button','aria-label':'Cell '+c.id});
+  g.dataset.id=c.id;
+  g.appendChild(el('polygon',{'class':'plot',points:hexPts(c.x,c.y,c.R),fill:'url(#grove'+c.tier+')'}));
+  if(c.status==='taken') g.appendChild(el('polygon',{points:hexPts(c.x,c.y,c.R),fill:'#C3F03C',opacity:'.15','pointer-events':'none'}));
+  if(c.logo){
+    var lr=c.R*0.72;
+    var clip=el('clipPath',{id:'clip-'+c.id});
+    clip.appendChild(el('polygon',{points:hexPts(c.x,c.y,lr)}));
+    defs.appendChild(clip);
+    g.appendChild(el('polygon',{points:hexPts(c.x,c.y,lr),fill:'#fff',opacity:'.92','pointer-events':'none'}));
+    g.appendChild(el('image',{href:c.logo,x:c.x-lr,y:c.y-lr,width:lr*2,height:lr*2,
+      preserveAspectRatio:'xMidYMid meet','clip-path':'url(#clip-'+c.id+')','pointer-events':'none'}));
+  }
+  if(c.cls!=='S'&&!c.logo){var t=el('text',{'class':'lab',x:c.x,y:c.y+3});t.textContent=c.id;g.appendChild(t);}
+  field.appendChild(g);
+});
+map.appendChild(field);
+
+/* хойд заалт, масштаб, гарчиг */
+var north=el('g',{transform:'translate(898,52)'});
+north.appendChild(el('path',{d:'M 0 -16 L 6 8 L 0 3 L -6 8 Z',fill:'rgba(48,40,24,.55)'}));
+var nt=el('text',{'class':'mapcap',x:0,y:22,'text-anchor':'middle'}); nt.textContent='N'; north.appendChild(nt);
+map.appendChild(north);
+
+var sb=el('g',{transform:'translate(28,826)'}), L50=(50*UPM).toFixed(1);
+sb.appendChild(el('line',{x1:0,y1:0,x2:L50,y2:0,stroke:'rgba(48,40,24,.55)','stroke-width':2}));
+sb.appendChild(el('line',{x1:0,y1:-4,x2:0,y2:4,stroke:'rgba(48,40,24,.55)','stroke-width':2}));
+sb.appendChild(el('line',{x1:L50,y1:-4,x2:L50,y2:4,stroke:'rgba(48,40,24,.55)','stroke-width':2}));
+var st=el('text',{'class':'mapcap',x:0,y:-9}); st.textContent='50 M'; sb.appendChild(st);
+map.appendChild(sb);
+
+var bc=el('text',{'class':'mapcap',x:CX,y:CY-R_SITE*0.866-12,'text-anchor':'middle'});
+bc.textContent='FENCED SITE · 30,000 M²'; map.appendChild(bc);
+
+/* ══════════ 7. ХАМГААЛАЛТЫН ТОР (салхины загварт) ══════════ */
+var GN=52, GX0=CX-R_SITE-40, GY0=CY-R_SITE-40, GW=(R_SITE+40)*2, GS=GW/GN;
+var SHELTER=new Float32Array(GN*GN);
+for(var gy=0;gy<GN;gy++) for(var gx=0;gx<GN;gx++){
+  var px=GX0+gx*GS, py=GY0+gy*GS, s=0;
+  for(var i=0;i<CELLS.length;i++){
+    var c=CELLS[i], dx=px-c.x, dy=py-c.y, d2=dx*dx+dy*dy, R2=c.R*c.R*1.5;
+    if(d2<R2*4) s+=Math.exp(-d2/R2);
+  }
+  SHELTER[gy*GN+gx]=Math.min(1,s);
+}
+function shelterAt(x,y){
+  var gx=(x-GX0)/GS, gy=(y-GY0)/GS;
+  if(gx<0||gy<0||gx>=GN-1||gy>=GN-1)return 0;
+  var i=Math.floor(gx), j=Math.floor(gy), fx=gx-i, fy=gy-j;
+  var a=SHELTER[j*GN+i], b=SHELTER[j*GN+i+1], c=SHELTER[(j+1)*GN+i], d=SHELTER[(j+1)*GN+i+1];
+  return lerp(lerp(a,b,fx),lerp(c,d,fx),fy);
+}
+
+/* ══════════ 8. САЛХИНЫ ХЭСГҮҮД (canvas) ══════════ */
+var cvs=$('wind'), ctx=cvs.getContext('2d'), inner=$('mapinner');
+var VB={x:0,y:0,w:940,h:860}, VB_BASE={x:0,y:0,w:940,h:860};
+var DPR=Math.min(2,window.devicePixelRatio||1), CW=1, CH=1;
+function sizeCanvas(){
+  var r=inner.getBoundingClientRect();
+  CW=r.width; CH=r.height;
+  cvs.width=Math.round(CW*DPR); cvs.height=Math.round(CH*DPR);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+window.addEventListener('resize',sizeCanvas);
+if(window.ResizeObserver) new ResizeObserver(sizeCanvas).observe(inner);
+
+var P=[], PN=190;
+function spawn(p,anywhere){
+  var m=Math.max(VB.w,VB.h);
+  if(anywhere){ p.x=VB.x+Math.random()*VB.w; p.y=VB.y+Math.random()*VB.h; }
+  else{
+    /* салхины дээд захаас */
+    var t=Math.random();
+    if(Math.random()<0.55){ p.x=VB.x-20; p.y=VB.y+t*VB.h*1.3-VB.h*0.15; }
+    else { p.x=VB.x+t*VB.w; p.y=VB.y-20; }
+  }
+  p.px=p.x; p.py=p.y;
+  p.life=0; p.max=140+Math.random()*180;
+  p.sp=0.7+Math.random()*0.9;
+}
+for(var i=0;i<PN;i++){ P.push({}); spawn(P[i],true); }
+
+var windOpen=1;      /* 0..1 — салхи хэр саадгүй байгаа */
+function drawWind(){
+  ctx.clearRect(0,0,CW,CH);
+  if(windOpen<=0.03) return;
+  var sc=CW/VB.w;
+  ctx.lineCap='round';
+  for(var i=0;i<P.length;i++){
+    var p=P[i];
+    var sh=shelterAt(p.x,p.y)*(1-windOpen);
+    /* урсгал саадыг тойрч гарна */
+    var gx=(shelterAt(p.x+6,p.y)-shelterAt(p.x-6,p.y))*(1-windOpen);
+    var gy=(shelterAt(p.x,p.y+6)-shelterAt(p.x,p.y-6))*(1-windOpen);
+    var vx=WIND.x-gx*7, vy=WIND.y-gy*7;
+    var len=Math.hypot(vx,vy)||1; vx/=len; vy/=len;
+    var speed=p.sp*(1-0.86*sh)*2.6;
+    p.px=p.x; p.py=p.y;
+    p.x+=vx*speed; p.y+=vy*speed;
+    p.life++;
+    var a=(1-sh)*windOpen*0.5*Math.min(1,p.life/18)*Math.min(1,(p.max-p.life)/28);
+    if(a>0.012){
+      var x1=(p.px-VB.x)*sc, y1=(p.py-VB.y)*sc, x2=(p.x-VB.x)*sc, y2=(p.y-VB.y)*sc;
+      if(x2>-30&&x2<CW+30&&y2>-30&&y2<CH+30){
+        ctx.strokeStyle='rgba(146,130,99,'+a.toFixed(3)+')';
+        ctx.lineWidth=Math.max(.6,1.1*sc*0.35);
+        ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+      }
+    }
+    if(p.life>p.max||p.x>VB.x+VB.w+40||p.y>VB.y+VB.h+40) spawn(p,false);
+  }
+}
+
+/* ══════════ 9. ЦАГ ХУГАЦААНЫ МОДЕЛЬ ══════════ */
+function leafOf(p){                                  /* навчны байдал 0..1 */
+  if(p<0.30)return 0;
+  if(p<0.40)return (p-0.30)/0.10;
+  if(p<0.70)return 1;
+  if(p<0.80)return 1-(p-0.70)/0.10;
+  return 0;
+}
+function growOf(p){ return clamp((p-0.30)/0.45,0,1); }  /* өсөлт зөвхөн ургалтын улиралд */
+function seasonOf(p){
+  var m=Math.floor(p*12);
+  if(m>=2&&m<=4)return ['SPRING', leafOf(p)<1?'leaves unfolding':'growth underway'];
+  if(m>=5&&m<=7)return ['SUMMER','active growth'];
+  if(m>=8&&m<=10)return ['AUTUMN', leafOf(p)>0?'leaves turning':'leaves have dropped'];
+  return ['WINTER','dormant · no canopy'];
+}
+var C_SPRING=[143,201,58], C_SUMMER=[94,143,30], C_AUTUMN=[217,165,39], C_BARE=[122,101,68];
+function crownColor(p,leaf){
+  if(leaf<=0) return C_BARE;
+  if(p<0.50) return [lerp(C_SPRING[0],C_SUMMER[0],clamp((p-0.36)/0.14,0,1)),
+                     lerp(C_SPRING[1],C_SUMMER[1],clamp((p-0.36)/0.14,0,1)),
+                     lerp(C_SPRING[2],C_SUMMER[2],clamp((p-0.36)/0.14,0,1))];
+  if(p>0.64) return [lerp(C_SUMMER[0],C_AUTUMN[0],clamp((p-0.64)/0.12,0,1)),
+                     lerp(C_SUMMER[1],C_AUTUMN[1],clamp((p-0.64)/0.12,0,1)),
+                     lerp(C_SUMMER[2],C_AUTUMN[2],clamp((p-0.64)/0.12,0,1))];
+  return C_SUMMER;
+}
+var SOIL_WARM=[222,211,188], SOIL_COLD=[229,226,215], UNDER=[152,178,104];
+
+var lastStage=-1, lastY=-1;
+function render(t){
+  var y=Math.floor(t), p=t-y, i=clamp(y-2026,0,10);
+  var prev = i===0?0.25:HE[i-1];
+  var h = prev+(HE[i]-prev)*growOf(p);
+  var leaf=leafOf(p), sea=seasonOf(p), win=(p<0.17||p>0.90)?1:0;
+  var si = (y-2026)<=2?0:((y-2026)<=7?1:2), stg=STAGES[si];
+
+  var crownM=0.22*h;
+  var struct=Math.min(.96,Math.PI*Math.pow(Math.min(3.6,crownM*UPM),2)/16);   /* мөчрийн бүтэц */
+  var canopy=struct*(0.22+0.78*leaf);
+  var shade=Math.min(2.6,0.42*h);
+  windOpen=1-clamp(canopy*1.05,0,0.96);
+
+  /* --- хээ: гурван эрчмийн бүлэг --- */
+  var cc=crownColor(p,leaf);
+  var soil=mixRGB(win?SOIL_COLD:SOIL_WARM, UNDER, clamp(struct*1.1,0,1));
+  for(var v=0;v<3;v++){
+    var rU=Math.min(3.6,crownM*VIG[v]*UPM)*(leaf>0?1:0.55);
+    $('pSoil'+v).setAttribute('fill',soil);
+    $('pDrip'+v).setAttribute('opacity',Math.max(0,1-struct*1.9).toFixed(2));
+    var cr=$('pCrown'+v);
+    cr.setAttribute('r',rU.toFixed(2));
+    cr.setAttribute('fill','rgb('+Math.round(cc[0])+','+Math.round(cc[1])+','+Math.round(cc[2])+')');
+    var sd=$('pShade'+v);
+    sd.setAttribute('r',rU.toFixed(2));
+    sd.setAttribute('cx',(2+shade*0.5).toFixed(2));
+    sd.setAttribute('cy',(2+shade*0.5).toFixed(2));
+    sd.setAttribute('opacity',(0.16+canopy*0.3).toFixed(2));
+  }
+
+  $('ground').setAttribute('fill', win?'#EDE7DA':'#E7DCC5');
+  $('halo').setAttribute('opacity', si>=2 ? clamp((struct-.55)*0.85,0,.32).toFixed(2) : '0');
+
+  /* небха — II үе шатнаас ургаж, нөмрөг хаагдахад булагдана */
+  var nbGrow=clamp((y-2026-2.2)/3.2,0,1)*(1-clamp((struct-.72)/.24,0,1));
+  var nbs=document.querySelectorAll('.nbk');
+  for(var k=0;k<nbs.length;k++){
+    nbs[k].setAttribute('rx',(0.4+nbGrow*7).toFixed(2));
+    nbs[k].setAttribute('opacity',(nbGrow*0.75).toFixed(2));
+  }
+
+  /* --- HUD --- */
+  setTxt($('yr'),String(y));
+  setTxt($('mon'),MON[Math.min(11,Math.floor(p*12))]);
+  setTxt($('seaName'),sea[0]); setTxt($('seaSub'),sea[1]);
+  setTxt($('stgNum'),stg.n); setTxt($('stgName'),stg.t);
+  if(si!==lastStage){
+    var chip=$('stgChip'); chip.classList.remove('flash'); void chip.offsetWidth; chip.classList.add('flash');
+    $('stageNote').innerHTML=stg.note+' <span style="opacity:.7">('+stg.y+')</span>';
+    var bars=$('stagebar').children;
+    for(var k=0;k<bars.length;k++) bars[k].className = k<=si?'lit':'';
+    lastStage=si;
+  }
+  setTxt($('r1'),h.toFixed(1)+' m');
+  setTxt($('r5'),crownM.toFixed(2)+' m');
+  setTxt($('r2'),Math.round(canopy*100)+'%');
+  setTxt($('r6'),Math.round((1-windOpen)*100)+'%');
+  setTxt($('r3'), canopy<.25?'High':(canopy<.6?'Moderate':'Low'));
+  setTxt($('r4'),Math.max(0,10-(y-2026))+' years');
+
+  HEX={t:t,y:y,p:p,h:h,leaf:leaf,canopy:canopy,struct:struct,open:windOpen,si:si,win:win};
+  if(typeof onTick==='function') onTick(HEX);
+}
+var HEX={t:2026.25,y:2026,p:.25,h:.3,leaf:0,canopy:0,struct:0,open:1,si:0,win:0};
+var onTick=null;
+
+/* ══════════ 10. ГОГЦОО ══════════ */
+var slider=$('slider'), T=parseFloat(slider.value), playing=false, last=0;
+function frame(ts){
+  if(!last)last=ts;
+  var dt=Math.min(0.05,(ts-last)/1000); last=ts;
+  if(playing){
+    T+=dt*0.85;                          /* жилд ~1.2 секунд */
+    if(T>=2036.99){T=2036.99; setPlay(false);}
+    slider.value=T.toFixed(2);
+    render(T);
+  }
+  drawWind();
+  requestAnimationFrame(frame);
+}
+function setPlay(on){
+  playing=on; $('play').textContent=on?'❚❚':'▶';
+  if(on&&T>=2036.98){T=2026; slider.value='2026'; render(T);}
+}
+$('play').addEventListener('click',function(){setPlay(!playing);});
+slider.addEventListener('input',function(e){ setPlay(false); T=parseFloat(e.target.value); render(T); });
+
+/* ══════════ 11. ТОМРУУЛАЛТ ══════════ */
+var zoomAnim=null;
+function tweenVB(to,ms){
+  var from={x:VB.x,y:VB.y,w:VB.w,h:VB.h}, t0=null;
+  if(zoomAnim)cancelAnimationFrame(zoomAnim);
+  function step(ts){
+    if(!t0)t0=ts;
+    var k=Math.min(1,(ts-t0)/ms), e=1-Math.pow(1-k,3);
+    VB.x=lerp(from.x,to.x,e); VB.y=lerp(from.y,to.y,e);
+    VB.w=lerp(from.w,to.w,e); VB.h=lerp(from.h,to.h,e);
+    map.setAttribute('viewBox',VB.x.toFixed(1)+' '+VB.y.toFixed(1)+' '+VB.w.toFixed(1)+' '+VB.h.toFixed(1));
+    if(k<1)zoomAnim=requestAnimationFrame(step);
+  }
+  zoomAnim=requestAnimationFrame(step);
+}
+function zoomToCell(c){
+  var pad=c.R*3.1, w=pad*2, hgt=w*(VB_BASE.h/VB_BASE.w);
+  tweenVB({x:c.x-w/2,y:c.y-hgt/2,w:w,h:hgt},700);
+  $('zoomout').classList.add('on');
+}
+$('zoomout').addEventListener('click',function(){
+  tweenVB({x:VB_BASE.x,y:VB_BASE.y,w:VB_BASE.w,h:VB_BASE.h},700);
+  this.classList.remove('on');
+  var cs=document.querySelectorAll('.cell');
+  for(var i=0;i<cs.length;i++)cs[i].classList.remove('on');
+  showIntro();
+});
+
+/* ══════════ 12. DETAIL PANEL ══════════ */
+var detail=$('detail');
+function rows(l){return l.map(function(s){return '<li><span>'+s[0]+'</span><span>'+s[1]+'</span></li>';}).join('');}
+function showIntro(){
+  detail.innerHTML='<span class="d-tag">Site Overview</span>'+
+    '<h3 class="d-title">50 cells, three sizes<span>Click any cell to zoom in</span></h3>'+
+    '<p class="d-body">Each cell has a fixed position on the site and carries its sponsor\'s name. Sponsorship is not land ownership — it is stewardship and recognition.</p>'+
+    '<ul class="d-stats">'+rows([
+      ['Fenced site','30,000 m²'],['Planted area','6,750 m² · 22.5%'],
+      ['Large cells','20 × 200 m²'],['Medium cells','25 × 100 m²'],['Small cells','5 × 50 m²'],
+      ['Unit price','₮100,000 / m²'],['Total trees','27,000 · Ulmus pumila']
+    ])+'</ul>';
+}
+function showCell(id){
+  var c=CELLS.filter(function(v){return v.id===id;})[0]; if(!c)return;
+  var s=SIZES[c.cls], size={L:'Large cell',M:'Medium cell',S:'Small cell'}[c.cls];
+  var state=c.status==='taken'?('Partnered — '+c.partner):(c.status==='held'?'In discussion':'Available');
+  var side=Math.sqrt(s.area/2.598).toFixed(1);
+  detail.innerHTML='<span class="d-tag">Cell '+c.id+' · '+size+'</span>'+
+    '<h3 class="d-title">'+state+'<span>'+s.area+' m² · hexagon side '+side+' m</span></h3>'+
+    '<p class="d-body">One named cell within the honeycomb. It holds '+s.pots+' planting pots spaced one metre apart in rows, each row connected to a drip line. Trees are irrigated for ten years and counted every six months.'+
+    (c.status==='free'?' This cell is currently available.':'')+'</p>'+
+    '<ul class="d-stats">'+rows([
+      ['Cell number',c.id],['Restoration area',s.area+' m²'],['Planting pots',s.pots+' · every 1 m'],
+      ['Siberian elm',(s.area*TREES_PER_M2).toLocaleString('en-US')+' saplings'],
+      ['Care period','10 years'],['Reporting','count every six months'],['Status',state]
+    ])+'</ul>'+
+    '<div class="grand"><span class="k">Sponsorship total</span><span class="v">'+s.price+'</span></div>';
+  var cs=document.querySelectorAll('.cell');
+  for(var i=0;i<cs.length;i++) cs[i].classList.toggle('on', cs[i].dataset.id===id);
+  zoomToCell(c);
+}
+document.addEventListener('click',function(e){
+  var cb=e.target.closest('.cell'); if(cb) showCell(cb.dataset.id);
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){$('zoomout').click();return;}
+  if(e.key!=='Enter'&&e.key!==' ')return;
+  var cb=e.target.closest?e.target.closest('.cell'):null;
+  if(cb){e.preventDefault();showCell(cb.dataset.id);}
+});
+
+var tip=$('tip'), holder=document.querySelector('.mapbox');
+holder.addEventListener('pointermove',function(e){
+  var r=holder.getBoundingClientRect();
+  tip.style.left=Math.min(e.clientX-r.left+14,r.width-190)+'px';
+  tip.style.top=Math.min(e.clientY-r.top+12,r.height-70)+'px';
+});
+document.addEventListener('pointerover',function(e){
+  var cell=e.target.closest?e.target.closest('.cell'):null; if(!cell)return;
+  var c=CELLS.filter(function(v){return v.id===cell.dataset.id;})[0], s=SIZES[c.cls];
+  tip.innerHTML='<b>'+c.id+'</b> · '+s.area+' m² · '+s.pots+' pots<br>'+
+    (c.partner?c.partner:(c.status==='held'?'In discussion':s.price));
+  tip.classList.add('show');
+});
+document.addEventListener('pointerout',function(e){
+  if(e.target.closest&&e.target.closest('.cell')) tip.classList.remove('show');
+});
+
+/* ══════════ 13. ГАРЧ ИРЭХ ══════════ */
+(function(){
+  var nodes=document.querySelectorAll('.cell'), started=false;
+  for(var i=0;i<nodes.length;i++) nodes[i].classList.add('presow');
+  var io=new IntersectionObserver(function(en){
+    if(started||!en[0].isIntersecting)return; started=true; io.disconnect();
+    for(var i=0;i<nodes.length;i++)
+      (function(n,d){setTimeout(function(){n.classList.remove('presow');n.classList.add('seeded');},d);})(nodes[i],i*22);
+  },{threshold:.15});
+  io.observe(map);
+})();
+(function(){
+  var t=document.querySelectorAll('.mapbox, .panel, .detail');
+  for(var i=0;i<t.length;i++) t[i].classList.add('reveal');
+  var io=new IntersectionObserver(function(en){
+    en.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);} });
+  },{threshold:.1});
+  for(var i=0;i<t.length;i++) io.observe(t[i]);
+})();
+
+sizeCanvas();
+render(T);
+showIntro();
+requestAnimationFrame(frame);
+</script>
+
+<script>
+/* ═════════════════════════════════════════════════════
+   ХЭРЭГСЭЛ 01–02 · АУДИО
+   ═════════════════════════════════════════════════════ */
+var AC=null, MASTER=null, DRONE=[], DFILT=null, NOISE=null, NGAIN=null, NFILT=null;
+var ambOn=false, symOn=false, pluckTimer=null;
+var PENT_MAJ=[62,64,66,69,71,74,76], PENT_MIN=[62,65,67,69,72,74,77];
+function mtof(m){return 440*Math.pow(2,(m-69)/12);}
+
+function bootAudio(){
+  if(AC)return;
+  AC=new (window.AudioContext||window.webkitAudioContext)();
+  MASTER=AC.createGain(); MASTER.gain.value=0; MASTER.connect(AC.destination);
+
+  DFILT=AC.createBiquadFilter(); DFILT.type='lowpass'; DFILT.frequency.value=420; DFILT.Q.value=0.7;
+  var dg=AC.createGain(); dg.gain.value=0.16; DFILT.connect(dg); dg.connect(MASTER);
+  [0,7,12].forEach(function(iv,k){
+    var o=AC.createOscillator(); o.type=k===2?'triangle':'sine';
+    o.frequency.value=mtof(38+iv); o.detune.value=(k-1)*6;
+    var g=AC.createGain(); g.gain.value=k===2?0.22:0.5;
+    o.connect(g); g.connect(DFILT); o.start();
+    DRONE.push({o:o,g:g,iv:iv});
+  });
+
+  var len=AC.sampleRate*2, buf=AC.createBuffer(1,len,AC.sampleRate), d=buf.getChannelData(0);
+  for(var i=0;i<len;i++) d[i]=(Math.random()*2-1)*0.4;
+  NOISE=AC.createBufferSource(); NOISE.buffer=buf; NOISE.loop=true;
+  NFILT=AC.createBiquadFilter(); NFILT.type='bandpass'; NFILT.frequency.value=900; NFILT.Q.value=0.6;
+  NGAIN=AC.createGain(); NGAIN.gain.value=0.0;
+  NOISE.connect(NFILT); NFILT.connect(NGAIN); NGAIN.connect(MASTER); NOISE.start();
+}
+function fadeMaster(v,ms){
+  if(!AC)return;
+  MASTER.gain.cancelScheduledValues(AC.currentTime);
+  MASTER.gain.setTargetAtTime(v, AC.currentTime, (ms||400)/3000);
+}
+function volNow(){ return (parseInt(document.getElementById('vol').value,10)/100)*0.42; }
+
+/* нэг цохилт — ойн "дуслын" аялгуу */
+function pluck(midi,when,amp,dur){
+  if(!AC)return;
+  var t=when||AC.currentTime;
+  var o=AC.createOscillator(), g=AC.createGain(), f=AC.createBiquadFilter();
+  o.type='sine'; o.frequency.value=mtof(midi);
+  f.type='lowpass'; f.frequency.value=mtof(midi)*4.5;
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(Math.max(0.001,amp),t+0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+(dur||1.6));
+  o.connect(f); f.connect(g); g.connect(MASTER);
+  o.start(t); o.stop(t+(dur||1.6)+0.05);
+}
+function thud(when,amp){
+  if(!AC)return;
+  var t=when||AC.currentTime, o=AC.createOscillator(), g=AC.createGain();
+  o.type='sine'; o.frequency.setValueAtTime(110,t); o.frequency.exponentialRampToValueAtTime(42,t+0.25);
+  g.gain.setValueAtTime(amp,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.4);
+  o.connect(g); g.connect(MASTER); o.start(t); o.stop(t+0.45);
+}
+function gust(when,amp,dur){
+  if(!AC)return;
+  var t=when||AC.currentTime, len=AC.sampleRate*(dur||0.7);
+  var b=AC.createBuffer(1,len,AC.sampleRate), d=b.getChannelData(0);
+  for(var i=0;i<len;i++) d[i]=(Math.random()*2-1);
+  var s=AC.createBufferSource(); s.buffer=b;
+  var f=AC.createBiquadFilter(); f.type='bandpass'; f.frequency.value=1400; f.Q.value=0.8;
+  var g=AC.createGain();
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(amp,t+0.12);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+(dur||0.7));
+  s.connect(f); f.connect(g); g.connect(MASTER); s.start(t); s.stop(t+(dur||0.7));
+}
+
+/* ── мэдрэгчийн утгууд загвараас ── */
+function sensors(s){
+  var jitter=(Math.sin(performance.now()/430)*0.5+Math.sin(performance.now()/1170)*0.5);
+  var growth=Math.max(0,Math.min(1,(s.p-0.30)/0.45))*s.leaf;
+  return {
+    bio: (0.6+growth*11.5)+jitter*0.9*(0.3+growth),   /* mV */
+    flu: s.leaf*(0.34+0.44*Math.min(1,s.struct*1.4)), /* Fv/Fm */
+    sap: s.leaf*Math.min(1,s.struct*1.25),
+    wind: s.open
+  };
+}
+
+function updateAmbient(s){
+  var sn=sensors(s);
+  var setB=function(id,v){document.getElementById(id).style.width=(Math.max(0,Math.min(1,v))*100).toFixed(1)+'%';};
+  setTxt(document.getElementById('mBio'),sn.bio.toFixed(1)+' mV');       setB('bBio',sn.bio/13);
+  setTxt(document.getElementById('mFlu'),'Fv/Fm '+sn.flu.toFixed(2));    setB('bFlu',sn.flu/0.8);
+  setTxt(document.getElementById('mSap'),sn.sap.toFixed(2));             setB('bSap',sn.sap);
+  setTxt(document.getElementById('mWnd'),Math.round(sn.wind*100)+'%');   setB('bWnd',sn.wind);
+  if(!ambOn||!AC||symOn)return;
+
+  var tc=AC.currentTime;
+  DFILT.frequency.setTargetAtTime(300+sn.flu*2600, tc, 0.25);
+  var base=38-Math.round(s.h*1.1);                       /* мод өндөрсөх тусам дрон гүнзгийрнэ */
+  DRONE.forEach(function(d){ d.o.frequency.setTargetAtTime(mtof(base+d.iv), tc, 0.6); });
+  NGAIN.gain.setTargetAtTime(sn.wind*0.11, tc, 0.4);
+  NFILT.frequency.setTargetAtTime(700+sn.wind*1500, tc, 0.4);
+}
+
+function ambientLoop(){
+  if(!ambOn||symOn){pluckTimer=setTimeout(ambientLoop,300);return;}
+  var s=HEX, sn=sensors(s);
+  var density=0.08+sn.sap*0.72;
+  if(Math.random()<density){
+    var scale = (s.p<0.55)?PENT_MAJ:PENT_MIN;
+    var n=scale[Math.floor(Math.random()*scale.length)] + (Math.random()<0.28?12:0);
+    pluck(n, AC.currentTime+Math.random()*0.08, 0.02+sn.sap*0.07, 1.4+Math.random()*1.8);
+  }
+  if(Math.random()<sn.wind*0.10) gust(AC.currentTime, 0.012+sn.wind*0.02, 0.9);
+  pluckTimer=setTimeout(ambientLoop, 190+Math.random()*260);
+}
+
+var ambBtn=document.getElementById('ambBtn');
+ambBtn.addEventListener('click',function(){
+  bootAudio(); if(AC.state==='suspended')AC.resume();
+  ambOn=!ambOn;
+  this.setAttribute('aria-pressed',String(ambOn));
+  this.textContent = ambOn?'❚❚ Stop':'▶ Listen to the Forest';
+  if(ambOn){ fadeMaster(volNow(),600); if(!pluckTimer)ambientLoop(); }
+  else if(!symOn){ fadeMaster(0,500); clearTimeout(pluckTimer); pluckTimer=null; }
+});
+document.getElementById('vol').addEventListener('input',function(){
+  if(AC&&(ambOn||symOn)) fadeMaster(volNow(),120);
+});
+
+/* ═════ ХЭРЭГСЭЛ 02 · ПАРТИТУР ═════ */
+function yearState(i){
+  var h=HE[i], crownM=0.22*h;
+  var struct=Math.min(.96,Math.PI*Math.pow(Math.min(3.6,crownM*UPM),2)/16);
+  return { h:h, crown:crownM, canopy:struct, wind:1-Math.min(.96,struct*1.05),
+           soc:0.35+1.15*Math.min(1,(i+1)/11*1.05) };
+}
+var SCORE=[]; for(var i=0;i<11;i++) SCORE.push(yearState(i));
+
+(function buildScore(){
+  var maxCrown=Math.max.apply(null,SCORE.map(function(d){return d.crown;}));
+  function fill(id,get){
+    var lane=document.getElementById(id), h='';
+    for(var i=0;i<11;i++) h+='<b style="height:'+(8+get(SCORE[i])*92).toFixed(0)+'%"></b>';
+    lane.innerHTML=h;
+  }
+  fill('laneCan',function(d){return d.canopy;});
+  fill('laneCrw',function(d){return d.crown/maxCrown;});
+  fill('laneSoc',function(d){return (d.soc-0.35)/1.15;});
+  fill('laneWnd',function(d){return d.wind;});
+  var yr=''; for(var i=0;i<11;i++) yr+='<span>'+((2026+i)%100)+'</span>';
+  document.getElementById('yrRow').innerHTML=yr;
+})();
+
+var symBtn=document.getElementById('symBtn'), ph=document.getElementById('ph'), symTimer=null;
+function stopSymphony(){
+  symOn=false; symBtn.setAttribute('aria-pressed','false');
+  symBtn.textContent='♪ Data Symphony · 2026–2036';
+  ph.style.opacity='0'; clearTimeout(symTimer); symTimer=null;
+  if(!ambOn) fadeMaster(0,600);
+}
+symBtn.addEventListener('click',function(){
+  bootAudio(); if(AC.state==='suspended')AC.resume();
+  if(symOn){stopSymphony();return;}
+  symOn=true; this.setAttribute('aria-pressed','true'); this.textContent='■ Stop';
+  ph.style.opacity='1';
+  fadeMaster(volNow(),300);
+  var BAR=1.55, t0=AC.currentTime+0.12;
+  for(var i=0;i<11;i++){
+    var d=SCORE[i], t=t0+i*BAR;
+    thud(t, 0.05+d.soc*0.05);                                   /* бас — хөрсний нүүрстөрөгч */
+    var root=36+Math.round(d.soc*4);
+    pluck(root, t, 0.05, BAR*1.5);
+    var voices=1+Math.round(d.canopy*4);                        /* гармони — нөмрөг */
+    for(var v=0;v<voices;v++){
+      var sc=(i<5)?PENT_MIN:PENT_MAJ;
+      pluck(sc[v%sc.length]+(v>2?12:0), t+0.05+v*0.11, 0.028+d.canopy*0.04, 1.5+v*0.2);
+    }
+    var hits=Math.round(d.wind*5);                              /* цохилт — элсний хөдөлгөөн */
+    for(var k=0;k<hits;k++) gust(t+k*(BAR/Math.max(1,hits)), 0.016+d.wind*0.03, 0.34);
+    var mel=(i<5?PENT_MIN:PENT_MAJ)[(i*2)%7]+12;                /* аялгуу — өсөлт */
+    pluck(mel, t+BAR*0.55, 0.03+d.canopy*0.05, 1.8);
+  }
+  var lane=document.getElementById('laneCan').getBoundingClientRect();
+  var box=document.getElementById('score').getBoundingClientRect();
+  var x0=lane.left-box.left, w=lane.width;
+  var start=performance.now();
+  (function sweep(){
+    if(!symOn)return;
+    var el2=(performance.now()-start)/1000, k=el2/(11*BAR);
+    if(k>=1){ stopSymphony(); return; }
+    ph.style.left=(x0+k*w).toFixed(1)+'px';
+    symTimer=setTimeout(sweep,40);
+  })();
+});
+
+/* ═════════════════════════════════════════════════════
+   ХЭРЭГСЭЛ 03 · ХӨРСНИЙ ИНДИКАТОР
+   ═════════════════════════════════════════════════════ */
+var PH_STOPS=[
+ [4.0,[214, 62,102]],[5.0,[206, 78,150]],[6.0,[150, 84,178]],
+ [7.0,[ 84,102,186]],[7.6,[ 62,140,166]],[8.2,[ 96,170,104]],
+ [8.8,[178,190, 72]],[10.0,[214,196, 74]]
+];
+function phColor(p){
+  for(var i=0;i<PH_STOPS.length-1;i++){
+    var a=PH_STOPS[i], b=PH_STOPS[i+1];
+    if(p<=b[0]){
+      var k=clamp((p-a[0])/(b[0]-a[0]),0,1);
+      return [lerp(a[1][0],b[1][0],k),lerp(a[1][1],b[1][1],k),lerp(a[1][2],b[1][2],k)];
+    }
+  }
+  return PH_STOPS[PH_STOPS.length-1][1];
+}
+function phName(p){
+  if(p>=8.5)return 'Pale olive · strongly alkaline';
+  if(p>=8.0)return 'Green · alkaline';
+  if(p>=7.4)return 'Teal · mildly alkaline';
+  if(p>=6.8)return 'Blue · neutral';
+  if(p>=6.0)return 'Violet-blue · mildly acidic';
+  return 'Magenta · acidic';
+}
+(function buildPhLine(){
+  var h='';
+  for(var i=0;i<=60;i++){
+    var p=4+ i/60*6, c=phColor(p);
+    h+='<i style="background:rgb('+Math.round(c[0])+','+Math.round(c[1])+','+Math.round(c[2])+')"></i>';
+  }
+  document.getElementById('phLine').innerHTML=h;
+})();
+
+var tileSvg=document.getElementById('tileSvg'), TILES=[];
+(function buildTiles(){
+  var pts=[[150,60],[86,100],[214,100],[86,175],[214,175],[150,215],[150,138]];
+  var s='';
+  for(var i=0;i<pts.length;i++){
+    var p=[],R=i===6?44:38;
+    for(var k=0;k<6;k++){var a=Math.PI/180*(60*k-90);p.push((pts[i][0]+R*Math.cos(a)).toFixed(1)+','+(pts[i][1]+R*Math.sin(a)).toFixed(1));}
+    s+='<polygon id="tl'+i+'" points="'+p.join(' ')+'" stroke="rgba(21,22,15,.22)" stroke-width="1.4"/>';
+  }
+  tileSvg.innerHTML=s;
+  for(var i=0;i<7;i++) TILES.push(document.getElementById('tl'+i));
+})();
+
+var phManual=null;
+function paintSoil(){
+  var prog = clamp((HEX.t-2026)/10,0,1);
+  var basePh = phManual!==null ? phManual : (8.60-0.62*Math.pow(prog,0.85));
+  var soc = 0.35+1.15*Math.pow(prog,0.9);
+  for(var i=0;i<7;i++){
+    var c=phColor(basePh+(i-3)*0.055);          /* хавтан бүр өөрийн бичил орчинтой */
+    TILES[i].setAttribute('fill','rgb('+Math.round(c[0])+','+Math.round(c[1])+','+Math.round(c[2])+')');
+  }
+  setTxt(document.getElementById('sYear'), phManual!==null?'manual setting':String(HEX.y));
+  setTxt(document.getElementById('sPh'), basePh.toFixed(2));
+  setTxt(document.getElementById('sSoc'), phManual!==null?'—':soc.toFixed(2)+'%');
+  setTxt(document.getElementById('sHue'), phName(basePh));
+  var mark=document.getElementById('phMark');
+  mark.style.left=(clamp((basePh-4)/6,0,1)*100).toFixed(1)+'%';
+  mark.textContent='pH '+basePh.toFixed(1);
+  document.getElementById('phSlider').value=basePh.toFixed(2);
+}
+document.getElementById('phSlider').addEventListener('input',function(e){
+  phManual=parseFloat(e.target.value); paintSoil();
+});
+document.getElementById('phReset').addEventListener('click',function(){ phManual=null; paintSoil(); });
+
+/* ═════════════════════════════════════════════════════
+   ХЭРЭГСЭЛ 04 · УСНЫ ХАМГИЙН БАГА ЗАГВАР
+   ═════════════════════════════════════════════════════ */
+/* water/grow/cover — харьцангуй индекс (0–10). Талбайн хэмжилтээр солино. */
+var SPECIES=[
+ {k:'elm',  n:'Siberian Elm',  l:'Ulmus pumila',        water:7.0, cover:9.0, grow:7.0, layer:3, salt:4},
+ {k:'sax',  n:'Saxaul',        l:'Haloxylon ammodendron',water:1.5, cover:5.0, grow:3.0, layer:2, salt:9},
+ {k:'car',  n:'Caragana',      l:'Caragana korshinskii', water:2.5, cover:6.0, grow:5.0, layer:1, salt:5},
+ {k:'tam',  n:'Tamarisk',      l:'Tamarix ramosissima',  water:3.5, cover:6.5, grow:6.0, layer:2, salt:10},
+ {k:'hip',  n:'Sea Buckthorn', l:'Hippophae rhamnoides', water:5.5, cover:7.0, grow:6.5, layer:2, salt:4},
+ {k:'sal',  n:'Saltwort',      l:'Salsola passerina',    water:1.0, cover:3.0, grow:4.0, layer:0, salt:8}
+];
+var GOAL='cover';
+
+function optimise(budget,goal){
+  var best=null, N=SPECIES.length;
+  function score(w){
+    var water=0,cover=0,grow=0,div=0,layers={};
+    for(var i=0;i<N;i++){
+      water+=w[i]*SPECIES[i].water; cover+=w[i]*SPECIES[i].cover; grow+=w[i]*SPECIES[i].grow;
+      if(w[i]>0.04){div++; layers[SPECIES[i].layer]=1;}
+    }
+    var nl=Object.keys(layers).length;
+    var target=budget/100*10;
+    var pen=Math.pow(Math.abs(water-target),1.6)*2.6;
+    var s=cover*(goal==='cover'?1.5:0.7)+div*(goal==='div'?2.4:0.7)+nl*(goal==='struct'?3.0:0.9)+grow*0.35;
+    return s-pen;
+  }
+  for(var trial=0;trial<420;trial++){
+    var w=[],sum=0;
+    for(var i=0;i<N;i++){w.push(Math.pow(Math.random(),1.6));sum+=w[i];}
+    for(var i=0;i<N;i++)w[i]/=sum;
+    var sc=score(w);
+    for(var step=0;step<70;step++){                 /* уулын оргил хайх */
+      var a=Math.floor(Math.random()*N), b=Math.floor(Math.random()*N);
+      if(a===b)continue;
+      var d=Math.min(w[a],0.02+Math.random()*0.1);
+      var w2=w.slice(); w2[a]-=d; w2[b]+=d;
+      var s2=score(w2);
+      if(s2>sc){w=w2;sc=s2;}
+    }
+    if(!best||sc>best.sc) best={w:w,sc:sc};
+  }
+  var water=0,cover=0,layers={},spec=0;
+  for(var i=0;i<N;i++){
+    water+=best.w[i]*SPECIES[i].water; cover+=best.w[i]*SPECIES[i].cover;
+    if(best.w[i]>0.04){spec++;layers[SPECIES[i].layer]=1;}
+  }
+  return {w:best.w,water:water,cover:cover,spec:spec,layers:Object.keys(layers).length};
+}
+
+/* --- процедур ургамал --- */
+function prng(s){return function(){s=(s*1103515245+12345)&0x7fffffff;return s/0x7fffffff;};}
+function branch(out,x,y,ang,len,wd,depth,cfg,R){
+  if(depth<=0||len<1.6)return;
+  var x2=x+Math.cos(ang)*len, y2=y+Math.sin(ang)*len;
+  out.push('<line x1="'+x.toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke-width="'+wd.toFixed(2)+'"/>');
+  for(var i=0;i<cfg.split;i++){
+    var a=ang+(i-(cfg.split-1)/2)*cfg.angle+(R()-0.5)*cfg.jit;
+    branch(out,x2,y2,a,len*cfg.taper,wd*0.66,depth-1,cfg,R);
+  }
+}
+var FORM={
+ elm:{split:3,angle:0.52,taper:0.76,jit:0.35,depth:6,len:26,root:0.8,w:3.4},
+ sax:{split:2,angle:0.92,taper:0.66,jit:0.55,depth:5,len:15,root:1.9,w:2.2},
+ car:{split:3,angle:0.85,taper:0.62,jit:0.5, depth:4,len:12,root:1.5,w:1.8},
+ tam:{split:4,angle:0.7, taper:0.66,jit:0.6, depth:5,len:16,root:1.3,w:2.0},
+ hip:{split:3,angle:0.62,taper:0.7, jit:0.42,depth:5,len:19,root:1.0,w:2.4},
+ sal:{split:3,angle:1.0, taper:0.55,jit:0.6, depth:3,len:9, root:1.2,w:1.4}
+};
+function drawGrove(mix){
+  var svg=document.getElementById('groveSvg'), GY=176, out=[];
+  out.push('<line x1="0" y1="'+GY+'" x2="720" y2="'+GY+'" stroke="rgba(21,22,15,.18)" stroke-width="1.2"/>');
+  var plants=[];
+  for(var i=0;i<SPECIES.length;i++){
+    var n=Math.round(mix.w[i]*16);
+    for(var k=0;k<n;k++) plants.push(SPECIES[i].k);
+  }
+  if(!plants.length)plants=['sax'];
+  for(var i=plants.length-1;i>0;i--){var j=Math.floor(prng(7+i)()*(i+1));var t=plants[i];plants[i]=plants[j];plants[j]=t;}
+  var step=720/(plants.length+1);
+  plants.forEach(function(k,i){
+    var f=FORM[k], R=prng(101+i*37), x=step*(i+1)+(R()-0.5)*step*0.5;
+    var above=[], below=[];
+    branch(above,x,GY,-Math.PI/2,f.len*(0.85+R()*0.3),f.w,f.depth,f,R);
+    branch(below,x,GY, Math.PI/2,f.len*0.62*f.root,f.w*0.7,Math.max(3,f.depth-1),
+      {split:2,angle:0.5,taper:0.74,jit:0.7},R);
+    out.push('<g stroke="#5E7D3C" fill="none" stroke-linecap="round">'+above.join('')+'</g>');
+    out.push('<g stroke="rgba(150,120,80,.5)" fill="none" stroke-linecap="round">'+below.join('')+'</g>');
+  });
+  svg.innerHTML=out.join('');
+}
+
+function runAI(){
+  var b=parseInt(document.getElementById('wBudget').value,10);
+  document.getElementById('wVal').textContent=b;
+  var m=optimise(b,GOAL);
+  var box=document.getElementById('mix'), h='';
+  for(var i=0;i<SPECIES.length;i++){
+    var pc=Math.round(m.w[i]*100);
+    h+='<div class="sp"><div class="nm"><b>'+SPECIES[i].n+'</b><em>'+SPECIES[i].l+'</em>'+
+       '<div class="track"><i data-w="'+pc+'"></i></div></div><div class="pc">'+pc+'%</div></div>';
+  }
+  box.innerHTML=h;
+  var bars=box.querySelectorAll('.track i');
+  requestAnimationFrame(function(){ for(var i=0;i<bars.length;i++) bars[i].style.width=bars[i].dataset.w+'%'; });
+  setTxt(document.getElementById('aWater'), m.water.toFixed(1)+' / 10');
+  setTxt(document.getElementById('aCover'), Math.round(m.cover*10)+'%');
+  setTxt(document.getElementById('aSpec'), m.spec+' species');
+  setTxt(document.getElementById('aLayer'), m.layers+' layers');
+  drawGrove(m);
+}
+document.getElementById('wBudget').addEventListener('input',runAI);
+document.getElementById('goalSeg').addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b)return;
+  var all=this.querySelectorAll('button');
+  for(var i=0;i<all.length;i++) all[i].setAttribute('aria-pressed',String(all[i]===b));
+  GOAL=b.dataset.g; runAI();
+});
+
+/* ═════ ХОЛБООС ═════ */
+onTick=function(s){ updateAmbient(s); paintSoil(); };
+updateAmbient(HEX); paintSoil(); runAI();
+(function(){
+  var t=document.querySelectorAll('section.panel');
+  for(var i=0;i<t.length;i++) t[i].classList.add('reveal');
+  var io=new IntersectionObserver(function(en){
+    en.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);} });
+  },{threshold:.08});
+  for(var i=0;i<t.length;i++) io.observe(t[i]);
+})();
+</script>
+</body>
+</html>
