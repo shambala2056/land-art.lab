@@ -50,6 +50,14 @@ canvas#wind{position:absolute;inset:0;width:100%;height:100%;pointer-events:none
   .chip{max-width:84px;font-size:8.5px;padding:6px 9px}
   .chip b{font-size:9.5px}
 }
+/* zoomToCell() magnifies the SVG content (cells, logos) by tweening its
+   viewBox, but the HUD is plain HTML positioned over the map, not part of
+   that SVG — so it does not scale down with the zoom. Left full-size, a
+   chip that was a modest fraction of the overview becomes a fraction of
+   the now-magnified, cropped view instead, covering real cell area. Shrink
+   and fade the whole HUD once a cell is zoomed in. */
+#mapinner.zoomed .right{transform:scale(.62);transform-origin:top right;opacity:.7}
+#mapinner.zoomed .stamp{transform:scale(.62);transform-origin:top left;opacity:.7}
 
 .zoomout{position:absolute;left:12px;bottom:12px;background:#fff;border:0;border-radius:12px;padding:9px 13px;
   font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--ink);box-shadow:var(--shadow-out);
@@ -743,10 +751,12 @@ function zoomToCell(c){
   var pad=c.R*3.1, w=pad*2, hgt=w*(VB_BASE.h/VB_BASE.w);
   tweenVB({x:c.x-w/2,y:c.y-hgt/2,w:w,h:hgt},700);
   $('zoomout').classList.add('on');
+  $('mapinner').classList.add('zoomed');
 }
 $('zoomout').addEventListener('click',function(){
   tweenVB({x:VB_BASE.x,y:VB_BASE.y,w:VB_BASE.w,h:VB_BASE.h},700);
   this.classList.remove('on');
+  $('mapinner').classList.remove('zoomed');
   var cs=document.querySelectorAll('.cell');
   for(var i=0;i<cs.length;i++)cs[i].classList.remove('on');
   showIntro();
