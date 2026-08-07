@@ -93,30 +93,11 @@
         .site-logo-img { height: 34px; width: auto; display: block; }
         .site-logo-img.footer { height: 44px; }
         .hero-logo-standalone { height: 190px; width: auto; display: block; margin: 0 auto; }
-        /* Hero photo is held still — the only motion in the hero is the green light wash below. */
+        /* Hero photo is held still — no motion effects in the hero. */
         .hero-image { overflow: hidden; }
         .hero-image .hero-bg-img { animation: none; transition: opacity .6s ease; filter: brightness(.8); }
-        /* Brand-green light wash over the hero photo. The photo is dark, so this screens
-           (multiply would vanish into the black) — green glow reads against the dark hexagon grid. */
-        .hero-light { position: absolute; inset: 0; border-radius: 40px; overflow: hidden; pointer-events: none; mix-blend-mode: screen; }
         /* Dark hero photo needs light text/logo — the base template assumed a near-white photo. */
         .section-hero .content-wrap .text { color: rgba(255,255,255,.82); }
-        .hero-light i { position: absolute; display: block; border-radius: 50%; filter: blur(50px); will-change: transform, opacity; }
-        .hero-light .l1 { width: 46%; padding-bottom: 46%; left: -6%;  top: -12%; background: radial-gradient(circle, rgba(178,209,53,.55) 0%, rgba(178,209,53,.22) 42%, rgba(178,209,53,0) 70%); animation: heroGlow 14s ease-in-out infinite; }
-        .hero-light .l2 { width: 40%; padding-bottom: 40%; right: -5%; top: 20%;  background: radial-gradient(circle, rgba(178,209,53,.48) 0%, rgba(178,209,53,.18) 45%, rgba(178,209,53,0) 72%); animation: heroGlow 18s ease-in-out infinite 3s; }
-        .hero-light .l3 { width: 55%; padding-bottom: 36%; left: 24%;  bottom: -14%; background: radial-gradient(ellipse at center, rgba(178,209,53,.42) 0%, rgba(178,209,53,.16) 48%, rgba(178,209,53,0) 74%); animation: heroGlow 22s ease-in-out infinite 7s; }
-        @keyframes heroGlow {
-            0%, 100% { opacity: .4; transform: translate3d(0, 0, 0) scale(1); }
-            50%      { opacity: .8;  transform: translate3d(2%, -3%, 0) scale(1.15); }
-        }
-        /* A single soft beam raking across the photo, tinted the same green. */
-        .hero-light .beam { width: 26%; padding-bottom: 130%; left: 8%; top: -25%; border-radius: 0; filter: blur(45px); background: linear-gradient(90deg, rgba(178,209,53,0) 0%, rgba(178,209,53,.28) 45%, rgba(178,209,53,.38) 55%, rgba(178,209,53,0) 100%); animation: heroBeam 26s ease-in-out infinite; }
-        @keyframes heroBeam {
-            0%, 100% { opacity: .25; transform: rotate(18deg) translateX(-20%); }
-            50%      { opacity: .6;  transform: rotate(18deg) translateX(230%); }
-        }
-        @media (max-width: 767px) { .hero-light i { filter: blur(38px); } .hero-light .beam { display: none; } }
-        @media (prefers-reduced-motion: reduce) { .hero-light i { animation: none; opacity: .5; } }
         /* Land art poster images are portrait (5315x7087 ≈ 3:4) — old cards assumed landscape.
            Full-width made them enormous, so lay out as a 2-column grid of smaller cards instead. */
         .featured-works-item .image { aspect-ratio: 3 / 4; }
@@ -703,9 +684,6 @@
         <div class="section-hero">
             <div class="hero-image">
                 <img class="hero-bg-img" src="assets/images/section/hero-hexagon-futuristic.jpg" alt="" fetchpriority="high">
-                <div class="hero-light" aria-hidden="true">
-                    <i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="beam"></i>
-                </div>
             </div>
             <div class="container">
                 <div class="content-wrap text-center">
