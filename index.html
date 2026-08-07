@@ -96,9 +96,11 @@
         /* Hero photo is held still — the only motion in the hero is the green light wash below. */
         .hero-image { overflow: hidden; }
         .hero-image .hero-bg-img { animation: none; transition: opacity .6s ease; }
-        /* Brand-green light wash over the hero photo. The photo is near-white, so this
-           multiplies (screen/soft-light would vanish into the white) — green tint, texture intact. */
-        .hero-light { position: absolute; inset: 0; border-radius: 40px; overflow: hidden; pointer-events: none; mix-blend-mode: multiply; }
+        /* Brand-green light wash over the hero photo. The photo is dark, so this screens
+           (multiply would vanish into the black) — green glow reads against the dark hexagon grid. */
+        .hero-light { position: absolute; inset: 0; border-radius: 40px; overflow: hidden; pointer-events: none; mix-blend-mode: screen; }
+        /* Dark hero photo needs light text/logo — the base template assumed a near-white photo. */
+        .section-hero .content-wrap .text { color: rgba(255,255,255,.82); }
         .hero-light i { position: absolute; display: block; border-radius: 50%; filter: blur(50px); will-change: transform, opacity; }
         .hero-light .l1 { width: 46%; padding-bottom: 46%; left: -6%;  top: -12%; background: radial-gradient(circle, rgba(178,209,53,.55) 0%, rgba(178,209,53,.22) 42%, rgba(178,209,53,0) 70%); animation: heroGlow 14s ease-in-out infinite; }
         .hero-light .l2 { width: 40%; padding-bottom: 40%; right: -5%; top: 20%;  background: radial-gradient(circle, rgba(178,209,53,.48) 0%, rgba(178,209,53,.18) 45%, rgba(178,209,53,0) 72%); animation: heroGlow 18s ease-in-out infinite 3s; }
@@ -700,7 +702,7 @@
         <!-- Hero Banner -->
         <div class="section-hero">
             <div class="hero-image">
-                <img class="hero-bg-img" src="assets/images/section/hero-sl-091920-35320-03.jpg" alt="" fetchpriority="high">
+                <img class="hero-bg-img" src="assets/images/section/hero-hexagon-futuristic.jpg" alt="" fetchpriority="high">
                 <div class="hero-light" aria-hidden="true">
                     <i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="beam"></i>
                 </div>
@@ -708,7 +710,7 @@
             <div class="container">
                 <div class="content-wrap text-center">
                     <div class="title text-display-2 effectFade fadeRotateX">
-                        <img loading="lazy" class="hero-logo-standalone" src="assets/images/logo/land-art-logo.png" alt="Land-art space">
+                        <img loading="lazy" class="hero-logo-standalone" src="assets/images/logo/land-art-logo-white.png" alt="Land-art space">
                     </div>
                     <p class="text effectFade fadeUp">
                         An art-and-technology driven reforestation initiative fighting desertification in Mongolia's Gobi through large-scale land art, satellite-monitored tree planting, and community-powered restoration.
