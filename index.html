@@ -19,6 +19,11 @@
     <!-- font -->
     <link rel="stylesheet" href="assets/fonts/fonts.css">
     <link rel="stylesheet" href="assets/icon/icomoon/style.css">
+    <!-- Poppins: used only by the Bio-sonification section, matching the exact
+         typography of hexagon-experience-map.html where these tools originated. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- css -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
@@ -333,40 +338,53 @@
             .inst-btn { width: 100%; text-align: center; }
         }
 
-        /* ── Data-sonification ─────────────────────────────────────────────── */
-        .bio-panel { max-width: 900px; margin: 0 auto; border: 1px solid #1F3040; border-radius: 20px; background: #09111C; padding: 28px; font-family: 'Urbanist', sans-serif; }
-        .bio-panel + .bio-panel { margin-top: 24px; }
-        .bio-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
-        .bio-btn { font-family: 'Urbanist', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: #B8C4D4; background: #050A12; border: 1px solid #29405A; border-radius: 999px; padding: 14px 22px; cursor: pointer; transition: color .3s ease, border-color .3s ease, background .3s ease; }
-        .bio-btn:hover { border-color: #b2d135; color: #fff; }
-        .bio-btn.primary { background: #b2d135; border-color: #b2d135; color: #050A12; }
-        .bio-btn.primary:hover { background: #c6e34a; color: #050A12; }
-        .bio-btn[aria-pressed="true"] { background: #b2d135; border-color: #b2d135; color: #050A12; }
-        .bio-vol { display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6B7F97; margin-left: auto; }
-        .bio-vol input[type=range] { width: 120px; }
-        .bio-meters { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-top: 22px; }
-        .bio-mt { background: #050A12; border: 1px solid #16232F; border-radius: 14px; padding: 16px 16px 14px; }
-        .bio-mt .k { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #6B7F97; }
-        .bio-mt .v { font-size: 18px; font-weight: 700; color: #fff; margin-top: 5px; }
-        .bio-mt .bar { height: 5px; border-radius: 99px; background: #16232F; margin-top: 10px; overflow: hidden; }
-        .bio-mt .bar i { display: block; height: 100%; background: #b2d135; border-radius: 99px; width: 0; transition: width .18s linear; }
-        .bio-mt .bar i.warm { background: #F0C93D; }
-        .bio-mt .bar i.dust { background: #6B7F97; }
-        .bio-note { font-size: 12.5px; line-height: 1.65; color: #6B7F97; margin-top: 18px; }
-        .bio-score { position: relative; }
-        .bio-lanes { display: grid; grid-template-columns: 76px 1fr; gap: 10px; align-items: center; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; color: #6B7F97; }
-        .bio-lanes + .bio-lanes { margin-top: 8px; }
-        .bio-lane { display: grid; grid-template-columns: repeat(11,1fr); gap: 3px; height: 26px; }
-        .bio-lane b { display: block; align-self: end; border-radius: 4px 4px 2px 2px; background: #1F3040; transition: background .2s; }
-        .bio-lane.on b { background: #b2d135; }
-        .bio-lane.wind b { background: #6B7F97; }
-        .bio-lane.soc b { background: #7FA33A; }
-        .bio-lane.crown b { background: #8FBF2E; }
-        .bio-playhead { position: absolute; top: 0; bottom: 22px; width: 2px; background: #fff; opacity: 0; border-radius: 2px; transition: opacity .2s; }
-        .bio-yrscale { display: grid; grid-template-columns: 76px 1fr; gap: 10px; margin-top: 10px; font-size: 10px; color: #6B7F97; }
+        /* ── Data-sonification ─────────────────────────────────────────────────
+           Restored to the exact neumorphic design from hexagon-experience-map.html
+           (soft cream cards, lime accent, Poppins) rather than the site's dark
+           Urbanist data-panel look used elsewhere — this is a direct port of that
+           page's #EFEFEA/#F6F6F2/#C3F03C palette and shadow tokens. ── */
+        #datasonification { --bio-bg:#EFEFEA; --bio-card:#F6F6F2; --bio-ink:#15160F; --bio-muted:#7B7D72; --bio-line:#E0E0D8;
+            --bio-lime:#C3F03C; --bio-yellow:#FFD300;
+            --bio-shadow-out: 6px 6px 16px rgba(21,22,15,.09), -6px -6px 16px rgba(255,255,255,.95);
+            --bio-shadow-in: inset 4px 4px 10px rgba(21,22,15,.09), inset -4px -4px 10px rgba(255,255,255,.95); }
+        .bio-panel { max-width: 900px; margin: 0 auto; background: var(--bio-card); border-radius: 22px; box-shadow: var(--bio-shadow-out);
+            padding: 20px; font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif; color: var(--bio-ink); }
+        .bio-panel + .bio-panel { margin-top: 14px; }
+        .bio-mhead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+        .bio-mhead h3 { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+        .bio-num { font-size: 11px; font-weight: 600; color: var(--bio-muted); letter-spacing: 0.12em; }
+        .bio-msub { font-size: 13px; color: var(--bio-muted); margin: 8px 0 18px; max-width: 56ch; }
+        .bio-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .bio-btn { border: 0; border-radius: 16px; padding: 14px 18px; font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer;
+            background: var(--bio-bg); box-shadow: var(--bio-shadow-out); color: var(--bio-ink); transition: box-shadow .15s, background .15s; }
+        .bio-btn:active { box-shadow: var(--bio-shadow-in); }
+        .bio-btn:focus-visible { outline: 3px solid var(--bio-ink); outline-offset: 2px; }
+        .bio-btn.primary { background: var(--bio-lime); }
+        .bio-btn[aria-pressed="true"] { background: var(--bio-ink); color: var(--bio-lime); box-shadow: var(--bio-shadow-in); }
+        .bio-vol { display: flex; align-items: center; gap: 9px; font-size: 11px; color: var(--bio-muted); font-weight: 600; letter-spacing: 0.08em; margin-left: auto; }
+        .bio-vol input[type=range] { width: 108px; flex: none; }
+        .bio-meters { display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: 12px; margin-top: 18px; }
+        .bio-mt { background: var(--bio-bg); border-radius: 16px; padding: 13px 15px; box-shadow: var(--bio-shadow-in); }
+        .bio-mt .k { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--bio-muted); }
+        .bio-mt .v { font-size: 17px; font-weight: 600; margin-top: 3px; color: var(--bio-ink); }
+        .bio-mt .bar { height: 5px; border-radius: 99px; background: #E2E2DA; margin-top: 9px; overflow: hidden; }
+        .bio-mt .bar i { display: block; height: 100%; background: var(--bio-lime); border-radius: 99px; width: 0; transition: width .18s linear; }
+        .bio-mt .bar i.warm { background: var(--bio-yellow); }
+        .bio-mt .bar i.dust { background: #B0A488; }
+        .bio-note { font-size: 12px; color: var(--bio-muted); margin-top: 12px; }
+        .bio-score { margin-top: 18px; background: var(--bio-bg); border-radius: 16px; box-shadow: var(--bio-shadow-in); padding: 14px 12px 10px; position: relative; overflow: hidden; }
+        .bio-lanes { display: grid; grid-template-columns: 64px 1fr; gap: 8px; align-items: center; font-size: 10px; color: var(--bio-muted); font-weight: 600; }
+        .bio-lanes + .bio-lanes { margin-top: 6px; }
+        .bio-lane { display: grid; grid-template-columns: repeat(11,1fr); gap: 3px; height: 22px; }
+        .bio-lane b { display: block; align-self: end; border-radius: 4px 4px 2px 2px; background: #D6D6CC; transition: background .2s; }
+        .bio-lane.on b { background: var(--bio-lime); }
+        .bio-lane.wind b { background: #CFC3A6; }
+        .bio-lane.soc b { background: #9FBF63; }
+        .bio-lane.crown b { background: #7DB222; }
+        .bio-playhead { position: absolute; top: 8px; bottom: 8px; width: 2px; background: var(--bio-ink); opacity: 0; border-radius: 2px; transition: opacity .2s; }
+        .bio-yrscale { display: grid; grid-template-columns: 64px 1fr; gap: 8px; margin-top: 8px; font-size: 9.5px; color: var(--bio-muted); }
         .bio-yrscale div:last-child { display: grid; grid-template-columns: repeat(11,1fr); gap: 3px; text-align: center; }
         @media (max-width: 767px) {
-            .bio-panel { padding: 20px; }
             .bio-meters { grid-template-columns: 1fr 1fr; }
             .bio-vol { margin-left: 0; width: 100%; }
         }
@@ -1620,14 +1638,16 @@
                 <div class="heading-section center mb-64">
                     <div class="heading-sub fw-semibold mx-auto effectFade fadeUp">Data-sonification</div>
                     <div class="heading-title text-gradient-3 effectFade fadeRotateX">The Forest, Audible</div>
-                    <p class="inv-intro effectFade fadeUp">Every tree in the HEXAGON planting generates measurable electrical signals. As leaf stomata open and sap is drawn upward through the trunk, the plant's cell membrane potential shifts — bioelectric potential. Converting this alongside chlorophyll fluorescence and sap flow into sound lets the forest compose its own music, live.</p>
+                    <p class="inv-intro effectFade fadeUp">Two tools turn the HEXAGON planting's biological signals into sound.</p>
                 </div>
 
                 <div class="bio-panel effectFade fadeUp">
+                    <div class="bio-mhead"><h3>Ambient Forest</h3><span class="bio-num">TOOL 01</span></div>
+                    <p class="bio-msub">Every tree generates electrical signals. As leaf stomata open and sap is drawn upward through the trunk, or when the plant is under stress, its cell membrane potential shifts — a measurable change known as bioelectric potential. Sensors across the site track this alongside chlorophyll fluorescence and sap flow. Converting these three signals into sound lets the forest compose its own music, live.</p>
                     <div class="bio-row">
                         <button class="bio-btn primary" id="bioAmbBtn" type="button" aria-pressed="false">▶ Listen to the Forest</button>
                         <button class="bio-btn" id="bioSymBtn" type="button" aria-pressed="false">♪ Data Symphony · 2026–2036</button>
-                        <label class="bio-vol">Volume
+                        <label class="bio-vol">VOLUME
                             <input type="range" id="bioVol" min="0" max="100" value="55" aria-label="Volume">
                         </label>
                     </div>
@@ -1641,6 +1661,8 @@
                 </div>
 
                 <div class="bio-panel effectFade fadeUp">
+                    <div class="bio-mhead"><h3>Data Symphony</h3><span class="bio-num">TOOL 02</span></div>
+                    <p class="bio-msub">Eleven years of change become a four-voice score: canopy sets the melody, crown size the harmony, soil carbon the bass, sand movement the percussion. Rather than reducing desertification reversal to a chart, the score renders it as an audible structure — noise dominates at the start, resolving into harmony by the end.</p>
                     <div class="bio-score" id="bioScore">
                         <div class="bio-lanes"><span>CANOPY</span><div class="bio-lane on" id="bioLaneCan"></div></div>
                         <div class="bio-lanes"><span>CROWN</span><div class="bio-lane crown" id="bioLaneCrw"></div></div>
@@ -1649,7 +1671,6 @@
                         <div class="bio-yrscale"><div></div><div id="bioYrRow"></div></div>
                         <div class="bio-playhead" id="bioPh"></div>
                     </div>
-                    <p class="bio-note">The Data Symphony renders eleven years of change as a four-voice score: canopy sets the melody, crown size the harmony, soil carbon the bass, sand movement the percussion.</p>
                 </div>
             </div>
         </div>
