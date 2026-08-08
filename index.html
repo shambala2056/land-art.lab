@@ -91,6 +91,12 @@
         @media (max-width: 767px) { .price-number-fixed { font-size: 40px; line-height: 48px; } }
         .site-logo-img { height: 34px; width: auto; display: block; }
         .site-logo-img.footer { height: 44px; }
+        /* The nav pill (.header-inner) was sized for nav+button only; adding the logo back
+           on the left with no spacing/room left it touching "Land Arts". Widen the pill and
+           give the logo its own margin so nothing crowds. */
+        .tf-header.header2 .header-inner { max-width: 880px; }
+        .header-inner .logo-site { margin-right: 28px; flex-shrink: 0; }
+        @media (max-width: 991px) { .header-inner .logo-site { margin-right: 0; } }
         /* #land-arts now holds only a heading (the two-column hero content moved into the
            poster carousel below), but the base stylesheet still forces .section-about-us to
            min-height:100vh under 1439px — built for the old full-height hero layout. Left
@@ -98,19 +104,9 @@
            laptop/mobile width. */
         #land-arts.section-about-us { min-height: 0; }
         /* Hero dropped the full-bleed photo and the oversized standalone logo (already in the
-           nav) in favor of a solid dark card with a real headline, plus a small hexagon-cell
-           graphic as a corner accent instead of a background image. */
+           nav) in favor of a plain solid dark card with a real headline. */
         .hero-image { overflow: hidden; }
         .section-hero .hero-image { background-image: none; background-color: #09111C; }
-        /* The base stylesheet forces every img inside .hero-image to width:100%;height:100%
-           (built for one full-bleed photo) — override with matching specificity so the accent
-           sizes from its own aspect ratio instead of stretching to the full hero height. */
-        .section-hero .hero-image img.hero-accent { position: absolute; right: 5%; bottom: 8%; width: 30%; max-width: 340px; min-width: 180px; height: auto; aspect-ratio: 1500 / 1166; border-radius: 20px; opacity: .92; pointer-events: none; box-shadow: 0 20px 60px rgba(0,0,0,.45); }
-        /* Content stacks taller than the viewport on mobile (headline + subtitle + 2 buttons),
-           so a bottom-pinned accent collides with the buttons and the scroll-more pill —
-           simplest fix is to drop the decorative accent at that width rather than chase exact
-           offsets against variable content height. */
-        @media (max-width: 767px) { .section-hero .hero-image img.hero-accent { display: none; } }
         .section-hero .content-wrap .title { color: #fff; }
         .section-hero .content-wrap .text { color: rgba(255,255,255,.82); max-width: 640px; margin-left: auto; margin-right: auto; }
         /* Land art poster images are portrait (5315x7087 ≈ 3:4) — old cards assumed landscape.
@@ -655,6 +651,9 @@
         <!-- Header -->
         <header class="tf-header header2">
             <div class="header-inner">
+                <a href="#" class="logo-site">
+                    <img loading="lazy" class="site-logo-img" src="assets/images/logo/land-art-logo.png" alt="Land-art space">
+                </a>
                 <div class="box-navigation">
                     <ul class="nav-menu-main">
                         <li class="menu-item has-child">
@@ -699,17 +698,12 @@
         <!-- /Header -->
         <!-- Hero Banner -->
         <div class="section-hero">
-            <div class="hero-image">
-                <img class="hero-accent effectFade fadeUp" loading="lazy" src="assets/images/section/HEXAGON.jpg" alt="Hexagon cell pattern">
-            </div>
+            <div class="hero-image"></div>
             <div class="container">
                 <div class="content-wrap text-center">
                     <div class="title text-display-2 effectFade fadeRotateX">
                         Where Art Restores the Land
                     </div>
-                    <p class="text effectFade fadeUp">
-                        An art-and-technology driven reforestation initiative fighting desertification in Mongolia's Gobi through large-scale land art, satellite-monitored tree planting, and community-powered restoration.
-                    </p>
                     <div class="bot-btns effectFade fadeRotateX">
                         <a href="#services" class="tf-btn">
                             Explore Ecosystem
