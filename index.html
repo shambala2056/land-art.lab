@@ -97,16 +97,22 @@
            unset, that reserves a near-full-screen blank gap under the heading on every
            laptop/mobile width. */
         #land-arts.section-about-us { min-height: 0; }
-        .hero-logo-standalone { height: 190px; width: auto; display: block; margin: 0 auto; }
-        /* Hero photo is held still — no motion effects in the hero. */
+        /* Hero dropped the full-bleed photo and the oversized standalone logo (already in the
+           nav) in favor of a solid dark card with a real headline, plus a small hexagon-cell
+           graphic as a corner accent instead of a background image. */
         .hero-image { overflow: hidden; }
-        /* Match the container's radius exactly — the base stylesheet rounds .hero-image tighter
-           on mobile (24px vs 40px) but never updates the img's own radius, so the old stock
-           background-image on .hero-image peeked out as a second frame around the corners. */
-        .hero-image .hero-bg-img { animation: none; transition: opacity .6s ease; filter: brightness(.8); }
-        .section-hero .hero-image img.hero-bg-img { border-radius: inherit; }
-        /* Dark hero photo needs light text/logo — the base template assumed a near-white photo. */
-        .section-hero .content-wrap .text { color: rgba(255,255,255,.82); }
+        .section-hero .hero-image { background-image: none; background-color: #09111C; }
+        /* The base stylesheet forces every img inside .hero-image to width:100%;height:100%
+           (built for one full-bleed photo) — override with matching specificity so the accent
+           sizes from its own aspect ratio instead of stretching to the full hero height. */
+        .section-hero .hero-image img.hero-accent { position: absolute; right: 5%; bottom: 8%; width: 30%; max-width: 340px; min-width: 180px; height: auto; aspect-ratio: 1500 / 1166; border-radius: 20px; opacity: .92; pointer-events: none; box-shadow: 0 20px 60px rgba(0,0,0,.45); }
+        /* Content stacks taller than the viewport on mobile (headline + subtitle + 2 buttons),
+           so a bottom-pinned accent collides with the buttons and the scroll-more pill —
+           simplest fix is to drop the decorative accent at that width rather than chase exact
+           offsets against variable content height. */
+        @media (max-width: 767px) { .section-hero .hero-image img.hero-accent { display: none; } }
+        .section-hero .content-wrap .title { color: #fff; }
+        .section-hero .content-wrap .text { color: rgba(255,255,255,.82); max-width: 640px; margin-left: auto; margin-right: auto; }
         /* Land art poster images are portrait (5315x7087 ≈ 3:4) — old cards assumed landscape.
            Full-width made them enormous, so lay out as a 2-column grid of smaller cards instead. */
         .featured-works-item .image { aspect-ratio: 3 / 4; }
@@ -120,8 +126,6 @@
         .featured-works-item .content .grid-text { width: 100%; flex-direction: column; gap: 10px; }
         .featured-works-item .content .grid-text .item { width: 100% !important; }
         @media (max-width: 767px) { .featured-works-list { grid-template-columns: 1fr; } }
-        @media (max-width: 991px) { .hero-logo-standalone { height: 120px; } }
-        @media (max-width: 767px) { .hero-logo-standalone { height: 78px; } }
         .features-center-logo { width: 76%; height: auto; object-fit: contain; }
         .features-center { background: #fff; box-shadow: 0px -3px 0px 0px rgba(0,0,0,.06) inset, 0px 1px 0px 0px rgba(255,255,255,.8) inset, 0px 3.44px 5.57px 0px rgba(0,0,0,.08), 0px 16px 32px 0px rgba(0,0,0,.08); }
         /* Ecosystem interaction-network diagram (ported from dornogovi-ecosystem-2.html) */
@@ -696,14 +700,15 @@
         <!-- Hero Banner -->
         <div class="section-hero">
             <div class="hero-image">
-                <img class="hero-bg-img" src="assets/images/section/hero-hexagon-futuristic.jpg" alt="" fetchpriority="high">
+                <img class="hero-accent effectFade fadeUp" loading="lazy" src="assets/images/section/HEXAGON.jpg" alt="Hexagon cell pattern">
             </div>
             <div class="container">
                 <div class="content-wrap text-center">
                     <div class="title text-display-2 effectFade fadeRotateX">
-                        <img loading="lazy" class="hero-logo-standalone" src="assets/images/logo/land-art-logo-white.png" alt="Land-art space">
+                        Where Art Restores the Land
                     </div>
                     <p class="text effectFade fadeUp">
+                        An art-and-technology driven reforestation initiative fighting desertification in Mongolia's Gobi through large-scale land art, satellite-monitored tree planting, and community-powered restoration.
                     </p>
                     <div class="bot-btns effectFade fadeRotateX">
                         <a href="#services" class="tf-btn">
@@ -711,7 +716,6 @@
                         </a>
                         <a href="#works" class="tf-btn-2">
                             Projects
-                        </a>
                         </a>
                     </div>
                 </div>
