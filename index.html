@@ -89,6 +89,8 @@
         .doc-image img, .doc-image video { width: 100%; height: 100%; object-fit: cover; display: block; }
         .film-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(2, 8, 16, 0.55); border: 2px solid rgba(255, 255, 255, 0.85); color: #fff; font-size: 18px; transition: all .25s; pointer-events: none; }
         .doc-image:hover .film-play-btn { background: var(--brand, #b2d135); border-color: var(--brand, #b2d135); transform: translate(-50%, -50%) scale(1.08); }
+        .doc-image video { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
+        .doc-image.playing .film-play-btn { display: none; }
         .doc-content { padding: 20px 24px 28px; }
         /* Static price, excluded from the shared monthly/yearly toggle JS (it's a one-time purchase, not a subscription). */
         .price-number-fixed { font-weight: 700; font-size: 72px; line-height: 72px; letter-spacing: -0.03em; }
@@ -4170,18 +4172,64 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
             window.addEventListener("load", initProcessSwipe);
         }
 
-        document.querySelectorAll(".doc-image.film-trigger").forEach(function (trigger) {
-            trigger.addEventListener("click", function () {
-                if (trigger.querySelector("video")) return;
+        /* Timelapse cards play by themselves. Muted is not a style choice — a browser will
+           refuse to autoplay a clip with sound. They are 17-39MB each, 95MB for the four, so
+           nothing is fetched until its card is actually on screen, and each pauses again when
+           it leaves. Click still mounts one immediately, and prefers-reduced-motion keeps the
+           poster and the play button instead of starting anything. */
+        (function () {
+            var cards = [].slice.call(document.querySelectorAll(".doc-image.film-trigger"));
+            if (!cards.length) return;
+            var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            function mount(trigger, auto) {
+                var existing = trigger.querySelector("video");
+                if (existing) return existing;
+                var poster = trigger.querySelector("img");
                 var video = document.createElement("video");
                 video.src = trigger.dataset.video;
+                if (poster) video.poster = poster.getAttribute("src");
                 video.controls = true;
-                video.autoplay = true;
+                video.muted = true;              /* required for autoplay to be allowed */
+                video.loop = true;
                 video.playsInline = true;
+                video.setAttribute("playsinline", "");
+                video.preload = auto ? "auto" : "metadata";
                 trigger.innerHTML = "";
                 trigger.appendChild(video);
+                trigger.classList.add("playing");
+                if (auto) { var pr = video.play(); if (pr && pr.catch) pr.catch(function () {}); }
+                else video.play();
+                return video;
+            }
+            cards.forEach(function (t) {
+                t.addEventListener("click", function () { mount(t, false); });
             });
-        });
+            if (reduce) return;
+
+            function visible(el) {
+                var r = el.getBoundingClientRect();
+                var h = window.innerHeight || document.documentElement.clientHeight;
+                return r.top < h * 0.9 && r.bottom > h * 0.1;
+            }
+            function sweep() {
+                cards.forEach(function (t) {
+                    var on = visible(t);
+                    if (on) {
+                        var v = mount(t, true);
+                        if (v && v.paused) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); }
+                    } else {
+                        var vid = t.querySelector("video");
+                        if (vid && !vid.paused) vid.pause();   /* off screen: stop burning data */
+                    }
+                });
+            }
+            window.addEventListener("scroll", sweep, true);
+            document.addEventListener("scroll", sweep, true);
+            window.addEventListener("resize", sweep);
+            setInterval(sweep, 400);
+            sweep();
+        })();
 
         function mountEcoNetwork(opts){
           var svg=document.getElementById(opts.svgId); if(!svg) return;
