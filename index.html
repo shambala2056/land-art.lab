@@ -48,6 +48,10 @@
         @media (max-width: 767px) {
             .story-row { grid-template-columns: 1fr; gap: 8px; padding: 18px 20px; }
         }
+        /* The stripe sits between the dark team block and the contact block, so its
+           60px of padding read as a thick white slab. Tighten it to the logo height. */
+        .partner-wrap { padding-top: 26px; padding-bottom: 26px; }
+        @media (max-width: 575px) { .partner-wrap { padding-top: 18px; padding-bottom: 18px; } }
         .partner-wrap .infiniteSlide_partner { gap: 48px; align-items: center; }
         /* Fixed slot width, not auto: the marquee has to know its travel distance before the
            lazy-loaded logos decode, and uniform slots read tidier than ragged ones. */
