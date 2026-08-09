@@ -4133,15 +4133,64 @@
             var figs = [].slice.call(wrap.querySelectorAll('.sat-fig'));
             var pinned = null;
 
+            /* The four stat tiles above the charts count up on the same trigger. Scoped to the
+               .inv-stats that actually precedes this block — the page builds another set of
+               .inv-stat nodes inside a modal, and those must not be touched. */
+            var tiles = [], statsEl = null;
+            (function () {
+                var el = wrap.previousElementSibling;
+                while (el && !el.classList.contains('inv-stats')) el = el.previousElementSibling;
+                if (!el) return;
+                statsEl = el;
+                el.querySelectorAll('.inv-stat .v').forEach(function (node) {
+                    var raw = node.textContent.trim();
+                    var m = raw.replace(/,/g, '').match(/^(-?\d*\.?\d+)(.*)$/);
+                    if (!m) return;
+                    var dp = (m[1].split('.')[1] || '').length;
+                    tiles.push({ node: node, to: parseFloat(m[1]), dp: dp, suffix: m[2] || '',
+                                 group: raw.indexOf(',') > -1 });
+                });
+            })();
+            function fmt(v, t) {
+                var s = v.toFixed(t.dp);
+                if (t.group) s = s.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                return s + t.suffix;
+            }
+            function settle() { tiles.forEach(function (t) { t.node.textContent = fmt(t.to, t); }); }
+            /* Stepped on an interval, not requestAnimationFrame: rAF was not running here, and
+               a count-up that never advances leaves the tiles reading 0 — worse than no motion
+               at all. The guard puts the real figures back whatever happens to the timer. */
+            function countUp() {
+                var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (reduce || !tiles.length) return;
+                var DUR = 1100, t0 = Date.now(), iv = null;
+                function frame() {
+                    var k = Math.min(1, (Date.now() - t0) / DUR);
+                    var e = 1 - Math.pow(1 - k, 3);            /* ease-out cubic */
+                    tiles.forEach(function (t) { t.node.textContent = fmt(t.to * e, t); });
+                    if (k >= 1 && iv) { clearInterval(iv); iv = null; settle(); }
+                }
+                tiles.forEach(function (t) { t.node.textContent = fmt(0, t); });
+                iv = setInterval(frame, 16);
+                setTimeout(function () { if (iv) { clearInterval(iv); iv = null; } settle(); }, DUR + 500);
+            }
+
             var drawn = false;
-            function drawAll() { if (drawn) return; drawn = true; figs.forEach(function (f) { f.classList.add('in'); }); }
+            function drawAll() {
+                if (drawn) return; drawn = true;
+                figs.forEach(function (f) { f.classList.add('in'); });
+                countUp();
+            }
             /* Fire on the section actually being on screen, measured from its own rect. An
                IntersectionObserver is unreliable here — GSAP ScrollSmoother moves the content
                by transform — and a plain timer is worse: it drew the lines while the reader
                was still at the top of the page, so the animation was over before they arrived
                and only a reload ever happened to catch it. */
             function onScreen() {
-                var r = wrap.getBoundingClientRect();
+                /* Measured from the stat tiles, which sit above the charts: they are what
+                   resets to zero, and triggering off the charts meant the reader watched the
+                   real figures snap back before counting up. */
+                var r = (statsEl || wrap).getBoundingClientRect();
                 var h = window.innerHeight || document.documentElement.clientHeight;
                 return r.top < h * 0.88 && r.bottom > h * 0.08;
             }
