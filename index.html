@@ -109,19 +109,6 @@
         .section-hero .hero-image { background-image: none; background-color: #09111C; }
         .section-hero .content-wrap .title { color: #fff; }
         .section-hero .content-wrap .text { color: rgba(255,255,255,.82); max-width: 640px; margin-left: auto; margin-right: auto; }
-        /* Land art poster images are portrait (5315x7087 ≈ 3:4) — old cards assumed landscape.
-           Full-width made them enormous, so lay out as a 2-column grid of smaller cards instead. */
-        .featured-works-item .image { aspect-ratio: 3 / 4; }
-        .featured-works-item .image img { object-fit: contain; background: #09111C; }
-        .featured-works-item:hover .image img { transform: none; }
-        .featured-works-item .image:after, .featured-works-item:hover .image:after { content: none; }
-        .featured-works-list { grid-template-columns: repeat(2, 1fr); }
-        .featured-works-item .content { padding: 24px 24px 16px; }
-        .featured-works-item .content .bot { flex-direction: column; gap: 12px; }
-        .featured-works-item .content .bot .heading { width: 100%; font-size: 20px; }
-        .featured-works-item .content .grid-text { width: 100%; flex-direction: column; gap: 10px; }
-        .featured-works-item .content .grid-text .item { width: 100% !important; }
-        @media (max-width: 767px) { .featured-works-list { grid-template-columns: 1fr; } }
         .features-center-logo { width: 76%; height: auto; object-fit: contain; }
         .features-center { background: #fff; box-shadow: 0px -3px 0px 0px rgba(0,0,0,.06) inset, 0px 1px 0px 0px rgba(255,255,255,.8) inset, 0px 3.44px 5.57px 0px rgba(0,0,0,.08), 0px 16px 32px 0px rgba(0,0,0,.08); }
         /* Ecosystem interaction-network diagram (ported from dornogovi-ecosystem-2.html) */
@@ -737,16 +724,13 @@
                             <a href="#land-arts" class="item-link link1">Land Arts</a>
                             <ul class="sub-menu">
                                 <li class="sub-menu-item">
-                                    <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalHexagon">HEXAGON</a>
+                                    <a href="#la-behuman" class="item-link link1">BE HUMAN</a>
                                 </li>
                                 <li class="sub-menu-item">
-                                    <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalBeHuman">BE HUMAN</a>
+                                    <a href="#la-artntech" class="item-link link1">ART N TECH</a>
                                 </li>
                                 <li class="sub-menu-item">
-                                    <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalArtNTech">ART N TECH</a>
-                                </li>
-                                <li class="sub-menu-item">
-                                    <a href="#" class="item-link link1" data-bs-toggle="modal" data-bs-target="#modalMongolz">MONGOLZ#1</a>
+                                    <a href="#la-hexagon" class="item-link link1">HEXAGON</a>
                                 </li>
                             </ul>
                         </li>
@@ -824,7 +808,7 @@
                     </div>
                     <div class="story-row">
                         <div class="story-q">Delivered to date</div>
-                        <div class="story-a">Four installations to date: three completed or active, one scheduled for 2026. A cumulative 157,857 trees planted across 108,970 m². <a href="#works" class="story-more">See all projects →</a></div>
+                        <div class="story-a">Three works to date: two completed, one scheduled for 2026. 57,857 trees planted across 68,970 m², with a further 28,425 to come. <a href="#works" class="story-more">See all projects →</a></div>
                     </div>
                     <div class="story-row">
                         <div class="story-q">Measured outcomes</div>
@@ -832,7 +816,7 @@
                     </div>
                     <div class="story-row">
                         <div class="story-q">Forthcoming work</div>
-                        <div class="story-a">HEXAGON, scheduled for 2026: 56 cells corresponding precisely to the geometry of the artwork, currently open for sponsorship. <a href="#pricing" class="story-more">See the investment structure →</a></div>
+                        <div class="story-a">HEXAGON, scheduled for 2026: 100 hexagonal cells corresponding precisely to the geometry of the artwork, currently open for sponsorship. <a href="#pricing" class="story-more">See the investment structure →</a></div>
                     </div>
                     <div class="story-row">
                         <div class="story-q">Risk assessment</div>
@@ -862,147 +846,2177 @@
         </div>
         <!-- /section-about-us -->
 
-        <div class="box-white">
-            <!-- section-featured-works: no heading-sub of its own — this carousel
-                 reads as a continuation of Land Arts above it, not a new section. -->
-            <div id="works" class="section-featured-works flat-spacing pt-0">
-                <div class="container">
-                    <div class="featured-works-list position-relative">
-                        <div class="">
-                            <div class="featured-works-item  effectFade fadeUp no-div">
-                                <div class="image main-mouse-hover">
-                                    <img loading="lazy" src="assets/images/section/featured-works-poster-behuman.jpg" alt="BE HUMAN land art aerial view">
-                                </div>
-                                <div class="content">
-                                    <div class="pagi-dot">
-                                        <span class="active"></span>
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                    </div>
-                                    <div class="bot">
-                                        <h4 class="heading fw-semibold">BE HUMAN <br> Land Art</h4>
-                                        <div class="grid-text">
-                                            <div class="item">
-                                                <div class="title text-secondary">DESCRIPTION</div>
-                                                <div class="text-body-3 fw-semibold">Our inaugural land art installation in the Gobi — a message written in trees, visible from satellite.</div>
-                                            </div>
-                                            <div class="item">
-                                                <div class="title text-secondary">SCALE</div>
-                                                <div class="fw-semibold text-body-3">21,857 trees across <br> 30,000 m²</div>
-                                            </div>
-                                            <div class="item">
-                                                <div class="title text-secondary">STATUS</div>
-                                                <div class="fw-semibold text-body-3">Completed — Phase I</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="">
-                            <div class="featured-works-item ">
-                                <div class="image main-mouse-hover">
-                                    <img loading="lazy" src="assets/images/section/featured-works-poster-artntech.jpg" alt="ART N TECH land art aerial view">
-                                </div>
-                                <div class="content">
-                                    <div class="pagi-dot">
-                                        <span></span>
-                                        <span class="active"></span>
-                                        <span></span>
-                                        <span></span>
-                                    </div>
-                                    <div class="bot">
-                                        <h4 class="heading fw-semibold">ART N TECH <br> Land Art</h4>
-                                        <div class="grid-text">
-                                            <div class="item">
-                                                <div class="title text-secondary">DESCRIPTION</div>
-                                                <div class="text-body-3 fw-semibold">A triangular land art formation pairing reforestation with on-site renewable power generation.</div>
-                                            </div>
-                                            <div class="item">
-                                                <div class="title text-secondary">SCALE</div>
-                                                <div class="fw-semibold text-body-3">36,000 trees + 10kWt <br> solar array</div>
-                                            </div>
-                                            <div class="item">
-                                                <div class="title text-secondary">STATUS</div>
-                                                <div class="fw-semibold text-body-3">Completed</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="">
-                            <div class="featured-works-item ">
-                                <div class="image main-mouse-hover">
-                                    <img loading="lazy" src="assets/images/section/featured-works-poster-mongolz.jpg" alt="MONGOLZ #1 land art aerial view">
-                                </div>
-                                <div class="content">
-                                    <div class="pagi-dot">
-                                        <span></span>
-                                        <span></span>
-                                        <span class="active"></span>
-                                        <span></span>
-                                    </div>
-                                    <div class="bot">
-                                        <h4 class="heading fw-semibold">MONGOLZ #1 <br> Land Art</h4>
-                                        <div class="grid-text">
-                                            <div class="item">
-                                                <div class="title text-secondary">DESCRIPTION</div>
-                                                <div class="text-body-3 fw-semibold">Our largest installation to date — a large-scale tribute to Mongolian cultural identity across the Gobi.</div>
-                                            </div>
-                                            <div class="item">
-                                                <div class="title text-secondary">SCALE</div>
-                                                <div class="fw-semibold text-body-3">100,000 trees across <br> 40,000 m²</div>
-                                            </div>
-                                            <div class="item">
-                                                <div class="title text-secondary">STATUS</div>
-                                                <div class="fw-semibold text-body-3">Active — In progress</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="">
-                            <div class="featured-works-item ">
-                                <div class="image main-mouse-hover">
-                                    <img loading="lazy" src="assets/images/section/featured-works-poster-hexagon.jpg" alt="HEXAGON land art aerial view">
-                                </div>
-                                <div class="content">
-                                    <div class="pagi-dot">
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                        <span class="active"></span>
-                                    </div>
-                                    <div class="bot">
-                                        <h4 class="heading fw-semibold">HEXAGON <br> Land Art</h4>
-                                        <div class="grid-text">
-                                            <div class="item">
-                                                <div class="title text-secondary">DESCRIPTION</div>
-                                                <div class="text-body-3 fw-semibold">A cluster of hexagonal cells mirroring the site's investment structure — restoration delivered one parcel at a time.</div>
-                                            </div>
-                                            <div class="item">
-                                                <div class="title text-secondary">SCALE</div>
-                                                <div class="fw-semibold text-body-3">27,000 trees across <br> 30,000 m²</div>
-                                            </div>
-                                            <div class="item">
-                                                <div class="title text-secondary">STATUS</div>
-                                                <div class="fw-semibold text-body-3">In progress</div>
-                                            </div>
-                                        </div>
-                                        <a href="#pricing" class="tf-btn">
-                                            Claim a Cell
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /section-featured-works -->
+        <div class="box-white" id="works">
+<style>
+/* ═════════════════════════════════════════════════════════════
+   LAND ARTS — live 3D section.
+   Бүх дүрэм #hexagon-live / #hx-detail дотор хаагдсан тул
+   сайтын бусад хэсгийн загварт огт нөлөөлөхгүй.
+   ═════════════════════════════════════════════════════════════ */
+#hexagon-live{
+  --hx-shell:#F2F0EA; --hx-card:#FBFAF6; --hx-ink:#14150F; --hx-soft:#5E5F55;
+  --hx-hair:#E0DACA; --hx-lime:#B8E020; --hx-lime-deep:#8AAE13;
+  --hx-shadow:10px 10px 26px rgba(60,52,32,.10), -8px -8px 22px rgba(255,255,255,.92);
+  position:relative; background:var(--hx-shell); color:var(--hx-ink);
+  font-family:'Urbanist',sans-serif; font-size:15px; line-height:1.6;
+}
+#hexagon-live *{box-sizing:border-box}
+#hexagon-live .hx-wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+
+/* ---- хэсгийн толгой: сайтын хэв маягаар ---- */
+#hexagon-live .hx-head{padding:110px 0 40px}
+#hexagon-live .hx-eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;
+  border-radius:100px;padding:7px 16px 7px 12px;font-size:11px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;box-shadow:var(--hx-shadow)}
+#hexagon-live .hx-eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--hx-lime)}
+#hexagon-live .hx-h2{font-family:'Urbanist',sans-serif;font-weight:600;
+  font-size:clamp(30px,5vw,54px);line-height:1.05;letter-spacing:-.02em;margin:20px 0 0;
+  color:#8C897C}
+#hexagon-live .hx-h2 b{color:var(--hx-ink);font-weight:600}
+#hexagon-live .hx-lead{color:var(--hx-soft);max-width:620px;margin-top:16px}
+#hexagon-live .hx-lead b{color:var(--hx-ink);font-weight:600}
+
+/* ---- наалдмал дүр зураг ---- */
+/* Тайзны өндөр = наалдмал байх хугацаа. Автомат тоглуулалт орсон тул
+   өмнөх 660vh (≈6000 px) хэрэггүй болсон — дүр зураг өөрөө өрнөнө. */
+#hexagon-live .hx-stage{position:relative;height:340vh}
+#hexagon-live .hx-sticky{position:sticky;top:0;height:100vh;overflow:hidden;
+  border-radius:0}
+#hexagon-live .hx-canvas{position:absolute;inset:0}
+#hexagon-live .hx-canvas canvas{display:block;width:100%;height:100%}
+#hexagon-live .hx-boot{position:absolute;left:0;right:0;top:0;bottom:0;display:grid;place-items:center;
+  background:var(--hx-shell);transition:opacity .6s;font-family:'Urbanist',sans-serif;
+  letter-spacing:.28em;font-size:11px;color:var(--hx-soft);z-index:4}
+#hexagon-live .hx-boot.gone{opacity:0;pointer-events:none}
+
+#hexagon-live .hx-meter{position:absolute;top:0;left:0;height:3px;background:var(--hx-lime-deep);
+  width:0;z-index:5;transition:width .12s}
+#hexagon-live .hx-year{position:absolute;top:22px;right:22px;z-index:5;background:#fff;
+  border-radius:16px;padding:11px 16px;box-shadow:var(--hx-shadow);text-align:right}
+#hexagon-live .hx-year b{display:block;font-family:'Urbanist',sans-serif;font-size:22px;font-weight:600;line-height:1}
+#hexagon-live .hx-year i{font-style:normal;font-size:9px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--hx-soft);font-weight:600}
+
+#hexagon-live .hx-cap{position:absolute;left:22px;bottom:26px;z-index:5;max-width:430px;
+  background:rgba(251,250,246,.9);backdrop-filter:blur(12px);border-radius:24px;
+  padding:24px 26px;box-shadow:var(--hx-shadow)}
+#hexagon-live .hx-cap .num{font-family:'Urbanist',sans-serif;font-size:11.5px;font-weight:700;
+  color:var(--hx-lime-deep);letter-spacing:.2em}
+#hexagon-live .hx-cap h3{font-family:'Urbanist',sans-serif;font-weight:600;
+  font-size:clamp(22px,3.4vw,32px);line-height:1.08;margin:10px 0 10px;letter-spacing:-.01em}
+#hexagon-live .hx-cap p{color:var(--hx-soft);font-size:14px;margin:0}
+#hexagon-live .hx-cap p b{color:var(--hx-ink);font-weight:600}
+#hexagon-live .hx-cap .mini{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+#hexagon-live .hx-cap .mini span{font-family:'Urbanist',sans-serif;font-size:11px;
+  background:var(--hx-shell);border-radius:100px;padding:5px 11px}
+#hexagon-live .hx-fade{transition:opacity .35s,transform .35s}
+#hexagon-live .hx-fade.out{opacity:0;transform:translateY(10px)}
+@media(max-width:640px){
+  #hexagon-live .hx-cap{left:14px;right:14px;bottom:16px;max-width:none;padding:18px 20px}
+  #hexagon-live .hx-year{top:14px;right:14px;padding:8px 12px}
+}
+
+/* ---- өмнөх бүтээлүүд ---- */
+#hexagon-live .hx-projhead{padding:52px 0 30px}
+#hexagon-live .hx-pnum{font-family:'Urbanist',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.16em;
+  color:var(--hx-lime-deep);letter-spacing:.2em}
+#hexagon-live .hx-ph{font-family:'Urbanist',sans-serif;font-weight:600;
+  font-size:clamp(28px,4.6vw,48px);line-height:1.02;letter-spacing:-.02em;margin:12px 0 0}
+#hexagon-live .hx-plead{color:var(--hx-soft);max-width:560px;margin-top:12px;font-size:14.5px}
+#hexagon-live .hx-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+#hexagon-live .hx-pills span{background:var(--hx-card);border-radius:100px;padding:9px 16px;
+  font-family:'Urbanist',sans-serif;font-size:11.5px;font-weight:700;box-shadow:var(--hx-shadow)}
+#hexagon-live .hx-pstage{height:300vh}
+/* Лэнд артын хэсэгт бичвэр дүрсний дээр биш, доор нь тусдаа зурвасаар суух */
+#hexagon-live .hx-proj .hx-sticky,
+#hexagon-live #hxSticky{display:flex;flex-direction:column;
+  background:var(--hx-shell)}
+#hexagon-live .hx-proj .hx-canvas,
+#hexagon-live #hxCanvas{position:relative;inset:auto;flex:1 1 auto;min-height:0}
+#hexagon-live .hx-proj .hx-year,
+#hexagon-live .hx-year{display:none}
+#hexagon-live .hx-proj .hx-cap,
+#hexagon-live #hxCap{position:relative;left:auto;bottom:auto;max-width:none;
+  flex:0 0 auto;border-radius:0;box-shadow:none;background:transparent;backdrop-filter:none;
+  padding:16px 22px 12px;border-top:1px solid var(--hx-hair)}
+#hexagon-live .hx-cap .yr{font-family:'Urbanist',sans-serif;font-size:11px;font-weight:700;
+  color:var(--hx-ink);letter-spacing:.14em;text-transform:uppercase}
+#hexagon-live .hx-proj .hx-cap h3,
+#hexagon-live #hxCap h3{font-size:clamp(20px,3vw,28px);margin:8px 0 8px}
+#hexagon-live .hx-cap p{max-width:720px}
+
+/* ---- цаг хугацааны удирдлага ---- */
+#hexagon-live .hx-time{width:100%}
+#hexagon-live .hx-time .tl{-webkit-appearance:none;appearance:none;width:100%;height:6px;
+  border-radius:100px;background:linear-gradient(90deg,var(--hx-hair),var(--hx-hair));
+  outline:none;cursor:pointer;margin:0}
+#hexagon-live .hx-time .tl::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;
+  border-radius:50%;background:var(--hx-ink);cursor:grab;border:4px solid var(--hx-lime);
+  box-shadow:0 3px 10px rgba(60,52,32,.3)}
+#hexagon-live .hx-time .tl::-moz-range-thumb{width:22px;height:22px;border-radius:50%;
+  background:var(--hx-ink);cursor:grab;border:4px solid var(--hx-lime)}
+#hexagon-live .hx-time .tks{display:flex;justify-content:space-between;margin-top:9px;gap:4px}
+#hexagon-live .hx-time .tks button{flex:1 1 0;min-width:0;border:none;background:none;cursor:pointer;
+  font-family:'Urbanist',sans-serif;font-size:10.5px;font-weight:700;color:var(--hx-soft);
+  padding:4px 0;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hexagon-live .hx-time .tks button:hover{color:var(--hx-ink)}
+#hexagon-live .hx-time .tks button.on{color:var(--hx-ink)}
+#hexagon-live .hx-time .ss{display:flex;gap:8px;margin-top:14px}
+#hexagon-live .hx-time .ss button{flex:1 1 0;border:none;cursor:pointer;
+  background:var(--hx-shell);border-radius:100px;padding:11px 4px;
+  font-family:'Urbanist',sans-serif;font-size:12.5px;font-weight:700;color:var(--hx-soft);
+  transition:background .15s,color .15s}
+#hexagon-live .hx-time .ss button:hover{color:var(--hx-ink)}
+#hexagon-live .hx-time .ss button.on{background:var(--hx-ink);color:#fff}
+#hexagon-live .hx-time .tks button.on::after{content:'';display:block;height:2px;
+  background:var(--hx-lime-deep);border-radius:2px;margin:3px auto 0;width:60%}
+#hexagon-live .hx-time .lb{display:flex;align-items:center;justify-content:space-between;
+  gap:14px;font-family:'Urbanist',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--hx-soft);margin-bottom:12px}
+/* ---- автомат тоглуулалтын товч ---- */
+#hexagon-live .hx-play{flex:none;border:none;cursor:pointer;background:var(--hx-ink);color:#fff;
+  border-radius:100px;padding:9px 18px 9px 14px;display:inline-flex;align-items:center;gap:9px;
+  font-family:'Urbanist',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;transition:transform .15s}
+#hexagon-live .hx-play:hover{transform:translateY(-1px)}
+#hexagon-live .hx-play i{width:8px;height:8px;border-radius:50%;background:var(--hx-lime)}
+#hexagon-live .hx-play.playing i{border-radius:1px}
+#hexagon-live .hx-timewrap{padding:0 22px 22px}
+#hexagon-live .hx-time{background:var(--hx-card);border-radius:22px;
+  padding:18px 22px 18px;box-shadow:var(--hx-shadow)}
+@media(max-width:640px){
+  #hexagon-live .hx-time .tks button{font-size:9px}
+}
+
+/* ---- цэс: хэсгийн доод хэсэгт суусан ---- */
+#hexagon-live .hx-menu{padding:64px 0 110px}
+#hexagon-live .hx-menu .no{font-family:'Urbanist',sans-serif;font-size:12px;
+  color:var(--hx-lime-deep);font-weight:700}
+#hexagon-live .hx-tabs{display:flex;gap:7px;overflow-x:auto;margin:22px 0 20px;
+  scrollbar-width:none;padding-bottom:2px}
+#hexagon-live .hx-tabs::-webkit-scrollbar{display:none}
+#hexagon-live .hx-tab{flex:none;border:none;cursor:pointer;background:var(--hx-card);
+  border-radius:100px;padding:10px 18px;font-family:'Urbanist',sans-serif;font-size:12px;font-weight:600;
+  color:var(--hx-soft);box-shadow:var(--hx-shadow);transition:transform .15s}
+#hexagon-live .hx-tab:hover{transform:translateY(-2px)}
+#hexagon-live .hx-tab.on{background:var(--hx-ink);color:#fff;box-shadow:none}
+#hexagon-live .hx-pane .lead{color:var(--hx-soft);font-size:14px;max-width:620px;margin:0 0 20px}
+#hexagon-live .hx-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+  gap:12px;margin-bottom:16px}
+#hexagon-live .hx-stat{background:var(--hx-card);border-radius:22px;padding:18px 20px;
+  box-shadow:var(--hx-shadow)}
+#hexagon-live .hx-stat .n{font-family:'Urbanist',sans-serif;font-weight:600;
+  font-size:clamp(24px,4vw,34px);line-height:1}
+#hexagon-live .hx-stat .l{font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--hx-soft);margin-top:7px;font-weight:600}
+#hexagon-live .hx-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+#hexagon-live .hx-chip{border:none;cursor:pointer;font-family:'Urbanist',sans-serif;font-weight:600;
+  font-size:12px;background:var(--hx-card);color:var(--hx-soft);border-radius:100px;
+  padding:9px 16px;box-shadow:var(--hx-shadow);transition:transform .15s}
+#hexagon-live .hx-chip:hover{transform:translateY(-2px)}
+#hexagon-live .hx-chip.on{background:var(--hx-ink);color:#fff;box-shadow:none}
+#hexagon-live .hx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:12px}
+#hexagon-live .hx-cell{background:var(--hx-card);border-radius:22px;padding:18px;
+  box-shadow:var(--hx-shadow);cursor:pointer;transition:transform .18s;
+  border-left:5px solid var(--hx-lime)}
+#hexagon-live .hx-cell:hover{transform:translateY(-3px)}
+#hexagon-live .hx-cell.taken{border-left-color:var(--hx-ink)}
+#hexagon-live .hx-cell.flat{cursor:default}
+#hexagon-live .hx-cell .cd{font-family:'Urbanist',sans-serif;font-size:10.5px;font-weight:700;
+  color:var(--hx-soft)}
+#hexagon-live .hx-cell .nm{font-family:'Urbanist',sans-serif;font-weight:600;font-size:16px;
+  margin-top:6px;line-height:1.2}
+#hexagon-live .hx-cell .ft{margin-top:10px;font-family:'Urbanist',sans-serif;font-size:10.5px;
+  color:var(--hx-soft)}
+
+/* ---- дэлгэрэнгүй цонх ---- */
+#hx-detail{position:fixed;z-index:9999;left:16px;right:16px;bottom:16px;background:#101010;
+  color:#F4F2EA;border-radius:26px;padding:22px 24px;
+  box-shadow:0 22px 50px rgba(60,52,32,.34);font-family:'Urbanist',sans-serif;
+  transform:translateY(130%);transition:transform .34s cubic-bezier(.2,.8,.25,1);
+  max-height:76vh;overflow-y:auto}
+#hx-detail.open{transform:translateY(0)}
+#hx-detail .code{font-family:'Urbanist',sans-serif;font-size:32px;font-weight:600;color:#B8E020;line-height:1}
+#hx-detail .nm{font-family:'Urbanist',sans-serif;font-size:20px;font-weight:600;margin-top:10px}
+#hx-detail .rl{color:#B2B1A6;font-size:13px;margin-top:8px}
+#hx-detail .kv{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#2A2A24;
+  border-radius:16px;overflow:hidden;margin-top:18px}
+#hx-detail .kv div{background:#101010;padding:12px 14px}
+#hx-detail .kv .k{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#84837A;
+  font-weight:700}
+#hx-detail .kv .v{font-family:'Urbanist',sans-serif;font-weight:700;font-size:15px;margin-top:5px}
+#hx-detail .price{background:#B8E020;color:#101010;border-radius:16px;padding:14px 18px;
+  margin-top:12px;display:flex;justify-content:space-between;align-items:center}
+#hx-detail .price .k{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+#hx-detail .price .v{font-family:'Urbanist',sans-serif;font-size:24px;font-weight:600}
+#hx-detail .st{margin-top:12px;border-radius:16px;padding:12px 16px;font-size:13px;
+  font-weight:600;background:#23241E;color:#C9C8BE}
+#hx-detail .st.taken{background:#fff;color:#101010}
+#hx-detail .x{position:absolute;top:18px;right:18px;background:#2C2D26;color:#fff;border:none;
+  width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;line-height:1}
+@media(min-width:900px){
+  #hx-detail{left:auto;right:26px;bottom:26px;width:390px}
+}
+@media(prefers-reduced-motion:reduce){
+  #hexagon-live .hx-fade{transition:none}
+}
+/* ---- "see the real photograph" pill, sits with the stat pills ---- */
+#hexagon-live .hx-shot{display:inline-flex;align-items:center;gap:9px;border:none;cursor:pointer;
+  background:var(--hx-ink);color:#fff;border-radius:100px;padding:9px 18px 9px 14px;
+  font-family:'Urbanist',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;transition:transform .15s}
+#hexagon-live .hx-shot:hover{transform:translateY(-2px)}
+#hexagon-live .hx-shot i{width:8px;height:8px;border-radius:50%;background:var(--hx-lime)}
+
+/* ---- lightbox for the real aerial photographs ---- */
+#hx-shot{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;
+  background:rgba(14,14,12,.96);backdrop-filter:blur(10px);padding:28px;
+  opacity:0;visibility:hidden;transition:opacity .28s,visibility .28s;
+  font-family:'Urbanist',sans-serif}
+#hx-shot.open{opacity:1;visibility:visible}
+/* display:table — хүснэгтийн өргөнийг зураг тодорхойлж, table-caption нь
+   түүнийг тэлэхгүй тул тайлбар яг зургийн өргөнөөр мөрлөнө */
+#hx-shot figure{display:table;margin:0;max-width:100%}
+#hx-shot img{display:block;width:auto;height:auto;max-width:min(1180px,92vw);max-height:76vh;
+  border-radius:20px}
+#hx-shot figcaption{display:table-caption;caption-side:bottom;color:#C9C8BE;
+  font-size:13px;line-height:1.6;padding-top:14px}
+#hx-shot .x{position:absolute;top:20px;right:22px;background:rgba(255,255,255,.16);color:#fff;
+  border:1px solid rgba(255,255,255,.22);width:42px;height:42px;border-radius:50%;
+  cursor:pointer;font-size:19px;line-height:1;transition:background .15s}
+#hx-shot .x:hover{background:rgba(255,255,255,.28)}
+@media(prefers-reduced-motion:reduce){#hx-shot{transition:none}}
+/* ---- claim-a-cell call to action ---- */
+#hexagon-live .hx-cta{padding:44px 22px 110px;text-align:center}
+#hexagon-live .hx-cta p{color:var(--hx-soft);font-size:14px;max-width:520px;
+  margin:0 auto 22px}
+#hexagon-live .hx-claim,#hx-detail .claim{display:inline-flex;align-items:center;gap:10px;
+  background:var(--hx-ink);color:#fff;border-radius:100px;padding:15px 30px;
+  font-family:'Urbanist',sans-serif;font-weight:700;font-size:13px;letter-spacing:.06em;
+  text-transform:uppercase;text-decoration:none;transition:transform .15s}
+#hexagon-live .hx-claim:hover,#hx-detail .claim:hover{transform:translateY(-2px);color:#fff}
+#hexagon-live .hx-claim i,#hx-detail .claim i{width:8px;height:8px;border-radius:50%;
+  background:var(--hx-lime)}
+#hx-detail .claim{background:var(--hx-lime);color:#101010;width:100%;justify-content:center;
+  margin-top:12px}
+#hx-detail .claim:hover{color:#101010}
+#hx-detail .claim i{background:#101010}
+</style>
+
+<!-- ═══════════ LAND ARTS — live 3D section ═══════════ -->
+<!-- Толгой гарчиггүй: яг дээр нь "Land Arts / Restoring the Gobi Through
+     Land Art" хэсэг байгаа тул давхардуулахгүй. -->
+<section id="hexagon-live">
+  <section class="hx-proj" id="la-behuman" data-proj="behuman">
+    <div class="hx-wrap hx-projhead">
+      <div class="hx-pnum">(01) · 2020 → 2026</div>
+      <h3 class="hx-ph">BE HUMAN</h3>
+      <p class="hx-plead">The first work. A 300 × 100 m band with a message written inside it
+        in trees — legible from satellite.</p>
+      <div class="hx-pills"><span>30,000 m²</span><span>21,857 trees</span><span>Planted June 2021</span>
+        <button type="button" class="hx-shot"
+          data-src="assets/images/section/be%20human%20drone%20pic.jpg"
+          data-alt="Aerial photograph of the BE HUMAN band in the Gobi"
+          data-cap="BE HUMAN from the air, Erdene sum, Dornogovi — the planted frame with BE above HUMAN inside it. The scene below is measured from this survey."><i></i>See the real photo</button>
+      </div>
+    </div>
+    <div class="hx-stage hx-pstage">
+      <div class="hx-sticky">
+        <div class="hx-canvas"></div>
+        <div class="hx-meter"></div>
+        <div class="hx-year"><b>2020</b><i>before planting</i></div>
+        <div class="hx-cap hx-fade"></div>
+        <div class="hx-timewrap"><div class="hx-time"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hx-proj" id="la-artntech" data-proj="artntech">
+    <div class="hx-wrap hx-projhead">
+      <div class="hx-pnum">(02) · 2022 → 2026</div>
+      <h3 class="hx-ph">ART N TECH</h3>
+      <p class="hx-plead">A 300 m equilateral triangle — an open circular ground at its centre,
+        one ring road around it and three spurs running to the corners. Restoration paired with
+        a 10 kW solar system.</p>
+      <div class="hx-pills"><span>38,970 m²</span><span>36,000 trees</span><span>Planted July 2023</span>
+        <button type="button" class="hx-shot"
+          data-src="assets/images/section/Ate%20zurag.jpg"
+          data-alt="Aerial photograph of the ART N TECH triangle in the Gobi"
+          data-cap="ART N TECH from the air, Erdene sum, Dornogovi — the open centre, the ring road around it and the spurs to the corners. The BE HUMAN band sits above it. The scene below is measured from this survey."><i></i>See the real photo</button>
+      </div>
+    </div>
+    <div class="hx-stage hx-pstage">
+      <div class="hx-sticky">
+        <div class="hx-canvas"></div>
+        <div class="hx-meter"></div>
+        <div class="hx-year"><b>2022</b><i>before planting</i></div>
+        <div class="hx-cap hx-fade"></div>
+        <div class="hx-timewrap"><div class="hx-time"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="hx-wrap hx-projhead" id="la-hexagon" style="padding-top:52px">
+    <div class="hx-pnum">(03) · 2026 → 2032</div>
+    <h3 class="hx-ph">HEXAGON</h3>
+    <p class="hx-plead">The third work, and the 2026–2032 programme. One hundred hexagonal cells
+      across three hectares — 93 woodland, 7 infrastructure. Cells run from 25 m² to 400 m²,
+      each with its own code and its own steward.</p>
+    <div class="hx-pills"><span>30,000 m² site</span><span>10,875 m² planted</span><span>28,425 trees</span><span>100 cells</span></div>
+  </div>
+
+  <div class="hx-stage" id="hxStage">
+    <div class="hx-sticky" id="hxSticky">
+      <div class="hx-canvas" id="hxCanvas"></div>
+      <div class="hx-meter" id="hxMeter"></div>
+      <div class="hx-year"><b id="hxYearN">2026</b><i id="hxYearL">before planting</i></div>
+      <div class="hx-cap hx-fade" id="hxCap"></div>
+      <div class="hx-timewrap"><div class="hx-time" id="hxTimeIn"></div></div>
+      <div class="hx-boot" id="hxBoot">LOADING THE MODEL</div>
+    </div>
+  </div>
+
+  <div class="hx-wrap hx-cta">
+    <p>Tap any cell in the scene above to see its code, size and status — then take a cell of
+      your own on the live map.</p>
+    <a href="#pricing" class="hx-claim"><i></i>Claim a cell</a>
+  </div>
+</section>
+
+<!-- lightbox for the real aerial photographs; src is filled in on open so the
+     large files are never fetched unless someone asks for them -->
+<div id="hx-shot" role="dialog" aria-modal="true" aria-label="Aerial photograph">
+  <button class="x" id="hxSx" type="button" aria-label="Close">×</button>
+  <figure>
+    <img id="hxSimg" alt="">
+    <figcaption id="hxScap"></figcaption>
+  </figure>
+</div>
+
+<div id="hx-detail">
+  <button class="x" id="hxDx" aria-label="Close">×</button>
+  <div class="code" id="hxDcode">—</div>
+  <div class="nm" id="hxDname"></div>
+  <div class="rl" id="hxDrole"></div>
+  <div class="kv">
+    <div><div class="k">Area</div><div class="v" id="hxDarea"></div></div>
+    <div><div class="k">Pits</div><div class="v" id="hxDpots"></div></div>
+    <div><div class="k">Elms</div><div class="v" id="hxDtrees"></div></div>
+    <div><div class="k">Class</div><div class="v" id="hxDsize"></div></div>
+  </div>
+  <div class="price"><span class="k">Sponsorship</span><span class="v" id="hxDprice"></span></div>
+  <div class="st" id="hxDst"></div>
+  <a href="#pricing" class="claim" id="hxDclaim"><i></i>Claim a cell</a>
+</div>
+<!-- ═══════════ /LAND ARTS — live 3D section ═══════════ -->
+
+<script>
+/* ---- real-photograph lightbox ---------------------------------------
+   Товч бүр өөрийн зураг, тайлбарыг data- атрибутаараа авч явна.
+   Зургийг зөвхөн нээх үед л татна — 0.6–0.9 МБ файлууд тул
+   хуудас ачаалахад ороход утсан дээр хүнд болно. */
+(function(){
+  "use strict";
+  var box=document.getElementById('hx-shot');
+  if(!box) return;
+  var img=document.getElementById('hxSimg'), cap=document.getElementById('hxScap');
+  var opener=null;
+
+  function open(btn){
+    opener=btn;
+    img.src=btn.getAttribute('data-src');
+    img.alt=btn.getAttribute('data-alt')||'';
+    cap.textContent=btn.getAttribute('data-cap')||'';
+    box.classList.add('open');
+    document.body.style.overflow='hidden';
+    document.getElementById('hxSx').focus();
+  }
+  function close(){
+    box.classList.remove('open');
+    document.body.style.overflow='';
+    if(opener){opener.focus();opener=null;}
+    /* эх сурвалжийг сална — олон зураг санах ойд үлдэхгүй */
+    setTimeout(function(){ if(!box.classList.contains('open')) img.removeAttribute('src'); },320);
+  }
+
+  var btns=document.querySelectorAll('#hexagon-live .hx-shot');
+  for(var i=0;i<btns.length;i++)
+    btns[i].addEventListener('click',function(){ open(this); });
+
+  document.getElementById('hxSx').addEventListener('click',close);
+  box.addEventListener('click',function(e){ if(e.target===box||e.target.tagName==='FIGURE') close(); });
+  addEventListener('keydown',function(e){ if(e.key==='Escape'&&box.classList.contains('open')) close(); });
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ═══════════ HEXAGON — ХУУЛЖ АВАХ JS (эхлэл) ═══════════ */
+/* Дөрвөн улирал: навчны өнгө, титмийн хэмжээ, гэрэл, газрын өнгө өөрчлөгдөнө */
+const SEASONS=[
+  {n:'Spring',dh:+.010,ds:1.02,dl:1.16,leaf:.70,sun:'#FFF6E2',si:1.50,hemi:.54,
+   fog:'#F2F0EA',snow:0,grn:'#86A44E',bug:1},
+  {n:'Summer',dh: .000,ds:1.00,dl:1.00,leaf:1.00,sun:'#FFF2D4',si:1.60,hemi:.50,
+   fog:'#F2F0EA',snow:0,grn:'#7D9A46',bug:1},
+  {n:'Autumn',dh:-.135,ds:1.20,dl:1.08,leaf:.86,sun:'#FFE7B6',si:1.44,hemi:.52,
+   fog:'#F3EEE0',snow:0,grn:'#95924A',bug:.4},
+  {n:'Winter',dh:-.020,ds:0.28,dl:0.88,leaf:0.00,sun:'#EDF2FF',si:1.10,hemi:.66,
+   fog:'#EDEFF3',snow:1,grn:'#C9CBC8',bug:0}
+];
+
+(function(){
+"use strict";
+
+/* ---------- өгөгдөл ---------- */
+/* rad = sqrt(талбай / 400) — нүдний хэмжээ бодит талбайгаа зөв илэрхийлнэ.
+   Ингэснээр 400 м² нүд 25 м² нүднээс яг 16 дахин том харагдана.
+   n нь тухайн нүдэнд зурагдах модны тоо — мөн талбайд шууд хамааралтай. */
+/* rad = sqrt(талбай / 400) — нүдний хэмжээ бодит талбайгаа зөв илэрхийлнэ.
+   h нь нимгэн хөрсний давхарга — өргөгдсөн суурь биш. Зургаан талт хэлбэрийг
+   зөвхөн тарьсан мод өөрөө үүсгэнэ. */
+const PAD=0.07;
+const SIZES={
+  XL:{rad:1.000,h:PAD,area:400,pots:400,trees:1200,price:40000000,n:32},
+  L :{rad:0.707,h:PAD,area:200,pots:200,trees:600, price:20000000,n:16},
+  M :{rad:0.500,h:PAD,area:100,pots:100,trees:300, price:10000000,n:8},
+  S :{rad:0.354,h:PAD,area:50, pots:50, trees:150, price:5000000, n:4},
+  XS:{rad:0.250,h:PAD,area:25, pots:25, trees:75,  price:2500000, n:2}
+};
+const COUNT={XL:5,L:20,M:30,S:30,XS:15};
+/* Дэд бүтцийн долоон нүд — тарилтгүй, тоног төхөөрөмжтэй */
+const THEMED={
+  'L-01':['Solar field · 100 kW','energy','100 kW installed capacity — irrigation pumps, lighting, sensor network and battery reserve'],
+  'L-02':['Water harvesting','water','Rainwater and fog-dew capture system with storage tanks'],
+  'L-03':['Recycling point','waste','Plastic, glass and metal sorting plus a composting yard'],
+  'L-04':['Research station','research','Weather and soil sensors, biodiversity monitoring'],
+  'L-05':['Bird refuge','birds','Stopover for migratory birds — nest boxes and a water point'],
+  'L-06':['Pollinator meadow','insect','Beehives and a flowering field — fruit set and plant regeneration'],
+  'L-07':['Community ground','community','Playground, outdoor classroom, ger and gathering space']
+};
+const PARTNERS={'L-08':'EFES GROUP','M-01':'YVES ROCHER','M-05':'TIMBERLAND',
+  'M-23':'ROC','S-13':'STEPPE LINK','S-25':'KHARKHORUM'};
+const CELLS=[];
+Object.entries(COUNT).forEach(function(e){
+  const key=e[0], n=e[1], S=SIZES[key];
+  for(let i=1;i<=n;i++){
+    const code=key+'-'+String(i).padStart(2,'0'), th=THEMED[code];
+    CELLS.push({code:code,sizeKey:key,S:S,themed:!!th,cat:th?th[1]:'flora',
+      name:th?th[0]:'Elm woodland',
+      role:th?th[2]:S.area+' m² planted — '+S.pots+' pits, '+S.trees+' elms, ten years of maintenance and irrigation',
+      pots:th?0:S.pots, trees:th?0:S.trees,
+      partner:PARTNERS[code]||null});
+  }
+});
+const TOT_TREES=CELLS.reduce(function(s,c){return s+c.trees;},0);
+const TOT_POTS =CELLS.reduce(function(s,c){return s+c.pots;},0);
+const fmt=function(n){return n.toLocaleString('en-US');};
+
+const BEATS=[
+  {cam:{r:104,theta:1.571,phi:.34},g:0.00,y:'2026',l:'before planting',num:'(01)',
+   h:'Starting point',
+   p:'Bare gravel surface. Rainfall is <b>about 100 mm a year</b>; evaporation runs several times higher.'},
+  {cam:{r:34,theta:1.10,phi:.78},g:0.00,y:'2026',l:'infrastructure',num:'(02)',
+   h:'Infrastructure',
+   p:'The conditions are built before anything is planted. Seven cells stay unplanted and become the '+
+     '<b>100 kW solar field, water harvesting tanks, recycling point, research station, bird refuge, '+
+     'pollinator meadow and community ground</b>.',
+   mini:['7 cells · infrastructure','100 kW solar','93 cells · planted']},
+  {cam:{r:44, theta:1.62,phi:.80},g:0.14,y:'2027',l:'planting',num:'(03)',
+   h:'Planting',
+   p:'<b>Three elms per pit.</b> A 400 m² cell takes 1,200 trees, a 25 m² cell takes 75. 28,425 in total.',
+   mini:['9,475 pits','28,425 saplings']},
+  {cam:{r:32, theta:1.95,phi:.88},g:0.32,y:'2028',l:'first summer',num:'(04)',
+   h:'First summer',
+   p:'The most fragile stage. Roots have not reached depth, so <b>irrigation never stops</b>. '+
+     'Survival is counted in full twice a year and losses are replanted.',
+   mini:['survival target >80%','census · twice a year']},
+  {cam:{r:26, theta:2.30,phi:.96},g:0.50,y:'2029',l:'three summers',num:'(05)',
+   h:'Three summers',
+   p:'A sapling that survives three summers usually stays alive. <b>Drip lines run across the whole site</b>. '+
+     'Wind still moves the open sand.',
+   mini:['risk window closes','irrigation · continuous']},
+  {cam:{r:22, theta:2.62,phi:1.02},g:0.68,y:'2031',l:'nebkha forms',num:'(06)',
+   h:'The nebkha effect',
+   p:'Trees slow the wind and drifting sand settles at their base. The mound this builds is called a '+
+     '<b>nebkha</b> — it holds moisture and improves the soil. The tree holds the sand and the sand '+
+     'feeds the tree. Butterflies and hares return.',
+   mini:['years 3–7','wind slows','moisture accumulates']},
+  {cam:{r:88,theta:1.571,phi:.32},g:0.86,y:'2032',l:'sixth year',num:'(07)',
+   h:'2032 · the result',
+   p:'Six years after planting. <b>10,875 m²</b> restored and the canopy begins to close. An independent '+
+     'satellite audit measures NDVI, soil carbon and tree survival. A fully closed woodland still needs '+
+     'another 10–15 years.',
+   mini:['10,875 m² restored','audit · every year','survival >80%']}
+];
+
+/* ---------- дэлгэрэнгүй ---------- */
+const D=document.getElementById('hx-detail');
+function openCell(c){
+  document.getElementById('hxDcode').textContent=c.code;
+  document.getElementById('hxDname').textContent=c.partner||c.name;
+  document.getElementById('hxDrole').textContent=c.role;
+  document.getElementById('hxDarea').textContent=c.S.area+' m²';
+  document.getElementById('hxDpots').textContent=c.themed?'—':fmt(c.pots);
+  document.getElementById('hxDtrees').textContent=c.themed?'—':fmt(c.trees);
+  document.getElementById('hxDsize').textContent=c.sizeKey;
+  document.getElementById('hxDprice').textContent='$'+fmt(c.S.area*30);
+  const st=document.getElementById('hxDst');
+  if(c.partner){st.className='st taken';st.textContent='Claimed · '+c.partner;}
+  else if(c.themed){st.className='st';st.textContent='Project infrastructure — not offered for sponsorship';}
+  else{st.className='st';st.textContent='Available — ten years of maintenance and irrigation included';}
+  D.classList.add('open');
+}
+document.getElementById('hxDx').onclick=function(){D.classList.remove('open');};
+
+/* ---------- бичвэрийн солилт ---------- */
+const capEl=document.getElementById('hxCap');
+let capIdx=-1;
+function setCap(i){
+  if(i===capIdx) return;
+  capIdx=i;
+  const b=BEATS[i];
+  capEl.classList.add('out');
+  setTimeout(function(){
+    capEl.innerHTML='<div class="yr">'+b.y+' · '+b.l+'</div>'+
+      '<h3>'+b.num+' '+b.h+'</h3><p>'+b.p+'</p>'+
+      (b.mini?'<div class="mini">'+b.mini.map(function(m){return '<span>'+m+'</span>';}).join('')+'</div>':'');
+    capEl.classList.remove('out');
+  },180);
+}
+
+/* ---------- 3D ---------- */
+const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const host=document.getElementById('hxCanvas');
+const stageEl=document.getElementById('hxStage');
+const stickyEl=document.getElementById('hxSticky');
+let scene,cam,rend,clock,ray,pointer,hexes=[],trunkIM,leafIM,TREES=[],TPARTS=[],LPARTS=[],INFRA=[],dummy;
+let infra=0, SITE=null;
+let camS={r:126,theta:.5,phi:.62}, camT={r:126,theta:.5,phi:.62};
+let season=1, paintLeaves=null, sunL=null, hemiL=null, groundM=null, SNOW=null;
+let DT=0, lastT=0;
+let drag=null,dragTheta=0,moved=0,beatF=0,growth=0,visible=false;
+const SC=function(hex){return window.THREE?new THREE.Color(hex).convertSRGBToLinear():null;};
+const SAND=window.THREE?SC('#CFC2A4'):null;
+const GREEN=window.THREE?SC('#7D9A46'):null;
+
+const DIRS=[[1,0],[1,-1],[0,-1],[-1,0],[-1,1],[0,1]];
+function ringC(k){ if(k===0)return[[0,0]];
+  const o=[];let q=DIRS[4][0]*k,r=DIRS[4][1]*k;
+  for(let i=0;i<6;i++)for(let j=0;j<k;j++){o.push([q,r]);q+=DIRS[i][0];r+=DIRS[i][1];}
+  return o;}
+const SLOTS=[];for(let k=0;k<=6&&SLOTS.length<100;k++)SLOTS.push.apply(SLOTS,ringC(k));
+SLOTS.length=100;
+const PITCH=3.05;
+const axial=function(q,r){return{x:PITCH*Math.sqrt(3)*(q+r/2), z:PITCH*1.5*r};};
+const rnd=function(s){let v=Math.abs(Math.round(s*9301+49297))%233280;
+  return function(){v=(v*9301+49297)%233280;return v/233280;};};
+
+function size(){return {w:host.clientWidth||stickyEl.clientWidth,
+                        h:host.clientHeight||stickyEl.clientHeight};}
+
+function init3D(){
+  dummy=new THREE.Object3D();
+  SNOW=SC('#E9EBEC');
+  scene=new THREE.Scene();
+  scene.fog=new THREE.Fog(SC('#F2F0EA').getHex(),108,240);
+  const s=size();
+  cam=new THREE.PerspectiveCamera(42,s.w/s.h,.5,600);
+  rend=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  rend.setPixelRatio(Math.min(devicePixelRatio,2));
+  /* updateStyle=false — эс бөгөөс inline хэмжээ CSS-ийг дарж, дүрс нь
+     доорх бичвэрийн зурвасыг халхална */
+  rend.setSize(s.w,s.h,false);
+  /* Өнгөний зай — үүнгүйгээр бүх өнгө хавтгай, хиймэл харагдана */
+  rend.outputEncoding=THREE.sRGBEncoding;
+  rend.shadowMap.enabled=true; rend.shadowMap.type=THREE.PCFSoftShadowMap;
+  host.appendChild(rend.domElement);
+
+  /* Тэнгэрийн сэрүүн дүүргэлт сул, нарны шууд туяа хүчтэй.
+     Ингэснээр сүүдэр гүн, гэрэлтсэн тал тод болж эзэлхүүн үүснэ. */
+  const hemi=new THREE.HemisphereLight(0xFFFFFF,0xFFFFFF,.5);
+  hemi.color.copy(SC('#D8E6FF')); hemi.groundColor.copy(SC('#C2B394'));
+  scene.add(hemi); hemiL=hemi;
+  const sun=new THREE.DirectionalLight(0xFFFFFF,1.6);
+  sun.color.copy(SC('#FFF2D4')); sunL=sun;
+  sun.position.set(42,84,28); sun.castShadow=true; sun.shadow.mapSize.set(2048,2048);
+  sun.shadow.bias=-0.0006;
+  const d=62;
+  sun.shadow.camera.left=-d;sun.shadow.camera.right=d;
+  sun.shadow.camera.top=d;sun.shadow.camera.bottom=-d;sun.shadow.camera.far=210;
+  scene.add(sun);
+
+  groundM=new THREE.MeshStandardMaterial({color:SC('#CBBEA0'),roughness:1});
+  const ground=new THREE.Mesh(new THREE.CircleGeometry(125,64),groundM);
+  ground.rotation.x=-Math.PI/2; ground.position.y=-.02; ground.receiveShadow=true;
+  scene.add(ground);
+
+  CELLS.forEach(function(c,i){
+    const S=c.S, sl=SLOTS[i], p=axial(sl[0],sl[1]);
+    const radius=PITCH*S.rad*.9;
+    const geo=new THREE.CylinderGeometry(radius,radius*.97,S.h,6,1);
+    const mat=new THREE.MeshStandardMaterial({color:SAND.clone(),roughness:.9});
+    const m=new THREE.Mesh(geo,mat);
+    m.position.set(p.x,S.h/2,p.z);
+    m.rotation.y=Math.PI/6; m.castShadow=false; m.receiveShadow=true;
+    scene.add(m);
+    hexes.push({mesh:m,mat:mat,c:c,i:i,x:p.x,z:p.z,top:S.h,radius:radius});
+  });
+
+  /* --- модны байрлал (дэд бүтцийн нүдэнд мод тарихгүй) --- */
+  hexes.forEach(function(h){
+    if(h.c.themed) return;
+    const R=rnd(h.i*17+5), n=h.c.S.n, rad=h.radius*.72;
+    const cf=1;                       // мод хаана ч ижил хэмжээтэй
+    const step=Math.sqrt(2.598*rad*rad/(n*.866));
+    const k=Math.ceil(rad/step)+1;
+    for(let rr=-k;rr<=k;rr++)for(let qq=-k;qq<=k;qq++){
+      const x=step*(qq+rr/2), z=step*rr*.866;
+      if(Math.hypot(x,z)>rad) continue;
+      TREES.push({x:h.x+x+(R()-.5)*step*.5, z:h.z+z+(R()-.5)*step*.5, base:h.top,
+        H:(0.42+R()*0.22)*cf, off:R()*.34, sway:R()*6.28, spin:R()*6.28, e:0});
+    }
+  });
+
+  /* --- хайлаасны бүтэц ---
+     Иш нь намхан хэсэгтээ сэрээлж, олон нимгэн мөчир титэм рүү сунана.
+     Навчийг битүү бөмбөлөг биш, тунгалаг ирмэгтэй давхаргаар зурна. */
+  const BR=[
+    {oy:0,   len:.46, rad:.050, tx:0,    tz:0},
+    {oy:.36, len:.44, rad:.032, tx:0,    tz:.44},
+    {oy:.40, len:.40, rad:.029, tx:.38,  tz:-.26},
+    {oy:.46, len:.34, rad:.023, tx:-.34, tz:-.12},
+    {oy:.54, len:.30, rad:.017, tx:.20,  tz:.62},
+    {oy:.58, len:.28, rad:.015, tx:-.52, tz:.30},
+    {oy:.60, len:.26, rad:.014, tx:.48,  tz:-.48},
+    {oy:.64, len:.24, rad:.012, tx:-.24, tz:-.60},
+    {oy:.68, len:.22, rad:.011, tx:.62,  tz:.16},
+    {oy:.70, len:.20, rad:.010, tx:-.14, tz:.70}
+  ];
+  /* rho — төвөөс хол, oy — өндөр, r — хэмжээ, dark — гүн сүүдэрт эсэх */
+  const LEAF=[
+    {rho:.06,oy:.78,r:.34,d:1},{rho:.14,oy:.68,r:.32,d:1},
+    {rho:.10,oy:.86,r:.30,d:0},{rho:.20,oy:.74,r:.31,d:1},
+    {rho:.38,oy:.82,r:.28,d:0},{rho:.42,oy:.70,r:.29,d:0},
+    {rho:.46,oy:.62,r:.27,d:1},{rho:.40,oy:.88,r:.25,d:0},
+    {rho:.52,oy:.76,r:.26,d:0},{rho:.56,oy:.66,r:.24,d:0},
+    {rho:.64,oy:.72,r:.22,d:0},{rho:.66,oy:.58,r:.21,d:1},
+    {rho:.60,oy:.84,r:.20,d:0},{rho:.70,oy:.62,r:.19,d:0}
+  ];
+  TREES.forEach(function(tr,ti){
+    BR.forEach(function(f,fi){
+      TPARTS.push({t:ti,oy:f.oy,len:f.len,rad:f.rad,
+        tx:f.tx*(0.7+0.6*Math.abs(Math.sin(ti*3.1+fi))),
+        tz:f.tz*(0.7+0.6*Math.abs(Math.cos(ti*2.3+fi))),
+        thin:fi>3});
+    });
+    LEAF.forEach(function(c,ci){
+      const a=tr.spin+ci*2.39+Math.sin(ti+ci)*.4;
+      const j=Math.abs(Math.sin(ti*1.7+ci*3.3));
+      LPARTS.push({t:ti,
+        ox:Math.cos(a)*c.rho*.88*(0.85+0.3*j),
+        oz:Math.sin(a)*c.rho*.88*(0.85+0.3*j),
+        oy:c.oy+(j-.5)*.05,
+        r:c.r*(0.86+0.3*j), d:c.d, ph:a});
+    });
+  });
+
+  /* --- навчны бүтэц: өнгөгүй, зөвхөн хэлбэр ба нягтрал.
+         Өнгийг доорх instance color өгнө — ингэснээр өнгө хяналттай болно. --- */
+  function leafTexture(){
+    const cv=document.createElement('canvas'); cv.width=cv.height=128;
+    const g=cv.getContext('2d');
+    for(let i=0;i<160;i++){
+      const a=Math.random()*Math.PI*2;
+      const rr=Math.pow(Math.random(),.52)*58;
+      const x=64+Math.cos(a)*rr, y=64+Math.sin(a)*rr*.94;
+      const s=2.2+Math.random()*4.4;
+      const v=Math.round(168+Math.random()*87);           // 168–255 саарал
+      g.fillStyle='rgba('+v+','+v+','+v+','+(.72+Math.random()*.28)+')';
+      g.beginPath(); g.ellipse(x,y,s,s*.66,Math.random()*3.14,0,6.283); g.fill();
+    }
+    const tx=new THREE.CanvasTexture(cv);
+    tx.encoding=THREE.sRGBEncoding;
+    tx.anisotropy=rend.capabilities.getMaxAnisotropy();
+    return tx;
+  }
+
+  const tg=new THREE.CylinderGeometry(.55,1,1,5); tg.translate(0,.5,0);
+  trunkIM=new THREE.InstancedMesh(tg,
+    new THREE.MeshStandardMaterial({color:0xFFFFFF,roughness:.95}),TPARTS.length);
+  leafIM=new THREE.InstancedMesh(new THREE.PlaneGeometry(1,1),
+    new THREE.MeshStandardMaterial({map:leafTexture(),alphaTest:.42,
+      side:THREE.DoubleSide,roughness:.92,metalness:0}),LPARTS.length);
+  trunkIM.castShadow=true; trunkIM.receiveShadow=true;
+  leafIM.castShadow=true; leafIM.receiveShadow=true;
+  scene.add(trunkIM); scene.add(leafIM);
+
+  const col=new THREE.Color();
+  TPARTS.forEach(function(p,i){
+    // холтос: цайвар саарал-бор, мөчир рүүгээ бараан
+    const l=(p.thin?.30:.46)+Math.sin(i*7.1)*.045;
+    col.setHSL(.095,.12,Math.max(.16,Math.min(.62,l))).convertSRGBToLinear();
+    trunkIM.setColorAt(i,col);
+  });
+  trunkIM.instanceColor.needsUpdate=true;
+  paintLeaves=function(){
+   const S=SEASONS[season];
+   LPARTS.forEach(function(p,i){
+    /* Байгалийн навч зөвхөн гэрэлтэй, харанхуй гэж ялгарахгүй — өнгө нь ч
+       өөрчлөгддөг. Наранд шаравтар ногоон, сүүдэрт хөхөвтөр гүн ногоон. */
+    const sun=p.d?0:1;
+    const lift=(p.oy-.55)/.40;                        // 0…1
+    const v=Math.sin(i*4.7), w=Math.sin(i*2.9);
+    const hue=.255-.028*sun-.012*lift+v*.010+S.dh;    // улирлаар шилжинэ
+    const sat=(.30+.13*sun+.05*lift+w*.035)*S.ds;
+    const lig=(.17+.20*lift+.11*sun+v*.028)*S.dl;
+    col.setHSL((hue+1)%1,Math.max(.05,Math.min(.62,sat)),
+                    Math.max(.08,Math.min(.60,lig))).convertSRGBToLinear();
+    leafIM.setColorAt(i,col);
+   });
+   leafIM.instanceColor.needsUpdate=true;
+  };
+  paintLeaves();
+
+  /* ==== ДЭД БҮТЭЦ ====
+     Материал бүгд одоо байгаа багцаас: цайвар, саарал, мод, элс.
+     Ганц шинэ өнгө нь нарны хавтангийн бүдэг ноорхой цэнхэр. */
+  const M={
+    pale:new THREE.MeshStandardMaterial({color:SC('#F2EADA'),roughness:.86}),
+    grey:new THREE.MeshStandardMaterial({color:SC('#BDB3A2'),roughness:.9}),
+    dark:new THREE.MeshStandardMaterial({color:SC('#46525A'),roughness:.55,metalness:.12}),
+    wood:new THREE.MeshStandardMaterial({color:SC('#A98C63'),roughness:.95}),
+    wood2:new THREE.MeshStandardMaterial({color:SC('#C4A87C'),roughness:.95}),
+    watr:new THREE.MeshStandardMaterial({color:SC('#6F9C90'),roughness:.35,metalness:.05}),
+    leaf:new THREE.MeshStandardMaterial({color:SC('#6E8A42'),roughness:.9}),
+    bush:new THREE.MeshStandardMaterial({color:SC('#5F8438'),roughness:.95}),
+    grav:new THREE.MeshStandardMaterial({color:SC('#C6BCA4'),roughness:1}),
+    clay:new THREE.MeshStandardMaterial({color:SC('#C1795A'),roughness:.9}),
+    lime:new THREE.MeshStandardMaterial({color:SC('#9DBF4C'),roughness:.9}),
+    skin:new THREE.MeshStandardMaterial({color:SC('#E0BC94'),roughness:.9})
+  };
+  const bx=function(w,h,d,m){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);
+    o.castShadow=true;o.receiveShadow=true;return o;};
+  const cy=function(r1,r2,h,sg,m){const o=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,sg),m);
+    o.castShadow=true;o.receiveShadow=true;return o;};
+  const sp=function(r,m){const o=new THREE.Mesh(new THREE.SphereGeometry(r,8,6),m);
+    o.castShadow=true;o.receiveShadow=true;return o;};
+  const put=function(o,x,y,z){o.position.set(x,y,z);return o;};
+
+  /* Тоног төхөөрөмжийн доор л хайрган суурь — үлдсэн нь зүлэг */
+  const pad=function(g,r,x,z){
+    const p=cy(r,r,.05,18,M.grav); p.castShadow=false;
+    return g.add(put(p,x||0,.025,z||0));
+  };
+  /* Нүд бүрийн захаар бут, цэцэг — тоног төхөөрөмж ногоон дунд суух */
+  const garden=function(g,n,r0,r1){
+    for(let i=0;i<n;i++){
+      const a=i*2.399, rr=r0+(((i*7)%5)/4)*(r1-r0);
+      const x=Math.cos(a)*rr, z=Math.sin(a)*rr, s=.15+((i*3)%4)*.05;
+      g.add(put(sp(s,M.bush),x,s*.78,z));
+      if(i%3===0){
+        g.add(put(cy(.014,.014,.20,4,M.bush),x+.16,.10,z+.11));
+        g.add(put(sp(.045,i%2?M.lime:M.pale),x+.16,.21,z+.11));
+      }
+    }
+  };
+
+  const BUILD={
+    energy:function(g){                                   // 100 кВт нарны талбай
+      pad(g,1.55); garden(g,14,1.75,2.05);
+      const pn=[];
+      for(let r=0;r<4;r++)for(let c=0;c<4;c++){
+        const x=(c-1.5)*.72, z=(r-1.5)*.62;
+        g.add(put(cy(.032,.032,.34,6,M.grey),x,.17,z));
+        const pv=new THREE.Group(); pv.position.set(x,.38,z); g.add(pv); pn.push(pv);
+        pv.add(bx(.64,.045,.42,M.dark));
+        pv.add(put(bx(.46,.015,.27,M.grey),0,.038,-.015));
+      }
+      // хувиргуур, батарейн шүүгээ
+      g.add(put(bx(.34,.52,.28,M.pale),1.42,.26,.42));
+      g.add(put(bx(.38,.05,.32,M.grey),1.42,.54,.42));
+      g.add(put(bx(.34,.52,.28,M.pale),1.42,.26,-.16));
+      g.add(put(bx(.38,.05,.32,M.grey),1.42,.54,-.16));
+      return function(t){
+        // 16 хавтан нэгэн зэрэг нар дагана
+        const a=-.52+Math.sin(t*.20)*.40;
+        for(let i=0;i<pn.length;i++) pn[i].rotation.x=a;
+      };
+    },
+    water:function(g){                                    // ус — гадаргуу дээр давалгаа
+      pad(g,.62,-.55,-.30); garden(g,16,1.35,2.00);
+      g.add(put(cy(.36,.36,.95,14,M.pale),-.55,.48,-.30));
+      g.add(put(cy(.40,.30,.26,14,M.grey),-.55,1.08,-.30));
+      g.add(put(cy(.03,.03,.9,6,M.grey),-.16,.45,-.30));
+      g.add(put(cy(.86,.86,.06,16,M.grey),.50,.02,.35));
+      g.add(put(cy(.78,.78,.10,16,M.watr),.50,.05,.35));
+      for(let i=0;i<3;i++)
+        g.add(put(cy(.02,.02,.34,5,M.leaf),.50+Math.cos(i*2.1)*.6,.17,.35+Math.sin(i*2.1)*.6));
+      const rings=[];
+      for(let i=0;i<3;i++){
+        const m=new THREE.MeshBasicMaterial({color:SC('#CDE4DC'),transparent:true,
+          opacity:0,side:THREE.DoubleSide});
+        const r=new THREE.Mesh(new THREE.RingGeometry(.60,.70,24),m);
+        r.rotation.x=-Math.PI/2; r.position.set(.50,.105,.35);
+        g.add(r); rings.push(r);
+      }
+      return function(t){ rings.forEach(function(r,i){
+        const u=((t*.42+i/3)%1);
+        r.scale.setScalar(.22+u*.95);
+        r.material.opacity=.55*(1-u)*(1-u);
+      });};
+    },
+    waste:function(g){                                    // компостын хашлага, дардас
+      pad(g,1.05); garden(g,16,1.35,2.00);
+      // модон хашлага — үйлдвэрийн биш, цэцэрлэгийн компост шиг
+      for(let i=0;i<4;i++){
+        const a=i*Math.PI/2;
+        g.add(put(bx(1.5,.30,.07,M.wood2),Math.cos(a)*.72,.16,Math.sin(a)*.72)).rotation.y=-a;
+      }
+      for(let i=0;i<3;i++){
+        const x=(i-1)*.42;
+        g.add(put(bx(.30,.44,.30,i===1?M.leaf:(i===0?M.grey:M.wood)),x,.22,-.35));
+        g.add(put(bx(.34,.06,.34,M.dark),x,.47,-.35));
+      }
+      const cr=[];
+      for(let i=0;i<2;i++)for(let j=0;j<2;j++){
+        const c=put(bx(.32,.26,.30,M.wood),(i-.5)*.40+.55,.13+(i+j)%2*.26,(j-.5)*.38+.42);
+        g.add(c); cr.push(c);
+      }
+      return function(t){ cr.forEach(function(c,i){
+        c.position.y=c.userData.y0!==undefined?c.userData.y0:(c.userData.y0=c.position.y);
+        c.position.y+=Math.max(0,Math.sin(t*.7+i*1.6))*.10;
+        c.rotation.y=Math.sin(t*.35+i)*.14;
+      });};
+    },
+    research:function(g){                                 // модон асар, салхины аяга
+      pad(g,.90,.25,.25); garden(g,14,1.45,2.05);
+      g.add(put(bx(1.0,.46,.78,M.pale),.25,.23,.25));
+      for(let i=0;i<2;i++){                                // хоёр налуутай модон дээвэр
+        const r=bx(.66,.06,.94,M.wood2);
+        r.rotation.z=(i?1:-1)*.62; g.add(put(r,.25+(i?.27:-.27),.60,.25));
+      }
+      g.add(put(bx(.20,.30,.03,M.wood),.25,.15,.65));
+      g.add(put(cy(.03,.03,1.5,6,M.grey),-.62,.75,-.28));
+      const sp=new THREE.Group(); sp.position.set(-.62,1.48,-.28); g.add(sp);
+      for(let i=0;i<3;i++){const a=i*2.09;
+        sp.add(put(bx(.20,.015,.015,M.grey),Math.cos(a)*.10,0,Math.sin(a)*.10));
+        sp.add(put(cy(.055,.055,.05,8,M.pale),Math.cos(a)*.20,0,Math.sin(a)*.20));}
+      const bl=new THREE.Mesh(new THREE.SphereGeometry(.035,8,6),
+        new THREE.MeshBasicMaterial({color:SC('#C6D96A'),transparent:true,opacity:1}));
+      bl.position.set(-.62,1.56,-.28); g.add(bl);
+      return function(t){ sp.rotation.y=t*1.9;
+        bl.material.opacity=.25+.75*Math.pow(Math.max(0,Math.sin(t*1.6)),6); };
+    },
+    birds:function(g){                                    // шувуу тойрон нисэнэ
+      pad(g,.52); garden(g,18,1.25,2.05);
+      for(let i=0;i<3;i++){
+        const a=i*2.2, x=Math.cos(a)*.75, z=Math.sin(a)*.75;
+        g.add(put(cy(.035,.035,1.0,6,M.wood),x,.50,z));
+        g.add(put(bx(.22,.26,.20,M.pale),x,1.13,z));
+        g.add(put(bx(.28,.05,.26,M.grey),x,1.29,z));
+      }
+      g.add(put(cy(.40,.40,.05,14,M.grey),0,.01,0));
+      g.add(put(cy(.34,.34,.07,14,M.watr),0,.04,0));
+      const bm=new THREE.MeshStandardMaterial({color:SC('#4A463F'),roughness:.9});
+      const birds=[];
+      for(let i=0;i<5;i++){
+        const b=new THREE.Group();
+        b.add(bx(.11,.035,.05,bm));
+        const wg=new THREE.BoxGeometry(.17,.012,.06);
+        wg.translate(.085,0,0);
+        const wr=new THREE.Mesh(wg,bm); wr.castShadow=true;
+        const wg2=wg.clone(); wg2.translate(-.17,0,0);
+        const wl=new THREE.Mesh(wg2,bm); wl.castShadow=true;
+        b.add(wr); b.add(wl);
+        b.userData={wl:wl,wr:wr,r:.85+i*.20,h:1.55+i*.20,sp:.42+i*.07,ph:i*1.31};
+        g.add(b); birds.push(b);
+      }
+      return function(t){ birds.forEach(function(b){
+        const d=b.userData, a=t*d.sp+d.ph;
+        b.position.set(Math.cos(a)*d.r, d.h+Math.sin(a*2.1)*.16, Math.sin(a)*d.r);
+        b.rotation.y=-a;
+        const f=Math.sin(t*6.5+d.ph)*.62;
+        d.wr.rotation.z=f; d.wl.rotation.z=-f;
+      });};
+    },
+    insect:function(g){                                   // зөгий үүр ба цэцгийн хооронд
+      pad(g,1.05,0,-.30); garden(g,22,1.20,2.05);
+      for(let i=0;i<3;i++){
+        const x=(i-1)*.62, z=-.30;
+        for(let k=0;k<3;k++) g.add(put(bx(.34,.13,.30,M.pale),x,.07+k*.14,z));
+        g.add(put(bx(.38,.04,.10,M.wood),x,.02,z+.19));
+        g.add(put(bx(.40,.05,.34,M.grey),x,.50,z));
+      }
+      for(let i=0;i<9;i++){const a=i*.7+1, r=.35+(i%3)*.22;
+        g.add(put(cy(.015,.015,.22,4,M.leaf),Math.cos(a)*r,.11,.55+Math.sin(a)*r*.5));}
+      const bm=new THREE.MeshBasicMaterial({color:SC('#6A5C2E')});
+      const bees=[];
+      for(let i=0;i<5;i++){
+        const b=new THREE.Mesh(new THREE.SphereGeometry(.022,6,5),bm);
+        b.userData={ph:i*.9, sp:.9+i*.11, r:.30+(i%4)*.18};
+        g.add(b); bees.push(b);
+      }
+      return function(t){ bees.forEach(function(b){
+        const d=b.userData, a=t*d.sp+d.ph;
+        b.position.set(Math.cos(a)*d.r+Math.sin(t*2+d.ph)*.12,
+                       .22+Math.abs(Math.sin(a*.7))*.34,
+                       .10+Math.sin(a)*d.r+Math.cos(t*1.7+d.ph)*.12);
+      });};
+    },
+    community:function(g){                                // гэр, тоглоомын талбай, хүүхдүүд
+      pad(g,.52,-.45,-.20); pad(g,.40,.60,.28); garden(g,20,1.35,2.05);
+      const tops=[];
+      [[-.45,-.20,.40],[.60,.28,.30]].forEach(function(p){
+        g.add(put(cy(p[2],p[2],.30,16,M.pale),p[0],.15,p[1]));
+        g.add(put(cy(p[2]*1.06,.04,.26,16,M.grey),p[0],.43,p[1]));
+        g.add(put(bx(.12,.20,.02,M.clay),p[0],.10,p[1]+p[2]));
+        tops.push([p[0],p[1]]);
+      });
+      // модон ширээ, сандал
+      g.add(put(bx(.62,.05,.34,M.wood2),-.10,.34,.95));
+      for(let i=0;i<2;i++){
+        g.add(put(bx(.60,.04,.14,M.wood2),-.10,.19,.95+(i?.30:-.30)));
+        g.add(put(bx(.05,.19,.05,M.wood),-.34,.09,.95+(i?.30:-.30)));
+        g.add(put(bx(.05,.19,.05,M.wood),.14,.09,.95+(i?.30:-.30)));
+      }
+      // ганхуур
+      const sw=new THREE.Group(); sw.position.set(1.05,0,-.70); g.add(sw);
+      sw.add(put(bx(.05,.90,.05,M.wood),-.34,.45,0));
+      sw.add(put(bx(.05,.90,.05,M.wood),.34,.45,0));
+      sw.add(put(bx(.78,.05,.05,M.wood),0,.90,0));
+      const seat=new THREE.Group(); seat.position.set(0,.90,0); sw.add(seat);
+      seat.add(put(bx(.03,.52,.03,M.wood),-.11,-.26,0));
+      seat.add(put(bx(.03,.52,.03,M.wood),.11,-.26,0));
+      seat.add(put(bx(.28,.04,.14,M.wood2),0,-.52,0));
+      // хүүхдүүд
+      const kidM=[M.clay,M.lime,M.watr,M.pale];
+      const kids=[];
+      for(let i=0;i<4;i++){
+        const k=new THREE.Group();
+        k.add(put(bx(.14,.20,.10,kidM[i%4]),0,.30,0));
+        k.add(put(sp(.09,M.skin),0,.47,0));
+        const lg1=bx(.05,.20,.05,M.wood); lg1.geometry.translate(0,-.10,0);
+        const lg2=bx(.05,.20,.05,M.wood); lg2.geometry.translate(0,-.10,0);
+        lg1.position.set(-.04,.20,0); lg2.position.set(.04,.20,0);
+        k.add(lg1); k.add(lg2);
+        const ar1=bx(.04,.17,.04,kidM[i%4]); ar1.geometry.translate(0,-.085,0);
+        const ar2=bx(.04,.17,.04,kidM[i%4]); ar2.geometry.translate(0,-.085,0);
+        ar1.position.set(-.10,.40,0); ar2.position.set(.10,.40,0);
+        k.add(ar1); k.add(ar2);
+        k.scale.setScalar(1.15);
+        g.add(k);
+        kids.push({k:k,lg1:lg1,lg2:lg2,ar1:ar1,ar2:ar2,
+          r:.55+i*.16,sp:.85+i*.18,ph:i*1.6});
+      }
+      const puffs=[];
+      tops.forEach(function(p,ti){
+        for(let i=0;i<3;i++){
+          const m=new THREE.MeshBasicMaterial({color:SC('#E8E4D8'),transparent:true,opacity:0});
+          const s=new THREE.Mesh(new THREE.SphereGeometry(.07,7,6),m);
+          s.userData={x:p[0],z:p[1],ph:(ti*3+i)/6};
+          g.add(s); puffs.push(s);
+        }
+      });
+      return function(t){
+        puffs.forEach(function(s){
+          const u=((t*.3+s.userData.ph)%1);
+          s.position.set(s.userData.x+u*.10,.48+u*.85,s.userData.z-u*.06);
+          s.scale.setScalar(.5+u*1.6);
+          s.material.opacity=.42*(1-u)*(1-u*.4);
+        });
+        seat.rotation.x=Math.sin(t*1.55)*.44;
+        kids.forEach(function(d,i){
+          const a=t*d.sp+d.ph;
+          d.k.position.set(Math.cos(a)*d.r-.10,Math.abs(Math.sin(t*4.4+d.ph))*.09,
+                           Math.sin(a)*d.r+.30);
+          d.k.rotation.y=-a-Math.PI/2;
+          const s0=Math.sin(t*4.4+d.ph);
+          d.lg1.rotation.x=s0*.85; d.lg2.rotation.x=-s0*.85;
+          d.ar1.rotation.x=-s0*.75; d.ar2.rotation.x=s0*.75;
+        });
+      };
+    }
+  };
+
+  hexes.forEach(function(h){
+    if(!h.c.themed) return;
+    const g=new THREE.Group();
+    g.position.set(h.x,h.top,h.z);
+    g.rotation.y=(h.i%6)*.4;
+    const fn=BUILD[h.c.cat]?BUILD[h.c.cat](g):null;
+    g.scale.setScalar(.001);
+    scene.add(g);
+    INFRA.push({g:g,anim:fn,cell:h.c});
+  });
+
+  /* ==== ТАЛБАЙ ДАЯАРХ ХӨДӨЛГӨӨН ====
+     Долоон нүдэн доторх жижиг хөдөлгөөн холоос харагдахгүй. Тиймээс
+     бүх талбайг хамарсан дөрвөн үзэгдэл нэмнэ. */
+  const find=function(code){
+    for(let i=0;i<hexes.length;i++) if(hexes[i].c.code===code) return hexes[i];
+    return hexes[0];
+  };
+  const HR=find('L-04');
+
+  /* 1. Хиймэл дагуулын хяналт — судалгааны цэгээс тархах сканнердах цагираг */
+  const swMat=new THREE.MeshBasicMaterial({color:SC('#9CC24A'),transparent:true,
+    opacity:0,side:THREE.DoubleSide});
+  const sweep=new THREE.Mesh(new THREE.RingGeometry(.965,1,96),swMat);
+  sweep.rotation.x=-Math.PI/2; sweep.position.set(HR.x,7.5,HR.z);
+  sweep.frustumCulled=false; scene.add(sweep);
+  const beamMat=new THREE.MeshBasicMaterial({color:SC('#9CC24A'),transparent:true,opacity:.16});
+  const beam=new THREE.Mesh(new THREE.CylinderGeometry(.10,.34,26,10,1,true),beamMat);
+  beam.position.set(HR.x,13+HR.top,HR.z); scene.add(beam);
+
+  /* 3. Шувууны сүрэг — цөөхөн, өндөрт */
+  const bMat=new THREE.MeshStandardMaterial({color:SC('#454138'),roughness:.9});
+  const FLOCK=[];
+  for(let i=0;i<4;i++){
+    const b=new THREE.Group();
+    b.add(bx(.62,.14,.22,bMat));
+    const wg=new THREE.BoxGeometry(1.05,.06,.34); wg.translate(.52,0,0);
+    const wr=new THREE.Mesh(wg,bMat);
+    const wg2=new THREE.BoxGeometry(1.05,.06,.34); wg2.translate(-.52,0,0);
+    const wl=new THREE.Mesh(wg2,bMat);
+    b.add(wr); b.add(wl);
+    b.userData={wl:wl,wr:wr,r:12+((i*9)%20),h:10+((i*4)%7),sp:.13+((i%4)*.03),ph:i*1.9};
+    b.visible=false; scene.add(b); FLOCK.push(b);
+  }
+
+  /* 3б. Говийн амьтад — нүдний гадаргуу дээр, нам түвшинд.
+        Талбай хашаатай тул зээр, аргаль, хулан ороход хүндрэлтэй.
+        Тиймээс тоос хүртээгч, туулай, үнэг — бодит хэмжилтийн зүйлүүд. */
+  const sandM=new THREE.MeshStandardMaterial({color:SC('#C2B194'),roughness:.95});
+  const foxM =new THREE.MeshStandardMaterial({color:SC('#A87A50'),roughness:.9});
+  const WILD=[];
+  const hostCells=hexes.filter(function(h){
+    return !h.c.themed&&(h.c.sizeKey==='XL'||h.c.sizeKey==='L'||h.c.sizeKey==='M');});
+
+  function addWild(o){WILD.push(o);scene.add(o.g);o.g.visible=false;}
+
+  // туулай — бөөрөнхий бие, урт чих, үсрэх хөл
+  for(let i=0;i<3;i++){
+    const hc=hostCells[(i*11+3)%hostCells.length], g=new THREE.Group();
+    const body=sp(.16,sandM); body.scale.set(1.15,.84,.80); body.position.set(0,.16,0); g.add(body);
+    const rump=sp(.13,sandM); rump.scale.set(1,.98,.92); rump.position.set(-.13,.17,0); g.add(rump);
+    const head=sp(.095,sandM); head.position.set(.20,.22,0); g.add(head);
+    const snout=sp(.05,sandM); snout.scale.set(1.4,.8,.8); snout.position.set(.27,.19,0); g.add(snout);
+    const mkEar=function(z){const eg=new THREE.BoxGeometry(.035,.22,.018);
+      eg.translate(0,.11,0); const e=new THREE.Mesh(eg,sandM); e.castShadow=true;
+      e.position.set(.19,.27,z); g.add(e); return e;};
+    const earL=mkEar(-.045), earR=mkEar(.045);
+    const tail=sp(.05,M.pale); tail.position.set(-.25,.20,0); g.add(tail);
+    const mkLeg=function(x,w,ht){const lg=new THREE.BoxGeometry(w,ht,w*.9);
+      lg.translate(0,-ht/2,0); const l=new THREE.Mesh(lg,sandM); l.castShadow=true;
+      l.position.set(x,.15,0); g.add(l); return l;};
+    const legF=mkLeg(.11,.05,.13), legB=mkLeg(-.09,.07,.16);
+    g.scale.setScalar(1.5);
+    addWild({g:g,type:'hare',earL:earL,earR:earR,legF:legF,legB:legB,
+      cx:hc.x,cz:hc.z,top:hc.top,ang:i*1.7,
+      r:.5+((i*7)%5)*.16,sp:.55+((i%3)*.14),ph:i*1.7,ap:.50});
+  }
+  // үнэг — сунасан бие, шовх хошуу, сөөнгө сүүл, дөрвөн хөл
+  for(let i=0;i<1;i++){
+    const hc=hostCells[(i*23+9)%hostCells.length], g=new THREE.Group();
+    const body=sp(.20,foxM); body.scale.set(1.75,.60,.60); body.position.set(0,.30,0); g.add(body);
+    const chest=sp(.15,foxM); chest.scale.set(1,.95,.95); chest.position.set(.20,.30,0); g.add(chest);
+    const head=sp(.105,foxM); head.scale.set(1.1,.92,.92); head.position.set(.42,.35,0); g.add(head);
+    const snout=sp(.055,foxM); snout.scale.set(1.7,.75,.75); snout.position.set(.54,.32,0); g.add(snout);
+    g.add(put(sp(.022,bMat),.62,.32,0));
+    const ear=function(z){const e=cy(.0,.055,.10,4,foxM);
+      e.position.set(.38,.46,z); e.rotation.x=z*2.2; g.add(e);};
+    ear(-.055); ear(.055);
+    const tg=new THREE.BoxGeometry(.30,.11,.11); tg.translate(-.15,0,0);
+    const tail=new THREE.Mesh(tg,foxM); tail.castShadow=true;
+    tail.position.set(-.30,.32,0); g.add(tail);
+    const bush=sp(.085,foxM); bush.scale.set(1.5,1,1); bush.position.set(-.16,0,0); tail.add(bush);
+    const tip=sp(.055,M.pale); tip.position.set(-.29,0,0); tail.add(tip);
+    const mkLeg=function(x,z){const lg=new THREE.BoxGeometry(.055,.24,.055);
+      lg.translate(0,-.12,0); const l=new THREE.Mesh(lg,foxM); l.castShadow=true;
+      l.position.set(x,.26,z); g.add(l); return l;};
+    const lFL=mkLeg(.22,-.07), lFR=mkLeg(.22,.07), lBL=mkLeg(-.18,-.07), lBR=mkLeg(-.18,.07);
+    g.scale.setScalar(1.5);
+    addWild({g:g,type:'fox',tail:tail,head:head,legs:[lFL,lFR,lBL,lBR],
+      cx:hc.x,cz:hc.z,top:hc.top,ang:0,
+      r:1.0,sp:.36,ph:0,ap:.70});
+  }
+  // эрвээхэй — жинхэнэ далавчны хэлбэртэй, нам зэрэг тогтворгүй нисэнэ
+  function wingGeo(sc,ex){
+    const s=new THREE.Shape();
+    s.moveTo(0,0);
+    s.bezierCurveTo(.06*sc,.13*sc,(.21+ex)*sc,.19*sc,(.27+ex)*sc,.07*sc);   // урд далавч
+    s.bezierCurveTo((.30+ex)*sc,-.01*sc,.19*sc,-.03*sc,.09*sc,-.01*sc);
+    s.bezierCurveTo(.02*sc,-.03*sc,-.09*sc,-.02*sc,-.13*sc,.05*sc);          // хойд далавч
+    s.bezierCurveTo(-.17*sc,.13*sc,-.06*sc,.17*sc,0,.10*sc);
+    s.lineTo(0,0);
+    const g=new THREE.ShapeGeometry(s,14);
+    g.rotateX(-Math.PI/2);
+    return g;
+  }
+  const wingIn=new THREE.MeshStandardMaterial({color:SC('#F1E9D6'),roughness:.8,
+    side:THREE.DoubleSide});
+  const wingEd=new THREE.MeshStandardMaterial({color:SC('#6E6455'),roughness:.85,
+    side:THREE.DoubleSide});
+  for(let i=0;i<8;i++){
+    const h=hostCells[(i*5+1)%hostCells.length], g=new THREE.Group();
+    g.add(put(bx(.13,.030,.030,bMat),.02,0,0));
+    g.add(put(bx(.02,.012,.06,bMat),.08,.02,0));                    // сахал
+    const mk=function(side){
+      const w=new THREE.Group();
+      const edge=new THREE.Mesh(wingGeo(1.06,.012),wingEd);
+      edge.position.y=-.004;
+      const inner=new THREE.Mesh(wingGeo(1,0),wingIn);
+      w.add(edge); w.add(inner);
+      w.scale.z=side;
+      return w;
+    };
+    const wr=mk(1), wl=mk(-1);
+    g.add(wr); g.add(wl);
+    g.scale.setScalar(1.9);
+    addWild({g:g,type:'fly',wl:wl,wr:wr,cx:h.x,cz:h.z,top:h.top,
+      r:.7+((i*3)%5)*.22,sp:.5+((i%5)*.13),ph:i*1.1,ap:.35});
+  }
+
+  /* 4. Судалгааны дрон — талбай дээгүүр нисэж зураглал авна */
+  const drone=new THREE.Group();
+  drone.add(bx(.55,.12,.55,M.pale));
+  for(let i=0;i<4;i++){
+    const a=i*Math.PI/2+.78;
+    drone.add(put(cy(.05,.05,.10,6,M.grey),Math.cos(a)*.42,.06,Math.sin(a)*.42));
+    drone.add(put(cy(.34,.34,.02,10,M.grey),Math.cos(a)*.42,.14,Math.sin(a)*.42));
+  }
+  const dLight=new THREE.Mesh(new THREE.SphereGeometry(.13,8,6),
+    new THREE.MeshBasicMaterial({color:SC('#C6D96A')}));
+  dLight.position.y=-.14; drone.add(dLight);
+  drone.visible=false; scene.add(drone);
+
+  /* 5. Нэбха — мод бүрийн суурьт хуримтлах элсэн товгор */
+  const nebGeo=new THREE.ConeGeometry(1,1,10); nebGeo.translate(0,.5,0);
+  const nebIM=new THREE.InstancedMesh(nebGeo,
+    new THREE.MeshStandardMaterial({color:SC('#CBBD9C'),roughness:1}),TREES.length);
+  nebIM.receiveShadow=true; nebIM.castShadow=true; nebIM.frustumCulled=false;
+  scene.add(nebIM);
+
+  /* 6. Зөөгдөх элс — талбайн гадуур урсах салхины зурвас.
+        Ой боловсрох тусам сулран, салхи саарсныг харуулна. */
+  const windIM=new THREE.InstancedMesh(new THREE.BoxGeometry(3.2,.09,.11),
+    new THREE.MeshBasicMaterial({color:SC('#E6DABE'),transparent:true,opacity:.55}),150);
+  windIM.frustumCulled=false; scene.add(windIM);
+
+  SITE={sweep:sweep,beam:beam,neb:nebIM,wind:windIM,
+        flock:FLOCK,wild:WILD,drone:drone,dLight:dLight,hr:HR};
+
+  ray=new THREE.Raycaster(); pointer=new THREE.Vector2(); clock=new THREE.Clock();
+  addEventListener('resize',onResize);
+  const el=rend.domElement;
+  el.addEventListener('pointerdown',function(e){drag={x:e.clientX};moved=0;});
+  addEventListener('pointerup',function(){drag=null;});
+  addEventListener('pointermove',function(e){
+    if(drag){const dx=e.clientX-drag.x;dragTheta+=dx*.004;moved+=Math.abs(dx);drag.x=e.clientX;}
+  });
+  el.addEventListener('click',function(e){ if(moved<6) pick(e); });
+
+  new IntersectionObserver(function(en){visible=en[0].isIntersecting;},{threshold:0})
+    .observe(stageEl);
+  /* Наалдмал хэсэг дэлгэцийг бүрэн эзэлмэгц тоглуулалт эхэлнэ.
+     IntersectionObserver нь scroll эвентээс хамаарахгүй — зарим хөтөч,
+     ялангуяа гар утсанд window руу scroll эвент ирэхгүй байдаг. */
+  new IntersectionObserver(function(en){
+    if(en[0].intersectionRatio>=.9) autoStart();
+  },{threshold:[.9,.99]}).observe(stickyEl);
+
+  document.getElementById('hxBoot').classList.add('gone');
+  animate();
+}
+function onResize(){const s=size();
+  cam.aspect=s.w/s.h;cam.updateProjectionMatrix();rend.setSize(s.w,s.h,false);}
+function pick(e){
+  const r=rend.domElement.getBoundingClientRect();
+  pointer.x=((e.clientX-r.left)/r.width)*2-1;
+  pointer.y=-((e.clientY-r.top)/r.height)*2+1;
+  ray.setFromCamera(pointer,cam);
+  const hit=ray.intersectObjects(hexes.map(function(h){return h.mesh;}));
+  if(hit.length){const h=hexes.filter(function(x){return x.mesh===hit[0].object;})[0];
+    if(h) openCell(h.c);}
+}
+function animate(){
+  requestAnimationFrame(animate);
+  if(!visible) return;
+  const t=clock.getElapsedTime();
+  DT=Math.min(.05,t-lastT); lastT=t;
+
+  autoStart();                       // скролл болоогүй тохиолдлын нөөц шалгалт
+  if(auto){
+    beatF+=DT*(BEATS.length-1)/PLAY_SECS;
+    if(beatF>=BEATS.length-1){ beatF=BEATS.length-1; setPlay(false); }
+    applyBeat();
+  }
+
+  const i0=Math.min(BEATS.length-1,Math.floor(beatF)),
+        i1=Math.min(BEATS.length-1,i0+1), f=beatF-i0;
+  const A=BEATS[i0],B=BEATS[i1];
+  camT.r=A.cam.r+(B.cam.r-A.cam.r)*f;
+  camT.theta=A.cam.theta+(B.cam.theta-A.cam.theta)*f;
+  camT.phi=A.cam.phi+(B.cam.phi-A.cam.phi)*f;
+  camS.r+=(camT.r-camS.r)*.06;
+  camS.theta+=(camT.theta-camS.theta)*.06;
+  camS.phi+=(camT.phi-camS.phi)*.06;
+  const th=camS.theta+dragTheta+(REDUCED?0:t*.006);
+  cam.position.set(camS.r*Math.sin(camS.phi)*Math.cos(th),
+                   camS.r*Math.cos(camS.phi)+2,
+                   camS.r*Math.sin(camS.phi)*Math.sin(th));
+  cam.lookAt(0,.8,0);
+
+  const gT=A.g+(B.g-A.g)*f;
+  growth+=(gT-growth)*.08;
+  hexes.forEach(function(h){
+    h.mat.color.copy(SAND).lerp(GREEN,Math.min(1,
+      h.c.themed?Math.max(infra*.85,growth*1.1):growth*1.1));
+  });
+  // дэд бүтэц тарилтаас өмнө баригдана
+  const iT=Math.max(0,Math.min(1,(beatF-1)/1));
+  infra+=(iT*iT*(3-2*iT)-infra)*.1;
+  INFRA.forEach(function(o){
+    o.g.scale.setScalar(Math.max(.001,infra*1.26));
+    if(o.anim&&infra>.06&&!REDUCED) o.anim(t);
+  });
+
+  /* ---- талбай даяарх үзэгдлүүд ---- */
+  if(SITE){
+    const monOn=Math.max(0,Math.min(1,(growth-.15)/.35));
+    SITE.sweep.visible=SITE.beam.visible=monOn>.02;
+    if(monOn>.02){
+      const u=(t*.16)%1;
+      SITE.sweep.scale.setScalar(2+u*44);
+      SITE.sweep.material.opacity=.55*monOn*(1-u)*(1-u);
+      SITE.beam.material.opacity=.13*monOn*(.6+.4*Math.sin(t*2.2));
+    }
+
+    /* говийн амьтад — тоос хүртээгч эхэлж, дараа нь туулай, эцэст нь үнэг */
+    SITE.wild.forEach(function(a){
+      const sb=(a.type==='fly')?SEASONS[season].bug:(SEASONS[season].snow?.5:1);
+      const on=Math.max(0,Math.min(1,(growth-a.ap)/.18))*sb;
+      a.g.visible=on>.04;
+      if(!a.g.visible) return;
+      // хааяа зогсож эргэн тойрноо ажиглана
+      const rest=Math.sin(t*.21+a.ph*1.7)>.62?0:1;
+      a.ang+=DT*a.sp*rest;
+      const ang=a.ang;
+      const x=a.cx+Math.cos(ang)*a.r, z=a.cz+Math.sin(ang)*a.r;
+      const face=-ang-Math.PI/2;
+      if(a.type==='hare'){
+        const ph=t*3.2+a.ph, hop=Math.max(0,Math.sin(ph))*rest;
+        a.g.position.set(x,a.top+hop*.34,z);
+        a.g.rotation.set(-Math.cos(ph)*.34*rest,face,Math.sin(ph)*.09*rest);
+        a.earL.rotation.x=-.22-hop*.95; a.earR.rotation.x=-.22-hop*.95;
+        a.legF.rotation.x= hop*1.35; a.legB.rotation.x=-hop*1.55;
+      }else if(a.type==='fox'){
+        const ph=t*5.2+a.ph;
+        a.g.position.set(x,a.top+Math.abs(Math.sin(ph))*.035*rest,z);
+        a.g.rotation.set(0,face,0);
+        for(let k=0;k<4;k++)
+          a.legs[k].rotation.x=Math.sin(ph+(k%2?Math.PI:0)+(k>1?Math.PI:0))*.85*rest;
+        a.tail.rotation.y=Math.sin(t*2.1+a.ph)*.45;
+        a.tail.rotation.z=.20+Math.sin(t*1.6)*.10;
+        a.head.rotation.y=Math.sin(t*.7+a.ph)*.35*(1-rest*.6);
+      }else{
+        const jx=Math.sin(t*2.7+a.ph)*Math.sin(t*1.13+a.ph*2)*.85;
+        const jz=Math.cos(t*2.1+a.ph*1.4)*Math.sin(t*.83+a.ph)*.85;
+        a.g.position.set(x+jx,a.top+.85+Math.sin(t*3.4+a.ph)*.22+Math.sin(t*1.1+a.ph)*.30,z+jz);
+        const vx=-Math.sin(ang)*a.r+Math.cos(t*2.7+a.ph)*.6;
+        const vz= Math.cos(ang)*a.r-Math.sin(t*2.1+a.ph*1.4)*.6;
+        a.g.rotation.set(Math.sin(t*2.4+a.ph)*.24,Math.atan2(-vz,vx),Math.sin(t*1.9+a.ph)*.30);
+        const s0=Math.sin(t*10+a.ph);
+        const f=Math.pow(Math.abs(s0),.55)*(s0<0?-.35:1.15);
+        a.wr.rotation.x=-f; a.wl.rotation.x=f;
+      }
+      a.g.scale.setScalar((a.type==='fly'?1.7:1.5)*(.5+on*.5));
+    });
+
+    const flyOn=Math.max(0,Math.min(1,(growth-.62)/.3));
+    SITE.flock.forEach(function(b,i){
+      b.visible=flyOn>.05;
+      if(!b.visible) return;
+      const d=b.userData, a=t*d.sp+d.ph;
+      b.position.set(Math.cos(a)*d.r, d.h+Math.sin(a*2.3+i)*1.4, Math.sin(a)*d.r);
+      b.rotation.y=-a; b.rotation.z=Math.sin(a*2.3+i)*.22;
+      const f=Math.sin(t*3.4+d.ph)*.75;
+      d.wr.rotation.z=f; d.wl.rotation.z=-f;
+      b.scale.setScalar(.5+flyOn*.5);
+    });
+
+    /* салхи: эхэндээ хүчтэй, ой боловсрох тусам саарна */
+    const windOn=(1-growth*.72)*Math.max(0,Math.min(1,growth*6));
+    SITE.wind.visible=windOn>.03&&!REDUCED;
+    if(SITE.wind.visible){
+      SITE.wind.material.opacity=.6*windOn;
+      for(let i=0;i<150;i++){
+        const lane=(i%2?1:-1)*(31+((i*7)%30));
+        const y=1.0+((i*5)%9)*.7;
+        const x=(((t*(9+(i%5)*2.5)+i*11)%124)-62);
+        dummy.position.set(x,y,lane+Math.sin(t*.5+i)*1.2);
+        dummy.rotation.set(0,0,0);
+        dummy.scale.set(.6+((i*3)%5)*.28,1,1);
+        dummy.updateMatrix(); SITE.wind.setMatrixAt(i,dummy.matrix);
+      }
+      SITE.wind.instanceMatrix.needsUpdate=true;
+    }
+
+    const drOn=infra>.5&&growth>.05;
+    SITE.drone.visible=drOn;
+    if(drOn){
+      const a=t*.22;
+      SITE.drone.position.set(Math.cos(a)*20,16.5+Math.sin(t*.5)*1.6,Math.sin(a)*20);
+      SITE.drone.rotation.y=-a+Math.PI/2;
+      SITE.dLight.visible=Math.sin(t*4)>0;
+    }
+  }
+
+  // мод бүрийн ургалт
+  const neb=Math.max(0,Math.min(1,(growth-.40)/.40));   // 3–7 дахь жилээс эхэлнэ
+  TREES.forEach(function(tr,i){
+    const gi=Math.max(0,Math.min(1,(growth-tr.off)/(1-tr.off)));
+    tr.e=gi*gi*(3-2*gi);
+    if(SITE&&SITE.neb){
+      const e=neb*tr.e;
+      const rr=Math.max(.001,.66*tr.H*e), hh2=Math.max(.001,.30*tr.H*e);
+      dummy.position.set(tr.x,tr.base,tr.z);
+      dummy.rotation.set(0,tr.sway,0);
+      dummy.scale.set(rr,hh2,rr*.84);
+      dummy.updateMatrix(); SITE.neb.setMatrixAt(i,dummy.matrix);
+    }
+  });
+  if(SITE&&SITE.neb) SITE.neb.instanceMatrix.needsUpdate=true;
+  // иш ба мөчир
+  TPARTS.forEach(function(p,i){
+    const tr=TREES[p.t], H=Math.max(.001,tr.H*tr.e);
+    dummy.position.set(tr.x,tr.base+p.oy*H,tr.z);
+    dummy.rotation.set(p.tx,0,p.tz);
+    dummy.scale.set(p.rad*H,p.len*H,p.rad*H);
+    dummy.updateMatrix(); trunkIM.setMatrixAt(i,dummy.matrix);
+  });
+  // навчны давхарга — камер руу эргэсэн хавтгай
+  LPARTS.forEach(function(p,i){
+    const tr=TREES[p.t], H=Math.max(.001,tr.H*tr.e);
+    const swy=REDUCED?0:Math.sin(t*.62+tr.sway+p.ph)*.045*tr.e;
+    dummy.position.set(tr.x+p.ox*H+swy, tr.base+p.oy*H, tr.z+p.oz*H);
+    dummy.quaternion.copy(cam.quaternion);
+    const s=p.r*H*2.1*SEASONS[season].leaf;
+    dummy.scale.set(s,s*.9,1);
+    dummy.updateMatrix(); leafIM.setMatrixAt(i,dummy.matrix);
+  });
+  trunkIM.instanceMatrix.needsUpdate=true; leafIM.instanceMatrix.needsUpdate=true;
+  rend.render(scene,cam);
+}
+
+/* ---------- цаг хугацаа: автомат тоглуулалт, эсвэл гараар ----------
+   Тайзыг 5000 px гүйлгэж байж бүтэн дүр зураг гарч ирдэг байсан нь хүнд
+   байсан тул дүр зураг наалдмагц өөрөө тоглож эхэлнэ. Гараар оролцмогц
+   (гулсагч, он дарах) автомат зогсоно. */
+const PLAY_SECS=14;
+let manual=false, auto=false, played=false, TL=null;
+function setPlay(on){
+  auto=on;
+  if(!TL||!TL.play) return;
+  TL.play.textContent='';
+  TL.play.insertAdjacentHTML('beforeend','<i></i>');
+  TL.play.appendChild(document.createTextNode(
+    on ? 'Pause' : (beatF>=BEATS.length-1.01 ? 'Replay' : 'Play')));
+  TL.play.className='hx-play'+(on?' playing':'');
+}
+function applyBeat(){
+  const p=beatF/(BEATS.length-1);
+  document.getElementById('hxMeter').style.width=(p*100)+'%';
+  const i=Math.round(beatF), b=BEATS[i];
+  document.getElementById('hxYearN').textContent=b.y;
+  document.getElementById('hxYearL').textContent=b.l;
+  setCap(i);
+  if(TL){
+    if(!manual) TL.rng.value=beatF;
+    for(let k=0;k<TL.btns.length;k++) TL.btns[k].className=(k===i?'on':'');
+  }
+}
+(function(){
+  const host=document.getElementById('hxTimeIn');
+  if(!host) return;
+  let s='<div class="lb"><span>Timeline &amp; season</span>'+
+        '<button type="button" class="hx-play"><i></i>Play</button></div>'+
+        '<input class="tl" type="range" min="0" max="'+(BEATS.length-1)+
+        '" step="0.01" value="0"><div class="tks">';
+  for(let i=0;i<BEATS.length;i++) s+='<button type="button" data-i="'+i+'">'+BEATS[i].y+'</button>';
+  host.innerHTML=s+'</div>';
+  const rng=host.querySelector('.tl'), btns=host.querySelectorAll('.tks button');
+  TL={rng:rng,btns:btns,play:host.querySelector('.hx-play')};
+  TL.play.onclick=function(){
+    if(auto){ setPlay(false); return; }
+    played=true; manual=false;
+    if(beatF>=BEATS.length-1.01) beatF=0;
+    setPlay(true);
+  };
+  rng.addEventListener('input',function(){
+    manual=true; played=true; setPlay(false);
+    beatF=parseFloat(rng.value); applyBeat();
+  });
+  for(let i=0;i<btns.length;i++) btns[i].onclick=function(){
+    manual=true; played=true; setPlay(false);
+    beatF=parseFloat(this.getAttribute('data-i'));
+    rng.value=beatF; applyBeat();
+  };
+  let ss='<div class="ss">';
+  for(let i=0;i<SEASONS.length;i++) ss+='<button type="button" data-s="'+i+'">'+SEASONS[i].n+'</button>';
+  host.insertAdjacentHTML('beforeend',ss+'</div>');
+  const sb=host.querySelectorAll('.ss button');
+  for(let i=0;i<sb.length;i++) sb[i].onclick=function(){
+    season=parseInt(this.getAttribute('data-s'),10); applySeason();
+  };
+})();
+function applySeason(){
+  const S=SEASONS[season];
+  if(paintLeaves) paintLeaves();
+  if(sunL){ sunL.color.copy(SC(S.sun)); sunL.intensity=S.si; }
+  if(hemiL) hemiL.intensity=S.hemi;
+  if(scene&&scene.fog) scene.fog.color.copy(SC(S.fog));
+  if(groundM) groundM.color.copy(SC('#CBBEA0')).lerp(SNOW,S.snow*.72);
+  GREEN.copy(SC(S.grn));
+  const bs=document.querySelectorAll('#hxTimeIn .ss button');
+  for(let i=0;i<bs.length;i++) bs[i].className=(i===season?'on':'');
+}
+function autoStart(){
+  /* Дүр зураг дэлгэцэнд бүрэн наалдмагц нэг удаа өөрөө эхэлнэ.
+     Энэ шалгалт скроллын боловсруулагчид байх ёстой — rAF давталтад
+     байрлуулбал мобайл дээр rAF удаашрахад эхлэхгүй байсан. */
+  if(played||REDUCED||!stageEl) return false;
+  const r=stageEl.getBoundingClientRect();
+  if(r.top>4||r.bottom<innerHeight) return false;
+  played=true; manual=false; beatF=0; setPlay(true); applyBeat();
+  return true;
+}
+function onScroll(){
+  if(autoStart()) return;
+  /* Тоглуулалт нэг удаа эхэлмэгц скролл цаг хугацааг жолоодохоо болино —
+     эс бөгөөс хоёулаа зэрэг татаж, дүр зураг ухарна. */
+  if(auto||played) return;
+  const r=stageEl.getBoundingClientRect();
+  const span=Math.max(1,r.height-innerHeight);
+  const p=Math.max(0,Math.min(1,-r.top/span));
+  manual=false;
+  beatF=p*(BEATS.length-1);
+  applyBeat();
+}
+addEventListener('scroll',onScroll,{passive:true});
+addEventListener('resize',onScroll);
+
+onScroll();
+if(window.THREE){ init3D(); }
+else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
+})();
+
+/* ══════════ ӨМНӨХ БҮТЭЭЛҮҮД — хуваалцсан хөдөлгүүр ══════════
+   Бүтээл бүрийн хэлбэрийг постерын агаарын зурагт тулгуурлан
+   зурган маск болгож, будагдсан цэг бүр дээр мод тарина. */
+(function projects(){
+  if(!window.THREE) return;
+  const SCp=function(hex){return new THREE.Color(hex).convertSRGBToLinear();};
+  const RED=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function maskPoints(draw,W,H,step,scale){
+    const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+    const g=cv.getContext('2d');
+    g.fillStyle='#ffffff'; g.fillRect(0,0,W,H);
+    g.fillStyle='#000000'; g.strokeStyle='#000000';
+    g.lineJoin='round'; g.lineCap='round';
+    draw(g,W,H);
+    const d=g.getImageData(0,0,W,H).data, pts=[];
+    for(let y=0;y<H;y+=step)for(let x=0;x<W;x+=step){
+      if(d[(y*W+x)*4]<120){
+        const j1=(Math.sin(x*12.9+y*7.7)*43758.5)%1, j2=(Math.sin(x*3.3+y*19.1)*12345.6)%1;
+        pts.push({x:(x-W/2)*scale+j1*scale*step*.7,
+                  z:(y-H/2)*scale+j2*scale*step*.7});
+      }
+    }
+    return pts;
+  }
+
+
+  /* Үсгийг зузаан зураасаар зурна. A, M, N зэрэг үсэгт налуу зураас
+     заавал хэрэгтэй — зөвхөн босоо, хэвтээ тэгш өнцөгтөөр зурвал таних
+     боломжгүй болно. */
+  function glyph(g,ch,x,y,w,hh,t){
+    g.lineWidth=t; g.lineCap='butt'; g.lineJoin='miter';
+    /* 90°-ийн залгаас (харьцаа 1.41) хурц хэвээр, түүнээс хурц нь налуу
+       таслагдана — M-ийн дундах "V"-гээс шовх ирмэг гарахгүй. */
+    g.miterLimit=1.6;
+    const L=x+t/2, R=x+w-t/2, T=y+t/2, Bm=y+hh-t/2, Md=y+hh/2, Cx=x+w/2;
+    const p=function(a){g.beginPath();g.moveTo(a[0][0],a[0][1]);
+      for(let i=1;i<a.length;i++)g.lineTo(a[i][0],a[i][1]);g.stroke();};
+    switch(ch){
+      case 'B': p([[L,Bm],[L,T],[R,T],[R,Md],[L,Md]]);
+                p([[L,Md],[R,Md],[R,Bm],[L,Bm]]); break;
+      case 'E': p([[R,T],[L,T],[L,Bm],[R,Bm]]); p([[L,Md],[R-t*.5,Md]]); break;
+      case 'H': p([[L,T],[L,Bm]]); p([[R,T],[R,Bm]]); p([[L,Md],[R,Md]]); break;
+      case 'U': p([[L,T],[L,Bm],[R,Bm],[R,T]]); break;
+      case 'M': p([[L,Bm],[L,T],[Cx,y+hh*.60],[R,T],[R,Bm]]); break;
+      /* Талбай дээрх үсэг нь тэгш оройтой блок хэлбэртэй — шовх орой биш */
+      case 'A': p([[L,Bm],[L,T],[R,T],[R,Bm]]);
+                p([[L,y+hh*.60],[R,y+hh*.60]]); break;
+      /* N — гурван тусдаа зураас. Нэг тасралтгүй шугамаар зурвал зүүн дээд
+         ба баруун доод булангийн хурц өнцөгт үсгийн хүрээнээс гарсан
+         шовх ирмэг үүсдэг. */
+      case 'N': p([[L,T],[L,Bm]]); p([[R,T],[R,Bm]]);
+                p([[L,T],[R,Bm]]); break;
+      case 'T': p([[L,T],[R,T]]); p([[Cx,T],[Cx,Bm]]); break;
+      case 'C': p([[R,T],[L,T],[L,Bm],[R,Bm]]); break;
+      default: break;
+    }
+  }
+  function word(g,s,x,y,w,hh,t,gap){
+    const n=s.length, cw=(w-gap*(n-1))/n;
+    for(let i=0;i<n;i++) if(s[i]!==' ') glyph(g,s[i],x+i*(cw+gap),y,cw,hh,t);
+  }
+
+  /* Бүтээл бүрийн жинхэнэ хэмжээ (1 px ≈ 1 м):
+     BE HUMAN — 300 × 100 м тэгш өнцөгт = 30,000 м²
+     ART N TECH — 300 м талтай зөв гурвалжин = 38,971 м² */
+  const MASK={
+    /* BE HUMAN-д үсгийн нарийн ялгааг гаргахын тулд 2 м алхам —
+       жинхэнэ талбайд 21,857 мод буюу ~1.2 м зайтай тарьсан. */
+    behuman:{W:330,H:125,step:2,scale:.200},
+    artntech:{W:316,H:280,step:3,scale:.200}
+  };
+
+  /* ---- хэлбэрүүд: рендер зургаас хуулсан ---- */
+  const SHAPES={
+    /* BE HUMAN — урт нарийн тэгш өнцөгт зурвас, дотор нь том блок үсэг.
+       Постер дээр зурвасын хүрээ модоор тодрон, үсэг бүтнээрээ тарьсан. */
+    behuman:function(g,W,H){
+      const x0=W*.045,x1=W*.955,y0=H*.10,y1=H*.90;
+      const bt=Math.max(3,W*.024);                 // хүрээний тарилт ≈ 8 м
+      g.fillStyle='#000000'; g.fillRect(x0,y0,x1-x0,y1-y0);
+      g.fillStyle='#ffffff'; g.fillRect(x0+bt,y0+bt,(x1-x0)-2*bt,(y1-y0)-2*bt);
+      g.fillStyle='#000000'; g.strokeStyle='#000000';
+      // хүрээ ба үсгийн хооронд нүцгэн зурвас ≈ 7 м
+      const gp=bt*.90;
+      const ix0=x0+bt+gp, iy0=y0+bt+gp,
+            iw=(x1-x0)-2*(bt+gp), ih=(y1-y0)-2*(bt+gp);
+      // BE — дээд мөр, уртын 26–63% хооронд (агаарын зургаас хэмжсэн).
+      // Үсэг хоорондын зай ≈ 12 м — модны титэм хаагаад бөөгнөрөхөөс сэргийлнэ.
+      const bw=iw*.37, bh=ih*.38;
+      word(g,'BE',ix0+iw*.255,iy0,bw,bh,Math.max(3,bh*.22),bw*.12);
+      // HUMAN — доод мөр, хүрээний хоёр хажууд хүрнэ
+      const hw=iw, hh=ih*.54;
+      word(g,'HUMAN',ix0,iy0+ih-hh,hw,hh,Math.max(3,hh*.25),hw*.045);
+    },
+    /* ART N TECH — 300 м талтай зөв гурвалжин, бүхэлдээ эгнээгээр тарьсан.
+       Агаарын зургаас хэмжсэн бүтэц:
+         · төвдөө том НҮЦГЭН ДУГУЙ ТАЛБАЙ (r≈29 м), голд нь товгор
+         · түүнийг тойрсон ГАНЦ ТОМ ДУГУЙ ЗАМ (r≈69 м)
+         · гурван орой руу татсан салаа зам, тус бүрийн үзүүрт дугуй талбай
+         · нэг нь урт зам болж гурвалжны булангаар гарна
+       Зам, талбай нь тарилтгүй тул цагаанаар хусна. */
+    artntech:function(g,W,H){
+      const s=W*.95;                       // талын урт
+      const th=s*0.8660254;                // өндөр
+      const Cx=W*.50;
+      const ay=(H-th)/2, by=ay+th;         // орой ба сууриийн Y
+      const ax=Cx, bx=Cx+s/2, cx=Cx-s/2;
+      g.fillStyle='#000000';
+      g.beginPath(); g.moveTo(ax,ay); g.lineTo(bx,by); g.lineTo(cx,by); g.closePath(); g.fill();
+
+      // төв — гурвалжны хүндийн төв
+      const Cy=ay+th*(2/3);
+      g.fillStyle='#ffffff'; g.strokeStyle='#ffffff';
+      g.lineCap='round'; g.lineJoin='round';
+
+      const RING=s*.230;                       // дугуй зам, r ≈ 69 м
+      const HUB =s*.095;                       // төвийн нүцгэн талбай, r ≈ 29 м
+      const NODE=s*.330;                       // салаа замын үзүүр, r ≈ 99 м
+      const rays=[-Math.PI/2, Math.PI/6, Math.PI*5/6];   // гурван орой рүү
+
+      /* Гурван салаа зам адилхан: төвөөс гарч, дугуй замыг огтолж,
+         дугуй талбайгаа дайраад бага зэрэг цааш үргэлжилнэ.
+         Гурвалжны булангуудыг зүсэхгүй — зурагт орой нь бүтэн байдаг. */
+      g.lineWidth=Math.max(4,s*.020);
+      for(let i=0;i<3;i++){
+        const a=rays[i], len=NODE+s*.060;
+        g.beginPath(); g.moveTo(Cx,Cy);
+        g.lineTo(Cx+Math.cos(a)*len, Cy+Math.sin(a)*len); g.stroke();
+      }
+      // ганц том дугуй зам
+      g.lineWidth=Math.max(4,s*.020);
+      g.beginPath(); g.arc(Cx,Cy,RING,0,6.283); g.stroke();
+      // салаа замын үзүүр дэх гурван дугуй талбай
+      for(let i=0;i<3;i++){
+        const a=rays[i];
+        g.beginPath();
+        g.arc(Cx+Math.cos(a)*NODE, Cy+Math.sin(a)*NODE, s*.042, 0, 6.283); g.fill();
+      }
+      // төвийн том нүцгэн дугуй талбай — голдоо товгортой
+      g.beginPath(); g.arc(Cx,Cy,HUB,0,6.283); g.fill();
+    }
+  };
+
+  /* ---- он цаг: постерын огноо ба Martensite аудитын тарилтын огноо ---- */
+  const BEATS={
+    behuman:[
+      {f:1.00,th:1.571,ph:.32,g:0,y:'2020',l:'site preparation',n:'(01)',h:'Bare Gobi',
+       p:'The site was chosen and surveyed. Rainfall is about 100 mm a year; evaporation runs several times higher.'},
+      {f:.80,th:1.30,ph:.56,g:0,y:'2020',l:'fence and well',n:'(02)',h:'Groundwork',
+       p:'Fencing went up, a deep well was drilled and irrigation lines were laid. '+
+         'Building the conditions before planting is what decides survival.'},
+      {f:.64,th:1.62,ph:.66,g:.12,y:'2021',l:'planting · June',n:'(03)',h:'The message is written',
+       p:'<b>21,857 elms</b> planted in June 2021 — in the shape of letters, every row set out by hand.'},
+      {f:.54,th:1.95,ph:.76,g:.28,y:'2022',l:'first summer',n:'(04)',h:'First summer',
+       p:'The most fragile stage. Roots have not reached depth, so irrigation never stops. '+
+         'The letters green up and begin to read from orbit.'},
+      {f:.48,th:2.30,ph:.84,g:.44,y:'2023',l:'three summers',n:'(05)',h:'Three summers',
+       p:'A sapling that survives three summers usually stays alive. The risk window closes.'},
+      {f:.56,th:2.62,ph:.72,g:.62,y:'2024',l:'nebkha forms',n:'(06)',h:'The nebkha effect',
+       p:'Trees slow the wind and sand settles at their base, building a <b>nebkha mound</b>. '+
+         'Moisture accumulates and the soil improves. Butterflies and hares return.'},
+      {f:1.02,th:1.571,ph:.24,g:.80,y:'2026',l:'five years on',n:'(07)',h:'30,000 m²',
+       p:'Five years after planting, and included in the Martensite Analytica audit. '+
+         'This is where ART N TECH and HEXAGON began.'}],
+    artntech:[
+      {f:1.00,th:1.571,ph:.32,g:0,y:'2022',l:'site preparation',n:'(01)',h:'A triangular site',
+       p:'The form was chosen for the bond between Human, Sky and Earth — a 300 m equilateral triangle.'},
+      {f:.80,th:1.30,ph:.56,g:0,y:'2022',l:'solar system',n:'(02)',h:'10 kW of solar',
+       p:'A solar array was installed on site so irrigation could run independently. '+
+         'This is where art and technology meet.'},
+      {f:.64,th:1.62,ph:.66,g:.12,y:'2023',l:'planting · July',n:'(03)',h:'The sun circle',
+       p:'<b>36,000 elms</b> planted in July 2023 — the triangle filled, with an open centre, '+
+         'a ring road around it and three spurs to the corners.'},
+      {f:.54,th:1.95,ph:.76,g:.26,y:'2024',l:'first summer',n:'(04)',h:'First summer',
+       p:'The most fragile stage. The triangle greens up and reads clearly from the air.'},
+      {f:.48,th:2.30,ph:.84,g:.40,y:'2025',l:'second summer',n:'(05)',h:'Second summer',
+       p:'Canopies begin to spread. The ring and the spur roads stand out sharply.'},
+      {f:.56,th:2.62,ph:.72,g:.52,y:'2026',l:'third summer',n:'(06)',h:'Third summer',
+       p:'Past the three risky summers. <b>Nebkha mounds</b> start to build at the base of each tree. '+
+         'Butterflies and pollinators settle in.'},
+      {f:1.02,th:1.571,ph:.24,g:.64,y:'2026',l:'today',n:'(07)',h:'38,970 m²',
+       p:'Three years after planting, logged in the audit as the ATE series. '+
+         'Full maturity is still more than a decade away. HEXAGON is next.'}]
+  };
+
+  function build(sec){
+    let season=1;
+    const key=sec.getAttribute('data-proj');
+    const host=sec.querySelector('.hx-canvas');
+    const sticky=sec.querySelector('.hx-sticky');
+    const stage=sec.querySelector('.hx-stage');
+    const meter=sec.querySelector('.hx-meter');
+    const yN=sec.querySelector('.hx-year b'), yL=sec.querySelector('.hx-year i');
+    const cap=sec.querySelector('.hx-cap');
+    const B=BEATS[key];
+
+    const scene=new THREE.Scene();
+    scene.fog=new THREE.Fog(SCp('#F2F0EA').getHex(),95,215);
+    const cam=new THREE.PerspectiveCamera(42,1,.5,600);
+    const rend=new THREE.WebGLRenderer({antialias:true,alpha:true});
+    rend.setPixelRatio(Math.min(devicePixelRatio,2));
+    rend.outputEncoding=THREE.sRGBEncoding;
+    rend.shadowMap.enabled=true; rend.shadowMap.type=THREE.PCFSoftShadowMap;
+    host.appendChild(rend.domElement);
+
+    const hemi=new THREE.HemisphereLight(0xFFFFFF,0xFFFFFF,.5);
+    hemi.color.copy(SCp('#D8E6FF')); hemi.groundColor.copy(SCp('#C2B394'));
+    scene.add(hemi);
+    const sun=new THREE.DirectionalLight(0xFFFFFF,1.6);
+    sun.color.copy(SCp('#FFF2D4'));
+    sun.position.set(40,80,26); sun.castShadow=true; sun.shadow.mapSize.set(2048,2048);
+    sun.shadow.bias=-0.0006;
+    const dd=52;
+    sun.shadow.camera.left=-dd;sun.shadow.camera.right=dd;
+    sun.shadow.camera.top=dd;sun.shadow.camera.bottom=-dd;sun.shadow.camera.far=200;
+    scene.add(sun);
+
+    const ground=new THREE.Mesh(new THREE.CircleGeometry(115,64),
+      new THREE.MeshStandardMaterial({color:SCp('#CBBEA0'),roughness:1}));
+    ground.rotation.x=-Math.PI/2; ground.receiveShadow=true; scene.add(ground);
+
+    /* ---- тарилтын цэгүүд ---- */
+    const MK=MASK[key];
+    /* Хучаасын радиус нь модны хоорондын зайд пропорциональ байх ёстой.
+       Хэт том бол зэргэлдээ хучаас нийлж, үсэг/замын нүцгэн зурвасыг дүүргэнэ. */
+    const GS=MK.step/3;
+    const PTS=maskPoints(SHAPES[key],MK.W,MK.H,MK.step,MK.scale);
+    let maxX=1,maxZ=1;
+    PTS.forEach(function(p){maxX=Math.max(maxX,Math.abs(p.x));maxZ=Math.max(maxZ,Math.abs(p.z));});
+    const Rf=Math.sqrt(maxX*maxX+maxZ*maxZ);      // бүтээлийг бүрэн багтаах радиус
+    let fitR=80;
+    function computeFit(){
+      // өргөн ба гүнийг тусад нь шалгаж, бүтээл бүтнээрээ багтах зайг олно
+      const vh=cam.fov*Math.PI/360;
+      const hh=Math.atan(Math.tan(vh)*cam.aspect);
+      fitR=1.22*Math.max(maxX/Math.tan(hh), maxZ*.98/Math.tan(vh));
+    }
+    const TR=[], TP=[], LP=[];
+    PTS.forEach(function(p,i){
+      const R=Math.abs(Math.sin(i*12.9898)*43758.5453)%1;
+      TR.push({x:p.x,z:p.z,H:.46+R*.24,off:R*.36,sway:R*6.28,spin:R*6.28,e:0});
+    });
+    const BR=[{oy:0,len:.48,rad:.055,tx:0,tz:0},
+              {oy:.38,len:.42,rad:.032,tx:0,tz:.44},
+              {oy:.44,len:.36,rad:.026,tx:.36,tz:-.26}];
+    /* Титэм долоон давхаргатай — таван давхаргатай үед мөчир, хөрс хэт их
+       харагдаж, ой холоос ногоон биш саарал болж байсан. */
+    const LF=[{rho:.06,oy:.80,r:.34,d:1},{rho:.42,oy:.68,r:.31,d:1},
+              {rho:.48,oy:.78,r:.28,d:0},{rho:.34,oy:.88,r:.26,d:0},
+              {rho:.56,oy:.68,r:.24,d:0},{rho:.22,oy:.74,r:.30,d:0},
+              {rho:.16,oy:.90,r:.25,d:0}];
+    TR.forEach(function(t,ti){
+      BR.forEach(function(f,fi){TP.push({t:ti,oy:f.oy,len:f.len,rad:f.rad,
+        tx:f.tx*(.7+.6*Math.abs(Math.sin(ti*3.1+fi))),
+        tz:f.tz*(.7+.6*Math.abs(Math.cos(ti*2.3+fi))),thin:fi>0});});
+      LF.forEach(function(c,ci){
+        const a=t.spin+ci*2.39, j=Math.abs(Math.sin(ti*1.7+ci*3.3));
+        LP.push({t:ti,ox:Math.cos(a)*c.rho*.88*(.85+.3*j),
+          oz:Math.sin(a)*c.rho*.88*(.85+.3*j),
+          oy:c.oy+(j-.5)*.05,r:c.r*(.86+.3*j),ph:a,d:c.d});
+      });
+    });
+
+    function leafTex(){
+      const cv=document.createElement('canvas'); cv.width=cv.height=128;
+      const g=cv.getContext('2d');
+      for(let i=0;i<150;i++){
+        const a=Math.random()*Math.PI*2, rr=Math.pow(Math.random(),.52)*58;
+        const x=64+Math.cos(a)*rr, y=64+Math.sin(a)*rr*.94, s=2.2+Math.random()*4.4;
+        const v=Math.round(200+Math.random()*55);   // цайвар — өнгийг instance color өгнө
+        g.fillStyle='rgba('+v+','+v+','+v+','+(.78+Math.random()*.22)+')';
+        g.beginPath(); g.ellipse(x,y,s,s*.66,Math.random()*3.14,0,6.283); g.fill();
+      }
+      const tx=new THREE.CanvasTexture(cv); tx.encoding=THREE.sRGBEncoding;
+      tx.anisotropy=rend.capabilities.getMaxAnisotropy(); return tx;
+    }
+    const tg=new THREE.CylinderGeometry(.55,1,1,5); tg.translate(0,.5,0);
+    const trunkIM=new THREE.InstancedMesh(tg,
+      new THREE.MeshStandardMaterial({color:0xFFFFFF,roughness:.95}),TP.length);
+    const leafIM=new THREE.InstancedMesh(new THREE.PlaneGeometry(1,1),
+      new THREE.MeshStandardMaterial({map:leafTex(),alphaTest:.42,
+        side:THREE.DoubleSide,roughness:.92}),LP.length);
+    trunkIM.castShadow=true; leafIM.castShadow=true; leafIM.receiveShadow=true;
+    scene.add(trunkIM); scene.add(leafIM);
+    const col=new THREE.Color();
+    TP.forEach(function(p,i){
+      col.setHSL(.095,.12,Math.max(.16,Math.min(.62,(p.thin?.30:.46)+Math.sin(i*7.1)*.045)))
+         .convertSRGBToLinear();
+      trunkIM.setColorAt(i,col);
+    });
+    trunkIM.instanceColor.needsUpdate=true;
+    function paintLeaves(){
+      const S=SEASONS[season];
+      LP.forEach(function(p,i){
+        const sun=p.d?0:1, lift=(p.oy-.55)/.40, v=Math.sin(i*4.7), w=Math.sin(i*2.9);
+        /* Ханалт, гэрэлтэлтийг HEXAGON-ы дүр зурагтай ижил түвшинд өргөв —
+           энэ хэсгийн мод цөөн давхаргатай тул өмнө нь саарал харагдаж байлаа. */
+        col.setHSL(((.258-.028*sun-.012*lift+v*.010+S.dh)+1)%1,
+          Math.max(.05,Math.min(.66,(.38+.14*sun+.05*lift+w*.035)*S.ds)),
+          Math.max(.08,Math.min(.62,(.25+.20*lift+.12*sun+v*.028)*S.dl))).convertSRGBToLinear();
+        leafIM.setColorAt(i,col);
+      });
+      leafIM.instanceColor.needsUpdate=true;
+    }
+    paintLeaves();
+
+    /* ---- сэргээгдсэн хөрс: мод бүрийн доор ногоорох хучаас ---- */
+    const SANDp=SCp('#CFC2A4'), GREENp=SCp('#7D9A46'), SNOWp=SCp('#E9EBEC');
+    const gndMat=new THREE.MeshStandardMaterial({color:SANDp.clone(),roughness:1});
+    const gndGeo=new THREE.CircleGeometry(1,12); gndGeo.rotateX(-Math.PI/2);
+    const gndIM=new THREE.InstancedMesh(gndGeo,gndMat,TR.length);
+    gndIM.receiveShadow=true; gndIM.frustumCulled=false; scene.add(gndIM);
+
+    /* ---- нэбха: модны суурьт хуримтлах элсэн товгор ---- */
+    const nebGeo=new THREE.ConeGeometry(1,1,10); nebGeo.translate(0,.5,0);
+    const nebIM=new THREE.InstancedMesh(nebGeo,
+      new THREE.MeshStandardMaterial({color:SCp('#CBBD9C'),roughness:1}),TR.length);
+    nebIM.receiveShadow=true; nebIM.frustumCulled=false; scene.add(nebIM);
+
+    /* ---- зөөгдөх элс: талбайн гадуур урсах салхи ---- */
+    const windIM=new THREE.InstancedMesh(new THREE.BoxGeometry(3.2,.09,.11),
+      new THREE.MeshBasicMaterial({color:SCp('#E6DABE'),transparent:true,opacity:.55}),110);
+    windIM.frustumCulled=false; scene.add(windIM);
+
+    /* ---- говийн уугуул ургамал: заг, харгана, хатсан өвс ---- */
+    const Mv={
+      sax:new THREE.MeshStandardMaterial({color:SCp('#8FA45A'),roughness:.95}),
+      stem:new THREE.MeshStandardMaterial({color:SCp('#CBB894'),roughness:.95}),
+      dry:new THREE.MeshStandardMaterial({color:SCp('#C4A566'),roughness:.95}),
+      fur:new THREE.MeshStandardMaterial({color:SCp('#C2B194'),roughness:.95}),
+      fox:new THREE.MeshStandardMaterial({color:SCp('#A87A50'),roughness:.9}),
+      dark:new THREE.MeshStandardMaterial({color:SCp('#454138'),roughness:.9}),
+      pale:new THREE.MeshStandardMaterial({color:SCp('#F1E9D6'),roughness:.85,
+        side:THREE.DoubleSide}),
+      edge:new THREE.MeshStandardMaterial({color:SCp('#6E6455'),roughness:.85,
+        side:THREE.DoubleSide})
+    };
+    const box=function(w,h,d,m){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);
+      o.castShadow=true;return o;};
+    const sph=function(r,m){const o=new THREE.Mesh(new THREE.SphereGeometry(r,7,6),m);
+      o.castShadow=true;return o;};
+    const EXT=34;
+    for(let i=0;i<64;i++){
+      const a=i*2.399, rr=10+((i*13)%1)*0+ (i%7)*4 + ((i*29)%17);
+      const x=Math.cos(a)*rr*.9, z=Math.sin(a)*rr*.62;
+      if(Math.abs(x)>EXT||Math.abs(z)>EXT*.7) continue;
+      const g0=new THREE.Group(); g0.position.set(x,0,z);
+      if(i%3===0){                                   // заг
+        for(let k=0;k<3;k++){
+          const br=box(.06,.42,.06,Mv.stem);
+          br.position.set(Math.cos(k*2.1)*.10,.21,Math.sin(k*2.1)*.10);
+          br.rotation.z=Math.cos(k*2.1)*.5; br.rotation.x=Math.sin(k*2.1)*.5;
+          g0.add(br);
+        }
+        const c1=sph(.26,Mv.sax); c1.position.set(0,.52,0); g0.add(c1);
+        const c2=sph(.18,Mv.sax); c2.position.set(.22,.40,.10); g0.add(c2);
+      }else if(i%3===1){                             // харганы бут
+        const c3=sph(.30,Mv.sax); c3.position.set(0,.22,0); g0.add(c3);
+        const c4=sph(.20,Mv.sax); c4.position.set(.26,.16,.14); g0.add(c4);
+      }else{                                         // хатсан өвс
+        for(let k=-2;k<3;k++){
+          const bl=box(.02,.34,.02,Mv.dry);
+          bl.position.set(k*.06,.17,0); bl.rotation.z=k*.14; g0.add(bl);
+        }
+      }
+      scene.add(g0);
+    }
+
+    /* ---- амьтад ---- */
+    const WILD=[];
+    function wing(sc,ex){
+      const s=new THREE.Shape();
+      s.moveTo(0,0);
+      s.bezierCurveTo(.06*sc,.13*sc,(.21+ex)*sc,.19*sc,(.27+ex)*sc,.07*sc);
+      s.bezierCurveTo((.30+ex)*sc,-.01*sc,.19*sc,-.03*sc,.09*sc,-.01*sc);
+      s.bezierCurveTo(.02*sc,-.03*sc,-.09*sc,-.02*sc,-.13*sc,.05*sc);
+      s.bezierCurveTo(-.17*sc,.13*sc,-.06*sc,.17*sc,0,.10*sc);
+      s.lineTo(0,0);
+      const gg=new THREE.ShapeGeometry(s,14); gg.rotateX(-Math.PI/2); return gg;
+    }
+    for(let i=0;i<6;i++){                             // эрвээхэй
+      const g0=new THREE.Group();
+      const bd=box(.13,.030,.030,Mv.dark); bd.position.set(.02,0,0); g0.add(bd);
+      const mk=function(side){
+        const w=new THREE.Group();
+        const e=new THREE.Mesh(wing(1.06,.012),Mv.edge); e.position.y=-.004;
+        w.add(e); w.add(new THREE.Mesh(wing(1,0),Mv.pale)); w.scale.z=side; return w;
+      };
+      const wr=mk(1), wl=mk(-1); g0.add(wr); g0.add(wl);
+      g0.scale.setScalar(2.6); g0.visible=false; scene.add(g0);
+      WILD.push({g:g0,type:'fly',wl:wl,wr:wr,
+        cx:(((i*17)%40)-20),cz:(((i*11)%26)-13),
+        r:1.4+((i*3)%5)*.5,sp:.45+((i%5)*.12),ph:i*1.1,ap:.34});
+    }
+    for(let i=0;i<2;i++){                             // туулай
+      const g0=new THREE.Group();
+      const bd=sph(.16,Mv.fur); bd.scale.set(1.15,.84,.80); bd.position.set(0,.16,0); g0.add(bd);
+      const rp=sph(.13,Mv.fur); rp.position.set(-.13,.17,0); g0.add(rp);
+      const hd=sph(.095,Mv.fur); hd.position.set(.20,.22,0); g0.add(hd);
+      const sn=sph(.05,Mv.fur); sn.scale.set(1.4,.8,.8); sn.position.set(.27,.19,0); g0.add(sn);
+      const mkEar=function(z){const eg=new THREE.BoxGeometry(.035,.22,.018); eg.translate(0,.11,0);
+        const e=new THREE.Mesh(eg,Mv.fur); e.castShadow=true; e.position.set(.19,.27,z);
+        g0.add(e); return e;};
+      const earL=mkEar(-.045), earR=mkEar(.045);
+      const tl=sph(.05,Mv.pale); tl.position.set(-.25,.20,0); g0.add(tl);
+      const mkLeg=function(x,w,ht){const lg=new THREE.BoxGeometry(w,ht,w*.9); lg.translate(0,-ht/2,0);
+        const l=new THREE.Mesh(lg,Mv.fur); l.castShadow=true; l.position.set(x,.15,0);
+        g0.add(l); return l;};
+      const legF=mkLeg(.11,.05,.13), legB=mkLeg(-.09,.07,.16);
+      g0.scale.setScalar(2.2); g0.visible=false; scene.add(g0);
+      WILD.push({g:g0,type:'hare',earL:earL,earR:earR,legF:legF,legB:legB,ang:i*1.7,
+        cx:(((i*23)%36)-18),cz:(((i*19)%22)-11),r:1.6+i*.5,sp:.5+i*.12,ph:i*1.7,ap:.50});
+    }
+    for(let i=0;i<1;i++){                             // үнэг
+      const g0=new THREE.Group();
+      const bd=sph(.20,Mv.fox); bd.scale.set(1.75,.60,.60); bd.position.set(0,.30,0); g0.add(bd);
+      const ch=sph(.15,Mv.fox); ch.position.set(.20,.30,0); g0.add(ch);
+      const hd=sph(.105,Mv.fox); hd.scale.set(1.1,.92,.92); hd.position.set(.42,.35,0); g0.add(hd);
+      const sn=sph(.055,Mv.fox); sn.scale.set(1.7,.75,.75); sn.position.set(.54,.32,0); g0.add(sn);
+      const ns=sph(.022,Mv.dark); ns.position.set(.62,.32,0); g0.add(ns);
+      const ear=function(z){const e=new THREE.Mesh(new THREE.CylinderGeometry(0,.055,.10,4),Mv.fox);
+        e.castShadow=true; e.position.set(.38,.46,z); e.rotation.x=z*2.2; g0.add(e);};
+      ear(-.055); ear(.055);
+      const tg=new THREE.BoxGeometry(.30,.11,.11); tg.translate(-.15,0,0);
+      const tail=new THREE.Mesh(tg,Mv.fox); tail.castShadow=true;
+      tail.position.set(-.30,.32,0); g0.add(tail);
+      const bu=sph(.085,Mv.fox); bu.scale.set(1.5,1,1); bu.position.set(-.16,0,0); tail.add(bu);
+      const tp=sph(.055,Mv.pale); tp.position.set(-.29,0,0); tail.add(tp);
+      const mkLeg=function(x,z){const lg=new THREE.BoxGeometry(.055,.24,.055); lg.translate(0,-.12,0);
+        const l=new THREE.Mesh(lg,Mv.fox); l.castShadow=true; l.position.set(x,.26,z);
+        g0.add(l); return l;};
+      const legs=[mkLeg(.22,-.07),mkLeg(.22,.07),mkLeg(-.18,-.07),mkLeg(-.18,.07)];
+      g0.scale.setScalar(2.2); g0.visible=false; scene.add(g0);
+      WILD.push({g:g0,type:'fox',tail:tail,head:hd,legs:legs,ang:0,
+        cx:-16,cz:-8,r:2.6,sp:.34,ph:0,ap:.70});
+    }
+    const FLOCK=[];
+    for(let i=0;i<3;i++){                             // шувуу
+      const b=new THREE.Group();
+      b.add(box(.62,.14,.22,Mv.dark));
+      const wg=new THREE.BoxGeometry(1.05,.06,.34); wg.translate(.52,0,0);
+      const wr=new THREE.Mesh(wg,Mv.dark);
+      const wg2=new THREE.BoxGeometry(1.05,.06,.34); wg2.translate(-.52,0,0);
+      const wl=new THREE.Mesh(wg2,Mv.dark);
+      b.add(wr); b.add(wl); b.visible=false; scene.add(b);
+      FLOCK.push({b:b,wl:wl,wr:wr,r:14+((i*9)%18),h:9+((i*4)%6),
+        sp:.13+((i%4)*.03),ph:i*1.9});
+    }
+
+    const dummy=new THREE.Object3D(), clock=new THREE.Clock();
+    let beatF=0, growth=0, vis=false, capIdx=-1, plt=0, lastG=-1;
+
+    function resize(){
+      const w=host.clientWidth||sticky.clientWidth,
+            hh=host.clientHeight||sticky.clientHeight;
+      if(!w||!hh) return;
+      cam.aspect=w/hh; cam.updateProjectionMatrix(); rend.setSize(w,hh,false); computeFit();
+    }
+    resize(); addEventListener('resize',resize);
+    new IntersectionObserver(function(e){vis=e[0].isIntersecting;},{threshold:0}).observe(stage);
+    /* Наалдмал хэсэг дэлгэцийг бүрэн эзэлмэгц тоглуулалт эхэлнэ — scroll
+       эвентээс хамаарахгүй (гар утсанд ирэхгүй байх тохиолдол бий). */
+    new IntersectionObserver(function(e){
+      if(e[0].intersectionRatio>=.9) autoStart();
+    },{threshold:[.9,.99]}).observe(sticky);
+
+    function setCap(i){
+      if(i===capIdx) return; capIdx=i; const b=B[i];
+      cap.classList.add('out');
+      setTimeout(function(){
+        cap.innerHTML='<div class="yr">'+b.y+' · '+b.l+'</div>'+
+          '<h3>'+b.n+' '+b.h+'</h3><p>'+b.p+'</p>';
+        cap.classList.remove('out');
+      },180);
+    }
+    const PLAY_SECS=14;
+    let manual=false, auto=false, played=false, TL=null;
+    function setPlay(on){
+      auto=on;
+      if(!TL||!TL.play) return;
+      TL.play.textContent='';
+      TL.play.insertAdjacentHTML('beforeend','<i></i>');
+      TL.play.appendChild(document.createTextNode(
+        on ? 'Pause' : (beatF>=B.length-1.01 ? 'Replay' : 'Play')));
+      TL.play.className='hx-play'+(on?' playing':'');
+    }
+    function applyBeat(){
+      const p=beatF/(B.length-1);
+      meter.style.width=(p*100)+'%';
+      const i=Math.round(beatF), b=B[i];
+      if(yN) yN.textContent=b.y;
+      if(yL) yL.textContent=b.l;
+      setCap(i);
+      if(TL){
+        if(!manual) TL.rng.value=beatF;
+        for(let k=0;k<TL.btns.length;k++) TL.btns[k].className=(k===i?'on':'');
+      }
+    }
+    (function(){
+      const host=sec.querySelector('.hx-time');
+      if(!host) return;
+      let s='<div class="lb"><span>Timeline &amp; season</span>'+
+            '<button type="button" class="hx-play"><i></i>Play</button></div>'+
+            '<input class="tl" type="range" min="0" max="'+(B.length-1)+
+            '" step="0.01" value="0"><div class="tks">';
+      for(let i=0;i<B.length;i++) s+='<button type="button" data-i="'+i+'">'+B[i].y+'</button>';
+      host.innerHTML=s+'</div>';
+      const rg=host.querySelector('.tl'), bs=host.querySelectorAll('.tks button');
+      TL={rng:rg,btns:bs,play:host.querySelector('.hx-play')};
+      TL.play.onclick=function(){
+        if(auto){ setPlay(false); return; }
+        played=true; manual=false;
+        if(beatF>=B.length-1.01) beatF=0;
+        setPlay(true);
+      };
+      rg.addEventListener('input',function(){
+        manual=true; played=true; setPlay(false);
+        beatF=parseFloat(rg.value); applyBeat();
+      });
+      for(let i=0;i<bs.length;i++) bs[i].onclick=function(){
+        manual=true; played=true; setPlay(false);
+        beatF=parseFloat(this.getAttribute('data-i'));
+        rg.value=beatF; applyBeat();
+      };
+      let ss='<div class="ss">';
+      for(let i=0;i<SEASONS.length;i++) ss+='<button type="button" data-s="'+i+'">'+SEASONS[i].n+'</button>';
+      host.insertAdjacentHTML('beforeend',ss+'</div>');
+      const sq=host.querySelectorAll('.ss button');
+      for(let i=0;i<sq.length;i++) sq[i].onclick=function(){
+        season=parseInt(this.getAttribute('data-s'),10); applySeason();
+      };
+    })();
+    function autoStart(){
+      /* Дүр зураг наалдмагц нэг удаа өөрөө эхэлнэ. Скроллын боловсруулагчид
+         байх ёстой — rAF давталтад байрлуулбал мобайл дээр эхлэхгүй байсан. */
+      if(played||RED) return false;
+      const r=stage.getBoundingClientRect();
+      if(r.top>4||r.bottom<innerHeight) return false;
+      played=true; manual=false; beatF=0; setPlay(true); applyBeat();
+      return true;
+    }
+    function onScroll(){
+      if(autoStart()) return;
+      if(auto||played) return;   // тоглуулалт эхэлмэгц скролл цаг хугацааг жолоодохгүй
+      const r=stage.getBoundingClientRect();
+      const span=Math.max(1,r.height-innerHeight);
+      const p=Math.max(0,Math.min(1,-r.top/span));
+      manual=false;
+      beatF=p*(B.length-1);
+      applyBeat();
+    }
+    addEventListener('scroll',onScroll,{passive:true});
+    addEventListener('resize',onScroll);
+    onScroll();
+
+    function applySeason(){
+      const S=SEASONS[season];
+      paintLeaves();
+      sun.color.copy(SCp(S.sun)); sun.intensity=S.si;
+      hemi.intensity=S.hemi;
+      scene.fog.color.copy(SCp(S.fog));
+      ground.material.color.copy(SCp('#CBBEA0')).lerp(SNOWp,S.snow*.72);
+      GREENp.copy(SCp(S.grn));
+      const bs=sec.querySelectorAll('.ss button');
+      for(let i=0;i<bs.length;i++) bs[i].className=(i===season?'on':'');
+    }
+    const camS={r:fitR*B[0].f,th:B[0].th,ph:B[0].ph};
+    function frame(){
+      requestAnimationFrame(frame);
+      if(!vis) return;
+      const t=clock.getElapsedTime();
+      const dt=Math.min(.05,t-plt); plt=t;
+
+      autoStart();                   // скролл болоогүй тохиолдлын нөөц шалгалт
+      if(auto){
+        beatF+=dt*(B.length-1)/PLAY_SECS;
+        if(beatF>=B.length-1){ beatF=B.length-1; setPlay(false); }
+        applyBeat();
+      }
+
+      const i0=Math.min(B.length-1,Math.floor(beatF)),
+            i1=Math.min(B.length-1,i0+1), f=beatF-i0;
+      const A=B[i0],C=B[i1];
+      camS.r+=((fitR*(A.f+(C.f-A.f)*f))-camS.r)*.06;
+      camS.th+=((A.th+(C.th-A.th)*f)-camS.th)*.06;
+      camS.ph+=((A.ph+(C.ph-A.ph)*f)-camS.ph)*.06;
+      const th=camS.th;                      // тогтмол өнцөг — үсэг эргэхгүй
+      cam.position.set(camS.r*Math.sin(camS.ph)*Math.cos(th),
+                       camS.r*Math.cos(camS.ph)+2,
+                       camS.r*Math.sin(camS.ph)*Math.sin(th));
+      cam.lookAt(0,1.5,0);
+      growth+=((A.g+(C.g-A.g)*f)-growth)*.08;
+
+      const neb=Math.max(0,Math.min(1,(growth-.40)/.40));
+      gndMat.color.copy(SANDp).lerp(GREENp,Math.min(1,growth*1.15));
+      if(SEASONS[season].snow) gndMat.color.lerp(SNOWp,.62);
+      /* Хучаас, нэбха, иш нь зөвхөн ургалтаас хамаарна — камер эргэхэд
+         дахин тооцоолох шаардлагагүй. Ургалт тогтмол болмогц алгасна. */
+      const grew=Math.abs(growth-lastG)>.0004; if(grew) lastG=growth;
+      if(grew) TR.forEach(function(tr,i){
+        const gi=Math.max(0,Math.min(1,(growth-tr.off)/(1-tr.off)));
+        tr.e=gi*gi*(3-2*gi);
+        /* Хучаасын радиус модны хоорондын зайнаас бага зэрэг л том байх ёстой.
+           Хэт том бол үсэг хоорондын нүцгэн зурвасыг дүүргэж, бичээс уншигдахаа болино. */
+        const gr=GS*(.255+.345*tr.e);
+        dummy.position.set(tr.x,.02,tr.z); dummy.rotation.set(0,tr.spin,0);
+        dummy.scale.set(gr,1,gr); dummy.updateMatrix(); gndIM.setMatrixAt(i,dummy.matrix);
+        const e=neb*tr.e;
+        const rr=Math.max(.001,.66*tr.H*e), hh2=Math.max(.001,.30*tr.H*e);
+        dummy.position.set(tr.x,0,tr.z); dummy.rotation.set(0,tr.sway,0);
+        dummy.scale.set(rr,hh2,rr*.84); dummy.updateMatrix(); nebIM.setMatrixAt(i,dummy.matrix);
+      });
+      if(grew){gndIM.instanceMatrix.needsUpdate=true; nebIM.instanceMatrix.needsUpdate=true;}
+      const windOn=(1-growth*.72)*Math.max(0,Math.min(1,growth*6+.35));
+      windIM.visible=windOn>.03&&!RED;
+      if(windIM.visible){
+        windIM.material.opacity=.6*windOn;
+        const lz=maxZ+5;
+        for(let i=0;i<110;i++){
+          const lane=(i%2?1:-1)*(lz+((i*7)%22));
+          dummy.position.set((((t*(9+(i%5)*2.5)+i*11)%(maxX*2.6))-maxX*1.3),
+            1.0+((i*5)%9)*.7, lane+Math.sin(t*.5+i)*1.2);
+          dummy.rotation.set(0,0,0);
+          dummy.scale.set(.6+((i*3)%5)*.28,1,1);
+          dummy.updateMatrix(); windIM.setMatrixAt(i,dummy.matrix);
+        }
+        windIM.instanceMatrix.needsUpdate=true;
+      }
+      if(grew) TP.forEach(function(p,i){
+        const tr=TR[p.t], H=Math.max(.001,tr.H*tr.e);
+        dummy.position.set(tr.x,p.oy*H,tr.z);
+        dummy.rotation.set(p.tx,0,p.tz);
+        dummy.scale.set(p.rad*H,p.len*H,p.rad*H);
+        dummy.updateMatrix(); trunkIM.setMatrixAt(i,dummy.matrix);
+      });
+      // навч камер руу эргэдэг тул кадр бүрт шинэчилнэ
+      LP.forEach(function(p,i){
+        const tr=TR[p.t], H=Math.max(.001,tr.H*tr.e);
+        const sw=RED?0:Math.sin(t*.62+tr.sway+p.ph)*.04*tr.e;
+        dummy.position.set(tr.x+p.ox*H+sw,p.oy*H,tr.z+p.oz*H);
+        dummy.quaternion.copy(cam.quaternion);
+        // титэм нарийн — үсэг хоорондын нүцгэн зурвасыг хаахгүй
+        const s=p.r*H*1.95*SEASONS[season].leaf; dummy.scale.set(s,s*.9,1);
+        dummy.updateMatrix(); leafIM.setMatrixAt(i,dummy.matrix);
+      });
+      if(grew) trunkIM.instanceMatrix.needsUpdate=true;
+      leafIM.instanceMatrix.needsUpdate=true;
+
+      if(!RED){
+        WILD.forEach(function(a){
+          const sb=(a.type==='fly')?SEASONS[season].bug:(SEASONS[season].snow?.5:1);
+          const on=Math.max(0,Math.min(1,(growth-a.ap)/.18))*sb;
+          a.g.visible=on>.04; if(!a.g.visible) return;
+          const rest=Math.sin(t*.21+a.ph*1.7)>.62?0:1;
+          a.ang+=dt*a.sp*rest;
+          const ang=a.ang;
+          const x=a.cx+Math.cos(ang)*a.r, z=a.cz+Math.sin(ang)*a.r;
+          const face=-ang-Math.PI/2;
+          if(a.type==='hare'){
+            const ph=t*3.2+a.ph, hop=Math.max(0,Math.sin(ph))*rest;
+            a.g.position.set(x,hop*.34,z);
+            a.g.rotation.set(-Math.cos(ph)*.34*rest,face,Math.sin(ph)*.09*rest);
+            a.earL.rotation.x=-.22-hop*.95; a.earR.rotation.x=-.22-hop*.95;
+            a.legF.rotation.x= hop*1.35; a.legB.rotation.x=-hop*1.55;
+          }else if(a.type==='fox'){
+            const ph=t*5.2+a.ph;
+            a.g.position.set(x,Math.abs(Math.sin(ph))*.035*rest,z);
+            a.g.rotation.set(0,face,0);
+            for(let k=0;k<4;k++)
+              a.legs[k].rotation.x=Math.sin(ph+(k%2?Math.PI:0)+(k>1?Math.PI:0))*.85*rest;
+            a.tail.rotation.y=Math.sin(t*2.1+a.ph)*.45;
+            a.tail.rotation.z=.20+Math.sin(t*1.6)*.10;
+            a.head.rotation.y=Math.sin(t*.7+a.ph)*.35*(1-rest*.6);
+          }else{
+            const jx=Math.sin(t*2.7+a.ph)*Math.sin(t*1.13+a.ph*2)*.9;
+            const jz=Math.cos(t*2.1+a.ph*1.4)*Math.sin(t*.83+a.ph)*.9;
+            a.g.position.set(x+jx,1.0+Math.sin(t*3.4+a.ph)*.35,z+jz);
+            a.g.rotation.set(Math.sin(t*2.4+a.ph)*.24,face,Math.sin(t*1.9+a.ph)*.30);
+            const s0=Math.sin(t*10+a.ph);
+            const fl=Math.pow(Math.abs(s0),.55)*(s0<0?-.35:1.15);
+            a.wr.rotation.x=-fl; a.wl.rotation.x=fl;
+          }
+        });
+        const flyOn=growth>.62;
+        FLOCK.forEach(function(d,i){
+          d.b.visible=flyOn; if(!flyOn) return;
+          const a=t*d.sp+d.ph;
+          d.b.position.set(Math.cos(a)*d.r,d.h+Math.sin(a*2.3+i)*1.3,Math.sin(a)*d.r);
+          d.b.rotation.y=-a; d.b.rotation.z=Math.sin(a*2.3+i)*.22;
+          const fl=Math.sin(t*3.4+d.ph)*.75;
+          d.wr.rotation.z=fl; d.wl.rotation.z=-fl;
+        });
+      }
+      rend.render(scene,cam);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  const secs=document.querySelectorAll('#hexagon-live .hx-proj');
+  for(let i=0;i<secs.length;i++) build(secs[i]);
+})();
+
+
+</script>
+
         </div>
 
         <div class="box-white">
@@ -1814,10 +3828,9 @@
                                         </a>
                                         <div id="dropdown-menu-1" class="collapse" data-bs-parent="#mobile-menu">
                                             <ul class="sub-nav-menu">
-                                                <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalHexagon">HEXAGON</a></li>
-                                                <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalBeHuman">BE HUMAN</a></li>
-                                                <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalArtNTech">ART N TECH</a></li>
-                                                <li><a href="#" class="sub-nav-link text-white close-mb-menu" data-bs-toggle="modal" data-bs-target="#modalMongolz">MONGOLZ#1</a></li>
+                                                <li><a href="#la-behuman" class="sub-nav-link text-white close-mb-menu">BE HUMAN</a></li>
+                                                <li><a href="#la-artntech" class="sub-nav-link text-white close-mb-menu">ART N TECH</a></li>
+                                                <li><a href="#la-hexagon" class="sub-nav-link text-white close-mb-menu">HEXAGON</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -1888,148 +3901,7 @@
     </div>
     <!-- /Mobile Menu -->
     <!-- Left Bar -->
-    <!-- Land Art Modals -->
-    <div class="modal fade modalCentered" id="modalBeHuman" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <span class="icon-close-popup" data-bs-dismiss="modal">
-                    <i class="icon-times-solid"></i>
-                </span>
-                <div class="modal-body">
-                    <div class="featured-works-item">
-                        <div class="image">
-                            <img loading="lazy" src="assets/images/section/featured-works-poster-behuman.jpg" alt="BE HUMAN land art aerial view">
-                        </div>
-                        <div class="content">
-                            <div class="bot">
-                                <h4 class="heading fw-semibold">BE HUMAN <br> Land Art</h4>
-                                <div class="grid-text">
-                                    <div class="item">
-                                        <div class="title text-secondary">DESCRIPTION</div>
-                                        <div class="text-body-3 fw-semibold">Our inaugural land art installation in the Gobi — a message written in trees, visible from satellite.</div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="title text-secondary">SCALE</div>
-                                        <div class="fw-semibold text-body-3">21,857 trees across <br> 30,000 m²</div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="title text-secondary">STATUS</div>
-                                        <div class="fw-semibold text-body-3">Completed — Phase I</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade modalCentered" id="modalArtNTech" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <span class="icon-close-popup" data-bs-dismiss="modal">
-                    <i class="icon-times-solid"></i>
-                </span>
-                <div class="modal-body">
-                    <div class="featured-works-item">
-                        <div class="image">
-                            <img loading="lazy" src="assets/images/section/featured-works-poster-artntech.jpg" alt="ART N TECH land art aerial view">
-                        </div>
-                        <div class="content">
-                            <div class="bot">
-                                <h4 class="heading fw-semibold">ART N TECH <br> Land Art</h4>
-                                <div class="grid-text">
-                                    <div class="item">
-                                        <div class="title text-secondary">DESCRIPTION</div>
-                                        <div class="text-body-3 fw-semibold">A triangular land art formation pairing reforestation with on-site renewable power generation.</div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="title text-secondary">SCALE</div>
-                                        <div class="fw-semibold text-body-3">36,000 trees + 10kWt <br> solar array</div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="title text-secondary">STATUS</div>
-                                        <div class="fw-semibold text-body-3">Completed</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade modalCentered" id="modalMongolz" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <span class="icon-close-popup" data-bs-dismiss="modal">
-                    <i class="icon-times-solid"></i>
-                </span>
-                <div class="modal-body">
-                    <div class="featured-works-item">
-                        <div class="image">
-                            <img loading="lazy" src="assets/images/section/featured-works-poster-mongolz.jpg" alt="MONGOLZ #1 land art aerial view">
-                        </div>
-                        <div class="content">
-                            <div class="bot">
-                                <h4 class="heading fw-semibold">MONGOLZ #1 <br> Land Art</h4>
-                                <div class="grid-text">
-                                    <div class="item">
-                                        <div class="title text-secondary">DESCRIPTION</div>
-                                        <div class="text-body-3 fw-semibold">Our largest installation to date — a large-scale tribute to Mongolian cultural identity across the Gobi.</div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="title text-secondary">SCALE</div>
-                                        <div class="fw-semibold text-body-3">100,000 trees across <br> 40,000 m²</div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="title text-secondary">STATUS</div>
-                                        <div class="fw-semibold text-body-3">Active — In progress</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade modalCentered" id="modalHexagon" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <span class="icon-close-popup" data-bs-dismiss="modal">
-                    <i class="icon-times-solid"></i>
-                </span>
-                <div class="modal-body">
-                    <div class="featured-works-item">
-                        <div class="image">
-                            <img loading="lazy" src="assets/images/section/featured-works-poster-hexagon.jpg" alt="HEXAGON land art aerial view">
-                        </div>
-                        <div class="content">
-                            <div class="bot">
-                                <h4 class="heading fw-semibold">HEXAGON <br> Land Art</h4>
-                                <div class="grid-text">
-                                    <div class="item">
-                                        <div class="title text-secondary">DESCRIPTION</div>
-                                        <div class="text-body-3 fw-semibold">A cluster of hexagonal cells mirroring the site's investment structure — restoration delivered one parcel at a time.</div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="title text-secondary">SCALE</div>
-                                        <div class="fw-semibold text-body-3">27,000 trees across <br> 30,000 m²</div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="title text-secondary">STATUS</div>
-                                        <div class="fw-semibold text-body-3">Planned — 2026</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /Land Art Modals -->
+
 
     <!-- Process Phase Modals -->
     <div class="modal fade modalCentered" id="modalProcess0" tabindex="-1" aria-hidden="true">
