@@ -495,6 +495,37 @@
         .sat-fig .end { font-size: 11px; font-weight: 700; font-family: 'Urbanist', sans-serif; }
         .sat-fig .end.p { fill: var(--proj); } .sat-fig .end.c { fill: var(--ctrl); }
         .sat-fig .hit { fill: transparent; cursor: crosshair; }
+        /* Entrance: each line draws itself once the figure scrolls into view, then the dots
+           and the end labels fade in behind it. --len is the path's own length, measured in
+           JS — a guessed dasharray leaves a visible gap or a late finish. */
+        /* The hidden start state is scoped to .anim, which JS only sets once it has measured
+           the paths and armed an observer. Fail open: if any of that does not happen — no
+           IntersectionObserver, a smooth-scroller that keeps the section out of the viewport
+           rect — the charts are simply drawn, never blank. */
+        /* Only the project line draws itself. The control line fades in instead: its 5-4 dash
+           is the secondary encoding the grey depends on, and a draw-in would have to overwrite
+           stroke-dasharray to work, erasing exactly that. */
+        .sat-charts.anim .sat-fig:not(.in) .ln-p {
+            stroke-dasharray: var(--len, 0); stroke-dashoffset: var(--len, 0); }
+        .sat-charts.anim .sat-fig:not(.in) .ln-c,
+        .sat-charts.anim .sat-fig:not(.in) .pt,
+        .sat-charts.anim .sat-fig:not(.in) .end { opacity: 0; }
+        .sat-charts.anim .sat-fig.in .ln-p {
+            stroke-dasharray: var(--len, 0); stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1.15s cubic-bezier(.22,1,.36,1) var(--d, 0s); }
+        .sat-charts.anim .sat-fig.in .ln-c {
+            opacity: 1; transition: opacity .7s ease var(--d, 0s); }
+        .sat-charts.anim .sat-fig.in .pt, .sat-charts.anim .sat-fig.in .end {
+            opacity: 1; transition: opacity .45s ease calc(var(--d, 0s) + .75s); }
+        @media (prefers-reduced-motion: reduce) {
+            .sat-charts.anim .sat-fig .ln-p { stroke-dasharray: none; stroke-dashoffset: 0; transition: none; }
+            .sat-charts.anim .sat-fig .ln-c,
+            .sat-charts.anim .sat-fig .pt, .sat-charts.anim .sat-fig .end { opacity: 1; transition: none; }
+        }
+        /* A pinned readout stays put until the next tap — on a touchscreen there is no
+           pointerleave to bring it back, so a tooltip that fades on release is unreadable. */
+        .sat-fig.pinned .cross { opacity: 1; }
+        .sat-tip.pin { opacity: 1; }
         .sat-fig .cross { stroke: #C2CDDA; stroke-width: 1; opacity: 0; }
         .sat-fig.on .cross { opacity: 1; }
         .sat-tip { position: absolute; z-index: 5; pointer-events: none; background: #16202C; color: #fff;
@@ -4091,31 +4122,87 @@
           });
         })();
 
-        /* Satellite index charts: one crosshair + tooltip shared by the four small multiples. */
+        /* Satellite index charts: one crosshair + tooltip shared by the four small multiples,
+           plus a draw-in on first view. Mouse tracks on move; touch pins on tap, because a
+           touchscreen has no hover to fall back to and a readout that vanishes on release
+           cannot be read. */
         (function () {
             var wrap = document.querySelector('.sat-charts'); if (!wrap) return;
             var tip = document.getElementById('satTip');
-            var YEARS = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], DATA = {"ndvi": {"p": [0.1394, 0.1753, 0.1984, 0.1334, 0.1419, 0.2684, 0.2409, 0.1693], "c": [0.1307, 0.1417, 0.1357, 0.1129, 0.1017, 0.1941, 0.1674, 0.1262]}, "evi": {"p": [0.1052, 0.1252, 0.1476, 0.1004, 0.1076, 0.1864, 0.1594, 0.1223], "c": [0.0988, 0.1066, 0.1117, 0.0851, 0.0808, 0.1473, 0.1197, 0.0942]}, "ndwi": {"p": [-0.2748, -0.3013, -0.3108, -0.2778, -0.2829, -0.3629, -0.3568, -0.3062], "c": [-0.2662, -0.2652, -0.2522, -0.256, -0.2482, -0.3124, -0.2892, -0.2568]}, "fapar": {"p": [0.1758, 0.2212, 0.2503, 0.1682, 0.179, 0.3386, 0.3039, 0.2136], "c": [0.1649, 0.1787, 0.1712, 0.1424, 0.1284, 0.2448, 0.2112, 0.1592]}}, XS = [44.0, 78.0, 112.0, 146.0, 180.0, 214.0, 248.0, 282.0];
-            wrap.querySelectorAll('.sat-fig').forEach(function (fig) {
-                var svg = fig.querySelector('svg'), cross = fig.querySelector('.cross');
-                var hit = fig.querySelector('.hit'), key = fig.dataset.key;
+            var YEARS = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], DATA = {"ndvi": {"p": [0.1394, 0.1753, 0.1984, 0.1334, 0.1419, 0.2684, 0.2409, 0.1693], "c": [0.1307, 0.1417, 0.1357, 0.1129, 0.1017, 0.1941, 0.1674, 0.1262]}, "evi": {"p": [0.1052, 0.1252, 0.1476, 0.1004, 0.1076, 0.1864, 0.1594, 0.1223], "c": [0.0988, 0.1066, 0.1117, 0.0851, 0.0808, 0.1473, 0.1197, 0.0942]}, "ndwi": {"p": [-0.2748, -0.3013, -0.3108, -0.2778, -0.2829, -0.3629, -0.3568, -0.3062], "c": [-0.2662, -0.2652, -0.2522, -0.256, -0.2482, -0.3124, -0.2892, -0.2568]}, "fapar": {"p": [0.1758, 0.2212, 0.2503, 0.1682, 0.179, 0.3386, 0.3039, 0.2136], "c": [0.1649, 0.1787, 0.1712, 0.1424, 0.1284, 0.2448, 0.2112, 0.1592]}}, XS = [44, 78, 112, 146, 180, 214, 248, 282];
+            var figs = [].slice.call(wrap.querySelectorAll('.sat-fig'));
+            var pinned = null;
+
+            var drawn = false;
+            function drawAll() { if (drawn) return; drawn = true; figs.forEach(function (f) { f.classList.add('in'); }); }
+            try {
+                figs.forEach(function (fig, n) {
+                    fig.querySelectorAll('.ln-p').forEach(function (path) {
+                        path.style.setProperty('--len', path.getTotalLength().toFixed(1));
+                    });
+                    fig.style.setProperty('--d', (n * 0.12).toFixed(2) + 's');
+                });
+                if ('IntersectionObserver' in window) {
+                    wrap.classList.add('anim');
+                    var io = new IntersectionObserver(function (es) {
+                        if (es.some(function (e) { return e.isIntersecting; })) { drawAll(); io.disconnect(); }
+                    }, { threshold: 0.2 });
+                    figs.forEach(function (f) { io.observe(f); });
+                    /* Backstop: whatever the scroller does, the lines are on screen within 4s. */
+                    setTimeout(drawAll, 4000);
+                } else drawAll();
+            } catch (err) { drawAll(); }
+
+            function nearest(fig, clientX) {
+                var r = fig.querySelector('svg').getBoundingClientRect();
+                var vx = (clientX - r.left) / r.width * 340, i = 0, best = 1e9;
+                XS.forEach(function (x, k) { var d = Math.abs(x - vx); if (d < best) { best = d; i = k; } });
+                return { i: i, r: r };
+            }
+            function show(fig, hitInfo, pin) {
+                var i = hitInfo.i, r = hitInfo.r, key = fig.dataset.key;
+                var cross = fig.querySelector('.cross');
+                cross.setAttribute('x1', XS[i]); cross.setAttribute('x2', XS[i]);
+                figs.forEach(function (f) { if (f !== fig) f.classList.remove('on', 'pinned'); });
+                fig.classList.add('on');
+                fig.classList.toggle('pinned', !!pin);
+                tip.innerHTML = YEARS[i] + ' &middot; <b>' + DATA[key].p[i].toFixed(4) + '</b> project' +
+                                ' &middot; <em>' + DATA[key].c[i].toFixed(4) + '</em> control';
+                var wr = wrap.getBoundingClientRect();
+                tip.style.left = (r.left - wr.left + XS[i] / 340 * r.width) + 'px';
+                tip.style.top = (r.top - wr.top + 26) + 'px';
+                tip.classList.add('on');
+                tip.classList.toggle('pin', !!pin);
+                pinned = pin ? fig : null;
+            }
+            function hide() {
+                figs.forEach(function (f) { f.classList.remove('on', 'pinned'); });
+                tip.classList.remove('on', 'pin'); pinned = null;
+            }
+
+            figs.forEach(function (fig) {
+                var hit = fig.querySelector('.hit');
                 hit.addEventListener('pointermove', function (e) {
-                    var r = svg.getBoundingClientRect();
-                    var vx = (e.clientX - r.left) / r.width * 340;
-                    var i = 0, best = 1e9;
-                    XS.forEach(function (x, k) { var d = Math.abs(x - vx); if (d < best) { best = d; i = k; } });
-                    cross.setAttribute('x1', XS[i]); cross.setAttribute('x2', XS[i]);
-                    fig.classList.add('on');
-                    tip.innerHTML = YEARS[i] + ' &middot; <b>' + DATA[key].p[i].toFixed(4) + '</b> project' +
-                                    ' &middot; <em>' + DATA[key].c[i].toFixed(4) + '</em> control';
-                    var wr = wrap.getBoundingClientRect();
-                    tip.style.left = (r.left - wr.left + XS[i] / 340 * r.width) + 'px';
-                    tip.style.top = (r.top - wr.top + 26) + 'px';
-                    tip.classList.add('on');
+                    if (e.pointerType !== 'mouse' || pinned) return;
+                    show(fig, nearest(fig, e.clientX), false);
                 });
-                hit.addEventListener('pointerleave', function () {
-                    fig.classList.remove('on'); tip.classList.remove('on');
+                hit.addEventListener('pointerleave', function (e) {
+                    if (e.pointerType === 'mouse' && !pinned) hide();
                 });
+                /* Tap: pin here, or unpin if this same point was already pinned. */
+                hit.addEventListener('pointerup', function (e) {
+                    if (e.pointerType === 'mouse') return;
+                    var h = nearest(fig, e.clientX);
+                    if (pinned === fig && fig.querySelector('.cross').getAttribute('x1') == XS[h.i]) hide();
+                    else show(fig, h, true);
+                });
+            });
+            /* Tap anywhere off the charts to dismiss. Guarded because the event target is not
+               always an Element with closest() — dismissing is the safe default either way. */
+            document.addEventListener('pointerdown', function (e) {
+                if (!pinned) return;
+                var t = e.target;
+                if (!t || typeof t.closest !== 'function' || !t.closest('.sat-fig')) hide();
             });
         })();
 </script>
