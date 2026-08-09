@@ -1130,7 +1130,7 @@
                     <div class="inv-stat"><div class="v">0.2313</div><span class="k">FAPAR light absorbed — vs. 0.1751 control</span></div>
                     <div class="inv-stat"><div class="v">1,898 kg</div><span class="k">Net carbon gain, annual average vs. control</span></div>
                 </div>
-                <div class="sat-charts effectFade fadeUp">
+                <div class="sat-charts">
                     <div class="sat-head">
                         <span class="lg"><i></i>Project site</span>
                         <span class="lg c"><i></i>Control site</span>
@@ -4135,6 +4135,29 @@
 
             var drawn = false;
             function drawAll() { if (drawn) return; drawn = true; figs.forEach(function (f) { f.classList.add('in'); }); }
+            /* Fire on the section actually being on screen, measured from its own rect. An
+               IntersectionObserver is unreliable here — GSAP ScrollSmoother moves the content
+               by transform — and a plain timer is worse: it drew the lines while the reader
+               was still at the top of the page, so the animation was over before they arrived
+               and only a reload ever happened to catch it. */
+            function onScreen() {
+                var r = wrap.getBoundingClientRect();
+                var h = window.innerHeight || document.documentElement.clientHeight;
+                return r.top < h * 0.88 && r.bottom > h * 0.08;
+            }
+            /* Checked straight from the handler rather than queued through rAF: it is one
+               getBoundingClientRect, and the rAF hop was swallowing the call outright. */
+            function check() {
+                if (drawn) return;
+                if (onScreen()) { drawAll(); teardown(); }
+            }
+            var poll = null;
+            function teardown() {
+                window.removeEventListener('scroll', check, true);
+                document.removeEventListener('scroll', check, true);
+                window.removeEventListener('resize', check);
+                if (poll) { clearInterval(poll); poll = null; }
+            }
             try {
                 figs.forEach(function (fig, n) {
                     fig.querySelectorAll('.ln-p').forEach(function (path) {
@@ -4142,15 +4165,17 @@
                     });
                     fig.style.setProperty('--d', (n * 0.12).toFixed(2) + 's');
                 });
-                if ('IntersectionObserver' in window) {
-                    wrap.classList.add('anim');
-                    var io = new IntersectionObserver(function (es) {
-                        if (es.some(function (e) { return e.isIntersecting; })) { drawAll(); io.disconnect(); }
-                    }, { threshold: 0.2 });
-                    figs.forEach(function (f) { io.observe(f); });
-                    /* Backstop: whatever the scroller does, the lines are on screen within 4s. */
-                    setTimeout(drawAll, 4000);
-                } else drawAll();
+                wrap.classList.add('anim');
+                /* Both targets, capture phase: the page may scroll the window or an inner
+                   element, depending on what the smooth-scroller is doing. */
+                window.addEventListener('scroll', check, true);
+                document.addEventListener('scroll', check, true);
+                window.addEventListener('resize', check);
+                /* And poll, because the listeners alone proved unreliable: which element
+                   actually scrolls depends on the smooth-scroller, and the events did not
+                   always reach here. One rect every 250ms, cleared the moment it fires. */
+                poll = setInterval(check, 250);
+                check();
             } catch (err) { drawAll(); }
 
             function nearest(fig, clientX) {
