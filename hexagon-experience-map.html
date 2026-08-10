@@ -685,6 +685,12 @@ $('zoomout').addEventListener('click',function(){
 var detail=$('detail');
 function rows(l){return l.map(function(s){return '<li><span>'+s[0]+'</span><span>'+s[1]+'</span></li>';}).join('');}
 function showIntro(){
+  /* Site Overview түр нуугдсан — төслийн хүсэлтээр. Сэргээхэд доорх хоёр
+     мөрийг устгаад блокийн тайлбарыг нь авна; юу ч устгаагүй. Нүд дарахад
+     дэлгэц хэвийн гарч ирнэ — showCell нь буцааж харуулна. */
+  detail.innerHTML=''; detail.style.display='none';
+  return;
+  /*
   detail.innerHTML='<span class="d-tag">Site Overview</span>'+
     '<h3 class="d-title">50 cells, three sizes<span>Click any cell to zoom in</span></h3>'+
     '<p class="d-body">Each cell has a fixed position on the site and carries its sponsor\'s name. Sponsorship is not land ownership — it is stewardship and recognition.</p>'+
@@ -696,9 +702,13 @@ function showIntro(){
       ['Unit price','₮100,000 / m² (≈ $29 / m²)'],['Total trees','27,000 · Ulmus pumila']
     ])+'</ul>'+
     '<a class="d-cta" href="index.html#contact" target="_top">Enquire About Sponsoring a Cell →</a>';
+  */
 }
 function showCell(id){
   var c=CELLS.filter(function(v){return v.id===id;})[0]; if(!c)return;
+  /* Танилцуулга нуугдсан ч нүдний дэлгэц гарна. display:none үед гарч ирэх
+     ажиглагч ажиллахгүй тул .in-г гараар өгнө — эс бөгөөс opacity:0 хэвээр. */
+  detail.style.display=''; detail.classList.add('in');
   var s=SIZES[c.cls], size={L:'Large cell',M:'Medium cell',S:'Small cell'}[c.cls];
   var state=c.status==='taken'?('Partnered — '+c.partner):(c.status==='held'?'In discussion':'Available');
   var side=Math.sqrt(s.area/2.598).toFixed(1);
