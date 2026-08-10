@@ -109,10 +109,50 @@
            unset, that reserves a near-full-screen blank gap under the heading on every
            laptop/mobile width. */
         #land-arts.section-about-us { min-height: 0; }
-        /* Hero dropped the full-bleed photo and the oversized standalone logo (already in the
-           nav) in favor of a plain solid dark card with a real headline. */
+        /* Hero dropped the oversized standalone logo (already in the nav) and now carries the
+           2022-05-30 satellite frame of the site — the wide view, with the land arts sitting
+           small at its centre. The photograph averages a light 129 luma, so the headline needs
+           a dark wash or the white type disappears into it; the gradient rides above the image
+           in the same background shorthand rather than costing an extra element.
+           background-attachment stays scroll: the base sheet pins it, which slides the picture
+           inside its own rounded card as the page moves, and fails outright on iOS. */
         .hero-image { overflow: hidden; }
-        .section-hero .hero-image { background-image: none; background-color: #09111C; }
+        .section-hero .hero-image {
+            background-color: #09111C;
+            background-image:
+                linear-gradient(180deg, rgba(9,17,28,.78) 0%, rgba(9,17,28,.42) 36%,
+                                       rgba(9,17,28,.38) 62%, rgba(9,17,28,.86) 100%),
+                url("assets/images/section/hero-satellite.jpg");
+            background-position: center, center;
+            background-repeat: no-repeat, no-repeat;
+            /* The file is cut to 1.6:1 — the hero card's own shape — with the land arts held at
+               its centre, so cover fills the card edge to edge while still showing the whole of
+               the prepared frame. Contain was leaving dark strips down both sides; cover on the
+               original near-square frame was cutting its top and bottom away. */
+            background-size: cover, cover;
+            background-attachment: scroll, scroll;
+        }
+        /* Narrow screens: cover crops this frame hard, and what it keeps is not the part worth
+           keeping. Contain it at the foot of the card instead — the whole frame is visible and
+           sits below the headline and the two buttons. The wash is rebuilt to match: heavy
+           where the type is, near-clear over the picture, since nothing sits on top of it. */
+        @media (max-width: 991px) {
+            .section-hero .hero-image {
+                background-image:
+                    linear-gradient(180deg, rgba(9,17,28,.88) 0%, rgba(9,17,28,.80) 30%,
+                                           rgba(9,17,28,.14) 52%, rgba(9,17,28,.06) 100%),
+                    url("assets/images/section/hero-satellite.jpg");
+                background-position: center, center calc(100% - 56px);
+                background-size: cover, contain;
+            }
+            /* Room is reserved under the buttons for the band, so nothing lands on top of it.
+               The file is 1.6:1, so contained it stands 0.625 × the card's width tall; the
+               scroll pill below it is a fixed 56px. Recompute this ratio if the photograph is
+               ever swapped for one cut to a different shape. */
+            .section-hero .content-wrap.text-center {
+                padding-bottom: calc((100vw - 32px) * 0.625 + 76px);
+            }
+        }
         .section-hero .content-wrap .title { color: #fff; }
         .section-hero .content-wrap .text { color: rgba(255,255,255,.82); max-width: 640px; margin-left: auto; margin-right: auto; }
         .features-center-logo { width: 76%; height: auto; object-fit: contain; }
@@ -815,7 +855,7 @@
                     </div>
                     <div class="story-row">
                         <div class="story-q">Measured outcomes</div>
-                        <div class="story-a">Independently audited by Martensite Analytica: a net carbon gain of 7,551 kg relative to an unrestored control site, with vegetation and water indices consistently outperforming the control. <a href="#satellite" class="story-more">See the full audit →</a></div>
+                        <div class="story-a">Independently measured by Martensite Analytica: a net carbon gain of 7,551 kg relative to an unrestored control site, with vegetation and water indices consistently outperforming the control. <a href="#satellite" class="story-more">See the full audit →</a></div>
                     </div>
                     <div class="story-row">
                         <div class="story-q">Forthcoming work</div>
@@ -1384,10 +1424,10 @@ const BEATS=[
    mini:['years 3–7','wind slows','moisture accumulates']},
   {cam:{r:88,theta:1.571,phi:.32},g:0.86,y:'2032',l:'sixth year',num:'(07)',
    h:'2032 · the result',
-   p:'Six years after planting. <b>10,875 m²</b> restored and the canopy begins to close. An independent '+
-     'satellite audit measures NDVI, soil carbon and tree survival. A fully closed woodland still needs '+
+   p:'Six years after planting. <b>10,875 m²</b> restored and the canopy begins to close. Independent '+
+     'satellite data tracks NDVI, soil carbon and tree survival. A fully closed woodland still needs '+
      'another 10–15 years.',
-   mini:['10,875 m² restored','audit · every year','survival >80%']}
+   mini:['10,875 m² restored','data · every year','survival >80%']}
 ];
 
 /* ---------- дэлгэрэнгүй ---------- */
@@ -2456,7 +2496,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
        p:'Trees slow the wind and sand settles at their base, building a <b>nebkha mound</b>. '+
          'Moisture accumulates and the soil improves. Butterflies and hares return.'},
       {f:1.02,th:1.571,ph:.24,g:.80,y:'2026',l:'five years on',n:'(07)',h:'30,000 m²',
-       p:'Five years after planting, and included in the Martensite Analytica audit. '+
+       p:'Five years after planting, and covered by the Martensite Analytica satellite data. '+
          'This is where ART N TECH and HEXAGON began.'}],
     artntech:[
       {f:1.00,th:1.571,ph:.32,g:0,y:'2022',l:'site preparation',n:'(01)',h:'A triangular site',
@@ -2475,7 +2515,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
        p:'Past the three risky summers. <b>Nebkha mounds</b> start to build at the base of each tree. '+
          'Butterflies and pollinators settle in.'},
       {f:1.02,th:1.571,ph:.24,g:.64,y:'2026',l:'today',n:'(07)',h:'38,970 m²',
-       p:'Three years after planting, logged in the audit as the ATE series. '+
+       p:'Three years after planting, logged in the satellite data as the ATE series. '+
          'Full maturity is still more than a decade away. HEXAGON is next.'}]
   };
 
@@ -3057,7 +3097,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
              content that used to live in #impact was consolidated here so the nav
              label and the section it points to match. Documentary films kept as a
              second block in the same section. Wrapped in .box-white because the
-             satellite-audit content was originally inside that light wrapper
+             satellite-data content was originally inside that light wrapper
              (as #impact); merging it into the dark #documentaries section
              without carrying that over left its heading unreadable. -->
         <div class="box-white">
@@ -3066,7 +3106,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                 <div class="heading-section center mb-64">
                     <div class="heading-sub fw-semibold mx-auto effectFade fadeUp">Satellite Data</div>
                     <div class="heading-title text-gradient-3 effectFade fadeRotateX">Independently Monitored by Satellite</div>
-                    <p class="inv-intro effectFade fadeUp">Since 2024, tree growth at the site has been monitored via NASA MODIS, Sentinel-5P, and Sentinel-2 — independently audited by Martensite Analytica against an unrestored control site.</p>
+                    <p class="inv-intro effectFade fadeUp">Since 2024, tree growth at the site has been monitored via NASA MODIS, Sentinel-5P, and Sentinel-2 — with the data independently processed by Martensite Analytica against an unrestored control site.</p>
                 </div>
                 <div class="inv-stats">
                     <!-- Eight-year means from Shambala_annual_summary_2019_2026.csv, project site
