@@ -1118,9 +1118,8 @@
         in trees — legible from satellite.</p>
       <div class="hx-pills"><span>30,000 m²</span><span>21,857 trees</span><span>Planted June 2021</span>
         <button type="button" class="hx-shot"
-          data-src="assets/images/section/be%20human%20drone%20pic.jpg"
-          data-alt="Aerial photograph of the BE HUMAN band in the Gobi"
-          data-cap="BE HUMAN from the air, Erdene sum, Dornogovi — the planted frame with BE above HUMAN inside it. The scene below is measured from this survey."><i></i>See the real photo</button>
+          data-src="assets/images/section/be%20human%20real.jpg"
+          data-alt="Aerial photograph of the BE HUMAN band in the Gobi"><i></i>See the real photo</button>
       </div>
     </div>
     <div class="hx-stage hx-pstage">
@@ -1143,9 +1142,8 @@
         a 10 kW solar system.</p>
       <div class="hx-pills"><span>38,970 m²</span><span>36,000 trees</span><span>Planted July 2023</span>
         <button type="button" class="hx-shot"
-          data-src="assets/images/section/Ate%20zurag.jpg"
-          data-alt="Aerial photograph of the ART N TECH triangle in the Gobi"
-          data-cap="ART N TECH from the air, Erdene sum, Dornogovi — the open centre, the ring road around it and the spurs to the corners. The BE HUMAN band sits above it. The scene below is measured from this survey."><i></i>See the real photo</button>
+          data-src="assets/images/section/art%20n%20tech%20real.jpg"
+          data-alt="Aerial photograph of the ART N TECH triangle in the Gobi"><i></i>See the real photo</button>
       </div>
     </div>
     <div class="hx-stage hx-pstage">
@@ -1229,7 +1227,9 @@
     opener=btn;
     img.src=btn.getAttribute('data-src');
     img.alt=btn.getAttribute('data-alt')||'';
-    cap.textContent=btn.getAttribute('data-cap')||'';
+    /* тайлбаргүй зурагт хоосон мөр үлдээхгүй — figcaption-ыг бүрэн нуна */
+    var c=btn.getAttribute('data-cap')||'';
+    cap.textContent=c; cap.style.display=c?'':'none';
     box.classList.add('open');
     document.body.style.overflow='hidden';
     document.getElementById('hxSx').focus();
