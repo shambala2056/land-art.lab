@@ -125,33 +125,66 @@
                 url("assets/images/section/hero-satellite.jpg");
             background-position: center, center;
             background-repeat: no-repeat, no-repeat;
-            /* The file is cut to 1.6:1 — the hero card's own shape — with the land arts held at
-               its centre, so cover fills the card edge to edge while still showing the whole of
-               the prepared frame. Contain was leaving dark strips down both sides; cover on the
-               original near-square frame was cutting its top and bottom away. */
+            /* The file is cut to 1.6:1 — the hero card's own shape — so cover fills the card
+               edge to edge while showing the whole of the prepared frame. Where the card is
+               wider than 1.6 the crop is vertical, and the land arts then spread out from the
+               card's centre by exactly (card aspect / 1.6): they sit at 0.555–0.775 of the file
+               precisely so that this spread still clears the buttons on a 4:3 tablet and still
+               clears the scroll pill on a 21:9 monitor. Move them and both ends need re-solving. */
             background-size: cover, cover;
             background-attachment: scroll, scroll;
         }
-        /* Narrow screens: cover crops this frame hard, and what it keeps is not the part worth
-           keeping. Contain it at the foot of the card instead — the whole frame is visible and
-           sits below the headline and the two buttons. The wash is rebuilt to match: heavy
-           where the type is, near-clear over the picture, since nothing sits on top of it. */
-        @media (max-width: 991px) {
+        /* A short card gives the fixed 180/160 padding a far bigger share of the height, which
+           pushes the buttons down onto the picture — an iPad in landscape ended up with them
+           finishing 61% of the way down. Tighten the padding whenever the viewport is short,
+           regardless of how wide it is. */
+        @media (orientation: landscape) and (max-height: 880px) {
+            .section-hero .content-wrap.text-center { padding: 118px 0 64px; }
+        }
+        @media (orientation: landscape) and (max-height: 700px) {
+            .section-hero .content-wrap.text-center { padding: 96px 0 44px; }
+        }
+        /* A phone held sideways leaves a card barely 290px tall, where the 56px scroll pill is a
+           fifth of it and no clear ground is left between the type and the picture. Drop the pill
+           there — it is an affordance, and the page still scrolls. */
+        @media (orientation: landscape) and (max-height: 500px) {
+            /* Top stays clear of the floating nav, which is ~100px down the card and does not
+               shrink with the viewport; only the bottom is cut. */
+            .section-hero .content-wrap.text-center { padding: 116px 0 24px; }
+            .section-hero .scroll-more { display: none; }
+            /* The type alone fills nine tenths of a card this short, so there is no ground left
+               to stand the land arts in. The picture drops back to texture under a heavy wash
+               rather than competing with the headline — at 250px tall its detail is noise. */
             .section-hero .hero-image {
                 background-image:
-                    linear-gradient(180deg, rgba(9,17,28,.88) 0%, rgba(9,17,28,.80) 30%,
-                                           rgba(9,17,28,.14) 52%, rgba(9,17,28,.06) 100%),
+                    linear-gradient(180deg, rgba(9,17,28,.90) 0%, rgba(9,17,28,.87) 100%),
                     url("assets/images/section/hero-satellite.jpg");
-                background-position: center, center calc(100% - 56px);
-                background-size: cover, contain;
             }
-            /* Room is reserved under the buttons for the band, so nothing lands on top of it.
-               The file is 1.6:1, so contained it stands 0.625 × the card's width tall; the
-               scroll pill below it is a fixed 56px. Recompute this ratio if the photograph is
-               ever swapped for one cut to a different shape. */
-            .section-hero .content-wrap.text-center {
-                padding-bottom: calc((100vw - 32px) * 0.625 + 76px);
+        }
+        /* Narrow *portrait* screens carry their own file, cut 3:4 so it stands up in a tall
+           card. Cover, not contain: a contained band left the top half of the hero as flat dark
+           and the picture read as a strip pasted on. Because the card is taller than 3:4 on a
+           phone, cover crops the sides only — the full height of the frame is always on screen
+           and the land arts, centred across the file, are never the part thrown away.
+           Only the matching rule's background is ever fetched, so phones never pull the wide
+           file and desktops never pull this one.
+           Landscape is deliberately excluded: those fall through to the rule above. */
+        @media (max-width: 991px) and (orientation: portrait) {
+            /* Floor as well as a share of the screen: 82vh of a 568px phone is a card so short
+               that the type alone fills three quarters of it, leaving no ground for the picture. */
+            .section-hero { min-height: max(84vh, 580px); }
+            .section-hero .hero-image {
+                background-image:
+                    linear-gradient(180deg, rgba(9,17,28,.86) 0%, rgba(9,17,28,.72) 26%,
+                                           rgba(9,17,28,.26) 48%, rgba(9,17,28,.30) 100%),
+                    url("assets/images/section/hero-satellite-portrait.jpg");
+                background-position: center, center;
+                background-size: cover, cover;
             }
+            .section-hero .content-wrap.text-center { padding: 118px 0 96px; }
+        }
+        @media (max-width: 991px) and (orientation: portrait) and (max-height: 700px) {
+            .section-hero .content-wrap.text-center { padding: 92px 0 44px; }
         }
         .section-hero .content-wrap .title { color: #fff; }
         .section-hero .content-wrap .text { color: rgba(255,255,255,.82); max-width: 640px; margin-left: auto; margin-right: auto; }
