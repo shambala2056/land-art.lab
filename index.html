@@ -55,8 +55,32 @@
         .partner-wrap .infiniteSlide_partner { gap: 48px; align-items: center; }
         /* Fixed slot width, not auto: the marquee has to know its travel distance before the
            lazy-loaded logos decode, and uniform slots read tidier than ragged ones. */
-        .partner-wrap .infiniteSlide_partner img { height: 40px; width: 150px; object-fit: contain; filter: brightness(0); opacity: 0.45; }
+        /* No white card behind the stripe any more: it rides on the dark block. brightness(0)
+           painted the logos near-black, which vanishes here, so they are inverted to white
+           instead; and the base sheet's edge fade is a hardcoded light grey, which would smear
+           two pale patches over the dark. Both are re-pointed at #09111C. */
+        .partner-wrap .infiniteSlide_partner img { height: 40px; width: 150px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.55; }
+        .section-partner .infiniteslide_wrap::after {
+            background: linear-gradient(90deg, #09111C 0%, rgba(9,17,28,0) 22%,
+                                               rgba(9,17,28,0) 78%, #09111C 100%); }
+        /* !important to match: .text-secondary on this label is itself !important, and its zinc
+           grey only reaches 3.9:1 against the dark. */
+        .partner-wrap > p { color: rgba(255,255,255,.62) !important; }
         @media (max-width: 575px) { .partner-wrap .infiniteSlide_partner { gap: 28px; } .partner-wrap .infiniteSlide_partner img { width: 110px; height: 32px; } }
+        /* ---- Contact on the dark, in black and white ----
+           The blue-grey photograph panel is gone, so the block sits straight on the same
+           #09111C as the partner stripe. Everything it carried was coloured for a light panel:
+           the headline is painted by a dark gradient through background-clip:text, which needs
+           the fill colour returned before a plain colour can take, and the two contact lines
+           were near-black. The pale shapes — the eyebrow pill, the icon tiles, the form card —
+           are kept as they are: white blocks on dark are already the black-and-white reading,
+           and only the brand lime inside the pill has to go for it to hold. */
+        #contact .contact-image { display: none; }
+        #contact .heading-title { background: none; -webkit-text-fill-color: #fff; color: #fff; }
+        #contact .heading-sub { color: #18181B; }
+        #contact .heading-sub::before { background-color: #18181B; }
+        #contact .contact-item .title { color: #fff; }
+        #contact .contact-item .text { color: rgba(255,255,255,.74); }
         .process-card .icon.icon-photo { width: 100%; height: 180px; margin: -32px -32px 24px -32px; border-radius: 40px 40px 0 0; background: var(--neutral-300); padding: 0; overflow: hidden; }
         .process-card .icon.icon-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .process-card { cursor: pointer; transition: box-shadow .3s, transform .3s; }
@@ -3490,11 +3514,10 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
             <!-- /section-team -->
         </div>
 
-        <!-- section-partner: wrapped in .box-white — the logo fade CSS
-             (.infiniteslide_wrap::after) hardcodes a light background color,
-             and the logos are brightness(0)-filtered near-black at low
-             opacity, both of which only read correctly on a light section. -->
-        <div class="box-white">
+        <!-- section-partner: no card behind it, so it sits straight on the dark #09111C
+             block. The white card used to carry two things the base sheet hardcodes for a
+             light background — the marquee's edge fade and the near-black logo filter — and
+             both are re-pointed at the dark in the stylesheet above. -->
         <div class="section-partner">
             <div class="container">
                 <div class="row">
@@ -3573,7 +3596,6 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                     </div>
                 </div>
             </div>
-        </div>
         </div>
         <!-- /section-partner -->
 
