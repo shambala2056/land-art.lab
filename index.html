@@ -776,6 +776,14 @@
         .hex-map-embed { margin-top: 40px; border: 1px solid #1F3040; background: #09111C; border-radius: 20px; overflow: hidden; }
         .hex-map-embed iframe { display: block; width: 100%; height: 1700px; border: 0; }
         .hive-intro { max-width: 62ch; margin: 0 auto 8px; }
+
+        /* Blank-page safeguard. styles.css ships .effectFade at opacity:0 and the
+           only thing that ever reveals it is scrollEffectFade() in gsapAnimation.js,
+           which sits partway down one synchronous init chain — so a single throw
+           anywhere earlier in that chain, or a script that fails to load, leaves the
+           whole page invisible rather than merely unanimated. The script at the foot
+           of the body sets this class when that has demonstrably happened. */
+        html.anim-fallback .effectFade { opacity: 1 !important; transform: none !important; }
     </style>
 </head>
 
@@ -3986,6 +3994,36 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
     <script src="assets/js/gsapAnimation.js"></script>
 
     <script src="assets/js/main.js"></script>
+
+    <!-- Blank-page safeguard, paired with the html.anim-fallback rule in the head.
+         Every section on this page starts at opacity:0 and waits for GSAP to reveal
+         it, so any failure in the animation chain presents to the visitor as a blank
+         white page with no clue that the HTML arrived intact. Two checks: the
+         libraries are simply absent, or they loaded but the reveal never ran. -->
+    <script>
+        (function () {
+            function reveal(why) {
+                document.documentElement.classList.add('anim-fallback');
+                console.warn('Reveal animations did not run (' + why + ') — showing content unanimated.');
+            }
+            window.addEventListener('load', function () {
+                if (!window.gsap || !window.ScrollTrigger) { reveal('GSAP missing'); return; }
+                /* Elements below the fold are meant to stay hidden until scrolled to,
+                   so only judge one that is already in view. If that is still fully
+                   transparent well after load, scrollEffectFade() never reached it. */
+                setTimeout(function () {
+                    var els = document.querySelectorAll('.effectFade');
+                    for (var i = 0; i < els.length; i++) {
+                        var box = els[i].getBoundingClientRect();
+                        if (box.bottom > 0 && box.top < window.innerHeight) {
+                            if (parseFloat(getComputedStyle(els[i]).opacity) === 0) reveal('content still hidden');
+                            return;
+                        }
+                    }
+                }, 2500);
+            });
+        })();
+    </script>
 
     <!-- Partner logo marquee repair.
          infiniteslide.js measures its children at DOM-ready with jQuery outerWidth(true).
