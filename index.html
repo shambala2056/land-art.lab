@@ -1088,6 +1088,14 @@
 #hexagon-live .hx-time .lb{display:flex;align-items:center;justify-content:space-between;
   gap:14px;font-family:'Urbanist',sans-serif;font-size:10px;font-weight:700;
   letter-spacing:.16em;text-transform:uppercase;color:var(--hx-soft);margin-bottom:12px}
+/* ---- тоглуулах товч ---- */
+#hexagon-live .hx-play{flex:none;border:none;cursor:pointer;background:var(--hx-ink);color:#fff;
+  border-radius:100px;padding:9px 18px 9px 14px;display:inline-flex;align-items:center;gap:9px;
+  font-family:'Urbanist',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;transition:transform .15s}
+#hexagon-live .hx-play:hover{transform:translateY(-1px)}
+#hexagon-live .hx-play i{width:8px;height:8px;border-radius:50%;background:var(--hx-lime)}
+#hexagon-live .hx-play.playing i{border-radius:1px}
 #hexagon-live .hx-timewrap{padding:0 22px 22px}
 #hexagon-live .hx-time{background:var(--hx-card);border-radius:22px;
   padding:18px 22px 18px;box-shadow:var(--hx-shadow)}
@@ -1560,6 +1568,7 @@ let infra=0, SITE=null;
 let camS={r:126,theta:.5,phi:.62}, camT={r:126,theta:.5,phi:.62};
 let season=1, paintLeaves=null, sunL=null, hemiL=null, groundM=null, SNOW=null;
 let DT=0, lastT=0;
+/* Эхлэх төлөв нь сүүлийн он: дүр зураг бэлэн үр дүнгээ харуулж зогсоно */
 let drag=null,dragTheta=0,moved=0,beatF=0,growth=0,visible=false;
 const SC=function(hex){return window.THREE?new THREE.Color(hex).convertSRGBToLinear():null;};
 const SAND=window.THREE?SC('#CFC2A4'):null;
@@ -2202,10 +2211,9 @@ function animate(){
   const t=clock.getElapsedTime();
   DT=Math.min(.05,t-lastT); lastT=t;
 
-  autoStart();
-  if(auto){                           // өөрөө гүйнэ
+  if(auto){                           // Play дарсны дараа гүйнэ
     beatF+=DT*(BEATS.length-1)/PLAY_SECS;
-    if(beatF>=BEATS.length-1){ beatF=BEATS.length-1; auto=false; }
+    if(beatF>=BEATS.length-1){ beatF=BEATS.length-1; setPlay(false); }
     target=beatF; applyBeat();
   } else if(beatF!==target){          // сонгосон он руу жигд гүйнэ
     const d=target-beatF, k=Math.min(1,DT*STEP_SPEED);
@@ -2380,14 +2388,16 @@ const STEP_SPEED=2.4;                       // 1/сек — экспоненци
 const PLAY_SECS=14;                         // бүтэн цаг хугацааг туулах хугацаа
 let manual=false, target=0, TL=null, auto=false, played=false;
 /* Он дээр дарах нь автомат гүйлтийг зогсоож, гар удирдлагад шилжүүлнэ */
-function goTo(v){ auto=false; target=Math.max(0,Math.min(BEATS.length-1,v)); }
-function autoStart(){
-  /* Дүр зураг дэлгэцийн ихэнхийг эзэлмэгц нэг удаа өөрөө эхэлнэ */
-  if(played||REDUCED||!stageEl) return false;
-  const el=stickyEl||stageEl, r=el.getBoundingClientRect(), ih=innerHeight;
-  if(Math.min(r.bottom,ih)-Math.max(r.top,0) < ih*.6) return false;
-  played=true; auto=true; beatF=0; target=0; manual=false; applyBeat();
-  return true;
+function goTo(v){ setPlay(false); target=Math.max(0,Math.min(BEATS.length-1,v)); }
+/* Өөрөө эхлэхгүй: дүр зураг сүүлийн он дээрээ буюу бэлэн үр дүн дээрээ зогсоно.
+   Уншигч Play дарж эхнээс нь гүйлгэнэ, гүйж дуусаад дахин сүүлийн он дээр зогсоно. */
+function setPlay(on){
+  auto=on;
+  if(!TL||!TL.play) return;
+  TL.play.textContent='';
+  TL.play.insertAdjacentHTML('beforeend','<i></i>');
+  TL.play.appendChild(document.createTextNode(on?'Pause':'Play from 2026'));
+  TL.play.className='hx-play'+(on?' playing':'');
 }
 function applyBeat(){
   const p=beatF/(BEATS.length-1);
@@ -2405,15 +2415,19 @@ function applyBeat(){
   const host=document.getElementById('hxTimeIn');
   if(!host) return;
   let s='<div class="lb"><span>Timeline &amp; season</span>'+
-        '<span>Pick a year</span></div>'+
+        '<button type="button" class="hx-play"><i></i>Play from 2026</button></div>'+
         '<input class="tl" type="range" min="0" max="'+(BEATS.length-1)+
         '" step="0.01" value="0"><div class="tks">';
   for(let i=0;i<BEATS.length;i++) s+='<button type="button" data-i="'+i+'">'+BEATS[i].y+'</button>';
   host.innerHTML=s+'</div>';
   const rng=host.querySelector('.tl'), btns=host.querySelectorAll('.tks button');
-  TL={rng:rng,btns:btns};
+  TL={rng:rng,btns:btns,play:host.querySelector('.hx-play')};
+  TL.play.onclick=function(){
+    if(auto){ setPlay(false); return; }
+    manual=false; beatF=0; target=0; applyBeat(); setPlay(true);
+  };
   rng.addEventListener('input',function(){       // гулсуурыг чирэхэд шууд дагана
-    auto=false; manual=true; beatF=parseFloat(rng.value); target=beatF; applyBeat();
+    setPlay(false); manual=true; beatF=parseFloat(rng.value); target=beatF; applyBeat();
   });
   for(let i=0;i<btns.length;i++) btns[i].onclick=function(){
     manual=false; goTo(parseFloat(this.getAttribute('data-i')));
@@ -2437,9 +2451,8 @@ function applySeason(){
   const bs=document.querySelectorAll('#hxTimeIn .ss button');
   for(let i=0;i<bs.length;i++) bs[i].className=(i===season?'on':'');
 }
-/* Скролл цаг хугацааг жолоодохоо больсон — он бүрийн цэг л жолоодно.
-   Тайз нь дүр зургийг дэлгэцэнд барих зорилготой, өөрөө хугацаа тоолохгүй. */
-applyBeat();
+/* Скролл цаг хугацааг жолоодохгүй. Дүр зураг сүүлийн он дээрээ зогсож эхэлнэ. */
+beatF=BEATS.length-1; target=beatF; growth=BEATS[BEATS.length-1].g; applyBeat(); setPlay(false);
 if(window.THREE){ init3D(); }
 else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
 })();
@@ -2930,13 +2943,16 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
     /* Дүр зураг өөрөө гүйнэ; он тус бүрийн цэг нь гар удирдлага */
     const STEP_SPEED=2.4, PLAY_SECS=14;
     let manual=false, target=0, TL=null, auto=false, played=false;
-    function goTo(v){ auto=false; target=Math.max(0,Math.min(B.length-1,v)); }
-    function autoStart(){
-      if(played||RED) return false;
-      const r=sticky.getBoundingClientRect(), ih=innerHeight;
-      if(Math.min(r.bottom,ih)-Math.max(r.top,0) < ih*.6) return false;
-      played=true; auto=true; beatF=0; target=0; manual=false; applyBeat();
-      return true;
+    function goTo(v){ setPlay(false); target=Math.max(0,Math.min(B.length-1,v)); }
+    /* Өөрөө эхлэхгүй: дүр зураг сүүлийн он дээрээ буюу бэлэн үр дүн дээрээ зогсоно.
+       Play дарахад эхнээс нь гүйж, дуусаад дахин сүүлийн он дээр зогсоно. */
+    function setPlay(on){
+      auto=on;
+      if(!TL||!TL.play) return;
+      TL.play.textContent='';
+      TL.play.insertAdjacentHTML('beforeend','<i></i>');
+      TL.play.appendChild(document.createTextNode(on?'Pause':'Play from '+B[0].y));
+      TL.play.className='hx-play'+(on?' playing':'');
     }
     function applyBeat(){
       const p=beatF/(B.length-1);
@@ -2954,15 +2970,20 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
       const host=sec.querySelector('.hx-time');
       if(!host) return;
       let s='<div class="lb"><span>Timeline &amp; season</span>'+
-            '<span>Pick a year</span></div>'+
+            '<button type="button" class="hx-play"><i></i>Play</button></div>'+
             '<input class="tl" type="range" min="0" max="'+(B.length-1)+
             '" step="0.01" value="0"><div class="tks">';
       for(let i=0;i<B.length;i++) s+='<button type="button" data-i="'+i+'">'+B[i].y+'</button>';
       host.innerHTML=s+'</div>';
       const rg=host.querySelector('.tl'), bs=host.querySelectorAll('.tks button');
-      TL={rng:rg,btns:bs};
+      TL={rng:rg,btns:bs,play:host.querySelector('.hx-play')};
+      TL.play.onclick=function(){
+        if(auto){ setPlay(false); return; }
+        manual=false; beatF=0; target=0; applyBeat(); setPlay(true);
+      };
+      setPlay(false);
       rg.addEventListener('input',function(){
-        auto=false; manual=true; beatF=parseFloat(rg.value); target=beatF; applyBeat();
+        setPlay(false); manual=true; beatF=parseFloat(rg.value); target=beatF; applyBeat();
       });
       for(let i=0;i<bs.length;i++) bs[i].onclick=function(){
         manual=false; goTo(parseFloat(this.getAttribute('data-i')));
@@ -2975,8 +2996,8 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
         season=parseInt(this.getAttribute('data-s'),10); applySeason();
       };
     })();
-    /* Скролл цаг хугацааг жолоодохгүй — он бүрийн цэг л жолоодно */
-    applyBeat();
+    /* Скролл цаг хугацааг жолоодохгүй. Дүр зураг сүүлийн он дээрээ зогсож эхэлнэ. */
+    beatF=B.length-1; target=beatF; growth=B[B.length-1].g; applyBeat();
 
     function applySeason(){
       const S=SEASONS[season];
@@ -2996,10 +3017,9 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
       const t=clock.getElapsedTime();
       const dt=Math.min(.05,t-plt); plt=t;
 
-      autoStart();
-      if(auto){                      // өөрөө гүйнэ
+      if(auto){                      // Play дарсны дараа гүйнэ
         beatF+=dt*(B.length-1)/PLAY_SECS;
-        if(beatF>=B.length-1){ beatF=B.length-1; auto=false; }
+        if(beatF>=B.length-1){ beatF=B.length-1; setPlay(false); }
         target=beatF; applyBeat();
       } else if(beatF!==target){     // сонгосон он руу жигд гүйнэ
         const d=target-beatF, k=Math.min(1,dt*STEP_SPEED);
