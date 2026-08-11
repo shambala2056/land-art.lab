@@ -136,6 +136,10 @@
         .tf-header.header2 .header-inner { max-width: 880px; }
         .header-inner .logo-site { margin-right: 28px; flex-shrink: 0; }
         @media (max-width: 991px) { .header-inner .logo-site { margin-right: 0; } }
+        /* The pill was 50% white with a blur behind it. Over the satellite photograph that
+           reads as grey rather than as a white bar, and the blur cost a repaint on every
+           scroll frame for a translucency that is no longer wanted. */
+        .tf-header .header-inner { background: #fff; backdrop-filter: none; }
         /* #land-arts now holds only a heading (the two-column hero content moved into the
            poster carousel below), but the base stylesheet still forces .section-about-us to
            min-height:100vh under 1439px — built for the old full-height hero layout. Left
@@ -2426,7 +2430,12 @@ function applyBeat(){
         '<button type="button" class="hx-play"><i></i>Play from 2026</button></div>'+
         '<input class="tl" type="range" min="0" max="'+(BEATS.length-1)+
         '" step="0.01" value="0"><div class="tks">';
-  for(let i=0;i<BEATS.length;i++) s+='<button type="button" data-i="'+i+'">'+BEATS[i].y+'</button>';
+  /* Эхний хоёр үе шат нэг онд болдог тул шууд он бичвэл "2026 2026" гэж давхардаж,
+     алдаа мэт уншигдана. Он солигдох бүрд оноо, давтагдах үед тухайн үе шатны нэрийг
+     харуулбал давхардал арилж, тэмдэглэгээ нь илүү мэдээлэлтэй болно. */
+  for(let i=0;i<BEATS.length;i++)
+    s+='<button type="button" data-i="'+i+'">'+
+       ((i>0&&BEATS[i-1].y===BEATS[i].y)?BEATS[i].l:BEATS[i].y)+'</button>';
   host.innerHTML=s+'</div>';
   const rng=host.querySelector('.tl'), btns=host.querySelectorAll('.tks button');
   TL={rng:rng,btns:btns,play:host.querySelector('.hx-play')};
@@ -2986,7 +2995,11 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
             '<button type="button" class="hx-play"><i></i>Play</button></div>'+
             '<input class="tl" type="range" min="0" max="'+(B.length-1)+
             '" step="0.01" value="0"><div class="tks">';
-      for(let i=0;i<B.length;i++) s+='<button type="button" data-i="'+i+'">'+B[i].y+'</button>';
+      /* Он солигдох бүрд он, давтагдах үед үе шатны нэр — "2020 2020" гэсэн давхардал
+         алдаа мэт уншигддаг. */
+      for(let i=0;i<B.length;i++)
+        s+='<button type="button" data-i="'+i+'">'+
+           ((i>0&&B[i-1].y===B[i].y)?B[i].l:B[i].y)+'</button>';
       host.innerHTML=s+'</div>';
       const rg=host.querySelector('.tl'), bs=host.querySelectorAll('.tks button');
       TL={rng:rg,btns:bs,play:host.querySelector('.hx-play')};
