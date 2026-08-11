@@ -4205,14 +4205,22 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                 if (existing) return existing;
                 var poster = trigger.querySelector("img");
                 var video = document.createElement("video");
-                video.src = trigger.dataset.video;
-                if (poster) video.poster = poster.getAttribute("src");
-                video.controls = true;
-                video.muted = true;              /* required for autoplay to be allowed */
-                video.loop = true;
-                video.playsInline = true;
+                /* Order matters on iOS: WebKit decides whether a video may autoplay at the
+                   moment it starts loading, so every attribute it checks has to be on the
+                   element before src is assigned — setting src first was enough to have the
+                   whole set ignored. It reads attributes, not properties, so muted and
+                   playsinline are written both ways. */
+                video.setAttribute("muted", "");
+                video.muted = true;
                 video.setAttribute("playsinline", "");
+                video.setAttribute("webkit-playsinline", "");
+                video.playsInline = true;
+                video.setAttribute("autoplay", "");
+                video.loop = true;
+                video.controls = true;
                 video.preload = auto ? "auto" : "metadata";
+                if (poster) video.poster = poster.getAttribute("src");
+                video.src = trigger.dataset.video;
                 trigger.innerHTML = "";
                 trigger.appendChild(video);
                 trigger.classList.add("playing");
@@ -4247,6 +4255,20 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
             window.addEventListener("resize", sweep);
             setInterval(sweep, 400);
             sweep();
+            /* Low Power Mode and a few Android browsers refuse muted autoplay outright, and
+               nothing in the page can overrule that. The first real touch, however, does —
+               so one is used to start whatever is on screen and still paused. */
+            ["touchstart", "pointerdown"].forEach(function (ev) {
+                document.addEventListener(ev, function once() {
+                    document.removeEventListener(ev, once);
+                    cards.forEach(function (t) {
+                        var v = t.querySelector("video");
+                        if (v && v.paused && visible(t)) {
+                            var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
+                        }
+                    });
+                }, { passive: true });
+            });
         })();
 
         function mountEcoNetwork(opts){
