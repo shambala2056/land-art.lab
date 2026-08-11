@@ -2202,7 +2202,12 @@ function animate(){
   const t=clock.getElapsedTime();
   DT=Math.min(.05,t-lastT); lastT=t;
 
-  if(beatF!==target){                 // сонгосон он руу жигд гүйнэ
+  autoStart();
+  if(auto){                           // өөрөө гүйнэ
+    beatF+=DT*(BEATS.length-1)/PLAY_SECS;
+    if(beatF>=BEATS.length-1){ beatF=BEATS.length-1; auto=false; }
+    target=beatF; applyBeat();
+  } else if(beatF!==target){          // сонгосон он руу жигд гүйнэ
     const d=target-beatF, k=Math.min(1,DT*STEP_SPEED);
     beatF = Math.abs(d)<.004 ? target : beatF+d*k;
     applyBeat();
@@ -2372,8 +2377,18 @@ function animate(){
    тэр он руу гүйлгэнэ — beatF нь зорилтот он руу жигд ойртох тул завсрын
    жилүүд харагдаж, мод үе шаттай ургана. */
 const STEP_SPEED=2.4;                       // 1/сек — экспоненциал ойртолт
-let manual=false, target=0, TL=null;
-function goTo(v){ target=Math.max(0,Math.min(BEATS.length-1,v)); }
+const PLAY_SECS=14;                         // бүтэн цаг хугацааг туулах хугацаа
+let manual=false, target=0, TL=null, auto=false, played=false;
+/* Он дээр дарах нь автомат гүйлтийг зогсоож, гар удирдлагад шилжүүлнэ */
+function goTo(v){ auto=false; target=Math.max(0,Math.min(BEATS.length-1,v)); }
+function autoStart(){
+  /* Дүр зураг дэлгэцийн ихэнхийг эзэлмэгц нэг удаа өөрөө эхэлнэ */
+  if(played||REDUCED||!stageEl) return false;
+  const el=stickyEl||stageEl, r=el.getBoundingClientRect(), ih=innerHeight;
+  if(Math.min(r.bottom,ih)-Math.max(r.top,0) < ih*.6) return false;
+  played=true; auto=true; beatF=0; target=0; manual=false; applyBeat();
+  return true;
+}
 function applyBeat(){
   const p=beatF/(BEATS.length-1);
   document.getElementById('hxMeter').style.width=(p*100)+'%';
@@ -2398,7 +2413,7 @@ function applyBeat(){
   const rng=host.querySelector('.tl'), btns=host.querySelectorAll('.tks button');
   TL={rng:rng,btns:btns};
   rng.addEventListener('input',function(){       // гулсуурыг чирэхэд шууд дагана
-    manual=true; beatF=parseFloat(rng.value); target=beatF; applyBeat();
+    auto=false; manual=true; beatF=parseFloat(rng.value); target=beatF; applyBeat();
   });
   for(let i=0;i<btns.length;i++) btns[i].onclick=function(){
     manual=false; goTo(parseFloat(this.getAttribute('data-i')));
@@ -2912,10 +2927,17 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
         cap.classList.remove('out');
       },180);
     }
-    /* Автомат тоглуулалтгүй — он тус бүрийн цэг л дүр зургийг жолоодно */
-    const STEP_SPEED=2.4;
-    let manual=false, target=0, TL=null;
-    function goTo(v){ target=Math.max(0,Math.min(B.length-1,v)); }
+    /* Дүр зураг өөрөө гүйнэ; он тус бүрийн цэг нь гар удирдлага */
+    const STEP_SPEED=2.4, PLAY_SECS=14;
+    let manual=false, target=0, TL=null, auto=false, played=false;
+    function goTo(v){ auto=false; target=Math.max(0,Math.min(B.length-1,v)); }
+    function autoStart(){
+      if(played||RED) return false;
+      const r=sticky.getBoundingClientRect(), ih=innerHeight;
+      if(Math.min(r.bottom,ih)-Math.max(r.top,0) < ih*.6) return false;
+      played=true; auto=true; beatF=0; target=0; manual=false; applyBeat();
+      return true;
+    }
     function applyBeat(){
       const p=beatF/(B.length-1);
       meter.style.width=(p*100)+'%';
@@ -2940,7 +2962,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
       const rg=host.querySelector('.tl'), bs=host.querySelectorAll('.tks button');
       TL={rng:rg,btns:bs};
       rg.addEventListener('input',function(){
-        manual=true; beatF=parseFloat(rg.value); target=beatF; applyBeat();
+        auto=false; manual=true; beatF=parseFloat(rg.value); target=beatF; applyBeat();
       });
       for(let i=0;i<bs.length;i++) bs[i].onclick=function(){
         manual=false; goTo(parseFloat(this.getAttribute('data-i')));
@@ -2974,7 +2996,12 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
       const t=clock.getElapsedTime();
       const dt=Math.min(.05,t-plt); plt=t;
 
-      if(beatF!==target){            // сонгосон он руу жигд гүйнэ
+      autoStart();
+      if(auto){                      // өөрөө гүйнэ
+        beatF+=dt*(B.length-1)/PLAY_SECS;
+        if(beatF>=B.length-1){ beatF=B.length-1; auto=false; }
+        target=beatF; applyBeat();
+      } else if(beatF!==target){     // сонгосон он руу жигд гүйнэ
         const d=target-beatF, k=Math.min(1,dt*STEP_SPEED);
         beatF = Math.abs(d)<.004 ? target : beatF+d*k;
         applyBeat();
