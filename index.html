@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 
 <!--[if IE 8]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
@@ -103,6 +105,13 @@
         .section-team .team-item { background: linear-gradient(0deg, var(--neutral-900, #18181B), var(--neutral-900, #18181B)), radial-gradient(62.56% 62.56% at 28.14% -10.42%, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0) 100%); }
         .section-team .team-item .image { height: 240px; background: #FFE505; }
         .section-team .team-item .image img { object-fit: cover; object-position: center top; filter: grayscale(100%); }
+        /* Even card heights. The three cards are identical apart from one line of
+           text: "CEO, Plastic Center LLC" fits on one line where the other two roles
+           wrap to two, so that card rendered 28px shorter with its button 28px
+           higher. h-100 does not help — the columns stretch, but the percentage
+           height never resolves against them, so each card simply takes its content
+           height. Reserving two lines for the role removes the difference at source. */
+        .section-team .team-item .sub { min-height: 56px; }
         .hero-icon-badge { position: absolute; display: flex; align-items: center; justify-content: center; background: #fff; box-shadow: 3px 13px 24px 0px rgba(0,0,0,0.25); }
         .hero-icon-badge i { -webkit-text-stroke: 1.5px currentColor; }
         .hero-icon-badge.rot-1 { width: 76px; height: 76px; border-radius: 20px; font-size: 32px; left: 125px; top: -10px; transform: rotate(-6deg); z-index: 3; color: #16A34A; }
@@ -1224,10 +1233,9 @@
 <section id="hexagon-live">
   <section class="hx-proj" id="la-behuman" data-proj="behuman">
     <div class="hx-wrap hx-projhead">
-      <div class="hx-pnum">(01) · 2020 → 2026</div>
+      <div class="hx-pnum">(01) · 2019 → 2026</div>
       <h3 class="hx-ph">BE HUMAN</h3>
-      <p class="hx-plead">The first work. A 300 × 100 m band with a message written inside it
-        in trees — legible from satellite.</p>
+      <p class="hx-plead">The inaugural project spans a 300 by 100-meter corridor where the living canopy forms a satellite-legible message, defining what it means to "be human" through the active stewardship of the earth.</p>
       <div class="hx-pills"><span>30,000 m²</span><span>21,857 trees</span><span>Planted June 2021</span>
         <button type="button" class="hx-shot"
           data-src="assets/images/section/be%20human%20real.jpg"
@@ -2622,22 +2630,27 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
   /* ---- он цаг: постерын огноо ба Martensite аудитын тарилтын огноо ---- */
   const BEATS={
     behuman:[
-      {f:1.00,th:1.571,ph:.32,g:0,y:'2020',l:'site preparation',n:'(01)',h:'Bare Gobi',
-       p:'The site was chosen and surveyed. Rainfall is about 100 mm a year; evaporation runs several times higher.'},
-      {f:.80,th:1.30,ph:.56,g:0,y:'2020',l:'fence and well',n:'(02)',h:'Groundwork',
-       p:'Fencing went up, a deep well was drilled and irrigation lines were laid. '+
+      {f:1.00,th:1.571,ph:.32,g:0,y:'2019',l:'the well',n:'(01)',h:'Water first',
+       p:'A deep well was drilled before anything else. Rainfall is about 100 mm a year; '+
+         'evaporation runs several times higher — without water on site there is no planting.'},
+      {f:.90,th:1.43,ph:.44,g:0,y:'2020',l:'survey · design',n:'(02)',h:'Soil, water, plan',
+       p:'Soil and water analyses were carried out and the landscape drawings were made — '+
+         'the site read and set out before a single pit was dug.'},
+      {f:.80,th:1.30,ph:.56,g:0,y:'2021',l:'fence · pits · April',n:'(03)',h:'Groundwork',
+       p:'From April 2021 the perimeter fence went up and the tree pits were dug. '+
          'Building the conditions before planting is what decides survival.'},
-      {f:.64,th:1.62,ph:.66,g:.12,y:'2021',l:'planting · June',n:'(03)',h:'The message is written',
-       p:'<b>21,857 elms</b> planted in June 2021 — in the shape of letters, every row set out by hand.'},
-      {f:.54,th:1.95,ph:.76,g:.28,y:'2022',l:'first summer',n:'(04)',h:'First summer',
+      {f:.64,th:1.62,ph:.66,g:.12,y:'2021',l:'planting · June',n:'(04)',h:'The message is written',
+       p:'<b>21,857 elms</b> planted from June 2021 — in the shape of letters, every row set out '+
+         'by hand — and the irrigation system assembled as the planting went in.'},
+      {f:.54,th:1.95,ph:.76,g:.28,y:'2022',l:'first summer',n:'(05)',h:'First summer',
        p:'The most fragile stage. Roots have not reached depth, so irrigation never stops. '+
          'The letters green up and begin to read from orbit.'},
-      {f:.48,th:2.30,ph:.84,g:.44,y:'2023',l:'three summers',n:'(05)',h:'Three summers',
+      {f:.48,th:2.30,ph:.84,g:.44,y:'2023',l:'three summers',n:'(06)',h:'Three summers',
        p:'A sapling that survives three summers usually stays alive. The risk window closes.'},
-      {f:.56,th:2.62,ph:.72,g:.62,y:'2024',l:'nebkha forms',n:'(06)',h:'The nebkha effect',
+      {f:.56,th:2.62,ph:.72,g:.62,y:'2024',l:'nebkha forms',n:'(07)',h:'The nebkha effect',
        p:'Trees slow the wind and sand settles at their base, building a <b>nebkha mound</b>. '+
          'Moisture accumulates and the soil improves. Butterflies and hares return.'},
-      {f:1.02,th:1.571,ph:.24,g:.80,y:'2026',l:'five years on',n:'(07)',h:'30,000 m²',
+      {f:1.02,th:1.571,ph:.24,g:.80,y:'2026',l:'five years on',n:'(08)',h:'30,000 m²',
        p:'Five years after planting, and covered by the Martensite Analytica satellite data. '+
          'This is where ART N TECH and HEXAGON began.'}],
     artntech:[
@@ -3560,14 +3573,10 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                                 <a href="#" class="name h6 fw-semibold">Odgerel.B</a>
                                 <div class="sub text-body-1">CEO, Oim Green Studio LLC</div>
                                 <div class="tf-social justify-content-center">
-                                    <a href="#" class="social-item">
-                                        <i class="icon icon-twitter-x"></i>
-                                    </a>
-                                    <a href="#" class="social-item">
-                                        <i class="icon icon-linkedin-in"></i>
-                                    </a>
-                                    <a href="#" class="social-item">
-                                        <i class="icon icon-github"></i>
+                                    <a href="https://www.instagram.com/oimnogoonurlan" class="social-item"
+                                       target="_blank" rel="noopener noreferrer" title="@oimnogoonurlan"
+                                       aria-label="Oim Green Studio on Instagram">
+                                        <i class="icon icon-instagram"></i>
                                     </a>
                                 </div>
                             </div>
@@ -3580,14 +3589,10 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                                 <a href="#" class="name h6 fw-semibold">Amgalan-Erdene.N </a>
                                 <div class="sub text-body-1">Executive Director, Ungu Nem NGO</div>
                                 <div class="tf-social justify-content-center">
-                                    <a href="#" class="social-item">
-                                        <i class="icon icon-twitter-x"></i>
-                                    </a>
-                                    <a href="#" class="social-item">
-                                        <i class="icon icon-linkedin-in"></i>
-                                    </a>
-                                    <a href="#" class="social-item">
-                                        <i class="icon icon-github"></i>
+                                    <a href="https://www.instagram.com/ungu_nemey" class="social-item"
+                                       target="_blank" rel="noopener noreferrer" title="@ungu_nemey"
+                                       aria-label="Ungu Nem NGO on Instagram">
+                                        <i class="icon icon-instagram"></i>
                                     </a>
                                 </div>
                             </div>
@@ -3599,15 +3604,13 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                                 </div>
                                 <a href="#" class="name h6 fw-semibold">Tsevegsuren.S</a>
                                 <div class="sub text-body-1">CEO, Plastic Center LLC</div>
+                                <!-- Website in place of the placeholder social icons: Plastic Center
+                                     is a partner company, so the one destination worth linking is theirs. -->
                                 <div class="tf-social justify-content-center">
-                                    <a href="#" class="social-item">
-                                        <i class="icon icon-twitter-x"></i>
-                                    </a>
-                                    <a href="#" class="social-item">
-                                        <i class="icon icon-linkedin-in"></i>
-                                    </a>
-                                    <a href="#" class="social-item">
-                                        <i class="icon icon-github"></i>
+                                    <a href="https://plasticcenter.mn/" class="social-item" target="_blank"
+                                       rel="noopener noreferrer" title="plasticcenter.mn"
+                                       aria-label="Plastic Center LLC website">
+                                        <i class="icon icon-global"></i>
                                     </a>
                                 </div>
                             </div>

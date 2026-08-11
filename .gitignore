@@ -2,3 +2,7 @@ node_modules/
 .env
 .vercel
 .DS_Store
+
+# Exported from the live server for the bank's merchant registration; public
+# information, but regenerated on demand rather than tracked. See certificate/.
+certificate/
