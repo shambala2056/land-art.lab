@@ -1267,7 +1267,7 @@
     <p class="hx-plead">The third work, and the 2026–2032 programme. One hundred hexagonal cells
       across three hectares — 93 woodland, 7 infrastructure. Cells run from 25 m² to 400 m²,
       each with its own code and its own steward.</p>
-    <div class="hx-pills"><span>30,000 m² site</span><span>10,875 m² planted</span><span>28,425 trees</span><span>100 cells</span></div>
+    <div class="hx-pills"><span>30,000 m² site</span><span>4,571 m² planted</span><span>13,713 trees</span><span>54 cells</span></div>
   </div>
 
   <div class="hx-stage" id="hxStage">
@@ -1421,38 +1421,48 @@ const SEASONS=[
    h нь нимгэн хөрсний давхарга — өргөгдсөн суурь биш. Зургаан талт хэлбэрийг
    зөвхөн тарьсан мод өөрөө үүсгэнэ. */
 const PAD=0.07;
+/* Хэмжээ, тоо, байрлал бүгд HEXAGON SHAPE.png-ээс уншигдсан: талбай дээр бодитоор
+   тарьсан 54 зургаалжин. Тогтмол зөгийн үүр биш, өөр өөр хэмжээтэй тархсан хэлбэр.
+   rad — хамгийн том зургаалжныг 1 болгосон харьцаа; талбай нь радиусын квадратаар
+   гарна (₮100,000/м², мод 3/м²). */
 const SIZES={
-  XL:{rad:1.000,h:PAD,area:400,pots:400,trees:1200,price:40000000,n:32},
-  L :{rad:0.707,h:PAD,area:200,pots:200,trees:600, price:20000000,n:16},
-  M :{rad:0.500,h:PAD,area:100,pots:100,trees:300, price:10000000,n:8},
-  S :{rad:0.354,h:PAD,area:50, pots:50, trees:150, price:5000000, n:4},
-  XS:{rad:0.250,h:PAD,area:25, pots:25, trees:75,  price:2500000, n:2}
+  A:{rad:1.000,h:PAD,area:400,pots:400,trees:1200,price:40000000,n:263},
+  B:{rad:0.805,h:PAD,area:260,pots:260,trees:780, price:26000000,n:170},
+  C:{rad:0.550,h:PAD,area:120,pots:120,trees:360, price:12000000,n:80},
+  D:{rad:0.470,h:PAD,area:90, pots:90,  trees:270, price:9000000, n:58},
+  E:{rad:0.337,h:PAD,area:45, pots:45,  trees:135, price:4500000, n:44},
+  F:{rad:0.172,h:PAD,area:12, pots:12,  trees:36,  price:1200000, n:14}
 };
-const COUNT={XL:5,L:20,M:30,S:30,XS:15};
+/* [x, y, class] — хамгийн том зургаалжны радиусыг нэгж болгосон нормчилсон байрлал */
+const SHAPE=[[-3.5764,1.0969,'A'],[1.7086,1.3346,'A'],[-1.0171,2.6433,'A'],[3.3162,-2.7075,'B'],[-5.0352,0.1615,'B'],[0.18,0.5734,'B'],[-0.8746,4.3662,'B'],[-0.4271,-1.9448,'C'],[1.3021,-1.8147,'C'],[-3.8427,-0.369,'C'],[1.4678,-0.1359,'C'],[0.4255,3.9604,'C'],[-2.6239,4.3019,'C'],[3.4772,-3.9643,'D'],[1.4779,-2.8245,'D'],[3.1652,-1.4717,'D'],[-2.3281,0.3938,'D'],[2.9329,0.609,'D'],[-0.894,1.213,'D'],[3.8001,1.786,'D'],[2.4768,2.7478,'D'],[2.7672,-4.4452,'E'],[-0.3256,-2.8523,'E'],[4.5629,-2.5821,'E'],[0.4162,-1.6095,'E'],[-1.244,-1.5901,'E'],[4.559,-1.3989,'E'],[2.0393,-1.2502,'E'],[3.0955,-0.5974,'E'],[0.1599,-0.5587,'E'],[2.4652,-0.2342,'E'],[-1.5839,0.7345,'E'],[3.7374,0.9397,'E'],[0.2559,2.2948,'E'],[0.7569,3.0645,'E'],[-1.8797,3.7723,'E'],[2.6766,-5.0259,'F'],[4.4142,-3.8249,'F'],[2.8097,-3.7506,'F'],[-0.2575,-3.437,'F'],[-0.9854,-2.4884,'F'],[0.7546,-2.3227,'F'],[5.0174,-2.2042,'F'],[5.0352,-1.7713,'F'],[-2.1755,-1.5878,'F'],[-1.7992,-1.3679,'F'],[1.4887,-1.062,'F'],[2.4737,-0.8289,'F'],[-1.0613,0.52,'F'],[-4.8788,1.1704,'F'],[-4.8796,1.5971,'F'],[0.7941,2.0702,'F'],[3.2596,2.6053,'F'],[-2.8833,5.0259,'F']];
+const COUNT={A:3,B:4,C:6,D:8,E:15,F:18};
 /* Дэд бүтцийн долоон нүд — тарилтгүй, тоног төхөөрөмжтэй */
+/* Дэд бүтэц D ангид (90 м²) — тэнд яг найман нүд байгаагаас долоог нь эзэлнэ */
 const THEMED={
-  'L-01':['Solar field · 100 kW','energy','100 kW installed capacity — irrigation pumps, lighting, sensor network and battery reserve'],
-  'L-02':['Water harvesting','water','Rainwater and fog-dew capture system with storage tanks'],
-  'L-03':['Recycling point','waste','Plastic, glass and metal sorting plus a composting yard'],
-  'L-04':['Research station','research','Weather and soil sensors, biodiversity monitoring'],
-  'L-05':['Bird refuge','birds','Stopover for migratory birds — nest boxes and a water point'],
-  'L-06':['Pollinator meadow','insect','Beehives and a flowering field — fruit set and plant regeneration'],
-  'L-07':['Community ground','community','Playground, outdoor classroom, ger and gathering space']
+  'D-01':['Solar field · 100 kW','energy','100 kW installed capacity — irrigation pumps, lighting, sensor network and battery reserve'],
+  'D-02':['Water harvesting','water','Rainwater and fog-dew capture system with storage tanks'],
+  'D-03':['Recycling point','waste','Plastic, glass and metal sorting plus a composting yard'],
+  'D-04':['Research station','research','Weather and soil sensors, biodiversity monitoring'],
+  'D-05':['Bird refuge','birds','Stopover for migratory birds — nest boxes and a water point'],
+  'D-06':['Pollinator meadow','insect','Beehives and a flowering field — fruit set and plant regeneration'],
+  'D-07':['Community ground','community','Playground, outdoor classroom, ger and gathering space']
 };
-const PARTNERS={'L-08':'EFES GROUP','M-01':'YVES ROCHER','M-05':'TIMBERLAND',
-  'M-23':'ROC','S-25':'KHARKHORUM'};
+/* Түншүүд өмнөх зэрэглэлдээ хамгийн ойр шинэ ангид шилжсэн */
+const PARTNERS={'B-01':'EFES GROUP','C-01':'YVES ROCHER','C-02':'TIMBERLAND',
+  'C-03':'ROC','E-01':'KHARKHORUM'};
 const CELLS=[];
-Object.entries(COUNT).forEach(function(e){
-  const key=e[0], n=e[1], S=SIZES[key];
-  for(let i=1;i<=n;i++){
+(function(){
+  const seq={A:0,B:0,C:0,D:0,E:0,F:0};
+  SHAPE.forEach(function(h){
+    const key=h[2], S=SIZES[key], i=++seq[key];
     const code=key+'-'+String(i).padStart(2,'0'), th=THEMED[code];
     CELLS.push({code:code,sizeKey:key,S:S,themed:!!th,cat:th?th[1]:'flora',
       name:th?th[0]:'Elm woodland',
       role:th?th[2]:S.area+' m² planted — '+S.pots+' pits, '+S.trees+' elms, ten years of maintenance and irrigation',
       pots:th?0:S.pots, trees:th?0:S.trees,
       partner:PARTNERS[code]||null});
-  }
-});
+  });
+})();
 const TOT_TREES=CELLS.reduce(function(s,c){return s+c.trees;},0);
 const TOT_POTS =CELLS.reduce(function(s,c){return s+c.pots;},0);
 const fmt=function(n){return n.toLocaleString('en-US');};
@@ -1469,8 +1479,8 @@ const BEATS=[
    mini:['7 cells · infrastructure','100 kW solar','93 cells · planted']},
   {cam:{r:44, theta:1.62,phi:.80},g:0.14,y:'2027',l:'planting',num:'(03)',
    h:'Planting',
-   p:'<b>Three elms per pit.</b> A 400 m² cell takes 1,200 trees, a 25 m² cell takes 75. 28,425 in total.',
-   mini:['9,475 pits','28,425 saplings']},
+   p:'<b>Three elms per pit.</b> A 400 m² cell takes 1,200 trees, a 12 m² cell takes 36. 13,713 in total.',
+   mini:['4,571 pits','13,713 saplings']},
   {cam:{r:32, theta:1.95,phi:.88},g:0.32,y:'2028',l:'first summer',num:'(04)',
    h:'First summer',
    p:'The most fragile stage. Roots have not reached depth, so <b>irrigation never stops</b>. '+
@@ -1487,13 +1497,23 @@ const BEATS=[
      '<b>nebkha</b> — it holds moisture and improves the soil. The tree holds the sand and the sand '+
      'feeds the tree. Butterflies and hares return.',
    mini:['years 3–7','wind slows','moisture accumulates']},
-  {cam:{r:88,theta:1.571,phi:.32},g:0.86,y:'2032',l:'sixth year',num:'(07)',
+  /* Сүүлийн үе — HEXAGON SHAPE.png-ийн өнцөг: дээрээс харсан төлөвлөгөө.
+     phi нь +Y-ээс хэмжигдэх туйлын өнцөг тул 0.06 нь бараг эгц дээрээс. theta=1.571
+     байх үед дэлгэцийн дээш чиглэл дэлхийн −z болж, зурган дээрх x → баруун,
+     y → доош гэсэн харьцаа яг давхцана. */
+  {cam:{r:88,theta:1.571,phi:.06},g:0.86,y:'2032',l:'sixth year',num:'(07)',
    h:'2032 · the result',
-   p:'Six years after planting. <b>10,875 m²</b> restored and the canopy begins to close. Independent '+
+   p:'Six years after planting. <b>4,571 m²</b> restored and the canopy begins to close. Independent '+
      'satellite data tracks NDVI, soil carbon and tree survival. A fully closed woodland still needs '+
      'another 10–15 years.',
-   mini:['10,875 m² restored','data · every year','survival >80%']}
+   mini:['4,571 m² restored','data · every year','survival >80%']}
 ];
+/* Лавлагааны хэлбэр цагираган торлолоос бараг хоёр дахин өргөн (хагас алгасал
+   31.7 м → 62.4 м) тул хэсгүүдийн камерын зайг мөн хэмжээгээр татна. Тус бүрийг
+   гараар засахын оронд нэг коэффициентээр — өнцөг, харьцаа нь хэвээр үлдэнэ. */
+const CAMK=1.97;
+BEATS.forEach(function(b){ b.cam.r*=CAMK; });
+
 
 /* ---------- дэлгэрэнгүй ---------- */
 const D=document.getElementById('hx-detail');
@@ -1504,7 +1524,7 @@ function openCell(c){
   document.getElementById('hxDarea').textContent=c.S.area+' m²';
   document.getElementById('hxDpots').textContent=c.themed?'—':fmt(c.pots);
   document.getElementById('hxDtrees').textContent=c.themed?'—':fmt(c.trees);
-  document.getElementById('hxDsize').textContent=c.sizeKey;
+  document.getElementById('hxDsize').textContent=c.S.area+' m\u00B2';
   document.getElementById('hxDprice').textContent='$'+fmt(c.S.area*30);
   const st=document.getElementById('hxDst');
   if(c.partner){st.className='st taken';st.textContent='Claimed · '+c.partner;}
@@ -1545,15 +1565,10 @@ const SC=function(hex){return window.THREE?new THREE.Color(hex).convertSRGBToLin
 const SAND=window.THREE?SC('#CFC2A4'):null;
 const GREEN=window.THREE?SC('#7D9A46'):null;
 
-const DIRS=[[1,0],[1,-1],[0,-1],[-1,0],[-1,1],[0,1]];
-function ringC(k){ if(k===0)return[[0,0]];
-  const o=[];let q=DIRS[4][0]*k,r=DIRS[4][1]*k;
-  for(let i=0;i<6;i++)for(let j=0;j<k;j++){o.push([q,r]);q+=DIRS[i][0];r+=DIRS[i][1];}
-  return o;}
-const SLOTS=[];for(let k=0;k<=6&&SLOTS.length<100;k++)SLOTS.push.apply(SLOTS,ringC(k));
-SLOTS.length=100;
-const PITCH=3.05;
-const axial=function(q,r){return{x:PITCH*Math.sqrt(3)*(q+r/2), z:PITCH*1.5*r};};
+/* PITCH нь хамгийн том зургаалжны радиусыг метр рүү хөрвүүлнэ: A нүд 400 м²,
+   тогтмол зургаалжны талбай = 2.598·R² тул R = √(400/2.598) = 12.41 м. */
+const PITCH=12.41;
+const SLOTS=SHAPE.map(function(h){return{x:h[0]*PITCH, z:h[1]*PITCH};});
 const rnd=function(s){let v=Math.abs(Math.round(s*9301+49297))%233280;
   return function(){v=(v*9301+49297)%233280;return v/233280;};};
 
@@ -1564,7 +1579,7 @@ function init3D(){
   dummy=new THREE.Object3D();
   SNOW=SC('#E9EBEC');
   scene=new THREE.Scene();
-  scene.fog=new THREE.Fog(SC('#F2F0EA').getHex(),108,240);
+  scene.fog=new THREE.Fog(SC('#F2F0EA').getHex(),210,470);
   const s=size();
   cam=new THREE.PerspectiveCamera(42,s.w/s.h,.5,600);
   rend=new THREE.WebGLRenderer({antialias:true,alpha:true});
@@ -1592,18 +1607,24 @@ function init3D(){
   scene.add(sun);
 
   groundM=new THREE.MeshStandardMaterial({color:SC('#CBBEA0'),roughness:1});
-  const ground=new THREE.Mesh(new THREE.CircleGeometry(125,64),groundM);
+  /* Дугуй биш хавтгай: дугуйн ирмэг нь дээрээс харахад элсэн дискний зах болж
+     харагдана. Мананд уусах хэмжээний том хавтгай өгвөл суурь дэлгэцийг бүтэн
+     дүүргэнэ (манан 210…470 тул 900 нэгж хангалттай). */
+  const ground=new THREE.Mesh(new THREE.PlaneGeometry(900,900),groundM);
   ground.rotation.x=-Math.PI/2; ground.position.y=-.02; ground.receiveShadow=true;
   scene.add(ground);
 
   CELLS.forEach(function(c,i){
-    const S=c.S, sl=SLOTS[i], p=axial(sl[0],sl[1]);
+    const S=c.S, p=SLOTS[i];
     const radius=PITCH*S.rad*.9;
     const geo=new THREE.CylinderGeometry(radius,radius*.97,S.h,6,1);
     const mat=new THREE.MeshStandardMaterial({color:SAND.clone(),roughness:.9});
     const m=new THREE.Mesh(geo,mat);
     m.position.set(p.x,S.h/2,p.z);
-    m.rotation.y=Math.PI/6; m.castShadow=false; m.receiveShadow=true;
+    /* Эргэлтгүй: CylinderGeometry-ийн анхны орой 90°-д, өөрөөр хэлбэл оройгоороо
+       дээшээ (pointy-top) — HEXAGON SHAPE.png дээрх чиглэл яг ийм. π/6-ээр
+       эргүүлбэл хавтгай талаараа дээшээ харна. */
+    m.rotation.y=0; m.castShadow=false; m.receiveShadow=true;
     scene.add(m);
     hexes.push({mesh:m,mat:mat,c:c,i:i,x:p.x,z:p.z,top:S.h,radius:radius});
   });
@@ -1611,15 +1632,37 @@ function init3D(){
   /* --- модны байрлал (дэд бүтцийн нүдэнд мод тарихгүй) --- */
   hexes.forEach(function(h){
     if(h.c.themed) return;
-    const R=rnd(h.i*17+5), n=h.c.S.n, rad=h.radius*.72;
-    const cf=1;                       // мод хаана ч ижил хэмжээтэй
-    const step=Math.sqrt(2.598*rad*rad/(n*.866));
-    const k=Math.ceil(rad/step)+1;
-    for(let rr=-k;rr<=k;rr++)for(let qq=-k;qq<=k;qq++){
-      const x=step*(qq+rr/2), z=step*rr*.866;
-      if(Math.hypot(x,z)>rad) continue;
-      TREES.push({x:h.x+x+(R()-.5)*step*.5, z:h.z+z+(R()-.5)*step*.5, base:h.top,
-        H:(0.42+R()*0.22)*cf, off:R()*.34, sway:R()*6.28, spin:R()*6.28, e:0});
+    const R=rnd(h.i*17+5), n=h.c.S.n, rad=h.radius*.86;
+    /* Модны өндөр үнэмлэхүй нэгжээр бичигдсэн бөгөөд хуучин 3.05-ийн алгасалд
+       тохируулагдсан байсан. Лавлагааны хэлбэрт алгасал 12.41 болсон тул тэр
+       харьцаагаар татахгүй бол мод нүдний дотор үл үзэгдэх толбо болно. */
+    const cf=PITCH/3.05;              // мод хаана ч ижил хэмжээтэй
+    /* Тарилт нь сүлжээ биш, ГҮХ. Талбай дээр зэрэгцээ шулуун ховил ухаж, ховил
+       бүрийн дагуу мод тарина — мөр бүрийн урт нь зургаалжны ирмэгээр тасарч,
+       хэлбэрийг мод өөрсдөө зурна. Нүдийг rotation.y=π/6-ээр эргүүлсэн тул дээд,
+       доод ирмэг нь z тэнхлэгт хөндлөн: эхний ба сүүлийн ховил яг ирмэг дээр
+       таарч, зургаалжин цэвэр уншигдана.
+       Оройнууд (±rad,0) ба (±rad/2,±apo)-д тул мөрийн хагас өргөн шугамаар
+       багасна: w(z) = rad·(1 − |z| / (2·apo)). */
+    /* Оройгоороо дээш харсан зургаалжин: орой (0,±rad)-д, хажуугийн хавтгай тал нь
+       x = ±apo дээр. Тиймээс ховил z = −rad…+rad хооронд явж, хагас өргөн нь дунд
+       бүсдээ тогтмол, орой руугаа шугамаар нарийсна:
+         |z| ≤ rad/2  →  w = apo
+         |z| > rad/2  →  w = 2·apo·(rad − |z|)/rad */
+    const apo=rad*0.8660254;
+    const d=Math.sqrt(2.598*rad*rad/n);           // ховил хоорондын = ховил доторх алхам
+    const rows=Math.max(1,Math.round(2*rad/d));
+    for(let j=0;j<=rows;j++){
+      const z=-rad+(2*rad-rows*d)/2+j*d;
+      const w=Math.abs(z)<=rad/2 ? apo : 2*apo*(rad-Math.abs(z))/rad;
+      if(w<=0) continue;
+      const cols=Math.max(0,Math.round(2*w/d));
+      for(let i=0;i<=cols;i++){
+        const x=-w+(2*w-cols*d)/2+i*d;
+        /* Хэлбэлзэлгүй: ухсан ховил шулуун, мод нь ховилын алхмаар яг суудаг. */
+        TREES.push({x:h.x+x, z:h.z+z, base:h.top,
+          H:(0.42+R()*0.22)*cf, off:R()*.34, sway:R()*6.28, spin:R()*6.28, e:0});
+      }
     }
   });
 
@@ -1754,15 +1797,14 @@ function init3D(){
     return g.add(put(p,x||0,.025,z||0));
   };
   /* Нүд бүрийн захаар бут, цэцэг — тоног төхөөрөмж ногоон дунд суух */
+  /* Бут бүгд нэг төрөл, нэг хэмжээ: өмнө нь дөрвөн өөр хэмжээ, гурав тутамд нэгэнд
+     нь ишлэг цэцэг нэмэгддэг байсан нь байгууламжийн эргэн тойрныг эмх замбараагүй
+     харагдуулж байв. Ижил бут жигд тойрог үүсгэвэл байгууламж өөрөө тодрох болно. */
   const garden=function(g,n,r0,r1){
+    const s=.22;
     for(let i=0;i<n;i++){
       const a=i*2.399, rr=r0+(((i*7)%5)/4)*(r1-r0);
-      const x=Math.cos(a)*rr, z=Math.sin(a)*rr, s=.15+((i*3)%4)*.05;
-      g.add(put(sp(s,M.bush),x,s*.78,z));
-      if(i%3===0){
-        g.add(put(cy(.014,.014,.20,4,M.bush),x+.16,.10,z+.11));
-        g.add(put(sp(.045,i%2?M.lime:M.pale),x+.16,.21,z+.11));
-      }
+      g.add(put(sp(s,M.bush),Math.cos(a)*rr,s*.78,Math.sin(a)*rr));
     }
   };
 
@@ -1985,7 +2027,7 @@ function init3D(){
     const fn=BUILD[h.c.cat]?BUILD[h.c.cat](g):null;
     g.scale.setScalar(.001);
     scene.add(g);
-    INFRA.push({g:g,anim:fn,cell:h.c});
+    INFRA.push({g:g,anim:fn,cell:h.c,radius:h.radius});
   });
 
   /* ==== ТАЛБАЙ ДАЯАРХ ХӨДӨЛГӨӨН ====
@@ -1995,7 +2037,7 @@ function init3D(){
     for(let i=0;i<hexes.length;i++) if(hexes[i].c.code===code) return hexes[i];
     return hexes[0];
   };
-  const HR=find('L-04');
+  const HR=find('D-04');                      // судалгааны станц шинэ ангидаа
 
   /* 1. Хиймэл дагуулын хяналт — судалгааны цэгээс тархах сканнердах цагираг */
   const swMat=new THREE.MeshBasicMaterial({color:SC('#9CC24A'),transparent:true,
@@ -2023,7 +2065,7 @@ function init3D(){
   const foxM =new THREE.MeshStandardMaterial({color:SC('#A87A50'),roughness:.9});
   const WILD=[];
   const hostCells=hexes.filter(function(h){
-    return !h.c.themed&&(h.c.sizeKey==='XL'||h.c.sizeKey==='L'||h.c.sizeKey==='M');});
+    return !h.c.themed&&(h.c.sizeKey==='A'||h.c.sizeKey==='B'||h.c.sizeKey==='C'||h.c.sizeKey==='D');});
 
   function addWild(o){WILD.push(o);scene.add(o.g);o.g.visible=false;}
 
@@ -2183,15 +2225,22 @@ function animate(){
 
   const gT=A.g+(B.g-A.g)*f;
   growth+=(gT-growth)*.08;
+  /* Нүдний суурь ногоон болохоо больсон: хэлбэрийг мод өөрсдөө үүсгэх ёстой,
+     доороос нь ногоон зургаалжин өгвөл ой байхгүй ч ургасан мэт харагдана.
+     Тарилтын нүд элсэн хэвээр; зөвхөн дэд бүтцийн долоон нүд өвсөрхөг болно —
+     тэнд мод байхгүй тул суурь нь өөрөө тэр нүдийг илэрхийлнэ. */
   hexes.forEach(function(h){
-    h.mat.color.copy(SAND).lerp(GREEN,Math.min(1,
-      h.c.themed?Math.max(infra*.85,growth*1.1):growth*1.1));
+    h.mat.color.copy(SAND);
+    if(h.c.themed) h.mat.color.lerp(GREEN,Math.min(1,infra*1.15));   // зүлгэн зургаалжин
   });
   // дэд бүтэц тарилтаас өмнө баригдана
   const iT=Math.max(0,Math.min(1,(beatF-1)/1));
   infra+=(iT*iT*(3-2*iT)-infra)*.1;
   INFRA.forEach(function(o){
-    o.g.scale.setScalar(Math.max(.001,infra*1.26));
+    /* Байгууламжууд хуучин 3.05-ийн алгаслаар, тэр үеийн L нүдний 1.94 нэгжийн
+       радиуст багтаж зохиогдсон. Ертөнцийн масштабаар татвал нүднээсээ халин
+       гарна — тиймээс нүд өөрийнх нь радиусын харьцаагаар татна. */
+    o.g.scale.setScalar(Math.max(.001,infra*1.26*(o.radius/1.9407)));
     if(o.anim&&infra>.06&&!REDUCED) o.anim(t);
   });
 
@@ -2616,7 +2665,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
     sun.shadow.camera.top=dd;sun.shadow.camera.bottom=-dd;sun.shadow.camera.far=200;
     scene.add(sun);
 
-    const ground=new THREE.Mesh(new THREE.CircleGeometry(115,64),
+    const ground=new THREE.Mesh(new THREE.PlaneGeometry(700,700),
       new THREE.MeshStandardMaterial({color:SCp('#CBBEA0'),roughness:1}));
     ground.rotation.x=-Math.PI/2; ground.receiveShadow=true; scene.add(ground);
 

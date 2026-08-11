@@ -216,7 +216,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 
   <span class="eyebrow"><i></i>Erdene Sum · Dornogovi · 44.0754 N / 111.1958 E</span>
   <h1>HEXAGON<span>Experience map</span></h1>
-  <p class="lead">A fenced 30,000 m² site divided into 50 hexagonal cells, with 6,750 m² under active planting. The map is drawn to scale — every point marks a single pot, every row a drip line. The timeline runs continuously: seasons turn, trees grow only through summer, and when leaves drop each winter the sand begins to move again.</p>
+  <p class="lead">A fenced 30,000 m² site holding 54 hexagonal cells, with 4,571 m² under active planting. The map is drawn to scale — every point marks a single pot, every row a drip line. The timeline runs continuously: seasons turn, trees grow only through summer, and when leaves drop each winter the sand begins to move again.</p>
 
   <div class="mapbox">
     <div class="mapinner" id="mapinner">
@@ -284,10 +284,10 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
       leave it out only for roughly square/icon logos, where 1 is fine.
    The logo then renders centered inside that cell automatically. ────── */
 var PARTNERS = {
-  'L-04': { name:'EFES GROUP', logo:'assets/images/partner/hexagon-cells/EFES-GROUP_L.png', aspect:1.41 },
-  'M-01': { name:'ROC', logo:'assets/images/partner/hexagon-cells/ROC_M.png', aspect:1.71 },
-  'M-22': { name:'TIMBERLAND', logo:'assets/images/partner/hexagon-cells/Timberland_M.svg', aspect:5.70 },
-  'M-24': { name:'YVES ROCHER', logo:'assets/images/partner/hexagon-cells/Yves-Rocher_M.webp', aspect:4.65 }
+  'B-01': { name:'EFES GROUP', logo:'assets/images/partner/hexagon-cells/EFES-GROUP_L.png', aspect:1.41 },
+  'C-03': { name:'ROC', logo:'assets/images/partner/hexagon-cells/ROC_M.png', aspect:1.71 },
+  'C-02': { name:'TIMBERLAND', logo:'assets/images/partner/hexagon-cells/Timberland_M.svg', aspect:5.70 },
+  'C-01': { name:'YVES ROCHER', logo:'assets/images/partner/hexagon-cells/Yves-Rocher_M.webp', aspect:4.65 }
 };
 var HELD     = [];
 
@@ -296,11 +296,19 @@ var HELD     = [];
    1 метр = 3.858 нэгж. Хээний нүд 4 нэгж = 1 метр = 1 бортого.    */
 var UPM=3.858, SLOT=36, CX=470, CY=420;
 var R_SITE=Math.sqrt(30000/2.598)*UPM;
+/* Хэмжээ, тоо, байрлал бүгд HEXAGON SHAPE.png-ээс уншигдсан: талбай дээрх 54
+   зургаалжин. Радиус нь талбайгаас гарна (тогтмол зургаалжин = 2.598·R²), тул
+   зурагдсан хэмжээ зарагдсан м²-тэй үргэлж таарна. ₮100,000/м², $1 ≈ ₮3,400. */
 var SIZES={
-  L:{area:200,pots:200,price:'₮20,000,000',usd:'≈ $5,880',r:.940,count:20},
-  M:{area:100,pots:100,price:'₮10,000,000',usd:'≈ $2,940',r:.665,count:25},
-  S:{area:50, pots:50, price:'₮5,000,000', usd:'≈ $1,470',r:.470,count:5}
+  A:{area:400,pots:400,price:'₮40,000,000',usd:'≈ $11,760',nm:'Extra large cell'},
+  B:{area:260,pots:260,price:'₮26,000,000',usd:'≈ $7,650', nm:'Large cell'},
+  C:{area:120,pots:120,price:'₮12,000,000',usd:'≈ $3,530', nm:'Medium cell'},
+  D:{area:90, pots:90, price:'₮9,000,000', usd:'≈ $2,650', nm:'Small-plus cell'},
+  E:{area:45, pots:45, price:'₮4,500,000', usd:'≈ $1,320', nm:'Small cell'},
+  F:{area:12, pots:12, price:'₮1,200,000', usd:'≈ $350',   nm:'Marker cell'}
 };
+/* [x, y, class] — хамгийн том зургаалжны радиусыг нэгж болгосон нормчилсон байрлал */
+var SHAPE=[[-3.5764,1.0969,'A'],[1.7086,1.3346,'A'],[-1.0171,2.6433,'A'],[3.3162,-2.7075,'B'],[-5.0352,0.1615,'B'],[0.18,0.5734,'B'],[-0.8746,4.3662,'B'],[-0.4271,-1.9448,'C'],[1.3021,-1.8147,'C'],[-3.8427,-0.369,'C'],[1.4678,-0.1359,'C'],[0.4255,3.9604,'C'],[-2.6239,4.3019,'C'],[3.4772,-3.9643,'D'],[1.4779,-2.8245,'D'],[3.1652,-1.4717,'D'],[-2.3281,0.3938,'D'],[2.9329,0.609,'D'],[-0.894,1.213,'D'],[3.8001,1.786,'D'],[2.4768,2.7478,'D'],[2.7672,-4.4452,'E'],[-0.3256,-2.8523,'E'],[4.5629,-2.5821,'E'],[0.4162,-1.6095,'E'],[-1.244,-1.5901,'E'],[4.559,-1.3989,'E'],[2.0393,-1.2502,'E'],[3.0955,-0.5974,'E'],[0.1599,-0.5587,'E'],[2.4652,-0.2342,'E'],[-1.5839,0.7345,'E'],[3.7374,0.9397,'E'],[0.2559,2.2948,'E'],[0.7569,3.0645,'E'],[-1.8797,3.7723,'E'],[2.6766,-5.0259,'F'],[4.4142,-3.8249,'F'],[2.8097,-3.7506,'F'],[-0.2575,-3.437,'F'],[-0.9854,-2.4884,'F'],[0.7546,-2.3227,'F'],[5.0174,-2.2042,'F'],[5.0352,-1.7713,'F'],[-2.1755,-1.5878,'F'],[-1.7992,-1.3679,'F'],[1.4887,-1.062,'F'],[2.4737,-0.8289,'F'],[-1.0613,0.52,'F'],[-4.8788,1.1704,'F'],[-4.8796,1.5971,'F'],[0.7941,2.0702,'F'],[3.2596,2.6053,'F'],[-2.8833,5.0259,'F']];
 var TREES_PER_M2=4;
 var WIND={x:0.80,y:0.60};                       /* баруун хойноос зүүн урагш */
 
@@ -329,25 +337,18 @@ function setTxt(el,v){if(el.textContent!==v)el.textContent=v;}
 function $(id){return document.getElementById(id);}
 
 /* ══════════ 4. ЭСҮҮД ══════════ */
-var slots=[];
-for(var q=-4;q<=4;q++) for(var r=Math.max(-4,-q-4);r<=Math.min(4,-q+4);r++){
-  var x=CX+SLOT*1.5*q, y=CY+SLOT*Math.sqrt(3)*(r+q/2);
-  slots.push({x:x,y:y,d:Math.hypot(x-CX,y-CY)+rnd()*34});
-}
-slots.sort(function(a,b){return a.d-b.d;}); slots=slots.slice(0,50);
-
-var classes=[];
-for(var i=0;i<20;i++)classes.push('L');
-for(var i=0;i<25;i++)classes.push('M');
-for(var i=0;i<5;i++)classes.push('S');
-for(var i=classes.length-1;i>0;i--){var j=Math.floor(rnd()*(i+1));var t=classes[i];classes[i]=classes[j];classes[j]=t;}
+/* Радиус метрээс: R = √(талбай/2.598), дараа нь UPM-ээр зурган нэгж рүү.
+   Хамгийн том нүд ийнхүү 47.9 нэгж болох тул бүх бүтээл талбайн тойрогт багтана. */
+function rOf(cls){ return Math.sqrt(SIZES[cls].area/2.598)*UPM; }
+var UNIT=rOf('A');                              /* нормчилсон нэгж → зурган нэгж */
 
 var VIG=[0.84,1.0,1.14];                       /* эсийн өсөлтийн ялгаа */
-var counters={L:0,M:0,S:0}, CELLS=[];
-slots.forEach(function(s,i){
-  var cls=classes[i]; counters[cls]++;
+var counters={A:0,B:0,C:0,D:0,E:0,F:0}, CELLS=[];
+SHAPE.forEach(function(h,i){
+  var cls=h[2]; counters[cls]++;
   var id=cls+'-'+String(counters[cls]).replace(/^(\d)$/,'0$1');
-  CELLS.push({x:s.x,y:s.y,cls:cls,id:id,R:SLOT*SIZES[cls].r,tier:Math.floor(rnd()*3),
+  var s={x:CX+h[0]*UNIT, y:CY+h[1]*UNIT};
+  CELLS.push({x:s.x,y:s.y,cls:cls,id:id,R:rOf(cls),tier:Math.floor(rnd()*3),
     status:PARTNERS[id]?'taken':(HELD.indexOf(id)>-1?'held':'free'),
     partner:PARTNERS[id]?PARTNERS[id].name:null,
     logo:PARTNERS[id]?PARTNERS[id].logo:null,
@@ -692,14 +693,17 @@ function showIntro(){
   return;
   /*
   detail.innerHTML='<span class="d-tag">Site Overview</span>'+
-    '<h3 class="d-title">50 cells, three sizes<span>Click any cell to zoom in</span></h3>'+
+    '<h3 class="d-title">54 cells, six sizes<span>Click any cell to zoom in</span></h3>'+
     '<p class="d-body">Each cell has a fixed position on the site and carries its sponsor\'s name. Sponsorship is not land ownership — it is stewardship and recognition.</p>'+
     '<ul class="d-stats">'+rows([
-      ['Fenced site','30,000 m²'],['Planted area','6,750 m² · 22.5%'],
-      ['Large cells','20 × 200 m² · ₮20,000,000 (≈ $5,880)'],
-      ['Medium cells','25 × 100 m² · ₮10,000,000 (≈ $2,940)'],
-      ['Small cells','5 × 50 m² · ₮5,000,000 (≈ $1,470)'],
-      ['Unit price','₮100,000 / m² (≈ $29 / m²)'],['Total trees','27,000 · Ulmus pumila']
+      ['Fenced site','30,000 m²'],['Planted area','4,571 m² · 15.2%'],
+      ['Extra large','3 × 400 m² · ₮40,000,000 (≈ $11,760)'],
+      ['Large','4 × 260 m² · ₮26,000,000 (≈ $7,650)'],
+      ['Medium','6 × 120 m² · ₮12,000,000 (≈ $3,530)'],
+      ['Small-plus','8 × 90 m² · ₮9,000,000 (≈ $2,650)'],
+      ['Small','15 × 45 m² · ₮4,500,000 (≈ $1,320)'],
+      ['Marker','18 × 12 m² · ₮1,200,000 (≈ $350)'],
+      ['Unit price','₮100,000 / m² (≈ $29 / m²)'],['Total trees','18,284 · Ulmus pumila']
     ])+'</ul>'+
     '<a class="d-cta" href="index.html#contact" target="_top">Enquire About Sponsoring a Cell →</a>';
   */
@@ -709,7 +713,7 @@ function showCell(id){
   /* Танилцуулга нуугдсан ч нүдний дэлгэц гарна. display:none үед гарч ирэх
      ажиглагч ажиллахгүй тул .in-г гараар өгнө — эс бөгөөс opacity:0 хэвээр. */
   detail.style.display=''; detail.classList.add('in');
-  var s=SIZES[c.cls], size={L:'Large cell',M:'Medium cell',S:'Small cell'}[c.cls];
+  var s=SIZES[c.cls], size=s.nm;
   var state=c.status==='taken'?('Partnered — '+c.partner):(c.status==='held'?'In discussion':'Available');
   var side=Math.sqrt(s.area/2.598).toFixed(1);
   detail.innerHTML='<span class="d-tag">Cell '+c.id+' · '+size+'</span>'+
