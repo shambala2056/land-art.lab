@@ -240,25 +240,9 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
     <div class="tip" id="tip"></div>
   </div>
 
-  <div class="panel">
-    <div class="trow">
-      <button class="play" id="play" type="button" aria-label="Play">▶</button>
-      <input type="range" id="slider" min="2026" max="2036.99" step="0.01" value="2026.25" aria-label="Select year">
-    </div>
-    <div class="ticks"><span class="now">2026 planting</span><span>2029</span><span>2032</span><span>2036</span></div>
-    <div class="stagebar" id="stagebar"><div></div><div></div><div></div><div></div></div>
-    <p class="stagenote" id="stageNote"></p>
-
-    <div class="out">
-      <div><div class="k">Tree height</div><div class="v" id="r1">0.3 m</div></div>
-      <div><div class="k">Crown radius</div><div class="v" id="r5">0.06 m</div></div>
-      <div><div class="k">Canopy cover · current</div><div class="v" id="r2">1%</div></div>
-      <div><div class="k">Wind reduction</div><div class="v" id="r6">2%</div></div>
-      <div><div class="k">Sand movement</div><div class="v" id="r3">High</div></div>
-      <div><div class="k">Care remaining</div><div class="v" id="r4">10 years</div></div>
-    </div>
-    <p class="note">Canopy cover is not a manually entered figure — it is the geometric result of crowns expanding across a 1-metre planting grid, scaled by seasonal leaf state. That is why cover drops every winter and sand movement naturally returns each spring, without being scripted.</p>
-  </div>
+  <!-- Он цагийн самбар хасагдсан: үндсэн хуудасны 3D бүтэц дээр аль хэдийн он цагийн
+       хяналт байгаа тул энд давхардаж байв. Дүр зураг өөрөө үргэлжлүүлэн гүйнэ —
+       он, улирал, үе шат нь дээрх HUD дээр харагдана. -->
 
   <div class="detail" id="detail"></div>
 
@@ -613,17 +597,17 @@ function render(t){
   setTxt($('stgNum'),stg.n); setTxt($('stgName'),stg.t);
   if(si!==lastStage){
     var chip=$('stgChip'); chip.classList.remove('flash'); void chip.offsetWidth; chip.classList.add('flash');
-    $('stageNote').innerHTML=stg.note+' <span style="opacity:.7">('+stg.y+')</span>';
-    var bars=$('stagebar').children;
-    for(var k=0;k<bars.length;k++) bars[k].className = k<=si?'lit':'';
+    /* Эдгээр нь он цагийн самбартай хамт хасагдсан тул байхгүй байж болно */
+    var sNote=$('stageNote');
+    if(sNote) sNote.innerHTML=stg.note+' <span style="opacity:.7">('+stg.y+')</span>';
+    var sBar=$('stagebar');
+    if(sBar){ var bars=sBar.children;
+      for(var k=0;k<bars.length;k++) bars[k].className = k<=si?'lit':''; }
     lastStage=si;
   }
-  setTxt($('r1'),h.toFixed(1)+' m');
-  setTxt($('r5'),crownM.toFixed(2)+' m');
-  setTxt($('r2'),Math.round(canopy*100)+'%');
-  setTxt($('r6'),Math.round((1-windOpen)*100)+'%');
-  setTxt($('r3'), canopy<.25?'High':(canopy<.6?'Moderate':'Low'));
-  setTxt($('r4'),Math.max(0,10-(y-2026))+' years');
+  /* Тоон үзүүлэлтийн самбар хасагдсан — setTxt нь байхгүй элемент дээр унах тул
+     r1/r2/r3/r5/r6-д бичих мөрүүд хамт хасагдав. Доорх HEX объект хэвээр: дүр зураг,
+     үе шатны тайлбар үүнээс уншсаар байна. */
 
   HEX={t:t,y:y,p:p,h:h,leaf:leaf,canopy:canopy,struct:struct,open:windOpen,si:si,win:win};
   if(typeof onTick==='function') onTick(HEX);
@@ -632,25 +616,22 @@ var HEX={t:2026.25,y:2026,p:.25,h:.3,leaf:0,canopy:0,struct:0,open:1,si:0,win:0}
 var onTick=null;
 
 /* ══════════ 10. ГОГЦОО ══════════ */
-var slider=$('slider'), T=parseFloat(slider.value), playing=false, last=0;
+/* Гулсуур, тоглуулах товч хасагдсан тул цаг хугацааг дүр зураг өөрөө жолооднө:
+   2026-аас 2036 хүртэл гүйгээд эхэлсэн газраа эргэж очно. Хөдөлгөөнийг багасгах
+   тохиргоотой уншигчид эцсийн жил дээр зогссон дүр зургийг харна. */
+var REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+var T=REDUCED?2036.5:2026.25, playing=!REDUCED, last=0;
 function frame(ts){
   if(!last)last=ts;
   var dt=Math.min(0.05,(ts-last)/1000); last=ts;
   if(playing){
     T+=dt*0.28;                          /* ~3.6 seconds per year */
-    if(T>=2036.99){T=2036.99; setPlay(false);}
-    slider.value=T.toFixed(2);
+    if(T>=2036.99) T=2026;               /* гогцоо */
     render(T);
   }
   drawWind();
   requestAnimationFrame(frame);
 }
-function setPlay(on){
-  playing=on; $('play').textContent=on?'❚❚':'▶';
-  if(on&&T>=2036.98){T=2026; slider.value='2026'; render(T);}
-}
-$('play').addEventListener('click',function(){setPlay(!playing);});
-slider.addEventListener('input',function(e){ setPlay(false); T=parseFloat(e.target.value); render(T); });
 
 /* ══════════ 11. ТОМРУУЛАЛТ ══════════ */
 var zoomAnim=null;

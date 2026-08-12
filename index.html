@@ -1491,21 +1491,27 @@ const BEATS=[
   {cam:{r:104,theta:1.571,phi:.34},g:0.00,y:'2026',l:'before planting',num:'(01)',
    h:'Starting point',
    p:'Bare gravel surface. Rainfall is <b>about 100 mm a year</b>; evaporation runs several times higher.'},
-  {cam:{r:34,theta:1.10,phi:.78},g:0.00,y:'2026',l:'infrastructure',num:'(02)',
-   h:'Infrastructure',
-   p:'The conditions are built before anything is planted. Seven cells stay unplanted and become the '+
-     '<b>100 kW solar field, water harvesting tanks, recycling point, research station, bird refuge, '+
-     'pollinator meadow and community ground</b>.',
-   mini:['7 cells · infrastructure','100 kW solar','93 cells · planted']},
-  {cam:{r:44, theta:1.62,phi:.80},g:0.14,y:'2027',l:'planting',num:'(03)',
+  {cam:{r:34,theta:1.10,phi:.78},g:0.00,y:'2026',l:'the conditions',num:'(02)',
+   h:'Conditions First',
+   p:'Nothing is planted until the site can keep it alive, and the order is fixed: '+
+     '<b>the well</b>, then the solar field that powers it, then the pits marked and augered to '+
+     'the layout plan, then the <b>perimeter fence</b>, and last the tanks and lined reservoir — '+
+     'filled and waiting before a single sapling arrives. Seven cells stay unplanted and become '+
+     'the solar field, water harvesting, recycling point, research station, bird refuge, '+
+     'pollinator meadow and community ground.',
+   mini:['7 cells · infrastructure','100 kW solar','54 cells · planted']},
+  {cam:{r:44, theta:1.62,phi:.80},g:0.14,y:'2027',l:'planting · drip',num:'(03)',
    h:'Planting',
-   p:'<b>Three elms per pit.</b> A 400 m² cell takes 1,200 trees, a 12 m² cell takes 36. 13,713 in total.',
+   p:'<b>Three elms per pit.</b> A 400 m² cell takes 1,200 trees, a 12 m² cell takes 36. 13,713 in '+
+     'total — four species, not elm alone — with the <b>drip lines laid alongside the planting</b> '+
+     'rather than after it.',
    mini:['4,571 pits','13,713 saplings']},
-  {cam:{r:32, theta:1.95,phi:.88},g:0.32,y:'2028',l:'first summer',num:'(04)',
-   h:'First summer',
+  {cam:{r:32, theta:1.95,phi:.88},g:0.32,y:'2028',l:'first summer · hub',num:'(04)',
+   h:'First Summer, and the Hub',
    p:'The most fragile stage. Roots have not reached depth, so <b>irrigation never stops</b>. '+
-     'Survival is counted in full twice a year and losses are replanted.',
-   mini:['survival target >80%','census · twice a year']},
+     'Survival is counted in full twice a year and losses are replanted. The hub is closed in '+
+     'before winter, and the <b>laboratory and greenhouse</b> are fitted out inside it.',
+   mini:['survival target >80%','census · twice a year','hub · lab · greenhouse']},
   {cam:{r:26, theta:2.30,phi:.96},g:0.50,y:'2029',l:'three summers',num:'(05)',
    h:'Three summers',
    p:'A sapling that survives three summers usually stays alive. <b>Drip lines run across the whole site</b>. '+
@@ -3304,7 +3310,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                                                 <div class="icon icon-photo"><img loading="lazy" src="assets/images/process/step-01.webp" alt="Hydrological survey in the Gobi"></div>
                                                 <div class="content">
                                                     <h4 class="title fw-semibold">Survey & Design</h4>
-                                                    <p class="text text-secondary">Hydrological and soil surveys, working drawings, and organic composting lay the groundwork before anything is built.</p>
+                                                    <p class="text text-secondary">Comprehensive hydrological and soil assessments, precision layout plans, and organic soil remediation form the rigorous foundation prior to any physical intervention.</p>
                                                 </div>
                                                 <div class="bot">
                                                     <div class="time fw-semibold">STEPS 01–04</div>
@@ -3320,7 +3326,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                                                 <div class="icon icon-photo"><img loading="lazy" src="assets/images/process/step-07.webp" alt="Installing a renewable energy system"></div>
                                                 <div class="content">
                                                     <h4 class="title fw-semibold">Infrastructure</h4>
-                                                    <p class="text text-secondary">Deep wells, irrigation tanks, renewable power, soil cultivation, and fencing — the systems that keep a site alive.</p>
+                                                    <p class="text text-secondary">The integration of groundwater extraction, irrigation networks, renewable power, soil conditioning, and secure fencing creates the essential life-support system that sustains the entire ecosystem. </p>
                                                 </div>
                                                 <div class="bot">
                                                     <div class="time fw-semibold">STEPS 05–09</div>
@@ -3336,7 +3342,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                                                 <div class="icon icon-photo"><img loading="lazy" src="assets/images/process/step-12.webp" alt="Planting a tree by hand"></div>
                                                 <div class="content">
                                                     <h4 class="title fw-semibold">Planting</h4>
-                                                    <p class="text text-secondary">Tree holes are dug, saplings transported and inoculated, planted, and connected to a full irrigation system.</p>
+                                                    <p class="text text-secondary">Following the precise excavation of planting pits, the saplings are mobilized, biologically inoculated, installed, and immediately integrated into a comprehensive irrigation network.</p>
                                                 </div>
                                                 <div class="bot">
                                                     <div class="time fw-semibold">STEPS 10–13</div>
@@ -3352,7 +3358,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                                                 <div class="icon icon-photo"><img loading="lazy" src="assets/images/process/step-16.webp" alt="Satellite view of a completed land art installation"></div>
                                                 <div class="content">
                                                     <h4 class="title fw-semibold">Monitoring</h4>
-                                                    <p class="text text-secondary">Control systems, pest management, and satellite tracking keep every planting verified long after it is in the ground.</p>
+                                                    <p class="text text-secondary"> After the initial planting phase, automated control systems, integrated biosecurity measures, and continuous satellite monitoring ensure the sustained viability of the entire site.</p>
                                                 </div>
                                                 <div class="bot">
                                                     <div class="time fw-semibold">STEPS 14–16</div>
@@ -3825,7 +3831,6 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                                 <div class="heading-section mb-48">
                                     <div class="heading-sub fw-semibold effectFade fadeUp">Contact</div>
                                     <div class="heading-title text-gradient-3 effectFade fadeRotateX">
-                                       Where Land Art   <br> Meets Land Restoration
                                     </div>
                                 </div>
                                 <div>
