@@ -1174,8 +1174,12 @@
 #hx-detail .st{margin-top:12px;border-radius:16px;padding:12px 16px;font-size:13px;
   font-weight:600;background:#23241E;color:#C9C8BE}
 #hx-detail .st.taken{background:#fff;color:#101010}
+/* Дугуйг × дээр голлуулна: товч нь өөрийн gorim padding-тай, × тэмдэг нь мөрийн
+   суурьтай зэрэгцдэг тул зүгээр line-height өгөхөд дугуйн голоос дээш/доош гулсана.
+   Flex голлуулалт нь тэмдгийг өөрийг нь хэмжиж төвлүүлдэг. */
 #hx-detail .x{position:absolute;top:18px;right:18px;background:#2C2D26;color:#fff;border:none;
-  width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;line-height:1}
+  width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;line-height:1;
+  display:flex;align-items:center;justify-content:center;padding:0}
 @media(min-width:900px){
   #hx-detail{left:auto;right:26px;bottom:26px;width:390px}
 }
@@ -1205,7 +1209,8 @@
   font-size:13px;line-height:1.6;padding-top:14px}
 #hx-shot .x{position:absolute;top:20px;right:22px;background:rgba(255,255,255,.16);color:#fff;
   border:1px solid rgba(255,255,255,.22);width:42px;height:42px;border-radius:50%;
-  cursor:pointer;font-size:19px;line-height:1;transition:background .15s}
+  cursor:pointer;font-size:19px;line-height:1;transition:background .15s;
+  display:flex;align-items:center;justify-content:center;padding:0}
 #hx-shot .x:hover{background:rgba(255,255,255,.28)}
 @media(prefers-reduced-motion:reduce){#hx-shot{transition:none}}
 /* ---- claim-a-cell call to action ---- */
