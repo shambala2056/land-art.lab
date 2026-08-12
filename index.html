@@ -2203,6 +2203,20 @@ function init3D(){
 
   new IntersectionObserver(function(en){visible=en[0].isIntersecting;},{threshold:0})
     .observe(stageEl);
+  /* Autoplay. Hunting for a Play button is friction nobody should need: the scene
+     runs itself the first time it is properly in view, once. A second observer
+     rather than the render one above, because that fires on the first stray pixel
+     and the run should start when the reader is actually looking at it. Anyone who
+     drags the slider or picks a year has taken over, so autostart stands down, and
+     reduced-motion readers keep the finished scene without the animation. */
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    var hxAuto=new IntersectionObserver(function(en){
+      if(!en[0].isIntersecting || played || manual) return;
+      played=true; hxAuto.disconnect();
+      beatF=0; target=0; applyBeat(); setPlay(true);
+    },{threshold:.4});
+    hxAuto.observe(stageEl);
+  }
   document.getElementById('hxBoot').classList.add('gone');
   animate();
 }
@@ -2651,17 +2665,21 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
       {f:.64,th:1.62,ph:.66,g:.12,y:'2021',l:'planting · June',n:'(04)',h:'The message is written',
        p:'<b>21,857 elms</b> planted from June 2021 — in the shape of letters, every row set out '+
          'by hand — and the irrigation system assembled as the planting went in.'},
-      {f:.54,th:1.95,ph:.76,g:.28,y:'2022',l:'first summer',n:'(05)',h:'First summer',
-       p:'The most fragile stage. Roots have not reached depth, so irrigation never stops. '+
-         'The letters green up and begin to read from orbit.'},
-      {f:.48,th:2.30,ph:.84,g:.44,y:'2023',l:'three summers',n:'(06)',h:'Three summers',
-       p:'A sapling that survives three summers usually stays alive. The risk window closes.'},
-      {f:.56,th:2.62,ph:.72,g:.62,y:'2024',l:'nebkha forms',n:'(07)',h:'The nebkha effect',
-       p:'Trees slow the wind and sand settles at their base, building a <b>nebkha mound</b>. '+
-         'Moisture accumulates and the soil improves. Butterflies and hares return.'},
-      {f:1.02,th:1.571,ph:.24,g:.80,y:'2026',l:'five years on',n:'(08)',h:'30,000 m²',
-       p:'Five years after planting, and covered by the Martensite Analytica satellite data. '+
-         'This is where ART N TECH and HEXAGON began.'}],
+      {f:.54,th:1.95,ph:.76,g:.28,y:'2022',l:'first summer',n:'(05)',h:'The Fragile Stage',
+       p:'The initial summer is the most critical. Because the root systems have not yet reached '+
+         'sufficient depth, continuous irrigation is required. During this phase, the living '+
+         'letters green up and become legible from orbit.'},
+      {f:.48,th:2.30,ph:.84,g:.44,y:'2023',l:'three summers',n:'(06)',h:'The Risk Window',
+       p:'After three summers, the critical risk window closes. Saplings that endure this period '+
+         'will usually survive, demonstrating long-term viability.'},
+      {f:.56,th:2.62,ph:.72,g:.62,y:'2024',l:'nebkha forms',n:'(07)',h:'The Nebkha Effect',
+       p:'As the canopy develops, it slows the wind, allowing sand to settle at the base of the '+
+         'trunks. This builds <b>nebkha mounds</b> that naturally trap moisture and rehabilitate '+
+         'the soil. Ultimately, this restored micro-ecosystem facilitates the return of local '+
+         'biodiversity, such as butterflies and hares.'},
+      {f:1.02,th:1.571,ph:.24,g:.80,y:'2026',l:'five years on',n:'(08)',h:'Data Maturation',
+       p:'Five years after planting, this 30,000-square-meter site is fully established and '+
+         'audited in 2026 against satellite data from EOS and Google Earth Engine.'}],
     artntech:[
       {f:1.00,th:1.571,ph:.32,g:0,y:'2022',l:'site preparation',n:'(01)',h:'A triangular site',
        p:'The form was chosen for the bond between Human, Sky and Earth — a 300 m equilateral triangle.'},
@@ -2953,6 +2971,17 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
     }
     resize(); addEventListener('resize',resize);
     new IntersectionObserver(function(e){vis=e[0].isIntersecting;},{threshold:0}).observe(stage);
+    /* Autoplay, as on the HEXAGON scene above: each land art runs itself once, the
+       first time it is properly in view, so the Play button becomes a replay rather
+       than the only way in. Manual control and reduced motion both opt out. */
+    if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+      var laAuto=new IntersectionObserver(function(e){
+        if(!e[0].isIntersecting || played || manual) return;
+        played=true; laAuto.disconnect();
+        beatF=0; target=0; applyBeat(); setPlay(true);
+      },{threshold:.4});
+      laAuto.observe(stage);
+    }
     function setCap(i){
       if(i===capIdx) return; capIdx=i; const b=B[i];
       cap.classList.add('out');
