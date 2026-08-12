@@ -2188,7 +2188,28 @@ function init3D(){
     new THREE.MeshBasicMaterial({color:SC('#E6DABE'),transparent:true,opacity:.55}),150);
   windIM.frustumCulled=false; scene.add(windIM);
 
-  SITE={sweep:sweep,beam:beam,neb:nebIM,wind:windIM,
+  /* 7. Тарилтын нүх — ухсан ховил дагуух бортого. Суулгац бага байхад мод өөрөө
+        элснээс ялгарахгүй тул хэлбэрийг нүх нь барина; титэм дэлгэрэх тусам далдарна.
+        Байрлал нь модныхтой яг нэг тул ховилын шулуун эгнээ хэвээр уншигдана. */
+  const pitGeo=new THREE.CircleGeometry(1,10); pitGeo.rotateX(-Math.PI/2);
+  const pitIM=new THREE.InstancedMesh(pitGeo,
+    new THREE.MeshBasicMaterial({color:SC('#4A3A22'),transparent:true,opacity:0}),TREES.length);
+  const rimGeo=new THREE.RingGeometry(1,1.42,10); rimGeo.rotateX(-Math.PI/2);
+  const rimIM=new THREE.InstancedMesh(rimGeo,
+    new THREE.MeshBasicMaterial({color:SC('#A98C63'),transparent:true,opacity:0}),TREES.length);
+  pitIM.frustumCulled=false; rimIM.frustumCulled=false;
+  scene.add(pitIM); scene.add(rimIM);
+  (function(){
+    const m=new THREE.Object3D();
+    TREES.forEach(function(t,i){
+      m.position.set(t.x,t.base+.03,t.z); m.scale.setScalar(.15); m.updateMatrix();
+      pitIM.setMatrixAt(i,m.matrix);
+      m.position.y=t.base+.02; m.updateMatrix(); rimIM.setMatrixAt(i,m.matrix);
+    });
+    pitIM.instanceMatrix.needsUpdate=true; rimIM.instanceMatrix.needsUpdate=true;
+  })();
+
+  SITE={sweep:sweep,beam:beam,neb:nebIM,wind:windIM,pits:pitIM,rims:rimIM,
         flock:FLOCK,wild:WILD,hr:HR};
 
   ray=new THREE.Raycaster(); pointer=new THREE.Vector2(); clock=new THREE.Clock();
@@ -2264,6 +2285,12 @@ function animate(){
 
   const gT=A.g+(B.g-A.g)*f;
   growth+=(gT-growth)*.08;
+  /* Нүх нь ухагдмагц тод, титэм хаагдах тусам далдарна — гурван дүр зурагт ижил муруй */
+  if(SITE&&SITE.pits){
+    const po=Math.max(0,Math.min(1,(growth-.005)/.05))*Math.max(0,1-Math.max(0,growth-.16)/.16);
+    SITE.pits.material.opacity=po*.95; SITE.rims.material.opacity=po*.7;
+    SITE.pits.visible=SITE.rims.visible=po>.01;
+  }
   /* Нүдний суурь ногоон болохоо больсон: хэлбэрийг мод өөрсдөө үүсгэх ёстой,
      доороос нь ногоон зургаалжин өгвөл ой байхгүй ч ургасан мэт харагдана.
      Тарилтын нүд элсэн хэвээр; зөвхөн дэд бүтцийн долоон нүд өвсөрхөг болно —
@@ -2506,9 +2533,10 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
     const d=g.getImageData(0,0,W,H).data, pts=[];
     for(let y=0;y<H;y+=step)for(let x=0;x<W;x+=step){
       if(d[(y*W+x)*4]<120){
-        const j1=(Math.sin(x*12.9+y*7.7)*43758.5)%1, j2=(Math.sin(x*3.3+y*19.1)*12345.6)%1;
-        pts.push({x:(x-W/2)*scale+j1*scale*step*.7,
-                  z:(y-H/2)*scale+j2*scale*step*.7});
+        /* Хэлбэлзэлгүй: цэг бүр алхмын торон дээр яг суух тул нүх нь HEXAGON-ынхтой
+           адил тэгш хэмтэй эгнээ үүсгэнэ. Санамсаргүй шидэлт нь модны титэм дор
+           мэдэгддэггүй байсан ч ил гарсан нүхийг эмх замбараагүй харагдуулж байв. */
+        pts.push({x:(x-W/2)*scale, z:(y-H/2)*scale});
       }
     }
     return pts;
@@ -2662,7 +2690,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
       {f:.80,th:1.30,ph:.56,g:0,y:'2021',l:'fence · pits · April',n:'(03)',h:'Groundwork',
        p:'From April 2021 the perimeter fence went up and the tree pits were dug. '+
          'Building the conditions before planting is what decides survival.'},
-      {f:.64,th:1.62,ph:.66,g:.12,y:'2021',l:'planting · June',n:'(04)',h:'The message is written',
+      {f:.64,th:1.62,ph:.66,g:.15,y:'2021',l:'planting · June',n:'(04)',h:'The message is written',
        p:'<b>21,857 elms</b> planted from June 2021 — in the shape of letters, every row set out '+
          'by hand — and the irrigation system assembled as the planting went in.'},
       {f:.54,th:1.95,ph:.76,g:.28,y:'2022',l:'first summer',n:'(05)',h:'The Fragile Stage',
@@ -2800,6 +2828,26 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
         side:THREE.DoubleSide,roughness:.92}),LP.length);
     trunkIM.castShadow=true; leafIM.castShadow=true; leafIM.receiveShadow=true;
     scene.add(trunkIM); scene.add(leafIM);
+    /* Тарилтын нүх: суулгац бага байхад мод өөрөө элснээс ялгарахгүй тул хэлбэрийг
+       ухсан нүх нь барина. Дотор нь бараан, ирмэг дээрээ овоолсон шороо — газарт
+       нүх ухсан мэт уншигдана. Титэм дэлгэрэх тусам далдарна. */
+    const pitG=new THREE.CircleGeometry(1,10); pitG.rotateX(-Math.PI/2);
+    const pitIM=new THREE.InstancedMesh(pitG,
+      new THREE.MeshBasicMaterial({color:SCp('#4A3A22'),transparent:true,opacity:0}),TR.length);
+    const rimG=new THREE.RingGeometry(1,1.42,10); rimG.rotateX(-Math.PI/2);
+    const rimIM=new THREE.InstancedMesh(rimG,
+      new THREE.MeshBasicMaterial({color:SCp('#A98C63'),transparent:true,opacity:0}),TR.length);
+    pitIM.frustumCulled=false; rimIM.frustumCulled=false;
+    scene.add(pitIM); scene.add(rimIM);
+    (function(){
+      const m=new THREE.Object3D();
+      TR.forEach(function(t,i){
+        m.position.set(t.x,.03,t.z); m.scale.setScalar(.15); m.updateMatrix();
+        pitIM.setMatrixAt(i,m.matrix);
+        m.position.y=.02; m.updateMatrix(); rimIM.setMatrixAt(i,m.matrix);
+      });
+      pitIM.instanceMatrix.needsUpdate=true; rimIM.instanceMatrix.needsUpdate=true;
+    })();
     const col=new THREE.Color();
     TP.forEach(function(p,i){
       col.setHSL(.095,.12,Math.max(.16,Math.min(.62,(p.thin?.30:.46)+Math.sin(i*7.1)*.045)))
@@ -3094,6 +3142,12 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                        camS.r*Math.sin(camS.ph)*Math.sin(th));
       cam.lookAt(0,1.5,0);
       growth+=((A.g+(C.g-A.g)*f)-growth)*.08;
+      /* Нүх ухагдмагц тод, титэм хаагдах тусам алга болно */
+      {
+        const po=Math.max(0,Math.min(1,(growth-.005)/.05))*Math.max(0,1-Math.max(0,growth-.16)/.16);
+        pitIM.material.opacity=po*.95; rimIM.material.opacity=po*.7;
+        pitIM.visible=rimIM.visible=po>.01;
+      }
 
       const neb=Math.max(0,Math.min(1,(growth-.40)/.40));
       gndMat.color.copy(SANDp).lerp(GREENp,Math.min(1,growth*1.15));
