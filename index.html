@@ -35,8 +35,13 @@
     <link rel="stylesheet" type="text/css" href="assets/css/styles.css">
 
     <!-- Favicon and Touch Icons  -->
-    <link rel="shortcut icon" href="assets/images/logo/favicon.svg">
-    <link rel="apple-touch-icon-precomposed" href="assets/images/logo/favicon.svg">
+    <!-- The brand mark from Symbol.png, on black. Its source is 1175x885 on transparency,
+         so it is squared and padded before export: a favicon slot is square and would
+         otherwise squash it, and left transparent the two marks sat on whatever the browser
+         paints behind a tab. -->
+    <link rel="icon" type="image/png" href="assets/images/logo/favicon.png">
+    <link rel="shortcut icon" href="assets/images/logo/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="assets/images/logo/favicon.png">
 
     <style>
         html, :root { scroll-behavior: auto !important; }
