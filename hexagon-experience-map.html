@@ -123,7 +123,6 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .cell:hover .plot,.cell.on .plot,.cell:focus-visible .plot{stroke:var(--ink);stroke-width:2.4}
 .lab{font-size:7.5px;fill:rgba(24,22,14,.6);text-anchor:middle;pointer-events:none;font-weight:600;
   paint-order:stroke;stroke:rgba(255,255,255,.5);stroke-width:1.6}
-.fence{fill:none;stroke:#8E846E;stroke-width:1.2;stroke-dasharray:1.5 5.5}
 .track{fill:none;stroke:#CFC0A2;stroke-width:5;stroke-linecap:round;opacity:.9}
 .wash{fill:none;stroke:#D9CBAE;stroke-width:4;stroke-linecap:round;opacity:.8}
 .mapcap{font-size:10px;fill:rgba(48,40,24,.5);letter-spacing:.1em;font-weight:600}
@@ -216,7 +215,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 
   <span class="eyebrow"><i></i>Erdene Sum · Dornogovi · 44.0754 N / 111.1958 E</span>
   <h1>HEXAGON<span>Experience map</span></h1>
-  <p class="lead">A fenced 30,000 m² site holding 54 hexagonal cells, with 4,571 m² under active planting. The map is drawn to scale — every point marks a single pot, every row a drip line. The timeline runs continuously: seasons turn, trees grow only through summer, and when leaves drop each winter the sand begins to move again.</p>
+  <p class="lead">Fifty-four hexagonal cells, 30,000 m² of planting between them. The map is drawn to scale — every point marks a single pot, every row a drip line. The timeline runs continuously: seasons turn, trees grow only through summer, and when leaves drop each winter the sand begins to move again.</p>
 
   <div class="mapbox">
     <div class="mapinner" id="mapinner">
@@ -276,20 +275,22 @@ var PARTNERS = {
 var HELD     = [];
 
 /* ══════════ 2. МАСШТАБ ══════════
-   200 м² зургаан өнцөгтийн радиус = 8.77 м → зурагт 33.84 нэгж.
-   1 метр = 3.858 нэгж. Хээний нүд 4 нэгж = 1 метр = 1 бортого.    */
-var UPM=3.858, SLOT=36, CX=470, CY=420;
-var R_SITE=Math.sqrt(30000/2.598)*UPM;
+   2,625 м² зургаалжны радиус = 31.79 м → зурагт 47.9 нэгж.
+   1 метр = 1.506 нэгж. Хээний нүд = 1 метр = 1 бортого.    */
+var UPM=1.506, CX=470, CY=420;
+var PAT=UPM, P4=PAT/4;                          /* хээний нүд ба хуучин 4 нэгжийн харьцаа */
 /* Хэмжээ, тоо, байрлал бүгд HEXAGON SHAPE.png-ээс уншигдсан: талбай дээрх 54
    зургаалжин. Радиус нь талбайгаас гарна (тогтмол зургаалжин = 2.598·R²), тул
-   зурагдсан хэмжээ зарагдсан м²-тэй үргэлж таарна. ₮100,000/м², $1 ≈ ₮3,400. */
+   зурагдсан хэмжээ зарагдсан м²-тэй үргэлж таарна. 54 нүдний нийлбэр яг
+   30,000 м². Хашаа байхгүй — нүднүүд өөрсдөө талбайг бүрдүүлнэ.
+   ₮100,000/м², $1 ≈ ₮3,400. */
 var SIZES={
-  A:{area:400,pots:400,price:'₮40,000,000',usd:'≈ $11,760',nm:'Extra large cell'},
-  B:{area:260,pots:260,price:'₮26,000,000',usd:'≈ $7,650', nm:'Large cell'},
-  C:{area:120,pots:120,price:'₮12,000,000',usd:'≈ $3,530', nm:'Medium cell'},
-  D:{area:90, pots:90, price:'₮9,000,000', usd:'≈ $2,650', nm:'Small-plus cell'},
-  E:{area:45, pots:45, price:'₮4,500,000', usd:'≈ $1,320', nm:'Small cell'},
-  F:{area:12, pots:12, price:'₮1,200,000', usd:'≈ $350',   nm:'Marker cell'}
+  A:{area:2625,pots:2625,price:'₮262,500,000',usd:'≈ $77,210',nm:'Extra large cell'},
+  B:{area:1700,pots:1700,price:'₮170,000,000',usd:'≈ $50,000',nm:'Large cell'},
+  C:{area:790, pots:790, price:'₮79,000,000', usd:'≈ $23,240',nm:'Medium cell'},
+  D:{area:590, pots:590, price:'₮59,000,000', usd:'≈ $17,350',nm:'Small-plus cell'},
+  E:{area:295, pots:295, price:'₮29,500,000', usd:'≈ $8,680', nm:'Small cell'},
+  F:{area:80,  pots:80,  price:'₮8,000,000',  usd:'≈ $2,350', nm:'Marker cell'}
 };
 /* [x, y, class] — хамгийн том зургаалжны радиусыг нэгж болгосон нормчилсон байрлал */
 var SHAPE=[[-3.5764,1.0969,'A'],[1.7086,1.3346,'A'],[-1.0171,2.6433,'A'],[3.3162,-2.7075,'B'],[-5.0352,0.1615,'B'],[0.18,0.5734,'B'],[-0.8746,4.3662,'B'],[-0.4271,-1.9448,'C'],[1.3021,-1.8147,'C'],[-3.8427,-0.369,'C'],[1.4678,-0.1359,'C'],[0.4255,3.9604,'C'],[-2.6239,4.3019,'C'],[3.4772,-3.9643,'D'],[1.4779,-2.8245,'D'],[3.1652,-1.4717,'D'],[-2.3281,0.3938,'D'],[2.9329,0.609,'D'],[-0.894,1.213,'D'],[3.8001,1.786,'D'],[2.4768,2.7478,'D'],[2.7672,-4.4452,'E'],[-0.3256,-2.8523,'E'],[4.5629,-2.5821,'E'],[0.4162,-1.6095,'E'],[-1.244,-1.5901,'E'],[4.559,-1.3989,'E'],[2.0393,-1.2502,'E'],[3.0955,-0.5974,'E'],[0.1599,-0.5587,'E'],[2.4652,-0.2342,'E'],[-1.5839,0.7345,'E'],[3.7374,0.9397,'E'],[0.2559,2.2948,'E'],[0.7569,3.0645,'E'],[-1.8797,3.7723,'E'],[2.6766,-5.0259,'F'],[4.4142,-3.8249,'F'],[2.8097,-3.7506,'F'],[-0.2575,-3.437,'F'],[-0.9854,-2.4884,'F'],[0.7546,-2.3227,'F'],[5.0174,-2.2042,'F'],[5.0352,-1.7713,'F'],[-2.1755,-1.5878,'F'],[-1.7992,-1.3679,'F'],[1.4887,-1.062,'F'],[2.4737,-0.8289,'F'],[-1.0613,0.52,'F'],[-4.8788,1.1704,'F'],[-4.8796,1.5971,'F'],[0.7941,2.0702,'F'],[3.2596,2.6053,'F'],[-2.8833,5.0259,'F']];
@@ -338,16 +339,22 @@ SHAPE.forEach(function(h,i){
     logo:PARTNERS[id]?PARTNERS[id].logo:null,
     logoAspect:PARTNERS[id]&&PARTNERS[id].aspect?PARTNERS[id].aspect:1});
 });
+/* Талбайн гадна радиус нь эсийн бөөгнөрлөөс өөрөө гарна — хашааны хэмжээнээс биш. */
+var R_FIELD=0;
+CELLS.forEach(function(c){
+  var d=Math.sqrt((c.x-CX)*(c.x-CX)+(c.y-CY)*(c.y-CY))+c.R;
+  if(d>R_FIELD) R_FIELD=d;
+});
 
 /* ══════════ 5. DEFS: хайрга, гурван тарилтын хээ ══════════ */
 var defs=el('defs');
 var pat='';
 for(var v=0;v<3;v++){
-  pat+='<pattern id="grove'+v+'" patternUnits="userSpaceOnUse" width="4" height="4">'+
-       '<rect id="pSoil'+v+'" x="0" y="0" width="4" height="4" fill="#DED3BC"/>'+
-       '<line id="pDrip'+v+'" x1="0" y1="0.45" x2="4" y2="0.45" stroke="#B5A78B" stroke-width="0.22"/>'+
-       '<circle id="pShade'+v+'" cx="2.5" cy="2.5" r="0.25" fill="#4A6414" opacity="0.35"/>'+
-       '<circle id="pCrown'+v+'" cx="2" cy="2" r="0.25" fill="#7DB222"/>'+
+  pat+='<pattern id="grove'+v+'" patternUnits="userSpaceOnUse" width="'+PAT.toFixed(3)+'" height="'+PAT.toFixed(3)+'">'+
+       '<rect id="pSoil'+v+'" x="0" y="0" width="'+PAT.toFixed(3)+'" height="'+PAT.toFixed(3)+'" fill="#DED3BC"/>'+
+       '<line id="pDrip'+v+'" x1="0" y1="'+(0.45*P4).toFixed(3)+'" x2="'+PAT.toFixed(3)+'" y2="'+(0.45*P4).toFixed(3)+'" stroke="#B5A78B" stroke-width="'+(0.22*P4).toFixed(3)+'"/>'+
+       '<circle id="pShade'+v+'" cx="'+(2.5*P4).toFixed(3)+'" cy="'+(2.5*P4).toFixed(3)+'" r="'+(0.25*P4).toFixed(3)+'" fill="#4A6414" opacity="0.35"/>'+
+       '<circle id="pCrown'+v+'" cx="'+(2*P4).toFixed(3)+'" cy="'+(2*P4).toFixed(3)+'" r="'+(0.25*P4).toFixed(3)+'" fill="#7DB222"/>'+
        '</pattern>';
 }
 defs.innerHTML=
@@ -375,9 +382,8 @@ for(var i=0;i<170;i++){
 }
 map.appendChild(shrubs);
 
-map.appendChild(el('polygon',{'class':'fence',points:hexPts(CX,CY,R_SITE)}));
-map.appendChild(el('path',{'class':'track',d:'M 470 860 L 470 '+(CY+R_SITE*0.866+4).toFixed(0)}));
-map.appendChild(el('circle',{cx:CX,cy:(CY+R_SITE*0.866).toFixed(1),r:6,fill:'none',stroke:'#8E846E','stroke-width':1.6}));
+/* Хашаа байхгүй: 54 зургаалжин өөрсдөө 30,000 м²-г бүрдүүлнэ. Зөвхөн орох зам үлдэнэ. */
+map.appendChild(el('path',{'class':'track',d:'M 470 860 L 470 '+(CY+R_FIELD+22).toFixed(0)}));
 
 /* доод давхаргын халих */
 var halo=el('g',{id:'halo',filter:'url(#soft)',opacity:'0'});
@@ -437,11 +443,11 @@ sb.appendChild(el('line',{x1:L50,y1:-4,x2:L50,y2:4,stroke:'rgba(48,40,24,.55)','
 var st=el('text',{'class':'mapcap',x:0,y:-9}); st.textContent='50 M'; sb.appendChild(st);
 map.appendChild(sb);
 
-var bc=el('text',{'class':'mapcap',x:CX,y:CY-R_SITE*0.866-12,'text-anchor':'middle'});
-bc.textContent='FENCED SITE · 30,000 M²'; map.appendChild(bc);
+var bc=el('text',{'class':'mapcap',x:CX,y:(CY-R_FIELD-22).toFixed(0),'text-anchor':'middle'});
+bc.textContent='54 CELLS · 30,000 M² PLANTED'; map.appendChild(bc);
 
 /* ══════════ 7. ХАМГААЛАЛТЫН ТОР (салхины загварт) ══════════ */
-var GN=52, GX0=CX-R_SITE-40, GY0=CY-R_SITE-40, GW=(R_SITE+40)*2, GS=GW/GN;
+var GN=52, GX0=CX-R_FIELD-90, GY0=CY-R_FIELD-90, GW=(R_FIELD+90)*2, GS=GW/GN;
 var SHELTER=new Float32Array(GN*GN);
 for(var gy=0;gy<GN;gy++) for(var gx=0;gx<GN;gx++){
   var px=GX0+gx*GS, py=GY0+gy*GS, s=0;
@@ -557,7 +563,8 @@ function render(t){
   var si = (y-2026)<=2?0:((y-2026)<=7?1:2), stg=STAGES[si];
 
   var crownM=0.22*h;
-  var struct=Math.min(.96,Math.PI*Math.pow(Math.min(3.6,crownM*UPM),2)/16);   /* мөчрийн бүтэц */
+  var RMAX=0.9*PAT;                                                          /* нөмрөг хээнийхээ нүдийг дүүргэх дээд хязгаар */
+  var struct=Math.min(.96,Math.PI*Math.pow(Math.min(RMAX,crownM*UPM),2)/(PAT*PAT));   /* мөчрийн бүтэц */
   var canopy=struct*(0.22+0.78*leaf);
   var shade=Math.min(2.6,0.42*h);
   windOpen=1-clamp(canopy*1.05,0,0.96);
@@ -566,16 +573,16 @@ function render(t){
   var cc=crownColor(p,leaf);
   var soil=mixRGB(win?SOIL_COLD:SOIL_WARM, UNDER, clamp(struct*1.1,0,1));
   for(var v=0;v<3;v++){
-    var rU=Math.min(3.6,crownM*VIG[v]*UPM)*(leaf>0?1:0.55);
+    var rU=Math.min(RMAX,crownM*VIG[v]*UPM)*(leaf>0?1:0.55);
     $('pSoil'+v).setAttribute('fill',soil);
     $('pDrip'+v).setAttribute('opacity',Math.max(0,1-struct*1.9).toFixed(2));
     var cr=$('pCrown'+v);
-    cr.setAttribute('r',rU.toFixed(2));
+    cr.setAttribute('r',rU.toFixed(3));
     cr.setAttribute('fill','rgb('+Math.round(cc[0])+','+Math.round(cc[1])+','+Math.round(cc[2])+')');
     var sd=$('pShade'+v);
-    sd.setAttribute('r',rU.toFixed(2));
-    sd.setAttribute('cx',(2+shade*0.5).toFixed(2));
-    sd.setAttribute('cy',(2+shade*0.5).toFixed(2));
+    sd.setAttribute('r',rU.toFixed(3));
+    sd.setAttribute('cx',((2+shade*0.5)*P4).toFixed(3));
+    sd.setAttribute('cy',((2+shade*0.5)*P4).toFixed(3));
     sd.setAttribute('opacity',(0.16+canopy*0.3).toFixed(2));
   }
 
@@ -677,14 +684,14 @@ function showIntro(){
     '<h3 class="d-title">54 cells, six sizes<span>Click any cell to zoom in</span></h3>'+
     '<p class="d-body">Each cell has a fixed position on the site and carries its sponsor\'s name. Sponsorship is not land ownership — it is stewardship and recognition.</p>'+
     '<ul class="d-stats">'+rows([
-      ['Fenced site','30,000 m²'],['Planted area','4,571 m² · 15.2%'],
-      ['Extra large','3 × 400 m² · ₮40,000,000 (≈ $11,760)'],
-      ['Large','4 × 260 m² · ₮26,000,000 (≈ $7,650)'],
-      ['Medium','6 × 120 m² · ₮12,000,000 (≈ $3,530)'],
-      ['Small-plus','8 × 90 m² · ₮9,000,000 (≈ $2,650)'],
-      ['Small','15 × 45 m² · ₮4,500,000 (≈ $1,320)'],
-      ['Marker','18 × 12 m² · ₮1,200,000 (≈ $350)'],
-      ['Unit price','₮100,000 / m² (≈ $29 / m²)'],['Total trees','18,284 · Ulmus pumila']
+      ['Planted area','30,000 m² · 54 cells'],
+      ['Extra large','3 × 2,625 m² · ₮262,500,000 (≈ $77,210)'],
+      ['Large','4 × 1,700 m² · ₮170,000,000 (≈ $50,000)'],
+      ['Medium','6 × 790 m² · ₮79,000,000 (≈ $23,240)'],
+      ['Small-plus','8 × 590 m² · ₮59,000,000 (≈ $17,350)'],
+      ['Small','15 × 295 m² · ₮29,500,000 (≈ $8,680)'],
+      ['Marker','18 × 80 m² · ₮8,000,000 (≈ $2,350)'],
+      ['Unit price','₮100,000 / m² (≈ $29 / m²)'],['Total trees','120,000 · Ulmus pumila']
     ])+'</ul>'+
     '<a class="d-cta" href="index.html#contact" target="_top">Enquire About Sponsoring a Cell →</a>';
   */
@@ -697,12 +704,13 @@ function showCell(id){
   var s=SIZES[c.cls], size=s.nm;
   var state=c.status==='taken'?('Partnered — '+c.partner):(c.status==='held'?'In discussion':'Available');
   var side=Math.sqrt(s.area/2.598).toFixed(1);
+  var area=s.area.toLocaleString('en-US'), pots=s.pots.toLocaleString('en-US');
   detail.innerHTML='<span class="d-tag">Cell '+c.id+' · '+size+'</span>'+
-    '<h3 class="d-title">'+state+'<span>'+s.area+' m² · hexagon side '+side+' m</span></h3>'+
-    '<p class="d-body">One named cell within the honeycomb. It holds '+s.pots+' planting pots spaced one metre apart in rows, each row connected to a drip line. Trees are irrigated for ten years and counted every six months.'+
+    '<h3 class="d-title">'+state+'<span>'+area+' m² · hexagon side '+side+' m</span></h3>'+
+    '<p class="d-body">One named cell within the honeycomb. It holds '+pots+' planting pots spaced one metre apart in rows, each row connected to a drip line. Trees are irrigated for ten years and counted every six months.'+
     (c.status==='free'?' This cell is currently available.':'')+'</p>'+
     '<ul class="d-stats">'+rows([
-      ['Cell number',c.id],['Restoration area',s.area+' m²'],['Planting pots',s.pots+' · every 1 m'],
+      ['Cell number',c.id],['Restoration area',area+' m²'],['Planting pots',pots+' · every 1 m'],
       ['Siberian elm',(s.area*TREES_PER_M2).toLocaleString('en-US')+' saplings'],
       ['Care period','10 years'],['Reporting','count every six months'],['Status',state]
     ])+'</ul>'+
