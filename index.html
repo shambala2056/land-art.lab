@@ -3547,7 +3547,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
 
                 <div class="bio-panel effectFade fadeUp">
                     <div class="bio-mhead"><h3>Ambient Forest</h3><span class="bio-num">TOOL 01</span></div>
-                    <p class="bio-msub">Every tree generates electrical signals. As leaf stomata open and sap is drawn upward through the trunk, or when the plant is under stress, its cell membrane potential shifts — a measurable change known as bioelectric potential. Sensors across the site track this alongside chlorophyll fluorescence and sap flow. Converting these three signals into sound lets the forest compose its own music, live.</p>
+                    <p class="bio-msub">Every tree generates electrical signals. As leaf stomata open and nutrient-rich sap is drawn upward through the trunk, or when the plant experiences stress from external factors, its cell membrane potential shifts—a measurable change known as bioelectric potential. Specialized sensors installed on-site continuously record these bioelectric fluctuations alongside other physiological indicators, such as chlorophyll fluorescence and sap flow rates. By algorithmically converting these three data streams into sound, the forest is able to compose and perform its own unique music live in real-time.</p>
                     <div class="bio-row">
                         <button class="bio-btn primary" id="bioAmbBtn" type="button" aria-pressed="false">▶ Listen to the Forest</button>
                         <button class="bio-btn" id="bioSymBtn" type="button" aria-pressed="false">♪ Data Symphony · 2026–2036</button>
@@ -5973,7 +5973,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
           /* iOS дээр Web Audio нь "ambient" сессээр явдаг бөгөөд утасны чимээгүй товчоор
              дардаг. Хэрэглэгчийн ижил хүрэлт дээр богино чимээгүй WAV тоглуулбал сесс
              "playback" болж, дуу гарах болно. Энэ нь мөн resume()-ийг найдвартай болгоно. */
-          var SILENT=null;
+          var SILENT=null, SINK=null;
           function unlockIOS(){
             try{
               if(!SILENT){ SILENT=new Audio("data:audio/wav;base64,UklGRmQGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YUAGAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA"); SILENT.loop=false;
@@ -5985,7 +5985,26 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
             unlockIOS();
             if(AC)return;
             AC=new (window.AudioContext||window.webkitAudioContext)();
-            MASTER=AC.createGain(); MASTER.gain.value=0; MASTER.connect(AC.destination);
+            MASTER=AC.createGain(); MASTER.gain.value=0;
+            /* iOS дээр Web Audio нь ambient сессээр явж, ringer switch-ээр дардаг. Богино
+               чимээгүй файл тоглуулах нь хангалтгүй байсан тул гаралтыг медиа элементээр
+               дамжуулна: MediaStreamDestination-ийг <audio>-д залгавал Safari үүнийг
+               playback гэж үзэж, чимээгүй товчийг үл хайхарна. Бусад хөтөч дээр шууд
+               destination рүү — тэнд ийм асуудал байхгүй, нэмэлт давхарга ч хэрэггүй. */
+            var isIOS=/iP(hone|ad|od)/.test(navigator.userAgent) ||
+                      (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+            var routed=false;
+            if(isIOS && AC.createMediaStreamDestination){
+              try{
+                var dest=AC.createMediaStreamDestination();
+                MASTER.connect(dest);
+                var el=new Audio(); el.srcObject=dest.stream;
+                el.setAttribute('playsinline',''); el.autoplay=true;
+                var pr=el.play(); if(pr&&pr.catch) pr.catch(function(){});
+                SINK=el; routed=true;
+              }catch(e){ routed=false; }
+            }
+            if(!routed) MASTER.connect(AC.destination);
 
             DFILT=AC.createBiquadFilter(); DFILT.type='lowpass'; DFILT.frequency.value=420; DFILT.Q.value=0.7;
             var dg=AC.createGain(); dg.gain.value=0.16; DFILT.connect(dg); dg.connect(MASTER);
