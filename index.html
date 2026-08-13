@@ -805,7 +805,12 @@
 
         /* Hive parcel map (investment structure) */
         .hex-map-embed { margin-top: 40px; border: 1px solid #1F3040; background: #09111C; border-radius: 20px; overflow: hidden; }
-        .hex-map-embed iframe { display: block; width: 100%; height: 1700px; border: 0; }
+        /* Эхний өндөр нь ойролцоо утга: газрын зураг ачаалагдмагц өндрөө postMessage-ээр
+           мэдэгдэж, доорх скрипт үүнийг яг тааруулна. 1700px байсан нь ширээн дээр ~640px,
+           утсан дээр ~910px цагаан хоосон зай үлдээж байсан. */
+        .hex-map-embed iframe { display: block; width: 100%; height: 1080px; border: 0;
+            transition: height .25s ease; }
+        @media (max-width: 767px) { .hex-map-embed iframe { height: 800px; } }
         .hive-intro { max-width: 62ch; margin: 0 auto 8px; }
 
         /* Blank-page safeguard. styles.css ships .effectFade at opacity:0 and the
@@ -1504,48 +1509,66 @@ const BEATS=[
   {cam:{r:104,theta:1.571,phi:.34},g:0.00,y:'2026',l:'before planting',num:'(01)',
    h:'Starting point',
    p:'Bare gravel surface. Rainfall is <b>about 100 mm a year</b>; evaporation runs several times higher.'},
-  {cam:{r:34,theta:1.10,phi:.78},g:0.00,y:'2026',l:'the conditions',num:'(02)',
-   h:'Conditions First',
-   p:'Nothing is planted until the site can keep it alive, and the order is fixed: '+
-     '<b>the well</b>, then the solar field that powers it, then the pits marked and augered to '+
-     'the layout plan, then the <b>perimeter fence</b>, and last the tanks and lined reservoir — '+
-     'filled and waiting before a single sapling arrives. Seven cells stay unplanted and become '+
-     'the solar field, water harvesting, recycling point, research station, bird refuge, '+
-     'pollinator meadow and community ground.',
-   mini:['7 cells · infrastructure','100 kW solar','54 cells · planted']},
-  {cam:{r:44, theta:1.62,phi:.80},g:0.14,y:'2027',l:'planting · drip',num:'(03)',
-   h:'Planting',
-   p:'<b>Three elms per pit.</b> A 400 m² cell takes 1,200 trees, a 12 m² cell takes 36. 13,713 in '+
-     'total — four species, not elm alone — with the <b>drip lines laid alongside the planting</b> '+
-     'rather than after it.',
-   mini:['4,571 pits','13,713 saplings']},
-  {cam:{r:32, theta:1.95,phi:.88},g:0.32,y:'2028',l:'first summer · hub',num:'(04)',
-   h:'First Summer, and the Hub',
-   p:'The most fragile stage. Roots have not reached depth, so <b>irrigation never stops</b>. '+
-     'Survival is counted in full twice a year and losses are replanted. The hub is closed in '+
-     'before winter, and the <b>laboratory and greenhouse</b> are fitted out inside it.',
-   mini:['survival target >80%','census · twice a year','hub · lab · greenhouse']},
-  {cam:{r:26, theta:2.30,phi:.96},g:0.50,y:'2029',l:'three summers',num:'(05)',
-   h:'Three summers',
-   p:'A sapling that survives three summers usually stays alive. <b>Drip lines run across the whole site</b>. '+
-     'Wind still moves the open sand.',
-   mini:['risk window closes','irrigation · continuous']},
-  {cam:{r:22, theta:2.62,phi:1.02},g:0.68,y:'2031',l:'nebkha forms',num:'(06)',
-   h:'The nebkha effect',
-   p:'Trees slow the wind and drifting sand settles at their base. The mound this builds is called a '+
-     '<b>nebkha</b> — it holds moisture and improves the soil. The tree holds the sand and the sand '+
-     'feeds the tree. Butterflies and hares return.',
-   mini:['years 3–7','wind slows','moisture accumulates']},
+  {cam:{r:60,theta:1.30,phi:.52},g:0.00,y:'2026',l:'survey',num:'(02)',
+   h:'Survey',
+   p:'Soil, water and the lie of the land are read before anything is decided. The result is the '+
+     '<b>layout plan</b> — every cell, the spacing between trees and the position of each pit, '+
+     'fixed on the drawing before a single machine arrives.',
+   mini:['soil · water · relief','layout plan · CAD']},
+  {cam:{r:34,theta:1.10,phi:.78},g:0.00,y:'2026',l:'water + sun',num:'(03)',
+   h:'Water and Sun',
+   p:'<b>The well first</b>, then the solar field that powers it. Nothing else on this site can '+
+     'run without those two: the pumps, the greenhouse, the laboratory and the hub all draw from '+
+     'the array, and the tanks and lined reservoir are filled and waiting before any planting.',
+   mini:['deep well · 120 m','solar field','tanks · reservoir']},
+  {cam:{r:44,theta:1.44,phi:.70},g:0.00,y:'2026',l:'fence',num:'(04)',
+   h:'The Fence',
+   p:'Seven hundred metres of perimeter close the site once the heavy machinery has finished. '+
+     'From here the ground is protected from livestock — <b>the pits are augered to the layout '+
+     'plan</b> while the site is still open to a drill rig.',
+   mini:['700 m perimeter','4,571 pits']},
+  {cam:{r:30,theta:1.72,phi:.86},g:0.02,y:'2027',l:'greenhouse',num:'(05)',
+   h:'The Greenhouse',
+   p:'A four-season greenhouse is raised before the planting, because it is what supplies it. '+
+     'Seedlings are grown on site rather than trucked across the Gobi, and the compost yard '+
+     'returns organic waste to the pits as amendment.',
+   mini:['150 m² · four-season','nursery for the site']},
+  {cam:{r:26,theta:1.95,phi:.92},g:0.06,y:'2027',l:'buildings',num:'(06)',
+   h:'The Hub and Laboratory',
+   p:'The hub is closed in before winter and the <b>laboratory</b> is fitted out inside it — soil '+
+     'carbon, water chemistry and plant tissue measured on site rather than sent away. This is '+
+     'what makes the restoration auditable instead of merely claimed.',
+   mini:['hub · 200 m²','laboratory · MRV']},
+  {cam:{r:40,theta:1.62,phi:.80},g:0.22,y:'2028',l:'заг · харгана · сухай',num:'(07)',
+   h:'The Pioneers',
+   p:'The hardest species go in first, because they build the conditions for everything after them. '+
+     '<b>Заг</b> · <i>Haloxylon ammodendron</i> anchors the open sand, <b>харгана</b> · '+
+     '<i>Caragana korshinskii</i> fixes nitrogen and binds the surface, <b>сухай</b> · '+
+     '<i>Tamarix ramosissima</i> takes the salt pans no other plant will hold.',
+   mini:['sand anchored','nitrogen fixed','salt pans held']},
+  {cam:{r:32,theta:2.20,phi:.94},g:0.46,y:'2029',l:'цэцэг · хайлаас · таана',num:'(08)',
+   h:'Flowers, Elm and Taana',
+   p:'Once the pioneers hold the ground, the second wave follows: flowering forbs for the insects, '+
+     '<b>хайлаас</b> · <i>Ulmus pumila</i> for the canopy, and <b>таана</b> · '+
+     '<i>Allium polyrhizum</i> across the floor between them. Wind slows, sand settles at the '+
+     'stems, and the <b>nebkha</b> mounds begin to build.',
+   mini:['canopy species','forbs · ground layer','nebkha forms']},
+  {cam:{r:24,theta:2.62,phi:1.02},g:0.68,y:'2031',l:'тоос хүртээгч · шувуу',num:'(09)',
+   h:'Pollinators, then Birds',
+   p:'A meadow with nowhere to nest holds nothing. Hives, insect hotels and loess banks bring the '+
+     '<b>pollinators</b>; nest boxes, perches and water points bring the <b>birds</b>. They '+
+     'pollinate the forbs and take the pests off the seedlings — the loop closes without us.',
+   mini:['12 hives · 40 hotels','60 nest boxes','butterflies · hares']},
   /* Сүүлийн үе — HEXAGON SHAPE.png-ийн өнцөг: дээрээс харсан төлөвлөгөө.
      phi нь +Y-ээс хэмжигдэх туйлын өнцөг тул 0.06 нь бараг эгц дээрээс. theta=1.571
      байх үед дэлгэцийн дээш чиглэл дэлхийн −z болж, зурган дээрх x → баруун,
      y → доош гэсэн харьцаа яг давхцана. */
-  {cam:{r:88,theta:1.571,phi:.06},g:0.86,y:'2032',l:'sixth year',num:'(07)',
-   h:'2032 · the result',
-   p:'Six years after planting. <b>4,571 m²</b> restored and the canopy begins to close. Independent '+
-     'satellite data tracks NDVI, soil carbon and tree survival. A fully closed woodland still needs '+
-     'another 10–15 years.',
-   mini:['4,571 m² restored','data · every year','survival >80%']}
+  {cam:{r:88,theta:1.571,phi:.06},g:0.86,y:'2032',l:'мониторинг',num:'(10)',
+   h:'Monitoring',
+   p:'<b>4,571 m²</b> restored and the canopy begins to close. Survival is counted twice a year, '+
+     'the laboratory measures soil carbon on site, and an independent spatial assessment reads the '+
+     'whole site from orbit. A fully closed woodland still needs another 10–15 years.',
+   mini:['4,571 m² restored','census · twice a year','independent assessment']}
 ];
 /* Лавлагааны хэлбэр цагираган торлолоос бараг хоёр дахин өргөн (хагас алгасал
    31.7 м → 62.4 м) тул хэсгүүдийн камерын зайг мөн хэмжээгээр татна. Тус бүрийг
@@ -4183,6 +4206,24 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
     <script src="assets/js/gsapAnimation.js"></script>
 
     <script src="assets/js/main.js"></script>
+
+    <!-- The HEXAGON map reports its own height. The iframe carried a fixed height that
+         no longer matched what the map draws — 1,700px against 1,061px of content on a
+         desktop and 789px on a phone — so it sat above 600–900px of white space that
+         scrolling="no" would not let anyone scroll past. -->
+    <script>
+        (function () {
+            var frame = document.getElementById('hexMapFrame');
+            if (!frame) return;
+            window.addEventListener('message', function (e) {
+                var h = e.data && e.data.hexMapHeight;
+                if (typeof h !== 'number' || !isFinite(h)) return;
+                /* only the frame we embedded, not any other window on the page */
+                if (frame.contentWindow && e.source !== frame.contentWindow) return;
+                frame.style.height = Math.max(320, Math.round(h)) + 'px';
+            });
+        })();
+    </script>
 
     <!-- Blank-page safeguard, paired with the html.anim-fallback rule in the head.
          Every section on this page starts at opacity:0 and waits for GSAP to reveal

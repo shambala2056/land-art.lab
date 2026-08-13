@@ -786,5 +786,31 @@ requestAnimationFrame(frame);
   for(var i=0;i<t.length;i++) io.observe(t[i]);
 })();
 </script>
+
+<script>
+/* ═════ ӨНДРӨӨ ЭЦЭГ ХУУДСАНД МЭДЭГДЭХ ═════
+   index.html дэх iframe тогтмол 1700px өндөртэй байсан. Энэ хуудасны бодит агуулга
+   утсан дээр 789px, ширээний дэлгэцэд 1061px тул доор нь 600–900px цагаан хоосон зай
+   үлдэж, scrolling="no" учир гүйлгэж ч болдоггүй байв. Одоо өндрөө өөрөө хэмжиж
+   мэдэгдэнэ; эцэг хуудас iframe-ээ түүнд тааруулна. */
+(function(){
+  if(window.parent===window) return;             /* дангаараа нээгдсэн бол хэрэггүй */
+  var last=0;
+  function post(){
+    /* body-ийн margin нь getBoundingClientRect-д ордоггүй тул тусад нь нэмнэ,
+       эс тэгвээс доор нь хэдэн арван пиксел тайрагдана */
+    var cs=getComputedStyle(document.body);
+    var h=Math.ceil(document.body.getBoundingClientRect().height
+          + parseFloat(cs.marginTop||0) + parseFloat(cs.marginBottom||0));
+    if(h && Math.abs(h-last)>2){ last=h; parent.postMessage({hexMapHeight:h},'*'); }
+  }
+  window.addEventListener('load',post);
+  window.addEventListener('resize',post);
+  /* Дүр зураг ачаалагдаж, фонт суумагц өндөр өөрчлөгдөж болно */
+  if(window.ResizeObserver) new ResizeObserver(post).observe(document.body);
+  setTimeout(post,400); setTimeout(post,1500);
+  post();
+})();
+</script>
 </body>
 </html>
