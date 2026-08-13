@@ -145,6 +145,19 @@
            reads as grey rather than as a white bar, and the blur cost a repaint on every
            scroll frame for a translucency that is no longer wanted. */
         .tf-header .header-inner { background: #fff; backdrop-filter: none; }
+        /* On a phone the pill used to scroll away with the page and never return — the menu
+           was only reachable by scrolling all the way back to the top. Pin it to the viewport
+           and let the scroll direction decide: down hides it, up brings it back. Desktop is
+           untouched; there the full nav is in the pill and it is meant to scroll away. */
+        @media (max-width: 991px) {
+            .tf-header {
+                position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+                margin-bottom: 0;
+                transition: transform .34s cubic-bezier(.22, 1, .36, 1);
+                will-change: transform;
+            }
+            .tf-header.nav-hidden { transform: translateY(calc(-100% - 12px)); }
+        }
         /* #land-arts now holds only a heading (the two-column hero content moved into the
            poster carousel below), but the base stylesheet still forces .section-about-us to
            min-height:100vh under 1439px — built for the old full-height hero layout. Left
@@ -6414,6 +6427,78 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                     submitBtn.textContent = originalText;
                 });
         });
+    })();
+</script>
+
+<!-- Phone-only header behaviour: reveal on scroll up, and close the menu on selection -->
+<script>
+    (function () {
+        var MOBILE = window.matchMedia('(max-width: 991px)');
+        var header = document.querySelector('.tf-header');
+        var canvas = document.querySelector('.offcanvas-menu');
+
+        /* ── The menu closes when a destination is chosen ──────────────────────────
+           Only the sub-menu links carried .close-mb-menu, so tapping "Process" left
+           the full-screen menu sitting over the section it had just jumped to. */
+        function closeMenu() {
+            if (!canvas || !canvas.classList.contains('show')) return;
+            canvas.classList.remove('show');
+            /* main.js toggles this class; set it outright so the two cannot drift apart. */
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        var opener = document.querySelector('.open-mb-menu');
+        /* Opening the menu resets the pill to visible, so dismissing it with CLOSE — without
+           having gone anywhere — does not leave the page with no header. */
+        if (opener) opener.addEventListener('click', function () { show(); });
+
+        if (canvas) {
+            canvas.addEventListener('click', function (e) {
+                var a = e.target.closest ? e.target.closest('a[href]') : null;
+                if (!a) return;
+                if (a.getAttribute('data-bs-toggle')) return;        /* "Projects" only unfolds */
+                if (a.classList.contains('close-mb-menu')) return;   /* main.js already closes these */
+                var href = a.getAttribute('href') || '';
+                if (href.charAt(0) !== '#' || href.length < 2) return;
+                closeMenu();
+            });
+        }
+
+        /* ── The pill follows the scroll direction ─────────────────────────────── */
+        if (!header) return;
+        var TOP_ZONE = 120;   /* always visible this near the top of the page */
+        var DEADBAND = 6;     /* ignore the jitter of a finger resting on the screen */
+        var last = window.pageYOffset || 0;
+        var ticking = false;
+
+        function show() { if (header) header.classList.remove('nav-hidden'); }
+
+        function measure() {
+            ticking = false;
+            if (!MOBILE.matches) { show(); last = window.pageYOffset || 0; return; }
+            /* While the menu is open the page behind it does not move meaningfully,
+               and a header sliding away under the overlay only causes a flash on close. */
+            if (canvas && canvas.classList.contains('show')) { last = window.pageYOffset || 0; return; }
+
+            var y = window.pageYOffset || 0;
+            if (y < 0) y = 0;                                   /* iOS rubber-band */
+            var dy = y - last;
+            if (Math.abs(dy) < DEADBAND) return;
+            if (y <= TOP_ZONE) show();
+            else if (dy > 0) header.classList.add('nav-hidden');
+            else show();
+            last = y;
+        }
+
+        window.addEventListener('scroll', function () {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(measure);
+        }, { passive: true });
+
+        /* Rotating a phone into landscape can cross the breakpoint — never leave it stuck off-screen. */
+        if (MOBILE.addEventListener) MOBILE.addEventListener('change', show);
+        else if (MOBILE.addListener) MOBILE.addListener(show);
     })();
 </script>
 
