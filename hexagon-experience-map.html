@@ -67,11 +67,15 @@ canvas#wind{position:absolute;inset:0;width:100%;height:100%;pointer-events:none
 .tip{position:absolute;pointer-events:none;z-index:6;background:var(--ink);color:#fff;border-radius:12px;padding:8px 12px;font-size:11px;line-height:1.55;opacity:0;transition:opacity .15s;white-space:nowrap}
 .tip.show{opacity:1}
 .tip b{color:var(--lime)}
+.stamp.avail{background:var(--lime)}
+.stamp.avail small{color:#3C4A16}
+.legend b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
 .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:11.5px;color:var(--muted);font-weight:500}
 .legend span{display:inline-flex;align-items:center;gap:7px}
-.sw{width:13px;height:13px;border-radius:4px;background:#DED3BC;border:1.5px solid #B9A882}
-.sw.taken{background:#D8EEA6;border-color:#5E8F0C}
-.sw.held{background:var(--yellow);border-color:var(--ink)}
+/* Дөрвөлжингүүд газрын зураг дээрх эсийн өнгийг яг давтана */
+.sw{width:14px;height:14px;border-radius:4px;background:#A9C97A;border:2px solid #4E7A08}
+.sw.held{background:#F5D34D;border-color:#C9A400}
+.sw.taken{background:#9AA093;border-color:#5B6155;border-style:dashed}
 
 /* ---- controls ---- */
 .panel{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow-out);padding:20px;margin-top:14px}
@@ -117,9 +121,12 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 
 /* ---- svg ---- */
 .cell{cursor:pointer;transform-box:fill-box;transform-origin:center;outline:none}
-.plot{stroke:rgba(48,40,24,.32);stroke-width:1;transition:stroke .15s,stroke-width .15s}
-.cell.taken .plot{stroke:#5E8F0C;stroke-width:2}
-.cell.held .plot{stroke:#C9A400;stroke-width:2}
+/* Сул эс = ногоон хүрээ, дүүрэн өнгө. Эзэнтэй = саарал, нимгэн тасархай хүрээ,
+   бүдгэрсэн. Ярилцаж буй = шар хүрээ. */
+.plot{stroke:#4E7A08;stroke-width:2.4;transition:stroke .15s,stroke-width .15s}
+.cell.taken .plot{stroke:#5B6155;stroke-width:1.2;stroke-dasharray:5 3}
+.cell.held .plot{stroke:#C9A400;stroke-width:2.4}
+.cell.taken{opacity:.9;filter:saturate(.35)}
 .cell:hover .plot,.cell.on .plot,.cell:focus-visible .plot{stroke:var(--ink);stroke-width:2.4}
 .lab{font-size:7.5px;fill:rgba(24,22,14,.6);text-anchor:middle;pointer-events:none;font-weight:600;
   paint-order:stroke;stroke:rgba(255,255,255,.5);stroke-width:1.6}
@@ -215,26 +222,24 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 
   <span class="eyebrow"><i></i>Erdene Sum · Dornogovi · 44.0754 N / 111.1958 E</span>
   <h1>HEXAGON<span>Experience map</span></h1>
-  <p class="lead">Fifty-four hexagonal cells, 30,000 m² of planting between them. The map is drawn to scale — every point marks a single pot, every row a drip line. The timeline runs continuously: seasons turn, trees grow only through summer, and when leaves drop each winter the sand begins to move again.</p>
+  <p class="lead">Fifty-four hexagonal cells on a fenced 30,000 m² site, 4,571 m² of planting between them. The map is drawn to scale — every point marks a single pot, every row a drip line. The timeline runs continuously: seasons turn, trees grow only through summer, and when leaves drop each winter the sand begins to move again.</p>
 
   <div class="mapbox">
     <div class="mapinner" id="mapinner">
       <svg class="map" id="map" viewBox="0 0 940 860" role="img" aria-label="Scaled map of the HEXAGON site"></svg>
       <canvas id="wind"></canvas>
+      <!-- The year stamp, stage chip and season chip are gone with the timeline.
+           This map is for someone choosing a cell, not watching the site grow —
+           the 3D scene on the main page carries the years. -->
       <div class="hud">
-        <div class="stamp"><span id="yr">2026</span><small id="mon">APR</small></div>
-        <div class="right">
-          <div class="chip" id="stgChip"><span id="stgNum">STAGE I</span><b id="stgName">Initial Planting</b></div>
-          <div class="chip season"><span id="seaName">SPRING</span><b id="seaSub">leaves unfolding</b></div>
-        </div>
+        <div class="stamp avail"><span id="availN">—</span><small>CELLS FREE</small></div>
       </div>
       <button class="zoomout" id="zoomout" type="button">⤢ Full Site</button>
     </div>
     <div class="legend">
-      <span><i class="sw"></i>Available cell</span>
-      <span><i class="sw held"></i>In discussion</span>
-      <span><i class="sw taken"></i>Partnered</span>
-      <span>↘ Wind · from the northwest</span>
+      <span><i class="sw"></i>Available <b id="cntFree">—</b></span>
+      <span><i class="sw held"></i>In discussion <b id="cntHeld">—</b></span>
+      <span><i class="sw taken"></i>Partnered <b id="cntTaken">—</b></span>
     </div>
     <div class="tip" id="tip"></div>
   </div>
@@ -277,7 +282,10 @@ var HELD     = [];
 /* ══════════ 2. МАСШТАБ ══════════
    2,625 м² зургаалжны радиус = 31.79 м → зурагт 47.9 нэгж.
    1 метр = 1.506 нэгж. Хээний нүд = 1 метр = 1 бортого.    */
-var UPM=1.506, CX=470, CY=420;
+/* 1 м = хэдэн зурган нэгж. SIZES-ийг 3D дүр зургийн бодит талбайд (4,571 м²)
+   тааруулахад зурагдсан хэмжээ хэвээр үлдэхийн тулд UPM-ийг √6.5625 = 2.5617
+   дахин томсгов: 1.506 → 3.858. Зураг өөрчлөгдөхгүй, гэхдээ метр нь жинхэнэ. */
+var UPM=3.858, CX=470, CY=420;
 var PAT=UPM, P4=PAT/4;                          /* хээний нүд ба хуучин 4 нэгжийн харьцаа */
 /* Хэмжээ, тоо, байрлал бүгд HEXAGON SHAPE.png-ээс уншигдсан: талбай дээрх 54
    зургаалжин. Радиус нь талбайгаас гарна (тогтмол зургаалжин = 2.598·R²), тул
@@ -285,16 +293,18 @@ var PAT=UPM, P4=PAT/4;                          /* хээний нүд ба ху
    30,000 м². Хашаа байхгүй — нүднүүд өөрсдөө талбайг бүрдүүлнэ.
    ₮100,000/м², $1 ≈ ₮3,400. */
 var SIZES={
-  A:{area:2625,pots:2625,price:'₮262,500,000',usd:'≈ $77,210',nm:'Extra large cell'},
-  B:{area:1700,pots:1700,price:'₮170,000,000',usd:'≈ $50,000',nm:'Large cell'},
-  C:{area:790, pots:790, price:'₮79,000,000', usd:'≈ $23,240',nm:'Medium cell'},
-  D:{area:590, pots:590, price:'₮59,000,000', usd:'≈ $17,350',nm:'Small-plus cell'},
-  E:{area:295, pots:295, price:'₮29,500,000', usd:'≈ $8,680', nm:'Small cell'},
-  F:{area:80,  pots:80,  price:'₮8,000,000',  usd:'≈ $2,350', nm:'Marker cell'}
+  /* index.html дэх 3D дүр зургийн SIZES-ийн хуулбар — талбай, нүх, үнэ бүгд ижил.
+     ₮100,000/м² · $30/м². Зурагдсан хэмжээг UPM барина. */
+  A:{area:400,pots:400,price:'₮40,000,000',usd:'$12,000',nm:'Extra large cell'},
+  B:{area:260,pots:260,price:'₮26,000,000',usd:'$7,800', nm:'Large cell'},
+  C:{area:120,pots:120,price:'₮12,000,000',usd:'$3,600', nm:'Medium cell'},
+  D:{area:90, pots:90,  price:'₮9,000,000', usd:'$2,700', nm:'Small-plus cell'},
+  E:{area:45, pots:45,  price:'₮4,500,000', usd:'$1,350', nm:'Small cell'},
+  F:{area:12, pots:12,  price:'₮1,200,000', usd:'$360',   nm:'Marker cell'}
 };
 /* [x, y, class] — хамгийн том зургаалжны радиусыг нэгж болгосон нормчилсон байрлал */
 var SHAPE=[[-3.5764,1.0969,'A'],[1.7086,1.3346,'A'],[-1.0171,2.6433,'A'],[3.3162,-2.7075,'B'],[-5.0352,0.1615,'B'],[0.18,0.5734,'B'],[-0.8746,4.3662,'B'],[-0.4271,-1.9448,'C'],[1.3021,-1.8147,'C'],[-3.8427,-0.369,'C'],[1.4678,-0.1359,'C'],[0.4255,3.9604,'C'],[-2.6239,4.3019,'C'],[3.4772,-3.9643,'D'],[1.4779,-2.8245,'D'],[3.1652,-1.4717,'D'],[-2.3281,0.3938,'D'],[2.9329,0.609,'D'],[-0.894,1.213,'D'],[3.8001,1.786,'D'],[2.4768,2.7478,'D'],[2.7672,-4.4452,'E'],[-0.3256,-2.8523,'E'],[4.5629,-2.5821,'E'],[0.4162,-1.6095,'E'],[-1.244,-1.5901,'E'],[4.559,-1.3989,'E'],[2.0393,-1.2502,'E'],[3.0955,-0.5974,'E'],[0.1599,-0.5587,'E'],[2.4652,-0.2342,'E'],[-1.5839,0.7345,'E'],[3.7374,0.9397,'E'],[0.2559,2.2948,'E'],[0.7569,3.0645,'E'],[-1.8797,3.7723,'E'],[2.6766,-5.0259,'F'],[4.4142,-3.8249,'F'],[2.8097,-3.7506,'F'],[-0.2575,-3.437,'F'],[-0.9854,-2.4884,'F'],[0.7546,-2.3227,'F'],[5.0174,-2.2042,'F'],[5.0352,-1.7713,'F'],[-2.1755,-1.5878,'F'],[-1.7992,-1.3679,'F'],[1.4887,-1.062,'F'],[2.4737,-0.8289,'F'],[-1.0613,0.52,'F'],[-4.8788,1.1704,'F'],[-4.8796,1.5971,'F'],[0.7941,2.0702,'F'],[3.2596,2.6053,'F'],[-2.8833,5.0259,'F']];
-var TREES_PER_M2=4;
+var TREES_PER_M2=3;   /* 3D дүр зурагтай ижил — нүх тутамд 3 хайлаас */
 var WIND={x:0.80,y:0.60};                       /* баруун хойноос зүүн урагш */
 
 var STAGES=[
@@ -410,7 +420,14 @@ CELLS.forEach(function(c){
   var g=el('g',{'class':'cell'+(c.status==='free'?'':' '+c.status),tabindex:'0',role:'button','aria-label':'Cell '+c.id});
   g.dataset.id=c.id;
   g.appendChild(el('polygon',{'class':'plot',points:hexPts(c.x,c.y,c.R),fill:'url(#grove'+c.tier+')'}));
-  if(c.status==='taken') g.appendChild(el('polygon',{points:hexPts(c.x,c.y,c.R),fill:'#C3F03C',opacity:'.15','pointer-events':'none'}));
+  /* Гурван төлөв гурван өөр өнгөтэй байх ёстой. Ногооноор ялгах гэсэн нь бүтээгүй —
+     газрын зураг өөрөө ногоон тул ногоон дээр ногоон нэмэхэд бүгд адилхан харагдана.
+     Тиймээс: эзэнтэй = саарал (шийдэгдсэн, ард нь ухарна), ярилцаж буй = шар,
+     сул = давхаргагүй, тарилтын хээ нь хэвээр — хамгийн тод, хамгийн ногоон. */
+  if(c.status==='taken')
+    g.appendChild(el('polygon',{'class':'st',points:hexPts(c.x,c.y,c.R),fill:'#7C8175',opacity:'.62','pointer-events':'none'}));
+  if(c.status==='held')
+    g.appendChild(el('polygon',{'class':'st',points:hexPts(c.x,c.y,c.R),fill:'#FFD300',opacity:'.52','pointer-events':'none'}));
   if(c.logo){
     var lr=c.R*0.72;
     var clip=el('clipPath',{id:'clip-'+c.id});
@@ -597,21 +614,8 @@ function render(t){
     nbs[k].setAttribute('opacity',(nbGrow*0.75).toFixed(2));
   }
 
-  /* --- HUD --- */
-  setTxt($('yr'),String(y));
-  setTxt($('mon'),MON[Math.min(11,Math.floor(p*12))]);
-  setTxt($('seaName'),sea[0]); setTxt($('seaSub'),sea[1]);
-  setTxt($('stgNum'),stg.n); setTxt($('stgName'),stg.t);
-  if(si!==lastStage){
-    var chip=$('stgChip'); chip.classList.remove('flash'); void chip.offsetWidth; chip.classList.add('flash');
-    /* Эдгээр нь он цагийн самбартай хамт хасагдсан тул байхгүй байж болно */
-    var sNote=$('stageNote');
-    if(sNote) sNote.innerHTML=stg.note+' <span style="opacity:.7">('+stg.y+')</span>';
-    var sBar=$('stagebar');
-    if(sBar){ var bars=sBar.children;
-      for(var k=0;k<bars.length;k++) bars[k].className = k<=si?'lit':''; }
-    lastStage=si;
-  }
+  /* HUD-ын он, улирал, үе шатны чипүүд хасагдсан — энэ газрын зураг цаг хугацаа
+     биш, эсийн сул/эзэнтэй байдлыг харуулна. */
   /* Тоон үзүүлэлтийн самбар хасагдсан — setTxt нь байхгүй элемент дээр унах тул
      r1/r2/r3/r5/r6-д бичих мөрүүд хамт хасагдав. Доорх HEX объект хэвээр: дүр зураг,
      үе шатны тайлбар үүнээс уншсаар байна. */
@@ -626,19 +630,24 @@ var onTick=null;
 /* Гулсуур, тоглуулах товч хасагдсан тул цаг хугацааг дүр зураг өөрөө жолооднө:
    2026-аас 2036 хүртэл гүйгээд эхэлсэн газраа эргэж очно. Хөдөлгөөнийг багасгах
    тохиргоотой уншигчид эцсийн жил дээр зогссон дүр зургийг харна. */
-var REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-var T=REDUCED?2036.5:2026.25, playing=!REDUCED, last=0;
-function frame(ts){
-  if(!last)last=ts;
-  var dt=Math.min(0.05,(ts-last)/1000); last=ts;
-  if(playing){
-    T+=dt*0.28;                          /* ~3.6 seconds per year */
-    if(T>=2036.99) T=2026;               /* гогцоо */
-    render(T);
-  }
+/* Улирлын өөрчлөлт хасагдсан. Энэ газрын зураг эс сонгох хүнд зориулагдсан тул
+   нэг тогтсон төлөвт зурагдана: зун, навчтай, мод нь суусан үе — эсийн хил, сул
+   эсвэл эзэнтэй эсэх нь хамгийн тод харагдах агшин. Он цагийн өрнөлийг үндсэн
+   хуудасны 3D дүр зураг үзүүлнэ. Салхи л ганц хөдөлгөөнөө хадгална. */
+var T=2032.55;                            /* зун — навч дүүрэн, сүүдэр тогтсон */
+function frame(){
   drawWind();
   requestAnimationFrame(frame);
 }
+
+/* Сул, ярилцаж буй, эзэнтэй эсийн тоог гаргаж, толгой ба тайлбарт бичнэ */
+(function(){
+  var n={free:0,held:0,taken:0};
+  CELLS.forEach(function(c){ n[c.status]=(n[c.status]||0)+1; });
+  function put(id,v){ var e=$(id); if(e) e.textContent=v; }
+  put('availN',n.free); put('cntFree',n.free);
+  put('cntHeld',n.held); put('cntTaken',n.taken);
+})();
 
 /* ══════════ 11. ТОМРУУЛАЛТ ══════════ */
 var zoomAnim=null;
@@ -684,14 +693,14 @@ function showIntro(){
     '<h3 class="d-title">54 cells, six sizes<span>Click any cell to zoom in</span></h3>'+
     '<p class="d-body">Each cell has a fixed position on the site and carries its sponsor\'s name. Sponsorship is not land ownership — it is stewardship and recognition.</p>'+
     '<ul class="d-stats">'+rows([
-      ['Planted area','30,000 m² · 54 cells'],
-      ['Extra large','3 × 2,625 m² · ₮262,500,000 (≈ $77,210)'],
-      ['Large','4 × 1,700 m² · ₮170,000,000 (≈ $50,000)'],
-      ['Medium','6 × 790 m² · ₮79,000,000 (≈ $23,240)'],
-      ['Small-plus','8 × 590 m² · ₮59,000,000 (≈ $17,350)'],
-      ['Small','15 × 295 m² · ₮29,500,000 (≈ $8,680)'],
-      ['Marker','18 × 80 m² · ₮8,000,000 (≈ $2,350)'],
-      ['Unit price','₮100,000 / m² (≈ $29 / m²)'],['Total trees','120,000 · Ulmus pumila']
+      ['Site','30,000 m² fenced · 4,571 m² planted'],
+      ['Extra large','3 × 400 m² · $12,000'],
+      ['Large','4 × 260 m² · $7,800'],
+      ['Medium','6 × 120 m² · $3,600'],
+      ['Small-plus','8 × 90 m² · $2,700'],
+      ['Small','15 × 45 m² · $1,350'],
+      ['Marker','18 × 12 m² · $360'],
+      ['Unit price','$30 / m²'],['Total trees','13,713 · Ulmus pumila']
     ])+'</ul>'+
     '<a class="d-cta" href="index.html#contact" target="_top">Enquire About Sponsoring a Cell →</a>';
   */
@@ -714,7 +723,9 @@ function showCell(id){
       ['Siberian elm',(s.area*TREES_PER_M2).toLocaleString('en-US')+' saplings'],
       ['Care period','10 years'],['Reporting','count every six months'],['Status',state]
     ])+'</ul>'+
-    '<div class="grand"><span class="k">Sponsorship total</span><span><span class="v">'+s.price+'</span><span class="usd">'+s.usd+'</span></span></div>'+
+    /* Доллар нь үндсэн үнэ — олон улсын түнш уншина. Төгрөг нь жижгээр хажууд нь. */
+    '<div class="grand"><span class="k">Sponsorship total</span><span><span class="v">'+
+      s.usd.replace(/^≈\s*/,'')+'</span><span class="usd">'+s.price+'</span></span></div>'+
     (c.status==='taken'
       ? '<a class="d-cta" href="index.html#contact" target="_top">Enquire About Another Cell →</a>'
       : '<a class="d-cta" href="index.html#contact" target="_top">'+(c.status==='held'?'Ask About This Cell →':'Sponsor This Cell →')+'</a>');
@@ -742,7 +753,7 @@ document.addEventListener('pointerover',function(e){
   var cell=e.target.closest?e.target.closest('.cell'):null; if(!cell)return;
   var c=CELLS.filter(function(v){return v.id===cell.dataset.id;})[0], s=SIZES[c.cls];
   tip.innerHTML='<b>'+c.id+'</b> · '+s.area+' m² · '+s.pots+' pots<br>'+
-    (c.partner?c.partner:(c.status==='held'?'In discussion':s.price));
+    (c.partner?c.partner:(c.status==='held'?'In discussion':s.usd.replace(/^≈\s*/,'')));
   tip.classList.add('show');
 });
 document.addEventListener('pointerout',function(e){
