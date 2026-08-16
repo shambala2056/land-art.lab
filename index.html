@@ -944,7 +944,7 @@
                     </div>
                     <div class="story-row">
                         <div class="story-q">Delivered to date</div>
-                        <div class="story-a">Three works to date: two completed, one scheduled for 2026. 57,857 trees planted across 68,970 m², with a further 28,425 to come. <a href="#works" class="story-more">See all projects →</a></div>
+                        <div class="story-a">Three works to date: two completed, one beginning 2026. 57,857 trees planted across 68,970 m², with a further 13,713 to come. <a href="#works" class="story-more">See all projects →</a></div>
                     </div>
                     <div class="story-row">
                         <div class="story-q">Measured outcomes</div>
@@ -952,7 +952,7 @@
                     </div>
                     <div class="story-row">
                         <div class="story-q">Forthcoming work</div>
-                        <div class="story-a">HEXAGON, scheduled for 2026: 100 hexagonal cells corresponding precisely to the geometry of the artwork, currently open for sponsorship. <a href="#pricing" class="story-more">See the investment structure →</a></div>
+                        <div class="story-a">HEXAGON, beginning 2026: 54 hexagonal cells set out across a fenced three-hectare site, 4,571 m² under planting. Each cell is sponsored individually and reported on individually, so a contribution corresponds to a located area of ground rather than to a share of a site average. <a href="#pricing" class="story-more">See the cell map →</a></div>
                     </div>
                     <div class="story-row">
                         <div class="story-q">Risk assessment</div>
@@ -1305,9 +1305,12 @@
   <div class="hx-wrap hx-projhead" id="la-hexagon" style="padding-top:52px">
     <div class="hx-pnum">(03) · 2026 → 2032</div>
     <h3 class="hx-ph">HEXAGON</h3>
-    <p class="hx-plead">The third work, and the 2026–2032 programme. One hundred hexagonal cells
-      across three hectares — 93 woodland, 7 infrastructure. Cells run from 25 m² to 400 m²,
-      each with its own code and its own steward.</p>
+    <p class="hx-plead">The third work, and the 2026–2032 programme. Fifty-four hexagonal cells
+      set out by GPS on a fenced three-hectare site, 4,571 m² of it under planting. Cells run
+      from 12 m² to 400 m², each with a fixed position, an identifier and a named steward. The
+      build order is dependency-driven — water and power, enclosure, buildings, then planting in
+      hardiness order — because on this ground the sequence, not the species list, decides
+      survival.</p>
     <div class="hx-pills"><span>30,000 m² site</span><span>4,571 m² planted</span><span>13,713 trees</span><span>54 cells</span></div>
   </div>
 
@@ -1327,6 +1330,39 @@
       your own on the live map.</p>
     <a href="#pricing" class="hx-claim"><i></i>Claim a cell</a>
   </div>
+
+  <!-- Fourth work · corporate collaboration. The scene is driven by SHAPES.jacks, which is
+       currently drawn by hand from the supplied artwork — replace it with a traced bitmask
+       the moment the real mark lands in assets/, as BE HUMAN's was. -->
+  <section class="hx-proj" id="la-jacks" data-proj="jacks">
+  <div class="hx-wrap hx-projhead" style="padding-top:52px">
+    <div class="hx-pnum">(04) · 2026 · with Jack's Coffee</div>
+    <h3 class="hx-ph">JACK'S COFFEE</h3>
+    <p class="hx-plead">The first work commissioned by a company in its own mark. A quarter of a
+      hectare at Erdene sum, Dornogovi, planted with 10,000 Siberian elm in the form of the
+      Jack's Coffee symbol — a mark 63 by 73 metres, read by drone survey rather than from orbit
+      at this scale, on ground that carried nothing before it. The
+      same method as the three works before it: water and enclosure first, then planting, then
+      ten years of maintenance and irrigation against a survival target counted twice a year.</p>
+    <div class="hx-pills"><span>2,500 m² · 0.25 ha</span><span>10,000 elms</span><span>Erdene sum, Dornogovi</span><span>2026</span></div>
+    <p class="hx-plead" style="margin-top:18px">
+      <b>At COP17.</b> Jack's Coffee is serving at the conference site in Ulaanbaatar, where one
+      cup carries one tree: every specially marked coffee plants an elm in the degraded Gobi
+      rangeland at Erdene. A delegate can taste the collaboration and read the coordinates of
+      what it plants on the same afternoon.</p>
+    <a href="https://jacks.coffee/product/cop17-bundle/" class="hx-claim" target="_blank"
+       rel="noopener noreferrer"><i></i>One coffee, one tree — buy the COP17 edition</a>
+  </div>
+  <div class="hx-stage hx-pstage">
+    <div class="hx-sticky">
+      <div class="hx-canvas"></div>
+      <div class="hx-meter"></div>
+      <div class="hx-year"><b>2026</b><i>the ground</i></div>
+      <div class="hx-cap hx-fade"></div>
+      <div class="hx-timewrap"><div class="hx-time"></div></div>
+    </div>
+  </div>
+  </section>
 </section>
 
 <!-- lightbox for the real aerial photographs; src is filled in on open so the
@@ -2723,7 +2759,22 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
     /* BE HUMAN-д үсгийн нарийн ялгааг гаргахын тулд 2 м алхам —
        жинхэнэ талбайд 21,857 мод буюу ~1.2 м зайтай тарьсан. */
     behuman:{W:330,H:137,step:2,scale:.200},
-    artntech:{W:316,H:280,step:3,scale:.200}
+    artntech:{W:316,H:280,step:3,scale:.200},
+    /* JACK'S COFFEE — 0.25 га, 10,000 хайлаас, 0.5 м алхамтай.
+       maskPoints нь W×H ПИКСЕЛ-ийн зотон дээр step пикселээр алхдаг тул step нь
+       бүхэл байх ёстой: 0.5 өгвөл getImageData-гийн индекс бутархай болж, нэг
+       пикселийг хэд хэдэн удаа, өөр өөр өнгөний сувгаас уншиж, дүрс давхарласан
+       мэт харагдана. Тиймээс зотонг метр тутамд 2 пикселээр авна: 63 × 73 м →
+       126 × 146 пиксел, алхам 1 пиксел = 0.5 м, scale нь хагасална (0.200 → 0.100).
+       Тарилт: 10,006 цэг ≈ 2,502 м².
+       Дүр зураг нь тарилтыг ТӨЛӨӨЛНӨ, нэг бүрчлэн зурдаггүй: BE HUMAN 21,857
+       модтой ч ~4,500-г, ART N TECH 36,000-аас ~4,000-г зурдаг. Бодит 10,000 мод
+       нь бүтээлийн баримт хэвээр.
+       scale нь бусадтай ижил .200: дүр зургийн бүх тогтмол — модны өндөр, хучаас,
+       манан, нарны сүүдрийн хайрцаг — тэр хэмжээнд тохируулагдсан. Хагасалбал
+       бүтээл дөрөвний нэг болж, сүүдрийн зураглалын нарийвчлал алдагдаж, элсэн
+       дээр бараан толбо анивчиж эхэлдэг. step=2 → зай 0.4, яг BE HUMAN шиг. */
+    jacks:{W:126,H:146,step:2,scale:.200}
   };
 
   /* ---- хэлбэрүүд: рендер зургаас хуулсан ---- */
@@ -2812,7 +2863,41 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
       }
       // төвийн том нүцгэн дугуй талбай — голдоо товгортой
       g.beginPath(); g.arc(Cx,Cy,HUB,0,6.283); g.fill();
-    }
+    },
+
+    /* JACK'S COFFEE — компанийн тэмдэг, өгөгдсөн 512×512 артворкоос буулгав.
+       Бүх координат 512 хэмжээст, X()/Y() нь тарилтын хүрээ рүү шилжүүлнэ.
+       Дүрс нь хэсгүүдийн нэгдэл: чихтэй толгой, зүүн гар, их бие, баруун
+       гарын дэгээ, тэлж татсан хоёр хөл. Нүд нь тарилтгүй нүх. */
+    /* JACK'S COFFEE — тэмдгийг "assets/images/jack's symbol.png" дээрх модоор
+       тарьсан рендерээс шууд буулгав: ногоон нь тарилт, элсэн шар нь хоосон.
+       Өнгөөр ялгаж, модны бүтцийн толбыг морфологиор цэвэрлэж, хамгийн том
+       холбоост хэсгийг авч 130×150 битмаск болгосон — нүд нь нүх хэвээр.
+       Гараар зурсангүй: брэндийн тэмдгийг таамаглах ёсгүй. */
+    jacks:(function(){
+      const MW=130, MH=150;
+      const B64="AAAAAAAEAAAcAAAAAAAAAAAAAAAAA4AAB4AAAAAAAAAAAAAAAAPwAAPgAAAAAAAAAAAAAAAA/gAA/AAAAAAAAAAAAAAAAD+AAH8AAAAAAAAAAAAAAAAP4AAf4AAAAAAAAAAAAAAAB/wAD/gAAAAAAAAAAAAAAAH/gAP/AAAAAAAAAAAAAAAAf/AA/8AAAAAAAAAAAAAAAB/8AH/wAAAAAAAAAAAAAAAH/4Af/gAAAAAAAAAAAAAAA//gD/+AAAAAAAAAAAAAAAD//AP/8AAAAAAAAAAAAAAAP/8A//wAAAAAAAAAAAAAAA//4H//AAAAAAAAAAAAAAAD//wf/+AAAAAAAAAAAAAAAP//D//4AAAAAAAAAAAAAAB//+P//wAAAAAAAAAAAAAAD//////AAAAAAAAAAAAAAAP/////+AAAAAAAAAAAAAAB//////4AAAAAAAAAAAAAAD//////gAAAAAAAAAAAAAAf//////AAAAAAAAAAAAAAB//////8AAAAAAAAAAAAAAH//////wAAAAAAAAAAAAAAf//////AAAAAAAAAAAAAAB//////+AAAAAAAAAAAAAAH//////4AAAAAAAAAAAAAAf//////gAAAAAAAAAAAAAB///////AAAAAAAAAAAAAAH//////8AAAAAAAAAAAAAAf//////wAAAAAAAAAAAAAB///////AAAAAAAAAAAAAAH//////+AAAAAAAAAAAAAAf//////4AAAAAAAAAAAAAB///////gAAAAAAAAAAAAAH///////AAAAAAAAAAAAAAf//////4AAAAAAAAAAAAAB///////wAAAAAAAAAAAAAH///////AAAAAAAAAAAAAAf//////8AAAAAAAAAAAAAB///////4AAAAAAAAAAAAAH///////AAAAAAAAAAAAAAf//////+AAAAAAAAAAAAAB///////4AAAAAAAAAAAAAH///////gAAAAAAAAAAAAAf//////+AAAAAAAAAAAAAB///////8AAAAAAAAAAAAAH///7///gAA////4AAAAAAf//8H+D+AAH////wAAAAAB///wP4P8AAf////AAAAAAH///A/A/wAB////8AAAAAAf//8D+B/AAH////wAAAAAB///wPwP8AAf////AAAAAAH///B/g/wAB////8AAAAAAf//+H/H/AAH////wAAAAAB///////8AAf////AAAAAAH///////wAB////8AAAAAAf///////AAH////wAAAAAB///////8AAf////AAAAAAH///////wAB////8AAAAAA////////gAP////3//f//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////7/////////////////////v////////////////////+/////////////////////z/////////////////////P////////////////////8/////////////////////j////////////////////8P////////////////////w////////////////////+D////////////////////wP///////////////////+A////////////////////wD////////////////////AP///////////////////wA///////////////////+AD///////////////////wAP//////////////////8AA///////////////////AAB//////////////////gAACtLbc3///////////+AAAAAAAAAA/////////8AAAAAAAAAAAB/////////gAAAAAAAAAAAH////////+AAAAAAAAAAAAf////////4AAAAAAAAAAAB/////////wAAAAAAAAAAAP/////////gAAAAAAAAAAB//////////AAAAAAAAAAAH/////////+AAAAAAAAAAA//////////8AAAAAAAAAAH//////////4AAAAAAAAAA///////////wAAAAAAAAAH///////////gAAAAAAAAA////////////AAAAAAAAAH///////////+AAAAAAAAA////////////8AAAAAAAAH////////////4AAAAAAAA/////////////wAAAAAAAP/////////////gAAAAAAB//////////////AAAAAAAf/////////////+AAAAAAH//////////////8AAAAAD///////g///////4AAAAB///////+B///////wAAAL////////wD///////wAAf////////+AH///////gAD/////////4AP///////AAP/////////AAf//////+AA/////////4AA///////8AD/////////AAB///////4AP////////4AAD///////wA/////////gAAH///////gD////////8AAAP///////AP////////gAAAf//////+A////////8AAAA///////8D////////gAAAB///////4P///////8AAAAD///////w////////gAAAAH///////D///////4AAAAAP//////8P///////AAAAAAf//////w///////4AAAAAA//////+D///////AAAAAAB//////wP//////wAAAAAAD/////+A//////8AAAAAAAH/////gD//////gAAAAAAAP////8AP/////4AAAAAAAAf////AA/////+AAAAAAAAA////4AD/////wAAAAAAAAB////AAP////8AAAAAAAAAD///4AA////+AAAAAAAAAAH///AAD////gAAAAAAAAAAP//wAAP///wAAAAAAAAAAAf/+AAA///wAAAAAAAAAAAA//wAAD//wAAAAAAAAAAAAB/8AAAD8AAAAAAAAAAAAAAD/gAAAAAAAAAAAAAAAAAAAH8AAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAAAAAIAAAAA=";
+      let bits=null;
+      function unpack(){
+        const raw=atob(B64), a=new Uint8Array(MW*MH);
+        for(let i=0;i<a.length;i++) a[i]=(raw.charCodeAt(i>>3)>>(7-(i&7)))&1;
+        return a;
+      }
+      return function(g,W,H){
+        if(!bits) bits=unpack();
+        g.fillStyle='#ffffff'; g.fillRect(0,0,W,H);
+        g.fillStyle='#000000';
+        const cw=W/MW, ch=H/MH;
+        for(let y=0;y<MH;y++){
+          let run=-1;
+          for(let x=0;x<=MW;x++){
+            const on = x<MW && bits[y*MW+x];
+            if(on && run<0) run=x;
+            else if(!on && run>=0){ g.fillRect(run*cw, y*ch, (x-run)*cw+0.5, ch+0.5); run=-1; }
+          }
+        }
+      };
+    })()
   };
 
   /* ---- он цаг: постерын огноо ба Martensite аудитын тарилтын огноо ---- */
@@ -2873,7 +2958,35 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
          'clearly legible from above.'},
       {f:.48,th:2.30,ph:.84,g:.52,y:'2026',l:'second summer',n:'(06)',h:'Canopies Spread',
        p:'Canopies begin to spread and close the distance between the rows. The ring road and the '+
-         'three spurs stand out sharply against the greening ground.'}]
+         'three spurs stand out sharply against the greening ground.'}],
+    jacks:[
+      {f:1.00,th:1.571,ph:.32,g:0,y:'2026',l:'the ground',n:'(01)',h:'Baseline and Set-out',
+       p:'Degraded rangeland at Erdene sum, Dornogovi — the same starting condition as the three '+
+         'works before it. The plot is surveyed and the mark set out on the ground before any '+
+         'planting: <b>2,500 m²</b>, a quarter of a hectare, positioned by GPS so the geometry is '+
+         'fixed on the ground rather than approximated during planting.'},
+      {f:.86,th:1.40,ph:.46,g:0,y:'2026',l:'water · fence',n:'(02)',h:'Water and Enclosure',
+       p:'Water reaches the plot and the perimeter is closed to livestock. The order is not '+
+         'negotiable and does not change with the size of the work: on a quarter hectare as on '+
+         'thirty, <b>the conditions are built before the planting</b>, not around it.'},
+      {f:.66,th:1.62,ph:.68,g:.14,y:'2026',l:'planting',n:'(03)',h:'Ten Thousand Elms',
+       p:'<b>10,000 Siberian elm</b> · <i>Ulmus pumila</i> at half-metre spacing, four to the '+
+         'square metre. The density is set by the mark rather than by forestry practice: at wider '+
+         'spacing the symbol would read as rows of dots from the air instead of closing into '+
+         'continuous canopy.'},
+      {f:.54,th:1.95,ph:.78,g:.34,y:'2027',l:'first summer',n:'(04)',h:'Establishment',
+       p:'The most fragile interval. Root systems have not reached depth, so irrigation does not '+
+         'stop, and <b>survival is counted in full twice a year</b> with losses replanted — the '+
+         'same reporting cadence applied to every other planting on this site.'},
+      {f:.48,th:2.30,ph:.86,g:.56,y:'2029',l:'three summers',n:'(05)',h:'The Risk Window Closes',
+       p:'A sapling through three summers has anchored its roots and is unlikely to be lost. The '+
+         'canopy closes and the mark becomes legible from the air — <b>2,500 m² of recovered '+
+         'ground</b> that happens to be shaped like a company\'s symbol.'},
+      {f:1.00,th:1.571,ph:.20,g:.78,y:'2036',l:'ten years',n:'(06)',h:'Ten Years of Care',
+       p:'Every marked cup served at COP17 funded one of these trees, and each carries <b>ten '+
+         'years of maintenance and irrigation</b>. That interval, not the planting day, decides '+
+         'whether restoration holds — and it is what the collaboration should be measured '+
+         'against.'}]
   };
 
   function build(sec){
@@ -2916,11 +3029,32 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
     const MK=MASK[key];
     /* Хучаасын радиус нь модны хоорондын зайд пропорциональ байх ёстой.
        Хэт том бол зэргэлдээ хучаас нийлж, үсэг/замын нүцгэн зурвасыг дүүргэнэ. */
-    const GS=MK.step/3;
+    /* Хучаасын хэмжээ нь модны хоорондын ДЭЛХИЙН зайнаас хамаарна, зотоны
+       пикселийн алхмаас биш. Өмнө нь MK.step/3 гэж бичсэн нь step ба scale
+       хоёр үргэлж хамт өөрчлөгддөг гэсэн далд таамаг байсан: JACK'S дээр зотон
+       нарийсаж (метрт 2 пиксел) step=1 болмогц хучаас зайнаасаа 3.3 дахин том
+       болж, зэргэлдээ дискүүд давхцан z-fighting үүсгэж анивчиж байв.
+       step×scale нь дэлхийн зай тул харьцаа гурван бүтээлд ижил хэвээр. */
+    const SPC=MK.step*MK.scale;             // хоёр модны хоорондын дэлхийн зай
+    const GS=SPC*(5/3);
+    const TSC=MK.tree||1;                   // нягт бүтээлд модыг жижигрүүлнэ
     const PTS=maskPoints(SHAPES[key],MK.W,MK.H,MK.step,MK.scale);
     let maxX=1,maxZ=1;
     PTS.forEach(function(p){maxX=Math.max(maxX,Math.abs(p.x));maxZ=Math.max(maxZ,Math.abs(p.z));});
     const Rf=Math.sqrt(maxX*maxX+maxZ*maxZ);      // бүтээлийг бүрэн багтаах радиус
+    /* Сүүдрийн камерыг бүтээлийн хэмжээнд тааруулна. Тогтмол ±52 нэгжийн хайрцаг
+       нь том бүтээлд тохирдог ч жижигт нь гүний нарийвчлал сарниж, элсэн дээр
+       бараан толбо (shadow acne) үүсэн, камер эргэхэд анивчина. Хайрцгийг
+       чангатгавал texel-ийн нягт өснө; bias-ыг мөн хайрцгийн хэмжээтэй
+       пропорциональ болгоно. */
+    (function(){
+      const half=Math.max(8,Math.max(maxX,maxZ)*1.3+2);
+      sun.shadow.camera.left=-half; sun.shadow.camera.right=half;
+      sun.shadow.camera.top=half;   sun.shadow.camera.bottom=-half;
+      sun.shadow.camera.far=Math.max(120,half*4);
+      sun.shadow.bias=-0.0006*Math.max(.25,half/52);
+      sun.shadow.camera.updateProjectionMatrix();
+    })();
     let fitR=80;
     function computeFit(){
       // өргөн ба гүнийг тусад нь шалгаж, бүтээл бүтнээрээ багтах зайг олно
@@ -2931,7 +3065,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
     const TR=[], TP=[], LP=[];
     PTS.forEach(function(p,i){
       const R=Math.abs(Math.sin(i*12.9898)*43758.5453)%1;
-      TR.push({x:p.x,z:p.z,H:.46+R*.24,off:R*.36,sway:R*6.28,spin:R*6.28,e:0});
+      TR.push({x:p.x,z:p.z,H:(.46+R*.24)*TSC,off:R*.36,sway:R*6.28,spin:R*6.28,e:0});
     });
     const BR=[{oy:0,len:.48,rad:.055,tx:0,tz:0},
               {oy:.38,len:.42,rad:.032,tx:0,tz:.44},
@@ -3023,6 +3157,46 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
     const gndGeo=new THREE.CircleGeometry(1,12); gndGeo.rotateX(-Math.PI/2);
     const gndIM=new THREE.InstancedMesh(gndGeo,gndMat,TR.length);
     gndIM.receiveShadow=true; gndIM.frustumCulled=false; scene.add(gndIM);
+
+    /* ---- эхлэлийн тойм: тарихаас өмнө зөвхөн хүрээ нь газарт зурагдана ----
+       Тарилт эхлэхээс өмнө газар дээр юу ч ургаагүй байхад дүрс уншигдахгүй.
+       Маскийн ирмэгийг олж (харанхуй цэг, гэрэлтэй хөрштэй) тунгалаг зотон дээр
+       буулгаад газрын дээгүүр тавина: эхлээд зөвхөн энэ тойм харагдаж, ургалт
+       эхлэхэд аажим арилж, оронд нь хучаас ногоороод, дараа нь мод өснө. */
+    let outline=null;
+    (function(){
+      const cv=document.createElement('canvas'); cv.width=MK.W; cv.height=MK.H;
+      const c=cv.getContext('2d');
+      c.fillStyle='#ffffff'; c.fillRect(0,0,MK.W,MK.H);
+      c.fillStyle='#000000'; c.strokeStyle='#000000'; c.lineJoin='round'; c.lineCap='round';
+      SHAPES[key](c,MK.W,MK.H);
+      const src=c.getImageData(0,0,MK.W,MK.H).data;
+      const out=c.createImageData(MK.W,MK.H), od=out.data;
+      const solid=function(x,y){
+        if(x<0||y<0||x>=MK.W||y>=MK.H) return false;
+        return src[(y*MK.W+x)*4]<120;
+      };
+      for(let y=0;y<MK.H;y++)for(let x=0;x<MK.W;x++){
+        /* ирмэг = дүрсийн дотор боловч хөрш нь гадна */
+        const edge = solid(x,y) && !(solid(x-1,y)&&solid(x+1,y)&&solid(x,y-1)&&solid(x,y+1));
+        const i=(y*MK.W+x)*4;
+        /* Газарт татсан шохойн шугам шиг цайвар — тарихаас өмнөх тэмдэглэгээ.
+           Бараан өнгө өгвөл газар нь толботсон мэт харагдаж, юуг илэрхийлж
+           буй нь ойлгомжгүй болно. */
+        od[i]=246; od[i+1]=243; od[i+2]=228; od[i+3]=edge?225:0;
+      }
+      c.putImageData(out,0,0);
+      const tex=new THREE.CanvasTexture(cv);
+      if(THREE.SRGBColorSpace&&tex.colorSpace!==undefined) tex.colorSpace=THREE.SRGBColorSpace;
+      tex.magFilter=THREE.LinearFilter;
+      const pw=MK.W*MK.scale, ph=MK.H*MK.scale;
+      const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:0,
+        depthWrite:false});
+      const pl=new THREE.Mesh(new THREE.PlaneGeometry(pw,ph),mat);
+      pl.rotation.x=-Math.PI/2; pl.position.y=.035; pl.renderOrder=2;
+      scene.add(pl);
+      outline={mesh:pl,mat:mat};
+    })();
 
     /* ---- нэбха: модны суурьт хуримтлах элсэн товгор ---- */
     const nebGeo=new THREE.ConeGeometry(1,1,10); nebGeo.translate(0,.5,0);
@@ -3297,6 +3471,12 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
       }
 
       const neb=Math.max(0,Math.min(1,(growth-.40)/.40));
+      /* Тойм: ургалт эхлэхээс өмнө бүтэн, ногоо орж эхлэхэд аажим арилна */
+      if(outline){
+        const o=1-Math.max(0,Math.min(1,(growth-.015)/.16));
+        outline.mat.opacity=o*.85;
+        outline.mesh.visible=o>.01;
+      }
       gndMat.color.copy(SANDp).lerp(GREENp,Math.min(1,growth*1.15));
       if(SEASONS[season].snow) gndMat.color.lerp(SNOWp,.62);
       /* Хучаас, нэбха, иш нь зөвхөн ургалтаас хамаарна — камер эргэхэд
@@ -3746,8 +3926,24 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                     </div>
                 </div>
                 -->
+                <!-- The section header above is commented out pending audit, which left the
+                     map with no introduction at all. A delegate arriving here needs to know
+                     what the map is and what sponsorship does and does not confer. -->
+                <div class="heading-section mb-48 text-center">
+                    <div class="heading-sub fw-semibold effectFade fadeUp mx-auto">Cell Map</div>
+                    <div class="heading-title text-gradient-3 effectFade fadeRotateX">
+                        Fifty-four cells,<br> individually reported
+                    </div>
+                    <p class="text-neutral-400 eco-web-intro effectFade fadeUp" style="margin: 16px auto 0;">
+                        Restoration on this site is allocated and reported cell by cell. Each of the
+                        54 cells has a fixed position, an identifier and a sponsor of record; survival
+                        is counted in full twice a year for every planted cell, so a contribution can
+                        be traced to a located area of ground rather than to a site average.
+                        Sponsorship confers stewardship and recognition — not title to land.
+                    </p>
+                </div>
                 <div class="hex-map-embed effectFade fadeUp">
-                    <iframe id="hexMapFrame" src="hexagon-experience-map.html" title="HEXAGON Experience Map" loading="lazy" scrolling="no"></iframe>
+                    <iframe id="hexMapFrame" src="hexagon-experience-map.html" title="HEXAGON cell map" loading="lazy" scrolling="no"></iframe>
                 </div>
                 <script>
                 (function(){
