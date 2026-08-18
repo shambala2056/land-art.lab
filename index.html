@@ -948,7 +948,11 @@
                     </div>
                     <div class="story-row">
                         <div class="story-q">Measured outcomes</div>
-                        <div class="story-a">Independently measured by Martensite Analytica: a net carbon gain of 7,551 kg relative to an unrestored control site, with vegetation and water indices consistently outperforming the control. <a href="#satellite" class="story-more">See the full audit →</a></div>
+                        <!-- The carbon figure is Martensite Analytica's audited result for the
+                             2019–2024 phase and stays at that value: the years since are read from
+                             Google Earth Engine, and a vegetation index is not carbon. The link
+                             goes to the index charts, which are data rather than an audit. -->
+                        <div class="story-a">Independently assessed by Martensite Analytica for the 2019–2024 phase: a net carbon gain of 7,652.84 kg relative to an unrestored control site. In the years since, the vegetation indices have continued to read above the control. <a href="#satellite" class="story-more">See the satellite data →</a></div>
                     </div>
                     <div class="story-row">
                         <div class="story-q">Forthcoming work</div>
@@ -3716,11 +3720,16 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
                     <!-- Eight-year means from Shambala_annual_summary_2019_2026.csv, project site
                          against control. NDWI is absent on purpose: both sites read negative and the
                          project reads lower, so a headline number would imply a direction the raw
-                         values do not support. It keeps its chart, where the sign is visible. -->
+                         values do not support. It keeps its chart, where the sign is visible.
+                         Carbon is absent for a harder reason: a vegetation index is not carbon, and
+                         converting one into kilograms here would invent a figure the audit never
+                         issued. The audited carbon result stays where it belongs, with Martensite's
+                         2019–2024 assessment. The fourth tile therefore counts the years the gap
+                         held, which is what the indices can actually support. -->
                     <div class="inv-stat"><div class="v">0.1834</div><span class="k">NDVI vegetation health — vs. 0.1388 control</span></div>
                     <div class="inv-stat"><div class="v">0.1318</div><span class="k">EVI vegetation density — vs. 0.1055 control</span></div>
                     <div class="inv-stat"><div class="v">0.2313</div><span class="k">FAPAR light absorbed — vs. 0.1751 control</span></div>
-                    <div class="inv-stat"><div class="v">1,898 kg</div><span class="k">Net carbon gain, annual average vs. control</span></div>
+                    <div class="inv-stat"><div class="v">8 / 8</div><span class="k">Years the vegetation indices led the control, 2019–2026</span></div>
                 </div>
                 <div class="sat-charts">
                     <div class="sat-head">
