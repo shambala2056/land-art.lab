@@ -1758,7 +1758,7 @@
                         <div class="bio-mt"><div class="k">EVI · vegetation density</div><div class="v" id="bioMEvi">0.0000</div><div class="bar"><i id="bioBEvi" class="warm"></i></div></div>
                         <div class="bio-mt"><div class="k">Lead over control site</div><div class="v" id="bioMLead">+0.0000</div><div class="bar"><i id="bioBLead"></i></div></div>
                     </div>
-                    <p class="bio-note">Within each phrase the melody simply follows the vegetation curve: the note rises with NDVI, so the August peak of 2024 — 0.4507, the highest reading in the record — is the highest note in the piece, and every December falls back to the bass and the wind. A bell opens each year. That shape is not an effect written into the score; it is the measurement, quantised onto the beat so it can be heard as music. The readouts above name the month you are listening to.</p>
+                    <p class="bio-note">Within each phrase the melody follows the vegetation curve: the note rises with NDVI, so the August peak of 2024 — 0.4507, the highest reading in the record — is the top note of the piece, and every December falls back to the bass and the wind. A bell opens each year. Note choice runs on a three-month rolling mean and moves by steps within one octave, because a satellite reading can jump by a third of its range between two passes and a line that jumps with it is not a melody. The shape is the measurement; only the jitter is smoothed. The readouts above always show the measured monthly figures, unsmoothed.</p>
                 </div>
 
                 <div class="bio-panel effectFade fadeUp">
@@ -4201,7 +4201,23 @@
           var YEND=M0+MN/12;                       /* 2026.67 — 8 дугаар сард дуусна */
           function rng(a){ var lo=Math.min.apply(null,a), hi=Math.max.apply(null,a);
             return {lo:lo, hi:hi, sp:(hi-lo)||1}; }
+          /* Хөгжимд зориулж гурван сарын гулсах дундаж. Хиймэл дагуулын уншилт
+             сараас саранд 0.32 хүртэл харайдаг тул үүнийг шууд хөгт буулгавал ая
+             биш, тасархай харайлт болно. Гулсуулбал улирлын болон оны хэлбэр
+             хэвээр үлдэж, зөвхөн чимээ л арилна. Заалтууд ХЭМЖСЭН тоог хэвээр
+             харуулна — гулсуулсныг зөвхөн ноот сонгоход хэрэглэнэ. */
+          function smooth(a){
+            var o=[];
+            for(var i=0;i<a.length;i++){
+              var lo=Math.max(0,i-1), hi=Math.min(a.length-1,i+1), n=0, sum=0;
+              for(var j=lo;j<=hi;j++){ sum+=a[j]; n++; }
+              o.push(sum/n);
+            }
+            return o;
+          }
+          var NDVI_S=smooth(NDVI_P), EVI_S=smooth(EVI_P), FAPAR_S=smooth(FAPAR_P);
           var R_ND=rng(NDVI_P), R_EV=rng(EVI_P), R_FA=rng(FAPAR_P);
+          var R_NDS=rng(NDVI_S), R_EVS=rng(EVI_S), R_FAS=rng(FAPAR_S);
           var NY=8;                                /* хэмжсэн онуудын тоо */
           function nrm(v,r){ return clamp((v-r.lo)/r.sp,0,1); }
           /* Сарын цувааг шугаман интерполяциар уншина — тухайн хоёр сарын хооронд
@@ -4212,11 +4228,14 @@
             t=clamp(t,M0,YEND-0.001);
             var f=clamp((t-M0)*12,0,MN-1.001);
             var nd=at(NDVI_P,f), ndc=at(NDVI_C,f), ev=at(EVI_P,f), fa=at(FAPAR_P,f);
+            var nds=at(NDVI_S,f), evs=at(EVI_S,f), fas=at(FAPAR_S,f);
             var yi=clamp(Math.floor(t)-M0,0,7);
             return { t:t, y:Math.floor(t), f:f, mon:Math.round(f)%12,
                      ndvi:nd, ndviC:ndc, evi:ev, fapar:fa, lead:nd-ndc,
                      carbon:CARB[yi],
                      ndviN:nrm(nd,R_ND), eviN:nrm(ev,R_EV), faparN:nrm(fa,R_FA),
+                     /* хөгжимд — гулсуулсан */
+                     regS:nrm(nds,R_NDS), densS:nrm(evs,R_EVS), briS:nrm(fas,R_FAS),
                      /* Нүцгэн хөрс. Урьд нь 1-nrm(NDVI) байсан — тэр нь бүтэн
                         бичлэгийн хамгийн өндөр уншилтад (2024 оны 8 сар, 0.4507)
                         харьцангуй тул 92 сарын 75-д 0.6-аас дээш гарч, шуугиан
@@ -4241,11 +4260,15 @@
              гэрт хүрч, 2022-ын ганд ухарч, 2024-25-д хоёр удаа тоник, 2026 нь
              хагас жил тул V дээр дуусна — дуусаагүй гэдгээ өөрөө хэлж байна. */
           var BPM=66, SPB=60/BPM, STEP=SPB/2, BARS=6, YSEC=SPB*4*BARS;   /* 21.8 с / он */
+          /* Таван нотын нягт байрлуулалт, бүгд нэг октавын дотор, ерөнхий нот
+             ихтэй. Өмнөх хувилбар 15-24 хагас тонд тархсан долоон нот байсан тул
+             хөрш хоёр ноот хооронд октаваас дээш харайж, ая тасарч байв.
+             Басс нь 38-47-ийн дотор — аккорд солигдоход зөөлөн хөрвөнө. */
           var CHORDS=[
-            {n:'Bm', root:59, deg:'vi', sc:[59,62,64,66,69,71,74]},
-            {n:'G',  root:55, deg:'IV', sc:[55,59,62,64,67,71,74]},
-            {n:'A',  root:57, deg:'V',  sc:[57,61,64,66,69,73,76]},
-            {n:'D',  root:50, deg:'I',  sc:[50,54,57,62,64,69,74]}
+            {n:'Bm', root:47, deg:'vi', sc:[59,62,64,66,69]},   /* B D E F# A  */
+            {n:'G',  root:43, deg:'IV', sc:[62,64,67,69,71]},   /* D E G A B   */
+            {n:'A',  root:45, deg:'V',  sc:[61,64,66,69,71]},   /* C# E F# A B */
+            {n:'D',  root:38, deg:'I',  sc:[62,64,66,69,71]}    /* D E F# A B  */
           ];
           function chordOf(lead){
             return lead<0.02?CHORDS[0]:lead<0.035?CHORDS[1]:lead<0.06?CHORDS[2]:CHORDS[3];
@@ -4416,7 +4439,9 @@
              хэлбэлзэл нэмбэл багажийн заалт мэт харагдах ч үнэндээ зохиомол болно. */
           function sensors(s){
             return { ndvi:s.ndvi, fapar:s.fapar, evi:s.evi, lead:s.lead,
-                     bright:s.faparN, density:s.eviN, register:s.ndviN, wind:s.bare };
+                     /* bright/density/register нь ХӨГЖМИЙН параметр — гулсуулсан
+                        цуваанаас. ndvi/evi/fapar/lead нь заалтад — хэмжсэнээрээ. */
+                     bright:s.briS, density:s.densS, register:s.regS, wind:s.bare };
           }
 
           function updateAmbient(s){
@@ -4458,7 +4483,7 @@
              нарийн цаг дээр төлөвлөх. setTimeout өөрөө хэдэн арван мс хэлбэлздэг
              тул түүн дээр ноот тавибал айзам гуйвна. Иймд 25 мс тутам сэрж,
              дараагийн 0.25 секундын бүх 8-ны цохилтыг цаг тавьж өгнө. */
-          var schedTimer=null, t0Audio=0, step=0;
+          var schedTimer=null, t0Audio=0, step=0, lastMel=null;
           function stepState(k){
             var el=k*STEP, cyc=NY*YSEC;
             el=el%cyc;
@@ -4477,12 +4502,39 @@
             if(BASS_AT[q.sub]) pluck(ch.root-12, when, 0.030+clamp(s.carbon/3400,0,1)*0.035, SPB*3.2);
             /* Ая: NDVI-г аккордын гамм дээр буулгана — хөг нь өсөлтийн муруйг
                өөрөө зурна, зун дээш, өвөл доош. Санамсаргүй сонголт байхгүй. */
-            if(PATT[q.sub] && Math.random() < 0.30+sn.density*0.66){
-              var deg=Math.round(sn.register*(ch.sc.length-1));
-              var note=ch.sc[deg]+(sn.register>0.72?12:0);
-              pluck(note, when, 0.018+sn.density*0.055, SPB*(1.6+sn.register*1.4));
-              if(sn.density>0.55 && q.sub%4===0)
-                pluck(ch.sc[Math.min(ch.sc.length-1,deg+2)], when+STEP*0.5, 0.012+sn.density*0.02, SPB*1.4);
+            if(PATT[q.sub] && Math.random() < 0.42+sn.density*0.52){
+              /* Хүрэх өндрийг өсөлтийн муруй тогтооно, гишгэлтийг хөгжим:
+                 гаммын хамгийн ойр ноотыг авч, өмнөх ноотоос хэт зөрвөл зөвхөн
+                 нэг шат хөдөлнө. Ингэснээр ая нь муруйг дагасаар, гэхдээ
+                 гишгэлж явна — харайлт биш. */
+              var lo=ch.sc[0], span=ch.sc[ch.sc.length-1]-lo;
+              var target=lo+sn.register*span;
+              var bi=0, bd=1e9;
+              for(var si=0;si<ch.sc.length;si++){
+                var dd=Math.abs(ch.sc[si]-target); if(dd<bd){ bd=dd; bi=si; }
+              }
+              if(lastMel!==null){
+                var li=0, ld=1e9;
+                for(var sj=0;sj<ch.sc.length;sj++){
+                  var d2=Math.abs(ch.sc[sj]-lastMel); if(d2<ld){ ld=d2; li=sj; }
+                }
+                if(bi>li+1) bi=li+1; else if(bi<li-1) bi=li-1;
+                /* Хүрэх өндөр нь хөдөлгөөнгүй үед ая нэг ноот дээр гацна. Тийм
+                   тохиолдолд гаммын дотор нэг шат зөөнө — гишгэлт хэвээр, гэхдээ
+                   ая хөдөлнө. Чиглэлийг муруй дээш эсвэл доош байгаагаас авна. */
+                if(bi===li && Math.random()<0.62){
+                  var dir=(sn.register>0.5)?1:-1;
+                  if(Math.random()<0.34) dir=-dir;
+                  bi=Math.max(0,Math.min(ch.sc.length-1,li+dir));
+                }
+              }
+              var note=ch.sc[bi];
+              lastMel=note;
+              pluck(note, when, 0.020+sn.density*0.050, SPB*(1.8+sn.register*1.2));
+              /* Гуравны зэрэгцээ хоолой — нягт саруудад, нэг гаммын дотор. */
+              if(sn.density>0.58 && q.sub%4===0)
+                pluck(ch.sc[Math.min(ch.sc.length-1,bi+2)], when+STEP*0.5,
+                      0.011+sn.density*0.016, SPB*1.4);
             }
             /* Нүцгэн хөрс → салхи, сул цохилт дээр. Өвөл бараг зөвхөн салхи. */
             if(sn.wind>0.55 && (q.sub===3||q.sub===7) && Math.random()<sn.wind*0.5)
@@ -4523,7 +4575,7 @@
             this.setAttribute('aria-pressed',String(ambOn));
             this.textContent = ambOn?'❚❚ Stop':'▶ Listen to the Forest';
             if(ambOn){
-              t0Audio=AC.currentTime+0.08; step=0;
+              t0Audio=AC.currentTime+0.08; step=0; lastMel=null;
               fadeMaster(volNow(),600);
               if(!schedTimer) schedTimer=setInterval(scheduler,25);
               scheduler();
