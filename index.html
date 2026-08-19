@@ -1763,7 +1763,7 @@
 
                 <div class="bio-panel effectFade fadeUp">
                     <div class="bio-mhead"><h3>Data Symphony</h3><span class="bio-num">TOOL 02</span></div>
-                    <p class="bio-msub">The same eight years, compressed to one bar each so the whole record passes in twelve seconds: NDVI sets the melody, EVI the harmony, the year's herbaceous carbon the bass, bare ground the percussion. It reads the same chord chart as the piece above, so the two tools agree — the dry 2022 sits on the subdominant and 2024 and 2025 land twice on the tonic.</p>
+                    <p class="bio-msub">The same eight years as a fixed piece, a little over a minute: two bars each, with an opening bar and a closing cadence. NDVI sets the melody, EVI how densely the bar is filled, the year's herbaceous carbon the bass, bare ground the percussion. It reads the same chord chart as the piece above, so the dry 2022 sits on the subdominant while 2024 and 2025 land twice on the tonic — and those two years, the strongest in the record, are also the busiest bars. The arpeggio climbs in the years the margin over the control widened and falls in the years it narrowed, so the direction of travel is audible. It ends on the dominant, unresolved, because the record ends in August 2026.</p>
                     <div class="bio-score" id="bioScore">
                         <div class="bio-lanes"><span>NDVI</span><div class="bio-lane on" id="bioLaneCan"></div></div>
                         <div class="bio-lanes"><span>EVI</span><div class="bio-lane crown" id="bioLaneCrw"></div></div>
@@ -4276,6 +4276,8 @@
           /* Айзмын хэв: 8-ны хуваалт. Нягтрал үүнээс аль цохилт дуугарахыг шийднэ,
              хугацааг нь биш — тул юу гарлаа гэсэн ч хэмнэлтэй хэвээр байна. */
           var PATT=[1,0,1,0,1,1,0,1], BASS_AT=[1,0,0,0,1,0,0,0];
+          /* Симфонийн гурван айзам: сийрэг, дунд, нягт. */
+          var SY_A=[1,0,0,0,1,0,0,0], SY_B=[1,0,1,0,1,0,1,0], SY_C=[1,0,1,1,1,0,1,1];
           function mtof(m){ return 440*Math.pow(2,(m-69)/12); }
 
           /* iOS дээр Web Audio нь "ambient" сессээр явдаг бөгөөд утасны чимээгүй товчоор
@@ -4613,11 +4615,13 @@
             document.getElementById('bioYrRow').innerHTML=yr;
           })();
 
-          var bioSymBtn=document.getElementById('bioSymBtn'), bioPh=document.getElementById('bioPh'), symTimer=null;
+          var bioSymBtn=document.getElementById('bioSymBtn'), bioPh=document.getElementById('bioPh'), symTimer=null, symTimer2=null;
           function stopSymphony(){
             symOn=false; bioSymBtn.setAttribute('aria-pressed','false');
             bioSymBtn.textContent='♪ Data Symphony · 2019–2026';
-            bioPh.style.opacity='0'; clearTimeout(symTimer); symTimer=null;
+            bioPh.style.opacity='0';
+            clearInterval(symTimer); symTimer=null;
+            clearTimeout(symTimer2); symTimer2=null;
             if(!ambOn) fadeMaster(0,600);
           }
           bioSymBtn.addEventListener('click',function(){
@@ -4626,36 +4630,103 @@
             symOn=true; this.setAttribute('aria-pressed','true'); this.textContent='■ Stop';
             bioPh.style.opacity='1';
             fadeMaster(volNow(),300);
-            var BAR=1.55, t0=AC.currentTime+0.12;
-            for(var i=0;i<NY;i++){
-              var d=SCORE[i], t=t0+i*BAR;
-              thud(t, 0.05+d.soc*0.05);
-              var ch0=chordOf(d.lead);
-              pluck(ch0.root-12, t, 0.05, BAR*1.5);
-              var voices=1+Math.round(d.dens*4);
-              /* Хоёр хэрэгсэл ижил аккордын дэвтэр дээр: тухайн оны зөрүү нь
-                 аккордыг сонгоно (vi–IV–I–IV–V–I–I–V). Тул 2022-ын ган нь
-                 ухаралт болж сонсогдоно. */
-              var ch=chordOf(d.lead), sc=ch.sc;
-              for(var v=0;v<voices;v++){
-                pluck(sc[v%sc.length]+(v>2?12:0), t+0.05+v*0.11, 0.028+d.canopy*0.04, 1.5+v*0.2);
+            /* Урьд нь он бүр 1.55 секунд байж, бүх хоолой эхний хагас секундэд
+               нэг дор буугаад дараа нь чимээгүй болдог — 12 секундын цуврал
+               цохилт, хөгжим биш. Одоо энэ нь жинхэнэ найруулга: 66 BPM, он бүр
+               хоёр хэм, нэг хэмийн удиртгал, хоёр хэмийн төгсгөл. Ноотыг
+               ямбын тор дээр, урьдчилан төлөвлөж тавина. */
+            var SBAR=SPB*4, BPY=2, INTRO=1, OUTRO=2;
+            var TOTB=INTRO+NY*BPY+OUTRO, SYDUR=TOTB*SBAR;
+            var syStep=0, syT0=AC.currentTime+0.12, syLast=null;
+            function syPlan(k, when){
+              var bar=Math.floor(k/8), sub=k%8;
+              /* Удиртгал: зөвхөн суурь — эхлэхийн товч тэмдэг. */
+              if(bar<INTRO){
+                var c0=chordOf(LEAD_A[0]);
+                if(sub===0){ pluck(c0.root-12, when, 0.040, SBAR*1.4); thud(when,0.045); }
+                if(sub===4)  pluck(c0.root, when, 0.020, SBAR*0.8);
+                return;
               }
-              var hits=Math.round(d.wind*5);
-              for(var k=0;k<hits;k++) gust(t+k*(BAR/Math.max(1,hits)), 0.016+d.wind*0.03, 0.34);
-              /* Аяны ноот нь тухайн оны NDVI-аас — айзам бүр өөр өндөрт төгсөнө. */
-              var mel=sc[Math.round(d.canopy*(sc.length-1))]+12;
-              pluck(mel, t+BAR*0.55, 0.03+d.canopy*0.05, 1.8);
+              /* Төгсгөл: сүүлийн аккордыг барина. 2026 нь хагас жил тул V дээр
+                 дуусна — шийдэгдээгүй, учир нь бичлэг ч дуусаагүй. */
+              if(bar>=INTRO+NY*BPY){
+                var cE=chordOf(LEAD_A[NY-1]);
+                if(sub===0 && bar===INTRO+NY*BPY){
+                  pluck(cE.root-12, when, 0.042, SBAR*3.4);
+                  cE.sc.forEach(function(nn,ix){ pluck(nn, when+ix*STEP*0.5, 0.020, SBAR*2.6); });
+                }
+                if(sub===0 && (bar-INTRO-NY*BPY)===1) pluck(cE.sc[0]+12, when, 0.016, SBAR*2.2);
+                return;
+              }
+              var yi=Math.floor((bar-INTRO)/BPY), inY=(bar-INTRO)%BPY;
+              var d=SCORE[yi], ch=chordOf(d.lead);
+              /* Он солигдох хонх */
+              if(inY===0 && sub===0){
+                pluck(ch.sc[0]+24, when, 0.026, 3.6);
+                pluck(ch.sc[3]+24, when+0.02, 0.018, 3.4);
+              }
+              /* Суурь: хэм бүрийн 1 ба 3 дээр. Хүч нь карбоноос. */
+              if(sub===0){ pluck(ch.root-12, when, 0.030+d.soc*0.026, SBAR*1.5); thud(when, 0.030+d.soc*0.030); }
+              if(sub===4)  pluck(ch.root,    when, 0.018+d.soc*0.014, SBAR*0.7);
+              /* Арпеджио: аккордыг дараалан татна — нэг дор бөөгнөрөхгүй. Нотын
+                 тоо тухайн оны EVI-аас, бүхэлдээ NDVI-ийн өндөрт. */
+              /* Он бүр өөр айзамтай байх ёстой — эс тэгвээс найман удаа ижил
+                 хэвийг сонсоно. Нягтрал нь хэв сонгоно, зөрүүний чиг нь
+                 арпеджиогийн ЧИГЛЭЛИЙГ: тэр он хяналтаас илүү ахисан бол дээш,
+                 ухарсан бол доош. Тухайн оны хөдөлгөөний чиг өөрөө сонсогдоно. */
+              var pat = d.dens<0.34 ? SY_A : d.dens<0.67 ? SY_B : SY_C;
+              var dir = (yi===0 || LEAD_A[yi]>=LEAD_A[yi-1]) ? 1 : -1;
+              if(pat[sub]){
+                var lo=ch.sc[0], span=ch.sc[ch.sc.length-1]-lo;
+                var tgt=lo+d.canopy*span, bi=0, bd=1e9;
+                for(var q=0;q<ch.sc.length;q++){ var dd=Math.abs(ch.sc[q]-tgt); if(dd<bd){bd=dd;bi=q;} }
+                /* Арпеджио: сонгосон ноотоос чиглэлийн дагуу нэг нэг шат. */
+                var stepsIn=(inY*8+sub);
+                var ix=bi+dir*(Math.floor(stepsIn/2)%3);
+                ix=Math.max(0,Math.min(ch.sc.length-1,ix));
+                if(syLast!==null){
+                  /* indexOf нь аккорд солигдоход -1 буцаана — тэр үед хязгаар
+                     хэрэгсэхгүй болж, он хооронд 10 хагас тонын харайлт гарч
+                     байв. Иймд шинэ гаммын ХАМГИЙН ОЙР индексээс хэмжинэ. */
+                  var li=0, lb=1e9;
+                  for(var r=0;r<ch.sc.length;r++){
+                    var rd=Math.abs(ch.sc[r]-syLast); if(rd<lb){ lb=rd; li=r; }
+                  }
+                  if(ix>li+2) ix=li+2; else if(ix<li-2) ix=li-2;
+                  ix=Math.max(0,Math.min(ch.sc.length-1,ix));
+                }
+                syLast=ch.sc[ix];
+                pluck(syLast, when, 0.019+d.canopy*0.028, SPB*(1.6+d.canopy));
+                /* Нягт онуудад гуравны хоолой нэмэгдэнэ. */
+                if(d.dens>0.62 && sub%4===2)
+                  pluck(ch.sc[Math.min(ch.sc.length-1,ix+2)], when+STEP*0.5,
+                        0.011+d.canopy*0.014, SPB*1.3);
+              }
+              /* Нүцгэн хөрс → зөөлөн салхи, сул цохилт дээр. */
+              if((sub===7) && d.wind>0.35) gust(when, 0.004+d.wind*0.008, 1.0);
             }
+            function sySched(){
+              if(!symOn||!AC) return;
+              var ahead=AC.currentTime+0.25;
+              while(syT0+syStep*STEP < ahead && syStep*STEP < SYDUR){
+                syPlan(syStep, syT0+syStep*STEP); syStep++;
+              }
+              if(syStep*STEP>=SYDUR && AC.currentTime>syT0+SYDUR){ stopSymphony(); }
+            }
+            symTimer=setInterval(sySched,25); sySched();
+
             var lane=document.getElementById('bioLaneCan').getBoundingClientRect();
             var box=document.getElementById('bioScore').getBoundingClientRect();
             var x0=lane.left-box.left, w=lane.width;
-            var start=performance.now();
+            /* Гүйгч нь зөвхөн найман оны хэсгийг дүрсэлнэ — удиртгал, төгсгөл нь
+               зураас дээр байхгүй тул тэр хугацаанд хоёр захад хүлээнэ. */
+            var yStart=INTRO*SBAR, yEnd=yStart+NY*BPY*SBAR;
             (function sweep(){
               if(!symOn)return;
-              var el2=(performance.now()-start)/1000, k=el2/(NY*BAR);
-              if(k>=1){ stopSymphony(); return; }
-              bioPh.style.left=(x0+k*w).toFixed(1)+'px';
-              symTimer=setTimeout(sweep,40);
+              var el2=AC.currentTime-syT0;
+              var kk=(el2-yStart)/(yEnd-yStart);
+              bioPh.style.left=(x0+Math.max(0,Math.min(1,kk))*w).toFixed(1)+'px';
+              symTimer2=setTimeout(sweep,40);
             })();
           });
         })();
