@@ -4217,15 +4217,18 @@
                      ndvi:nd, ndviC:ndc, evi:ev, fapar:fa, lead:nd-ndc,
                      carbon:CARB[yi],
                      ndviN:nrm(nd,R_ND), eviN:nrm(ev,R_EV), faparN:nrm(fa,R_FA),
-                     /* хөрсний нүцгэн хувь — NDVI-ийн урвуу. Өвөл ба эрт онуудад
-                        ойртож, салхи л үлддэг. */
-                     bare:1-nrm(nd,R_ND) };
+                     /* Нүцгэн хөрс. Урьд нь 1-nrm(NDVI) байсан — тэр нь бүтэн
+                        бичлэгийн хамгийн өндөр уншилтад (2024 оны 8 сар, 0.4507)
+                        харьцангуй тул 92 сарын 75-д 0.6-аас дээш гарч, шуугиан
+                        хөгжмөө дарж байв. Одоо шингэн босготой: NDVI 0.20-аас
+                        доош унасан үед л салхи сонсогдоно. */
+                     bare:clamp((0.20-nd)/0.20,0,1) };
           }
           function setTxt(el,v){ if(el.textContent!==v) el.textContent=v; }
 
           /* ═════ audio engine (identical to the map's) ═════ */
           var AC=null, MASTER=null, DRONE=[], DFILT=null, NOISE=null, NGAIN=null, NFILT=null;
-          var SEND=null, DLY=null;
+          var SEND=null, DLY=null, BUS=null, RVB=null, RSEND=null;
           var ambOn=false, symOn=false;
           var PENT_MAJ=[62,64,66,69,71,74,76], PENT_MIN=[62,65,67,69,72,74,77];
           /* ── Хөгжмийн бүтэц ──────────────────────────────────────────────────
@@ -4288,8 +4291,55 @@
             }
             if(!routed) MASTER.connect(AC.destination);
 
+            /* ── Мастеринг ──────────────────────────────────────────────────────
+               Бүх хоолой BUS руу нийлж, дараа нь: доод чөлөөг цэвэрлэх → шуугиан
+               сууж байдаг 2-6 кГц-ийг дарах → бүхэлдээ нэгтгэх компресс → зөөлөн
+               сатураци (транзистор мэт дулаан, оргилыг мохоох) → лимитер. Ингэж
+               ноот ба пад нэг биетэй болж, "шуугиан" биш "хөгжим" шиг сонсогдоно. */
+            BUS=AC.createGain(); BUS.gain.value=1.0;
+            var hp=AC.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=34; hp.Q.value=0.5;
+            var hiss=AC.createBiquadFilter(); hiss.type='peaking';
+            hiss.frequency.value=3200; hiss.Q.value=0.9; hiss.gain.value=-5.5;
+            var air=AC.createBiquadFilter(); air.type='highshelf';
+            air.frequency.value=7200; air.gain.value=-7;
+            var warm=AC.createBiquadFilter(); warm.type='lowshelf';
+            warm.frequency.value=180; warm.gain.value=2.2;
+
+            var glue=AC.createDynamicsCompressor();
+            glue.threshold.value=-20; glue.knee.value=26; glue.ratio.value=2.4;
+            glue.attack.value=0.02;  glue.release.value=0.28;
+
+            var sat=AC.createWaveShaper();
+            var cv=new Float32Array(1024);
+            for(var ci=0;ci<1024;ci++){ var x=(ci/1023)*2-1; cv[ci]=Math.tanh(x*1.6)/Math.tanh(1.6); }
+            sat.curve=cv; sat.oversample='2x';
+
+            var lim=AC.createDynamicsCompressor();
+            lim.threshold.value=-2.5; lim.knee.value=0; lim.ratio.value=20;
+            lim.attack.value=0.002;  lim.release.value=0.09;
+
+            BUS.connect(hp); hp.connect(warm); warm.connect(hiss); hiss.connect(air);
+            air.connect(glue); glue.connect(sat); sat.connect(lim); lim.connect(MASTER);
+
+            /* Реверб: 2.6 секундын хиймэл импульс, стерео. Delay нь хэмнэл өгдөг,
+               реверб нь орон зай — хоёулаа байх нь хуурай "бип"-ээс салгана. */
+            RVB=AC.createConvolver();
+            var rl=Math.floor(AC.sampleRate*2.6), ib=AC.createBuffer(2,rl,AC.sampleRate);
+            for(var chn=0;chn<2;chn++){
+              var dd=ib.getChannelData(chn);
+              for(var ri=0;ri<rl;ri++){
+                var env=Math.pow(1-ri/rl,2.6);
+                dd[ri]=(Math.random()*2-1)*env*0.5;
+              }
+            }
+            RVB.buffer=ib;
+            RSEND=AC.createGain(); RSEND.gain.value=0.30;
+            var rtone=AC.createBiquadFilter(); rtone.type='lowpass'; rtone.frequency.value=2600;
+            var rlvl=AC.createGain(); rlvl.gain.value=0.55;
+            RSEND.connect(rtone); rtone.connect(RVB); RVB.connect(rlvl); rlvl.connect(BUS);
+
             DFILT=AC.createBiquadFilter(); DFILT.type='lowpass'; DFILT.frequency.value=420; DFILT.Q.value=0.7;
-            var dg=AC.createGain(); dg.gain.value=0.16; DFILT.connect(dg); dg.connect(MASTER);
+            var dg=AC.createGain(); dg.gain.value=0.16; DFILT.connect(dg); dg.connect(BUS);
             [0,7,12].forEach(function(iv,k){
               var o=AC.createOscillator(); o.type=k===2?'triangle':'sine';
               o.frequency.value=mtof(38+iv); o.detune.value=(k-1)*6;
@@ -4302,17 +4352,19 @@
             for(var i=0;i<len;i++) d[i]=(Math.random()*2-1)*0.4;
             /* Цуурай: хуурай ноот нь "бип" шиг сонсогдоно. Санал болгох хэмжээний
                feedback delay нь орон зай нэмж, хөгжим шиг болгоно. */
-            SEND=AC.createGain(); SEND.gain.value=0.34;
+            /* Реверб нэмэгдсэн тул delay-г 0.34-өөс 0.22 болгов — хоёулаа
+               өндөр байвал бүрхэг болно. */
+            SEND=AC.createGain(); SEND.gain.value=0.22;
             DLY=AC.createDelay(1.2); DLY.delayTime.value=SPB*0.75;
             var fb=AC.createGain(); fb.gain.value=0.34;
             var dlp=AC.createBiquadFilter(); dlp.type='lowpass'; dlp.frequency.value=2200;
             SEND.connect(DLY); DLY.connect(dlp); dlp.connect(fb); fb.connect(DLY);
-            dlp.connect(MASTER);
+            dlp.connect(BUS);
 
             NOISE=AC.createBufferSource(); NOISE.buffer=buf; NOISE.loop=true;
-            NFILT=AC.createBiquadFilter(); NFILT.type='bandpass'; NFILT.frequency.value=900; NFILT.Q.value=0.6;
+            NFILT=AC.createBiquadFilter(); NFILT.type='bandpass'; NFILT.frequency.value=420; NFILT.Q.value=1.1;
             NGAIN=AC.createGain(); NGAIN.gain.value=0.0;
-            NOISE.connect(NFILT); NFILT.connect(NGAIN); NGAIN.connect(MASTER); NOISE.start();
+            NOISE.connect(NFILT); NFILT.connect(NGAIN); NGAIN.connect(BUS); NOISE.start();
           }
           function fadeMaster(v,ms){
             if(!AC)return;
@@ -4330,7 +4382,12 @@
             g.gain.setValueAtTime(0.0001,t);
             g.gain.exponentialRampToValueAtTime(Math.max(0.001,amp),t+0.012);
             g.gain.exponentialRampToValueAtTime(0.0001,t+(dur||1.6));
-            o.connect(f); f.connect(g); g.connect(MASTER); if(SEND) g.connect(SEND);
+            var pn=AC.createStereoPanner();
+            /* Бага зэрэг стерео: ноот бүр өөр өнцөгт — моно бөөгнөрөл тайлагдана. */
+            pn.pan.value=Math.max(-0.55,Math.min(0.55,((midi%7)-3)/5.5));
+            o.connect(f); f.connect(g); g.connect(pn); pn.connect(BUS);
+            if(SEND) pn.connect(SEND);
+            if(RSEND) pn.connect(RSEND);
             o.start(t); o.stop(t+(dur||1.6)+0.05);
           }
           function thud(when,amp){
@@ -4338,7 +4395,7 @@
             var t=when||AC.currentTime, o=AC.createOscillator(), g=AC.createGain();
             o.type='sine'; o.frequency.setValueAtTime(110,t); o.frequency.exponentialRampToValueAtTime(42,t+0.25);
             g.gain.setValueAtTime(amp,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.4);
-            o.connect(g); g.connect(MASTER); o.start(t); o.stop(t+0.45);
+            o.connect(g); g.connect(BUS); o.start(t); o.stop(t+0.45);
           }
           function gust(when,amp,dur){
             if(!AC)return;
@@ -4351,7 +4408,8 @@
             g.gain.setValueAtTime(0.0001,t);
             g.gain.exponentialRampToValueAtTime(amp,t+0.12);
             g.gain.exponentialRampToValueAtTime(0.0001,t+(dur||0.7));
-            s.connect(f); f.connect(g); g.connect(MASTER); s.start(t); s.stop(t+(dur||0.7));
+            s.connect(f); f.connect(g); g.connect(BUS); if(RSEND) g.connect(RSEND);
+            s.start(t); s.stop(t+(dur||0.7));
           }
 
           /* Дөрвөн заалт нь бүгд хэмжсэн тоо. Нэмэлт "jitter" байхгүй: хиймэл
@@ -4388,8 +4446,11 @@
                хэт багасгавал басс ноот дроныг дарж, пад нимгэн болно. */
             var body=0.34+clamp(s.carbon/3400,0,1)*0.18;
             DRONE.forEach(function(d){ d.g.gain.setTargetAtTime(d.iv===12?body*0.45:body, tc, 1.2); });
-            NGAIN.gain.setTargetAtTime(sn.wind*0.11, tc, 0.4);
-            NFILT.frequency.setTargetAtTime(700+sn.wind*1500, tc, 0.4);
+            /* Салхи 0.11 → 0.022. Ноот 0.018-0.073 тул одоо салхи нь дэвсгэр
+               болж, дуугүй үед л мэдэгдэнэ. Мөн 700-2200 Гц биш, 340-820 Гц —
+               "шуугиан" биш "салхи" шиг. */
+            NGAIN.gain.setTargetAtTime(sn.wind*0.022, tc, 0.6);
+            NFILT.frequency.setTargetAtTime(340+sn.wind*480, tc, 0.6);
           }
 
           /* ═════ Айзамд суулгасан төлөвлөгч ═════
@@ -4425,7 +4486,7 @@
             }
             /* Нүцгэн хөрс → салхи, сул цохилт дээр. Өвөл бараг зөвхөн салхи. */
             if(sn.wind>0.55 && (q.sub===3||q.sub===7) && Math.random()<sn.wind*0.5)
-              gust(when, 0.010+sn.wind*0.022, 0.8);
+              gust(when, 0.004+sn.wind*0.009, 1.1);
           }
           function scheduler(){
             if(!ambOn||symOn||!AC) return;
