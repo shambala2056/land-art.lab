@@ -11,7 +11,12 @@
  */
 
 const crypto = require("crypto");
-const { Resend } = require("resend");
+/* Resend is required lazily, inside the notification block. At module scope a
+ * failure to load it — a missing install, a bad version, an outage in the
+ * package itself — takes the whole handler down, and this handler must always
+ * answer 200 once a payment is confirmed. A 500 here makes the provider retry a
+ * payment we have already accepted, and the money moves while our record of it
+ * does not. Notifying is best-effort; confirming is not. */
 
 /* Compares without leaking length or position through timing. A plain ===
  * returns early on the first wrong byte, which is enough to guess a secret one
@@ -82,6 +87,7 @@ module.exports = async function handler(req, res) {
        provider retries on a non-200 and would repeat a payment we already have. */
     if (paid && process.env.RESEND_API_KEY && process.env.CONTACT_TO_EMAIL) {
         try {
+            const { Resend } = require("resend");
             await new Resend(process.env.RESEND_API_KEY).emails.send({
                 from: process.env.CONTACT_FROM_EMAIL || "Land-Art Lab <onboarding@resend.dev>",
                 to: process.env.CONTACT_TO_EMAIL,
