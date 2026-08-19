@@ -209,13 +209,18 @@ const BEATS=[
      'species and the most demanding — placed behind the saxaul and caragana ranks it inherits '+
      'their wind shelter and their nitrogen, which is what the <b>80% survival target</b> rests on.',
    mini:['elm · sheltered interior','understorey planted','first survival census']},
-  {cam:{r:24,theta:2.62,phi:1.02},g:0.68,y:'2031',l:'phase 6 · habitat',num:'(08)',
+  /* Энэ үе шат бол А-01 нүд өөрөө: шувууны хоргодох байр + Jack's-ийн тэмдэг.
+     Тул камер талбайн төв рүү бус тэр нүд рүү тольдож, dwell секунд тэндээ
+     хүлээнэ — тэмдэг нь уншигдах хугацаа гарна. */
+  {cam:{r:19,theta:2.42,phi:0.96},look:{x:-44.4,z:13.6},dwell:4.0,
+   g:0.68,y:'2031',l:'phase 6 · habitat',num:'(08)',
    h:'Phase 6 · Habitat Structures',
    p:'Structures do not attract fauna on their own — <b>forage must precede colonisation</b>. '+
      'Hives go in only once the flowering species are in flower; the bird hotel only once the '+
-     'canopy gives adjacent cover and the insect populations exist to feed on. Both follow the '+
-     'plantings that support them, never the reverse.',
-   mini:['hives after first flowering','bird hotel after canopy']},
+     'canopy gives adjacent cover and the insect populations exist to feed on. The cell in view '+
+     'is <b>A-01, Small Cup, Big Impact</b> — the Jack\'s Coffee mark in 10,000 elms, with the '+
+     'nest boxes and pond set in the open ground inside it.',
+   mini:['hives after first flowering','bird hotel after canopy','cell A-01']},
   /* Сүүлийн үе — газрын түвшний ташуу өнцөг. Дээрээс харсан төлөвлөгөө нь
      хэлбэрийг сайн харуулдаг ч тугууд шугам болж хавтгайрч, ямар компанийн
      туг болох нь уншигдахгүй байв. Камерыг тугны оройтой ойролцоо өндөрт
@@ -320,7 +325,9 @@ const stageEl=document.getElementById('hxStage');
 const stickyEl=document.getElementById('hxSticky');
 let scene,cam,rend,clock,ray,pointer,hexes=[],trunkIM,leafIM,TREES=[],TPARTS=[],LPARTS=[],INFRA=[],dummy;
 let infra=0, SITE=null;
-let camS={r:126,theta:.5,phi:.62}, camT={r:126,theta:.5,phi:.62};
+/* lx/lz — камерын харах цэг. Анхдагчаар талбайн төв (0,0); тодорхой нүд рүү
+   тольдох үед л шилжинэ, тул бусад үе шат яг хуучнаараа хэвээр байна. */
+let camS={r:126,theta:.5,phi:.62,lx:0,lz:0}, camT={r:126,theta:.5,phi:.62,lx:0,lz:0};
 let season=1, paintLeaves=null, sunL=null, hemiL=null, groundM=null, SNOW=null;
 let DT=0, lastT=0;
 /* Эхлэх төлөв нь сүүлийн он: дүр зураг бэлэн үр дүнгээ харуулж зогсоно */
@@ -1176,8 +1183,19 @@ function animate(){
     if(holdT>0){                      // төгссөн байдлыг барина, дараа нь дахин эхэлнэ
       holdT-=DT;
       if(holdT<=0){ beatF=0; target=0; applyBeat(); }
+    } else if(dwellT>0){              // тодорхой үе шат дээр зориуд хүлээнэ
+      dwellT-=DT;
+      applyBeat();                    // камер тольдох цэг рүүгээ гүйцэж ирнэ
     } else {
+      const was=Math.floor(beatF);
       beatF+=DT*(BEATS.length-1)/PLAY_SECS;
+      /* Шинэ үе шат дээр гарч ирэхэд тэр үе шат dwell гуйж байвал тэндээ
+         тодорхой хугацаа зогсоно. Ингэснээр Jack's-ийн нүд шиг харуулах юмтай
+         үе шат нь бусадтай ижил хугацаанд дүүлж өнгөрөхгүй. */
+      const now=Math.floor(beatF);
+      if(now>was && BEATS[now] && BEATS[now].dwell){
+        beatF=now; dwellT=BEATS[now].dwell;
+      }
       if(beatF>=BEATS.length-1){
         beatF=BEATS.length-1;
         if(LOOP) holdT=LOOP_HOLD; else setPlay(false);
@@ -1196,14 +1214,21 @@ function animate(){
   camT.r=A.cam.r+(B.cam.r-A.cam.r)*f;
   camT.theta=A.cam.theta+(B.cam.theta-A.cam.theta)*f;
   camT.phi=A.cam.phi+(B.cam.phi-A.cam.phi)*f;
+  const ALx=A.look?A.look.x:0, ALz=A.look?A.look.z:0;
+  const BLx=B.look?B.look.x:0, BLz=B.look?B.look.z:0;
+  camT.lx=ALx+(BLx-ALx)*f;  camT.lz=ALz+(BLz-ALz)*f;
   camS.r+=(camT.r-camS.r)*.06;
   camS.theta+=(camT.theta-camS.theta)*.06;
   camS.phi+=(camT.phi-camS.phi)*.06;
+  camS.lx+=(camT.lx-camS.lx)*.045;   /* тольдох цэг рүү бага зэрэг зөөлөн */
+  camS.lz+=(camT.lz-camS.lz)*.045;
   const th=camS.theta+dragTheta+(REDUCED?0:t*.006);
-  cam.position.set(camS.r*Math.sin(camS.phi)*Math.cos(th),
+  /* Камер нь харах цэгээ тойрно — цэг нь төв байх үед энэ нь хуучин тооцоотой
+     яг адилхан. */
+  cam.position.set(camS.lx+camS.r*Math.sin(camS.phi)*Math.cos(th),
            camS.r*Math.cos(camS.phi)+2,
-           camS.r*Math.sin(camS.phi)*Math.sin(th));
-  cam.lookAt(0,.8,0);
+           camS.lz+camS.r*Math.sin(camS.phi)*Math.sin(th));
+  cam.lookAt(camS.lx,.8,camS.lz);
 
   /* Түншийн тугууд салхинд намирна. Хөдөлгөөн багасгах горимд зогсоно. */
   if(!REDUCED && window.__hexFlagWave) window.__hexFlagWave(t);
@@ -1370,13 +1395,13 @@ let manual=false, target=0, TL=null, auto=false, played=false;
    эхэлнэ. Дэлгэцийн горимд (screen.html) давтахгүй — тэнд done() дууссаныг
    мэдэгдэж дараагийн бүтээл рүү шилждэг тул мөнхийн давталт гацаа болно. */
 const LOOP=!window.__laLazy, LOOP_HOLD=3.2;
-let holdT=0;
+let holdT=0, dwellT=0;
 /* Он дээр дарах нь автомат гүйлтийг зогсоож, гар удирдлагад шилжүүлнэ */
 function goTo(v){ setPlay(false); target=Math.max(0,Math.min(BEATS.length-1,v)); }
 /* Өөрөө эхлэхгүй: дүр зураг сүүлийн он дээрээ буюу бэлэн үр дүн дээрээ зогсоно.
    Уншигч Play дарж эхнээс нь гүйлгэнэ, гүйж дуусаад дахин сүүлийн он дээр зогсоно. */
 function setPlay(on){
-  auto=on; if(!on) holdT=0;
+  auto=on; if(!on){ holdT=0; dwellT=0; }
   if(!TL||!TL.play) return;
   TL.play.textContent='';
   TL.play.insertAdjacentHTML('beforeend','<i></i>');
