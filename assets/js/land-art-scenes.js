@@ -402,7 +402,14 @@ function init3D(){
     'F-13':{url:'assets/images/partner/hexagon-cells/EFES-INTERNATIONAL_S.jpg', ar:3.02},
     'F-11':{url:'assets/images/partner/hexagon-cells/EFES-CONSTRUCTION_S.png',  ar:1.51},
     'F-16':{url:'assets/images/partner/hexagon-cells/EFEC-SUPERMARKET_S.png',   ar:2.76},
-    'F-10':{url:'assets/images/partner/hexagon-cells/KHULAN-UUL_S.png',         ar:3.67}
+    'F-10':{url:'assets/images/partner/hexagon-cells/KHULAN-UUL_S.png',         ar:3.67},
+    /* JACK'S COFFEE — A-01. Гар дээрх лого нь ЦАГААН дүрстэй (харанхуй
+       дэвсгэрт зориулсан) тул цагаан даавуун дээр үл харагдана; иймд хэлбэрийг
+       хөндөхгүй, зөвхөн бэхийг тодруулсан хувилбар үүсгэв. off нь тугийг эсийн
+       ТӨВӨӨС зөөнө — тэр төвд Jack's-ийн тэмдэг тарьсан байдаг тул мачт нь
+       тэмдгийн дундуур гарах ёсгүй. Цөөрөм (-1.05,.58) талаас эсрэг зүгт. */
+    'A-01':{url:'assets/images/partner/hexagon-cells/JACKS-COFFEE_A.png', ar:0.546,
+            off:{x:0.56,z:-0.60}}
   };
   const FLAGS=[];
   window.__hexFlags=FLAGS;
@@ -436,7 +443,10 @@ function init3D(){
        салхины нэг зүг рүү харснаас хажуугийнх нь ирмэгээрээ эргэж уншигдахгүй
        байв. Одоо камер руу эргэдэг (wave-г үз). */
     const poleH=Math.max(3.2,PITCH*1.15), cw=poleH*0.62, ch=poleH*0.34;
-    const g=new THREE.Group(); g.position.set(p.x,S.h,p.z);
+    const g=new THREE.Group();
+    /* Анхдагчаар эсийн төвд. off байвал эсийн радиусын хувиар зөөнө. */
+    const cr=PITCH*S.rad*0.9;
+    g.position.set(p.x+(spec.off?spec.off.x*cr:0), S.h, p.z+(spec.off?spec.off.z*cr:0));
 
     const pole=new THREE.Mesh(new THREE.CylinderGeometry(poleH*.012,poleH*.016,poleH,6),
       new THREE.MeshStandardMaterial({color:SC('#8A8578'),roughness:.6,metalness:.3}));
@@ -494,7 +504,10 @@ function init3D(){
     m.rotation.y=0; m.castShadow=false; m.receiveShadow=true;
     scene.add(m);
     hexes.push({mesh:m,mat:mat,c:c,i:i,x:p.x,z:p.z,top:S.h,radius:radius});
-    if(c.partner) makeFlag(c,p,S);
+    /* Туг нь лого тодорхойлогдсон бүх эсэд гарна. Урьд нь зөвхөн c.partner
+       байхыг шалгадаг байсан тул A-01 (төслийн бүтээл, худалдаанд байхгүй)
+       туггүй үлдэж байв. */
+    if(c.partner || FLAG_LOGOS[c.code]) makeFlag(c,p,S);
   });
 
   /* --- модны байрлал (дэд бүтцийн нүдэнд мод тарихгүй) --- */
