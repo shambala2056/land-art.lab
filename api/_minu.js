@@ -69,11 +69,22 @@ async function login(cfg) {
     return res.body.entity;
 }
 
-/* Prices live here, on the server. The browser sends a SKU and nothing else:
- * if the amount came from the client, anyone could open the console and buy a
- * 400 m² cell for one tögrög. Figures match SIZES in assets/js/land-art-scenes.js
- * and the sponsorship section. */
+/* Prices live here, on the server. The browser sends a SKU and a quantity and
+ * nothing else: if the amount came from the client, anyone could open the
+ * console and buy a hectare for one tögrög.
+ *
+ * The published offer is one cell = one square metre = USD 30, and the site's
+ * own cost breakdown adds to exactly that. The MNT figure is the same unit the
+ * HEXAGON classes already use — cell A is ₮40,000,000 for 400 m² and cell F is
+ * ₮1,200,000 for 12 m², both ₮100,000/m² — so the two models on the site agree
+ * rather than quietly disagreeing. */
+const UNIT = { mnt: 100000, usd: 30 };          /* per square metre */
+const MAX_QTY = 10000;                          /* the whole hectare */
+
 const CATALOG = {
+    /* Priced by the square metre; the buyer chooses how many. */
+    "m2": { perUnit: true, label: "m² sponsored", mnt: UNIT.mnt, usd: UNIT.usd },
+    /* Whole HEXAGON cells, as offered on the purchase map. */
     "cell-A": { label: "Cell · 400 m²", mnt: 40000000, usd: 12000 },
     "cell-B": { label: "Cell · 260 m²", mnt: 26000000, usd: 7800 },
     "cell-C": { label: "Cell · 120 m²", mnt: 12000000, usd: 3600 },
@@ -85,11 +96,24 @@ const CATALOG = {
 /* 496 = MNT, 840 = USD, per the integration document. */
 const CURRENCY = { MNT: "496", USD: "840" };
 
-function priceOf(sku, currency) {
+/* Quantity is only honoured for per-unit items, and is bounded. Without the
+ * bound a request for a billion square metres produces an invoice for a number
+ * the provider may or may not reject, and nobody wants to find out which. */
+function priceOf(sku, currency, quantity) {
     const item = CATALOG[sku];
     if (!item) return null;
-    const amount = currency === "USD" ? item.usd : item.mnt;
-    return { label: item.label, amount, currency: CURRENCY[currency] || CURRENCY.MNT };
+
+    let qty = 1;
+    if (item.perUnit) {
+        qty = Number(quantity);
+        if (!Number.isInteger(qty) || qty < 1 || qty > MAX_QTY) return null;
+    }
+
+    const unit = currency === "USD" ? item.usd : item.mnt;
+    const amount = unit * qty;
+    const label = item.perUnit ? qty.toLocaleString("en-US") + " " + item.label : item.label;
+    return { label: label, amount: amount, quantity: qty,
+             currency: CURRENCY[currency] || CURRENCY.MNT };
 }
 
-module.exports = { config, describeMissing, call, login, priceOf, CATALOG, CURRENCY };
+module.exports = { config, describeMissing, call, login, priceOf, CATALOG, CURRENCY, UNIT, MAX_QTY };

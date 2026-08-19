@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payment · Land-art Space</title>
+<!-- Not indexable: this page only means anything with a live reference on it. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/images/logo/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    :root { --ink:#14150F; --soft:#5E5F55; --shell:#F2F0EA; --card:#FBFAF6;
+            --hair:#E0DACA; --lime:#B8E020; --good:#3E7B3B; --warn:#8A6A1C; --bad:#8A2E2E; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--shell); color:var(--ink); min-height:100vh;
+           font-family:'Urbanist',system-ui,-apple-system,sans-serif; font-size:16px; line-height:1.6;
+           display:flex; align-items:center; justify-content:center; padding:24px; }
+    .card { background:var(--card); border:1px solid var(--hair); border-radius:28px;
+            padding:40px 36px; max-width:520px; width:100%;
+            box-shadow:10px 10px 30px rgba(60,52,32,.08), -8px -8px 22px rgba(255,255,255,.9); }
+    .logo { height:34px; margin-bottom:26px; }
+    .eyebrow { font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--soft); font-weight:700; }
+    h1 { font-size:26px; font-weight:600; margin:10px 0 12px; line-height:1.25; }
+    p { color:var(--soft); font-size:14.5px; margin:0 0 14px; }
+    .ref { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px;
+           background:#EFEDE4; border-radius:10px; padding:10px 13px; display:inline-block;
+           color:var(--ink); word-break:break-all; }
+    .state { display:flex; align-items:center; gap:11px; margin:22px 0 8px; font-weight:600; font-size:17px; }
+    .dot { width:11px; height:11px; border-radius:50%; background:var(--soft); flex:none; }
+    .state.paid .dot { background:var(--good); }
+    .state.pending .dot { background:var(--warn); animation:pulse 1.3s ease-in-out infinite; }
+    .state.failed .dot, .state.cancelled .dot, .state.expired .dot { background:var(--bad); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+    @media (prefers-reduced-motion: reduce) { .state.pending .dot { animation:none } }
+    .actions { margin-top:26px; display:flex; flex-wrap:wrap; gap:10px; }
+    a.btn { display:inline-flex; align-items:center; gap:9px; text-decoration:none;
+            background:var(--ink); color:#fff; border-radius:100px; padding:13px 26px;
+            font-weight:700; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; }
+    a.btn.alt { background:var(--lime); color:var(--ink); }
+    /* An explicit display beats the hidden attribute, so without this the
+       "Try again" button shows even on a successful payment — inviting someone
+       who has just paid to pay a second time. */
+    a.btn[hidden] { display:none; }
+    a.btn i { width:7px; height:7px; border-radius:50%; background:var(--lime); }
+    a.btn.alt i { background:var(--ink); }
+    .foot { margin-top:24px; padding-top:18px; border-top:1px solid var(--hair);
+            font-size:12.5px; color:var(--soft); }
+</style>
+</head>
+<body>
+<main class="card">
+    <img class="logo" src="assets/images/logo/land-art-logo.png" alt="Land-art Space">
+    <div class="eyebrow">Sponsorship payment</div>
+    <h1 id="head">Checking your payment…</h1>
+    <p id="msg">One moment — we're confirming this with the bank.</p>
+
+    <div class="state pending" id="state"><span class="dot"></span><span id="stateText">Checking</span></div>
+    <div id="refWrap" hidden><span class="ref" id="ref"></span></div>
+
+    <div class="actions">
+        <a class="btn" href="/"><i></i>Back to the site</a>
+        <a class="btn alt" href="/#pricing" id="again" hidden><i></i>Try again</a>
+    </div>
+
+    <div class="foot">
+        Questions about a payment? Email <a href="mailto:hello@shambala.today">hello@shambala.today</a>
+        and quote the reference above.
+    </div>
+</main>
+
+<script>
+(function () {
+    "use strict";
+    var qs = new URLSearchParams(location.search);
+    /* The provider's redirect carries our own reference back. Constrain it to
+       the shape we issue before showing it or sending it anywhere. */
+    var ref = (qs.get("ref") || qs.get("referenceNumber") || "").trim();
+    if (!/^[A-Z0-9-]{1,100}$/i.test(ref)) ref = "";
+
+    var head = document.getElementById("head"),
+        msg = document.getElementById("msg"),
+        state = document.getElementById("state"),
+        stateText = document.getElementById("stateText"),
+        again = document.getElementById("again");
+
+    if (ref) {
+        document.getElementById("ref").textContent = ref;
+        document.getElementById("refWrap").hidden = false;
+    }
+
+    var COPY = {
+        paid:      ["Thank you — payment received",
+                    "Your sponsorship is confirmed. We'll be in touch by email with your cell's location and its reporting schedule."],
+        pending:   ["Payment not confirmed yet",
+                    "The bank hasn't confirmed this one yet. If you completed the payment it may take a moment; this page checks again on its own."],
+        cancelled: ["Payment cancelled", "Nothing has been charged. You can start again whenever you're ready."],
+        expired:   ["This payment expired", "Nothing has been charged. Invoices are only valid for a short time — please start a new one."],
+        failed:    ["Payment didn't go through", "Nothing has been charged. Please try again, or use a different card."],
+        unknown:   ["We couldn't check this payment",
+                    "Something went wrong on our side, not with your card. Email us with the reference and we'll confirm it by hand."]
+    };
+
+    function show(status) {
+        var c = COPY[status] || COPY.unknown;
+        head.textContent = c[0];
+        msg.textContent = c[1];
+        state.className = "state " + status;
+        stateText.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        again.hidden = (status === "paid" || status === "pending");
+    }
+
+    if (!ref) {
+        head.textContent = "No payment reference";
+        msg.textContent = "This page needs a payment reference to check anything. If you've just paid, the confirmation email is the reliable record.";
+        state.className = "state";
+        stateText.textContent = "Nothing to check";
+        return;
+    }
+
+    /* A card can settle a second or two after the redirect, so a single check
+       would often show "pending" for a payment that actually succeeded. Poll a
+       few times with a widening gap, then stop rather than spin forever. */
+    var tries = 0, MAX = 6;
+    function check() {
+        tries++;
+        fetch("/api/pay-status", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reference: ref })
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+            if (d && d.status) {
+                show(d.status);
+                if (d.status === "pending" && tries < MAX) setTimeout(check, 1200 * tries);
+            } else {
+                show("unknown");
+            }
+        })
+        .catch(function () {
+            if (tries < MAX) { setTimeout(check, 1500 * tries); } else { show("unknown"); }
+        });
+    }
+    check();
+})();
+</script>
+</body>
+</html>

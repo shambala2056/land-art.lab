@@ -47,9 +47,11 @@ module.exports = async function handler(req, res) {
     const sku = typeof body.sku === "string" ? body.sku : "";
     const currency = body.currency === "USD" ? "USD" : "MNT";
 
-    const price = priceOf(sku, currency);
+    /* priceOf rejects a quantity that is not a whole number in range, so a
+       fractional, negative or absurd count never reaches the provider. */
+    const price = priceOf(sku, currency, body.quantity);
     if (!price) {
-        return res.status(400).json({ error: "Unknown item." });
+        return res.status(400).json({ error: "Unknown item or quantity." });
     }
 
     const token = await login(cfg);
@@ -73,7 +75,10 @@ module.exports = async function handler(req, res) {
                the provider posts the result; the redirect is where the payer's
                browser lands afterwards. */
             webhook: origin + "/api/pay-callback",
-            redirectUtl: origin + "/payment-complete?ref=" + encodeURIComponent(ref),
+            /* Explicit .html: Vercel does not serve extensionless paths unless
+               cleanUrls is turned on, and turning it on would change every URL
+               on the site. A payer must never land on a 404. */
+            redirectUtl: origin + "/payment-complete.html?ref=" + encodeURIComponent(ref),
         }),
     });
 
@@ -91,7 +96,7 @@ module.exports = async function handler(req, res) {
     /* The provider returns the invoice URL without a scheme in their examples. */
     const invoice = /^https?:\/\//i.test(entity.invoice) ? entity.invoice : "https://" + entity.invoice;
 
-    console.log("payment invoice created:", { reference: ref, sku: sku, currency: currency });
+    console.log("payment invoice created:", { reference: ref, sku: sku, qty: price.quantity, currency: currency });
 
     /* Only these three fields cross back to the browser. No token, no merchant
        code, no credentials. */

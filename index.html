@@ -1198,6 +1198,45 @@
 #hexagon-live .hx-cell .ft{margin-top:10px;font-family:'Urbanist',sans-serif;font-size:10.5px;
   color:var(--hx-soft)}
 
+/* ---- Картын төлбөрийн хэсэг ---- */
+.pay-box { max-width: 720px; margin: 0 auto 64px; background: #FBFAF6;
+    border: 1px solid #E0DACA; border-radius: 28px; padding: 34px 32px;
+    box-shadow: 10px 10px 30px rgba(60,52,32,.07), -8px -8px 22px rgba(255,255,255,.9);
+    font-family: 'Urbanist', sans-serif; color: #14150F; }
+.pay-box[hidden] { display: none; }
+.pay-eyebrow { font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+    color: #5E5F55; font-weight: 700; }
+.pay-title { font-size: 24px; font-weight: 600; margin: 8px 0 0; line-height: 1.25; }
+.pay-sub { color: #5E5F55; font-size: 14px; margin: 12px 0 0; }
+.pay-note { margin-top: 14px; background: #FFF4CC; border-radius: 12px; padding: 9px 14px;
+    font-size: 12.5px; font-weight: 600; color: #6B5510; }
+.pay-note[hidden] { display: none; }
+.pay-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; margin-top: 22px; }
+.pay-field { display: flex; flex-direction: column; gap: 6px; flex: 1 1 150px; }
+.pay-field span { font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    color: #5E5F55; font-weight: 700; }
+.pay-field input, .pay-field select { font-family: 'Urbanist', sans-serif; font-size: 16px;
+    font-weight: 600; color: #14150F; background: #F2F0EA; border: 1px solid #E0DACA;
+    border-radius: 14px; padding: 13px 15px; width: 100%; }
+.pay-field input:focus, .pay-field select:focus { outline: 2px solid #B8E020; outline-offset: 1px; }
+.pay-total { flex: 1 1 170px; background: #14150F; color: #fff; border-radius: 16px;
+    padding: 11px 18px; }
+.pay-total span { display: block; font-size: 9.5px; letter-spacing: .14em;
+    text-transform: uppercase; color: #B2B1A6; font-weight: 700; }
+.pay-total b { font-size: 22px; font-weight: 600; }
+.pay-btn { margin-top: 20px; display: inline-flex; align-items: center; gap: 10px;
+    background: #B8E020; color: #14150F; border: none; border-radius: 100px;
+    padding: 15px 32px; font-family: 'Urbanist', sans-serif; font-weight: 700;
+    font-size: 13px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+    transition: transform .15s; }
+.pay-btn:hover:not(:disabled) { transform: translateY(-2px); }
+.pay-btn:disabled { opacity: .55; cursor: default; }
+.pay-btn i { width: 8px; height: 8px; border-radius: 50%; background: #14150F; }
+.pay-msg { margin-top: 12px; font-size: 13.5px; font-weight: 600; min-height: 20px; }
+.pay-msg.err { color: #8A2E2E; }
+.pay-fine { margin: 18px 0 0; font-size: 12px; color: #5E5F55; line-height: 1.55; }
+@media (max-width: 600px) { .pay-box { padding: 26px 20px; border-radius: 22px; } }
+
 /* ---- дэлгэрэнгүй цонх ---- */
 /* Өнгөний токенууд #hexagon-live дээр зарлагдсан бөгөөд custom property нь
    зөвхөн УДАМ руугаа дамждаг. #hx-detail нь тэр хэсгийн дотор биш, ХАЖУУД нь
@@ -1815,6 +1854,44 @@
                 <!-- The section header above is commented out pending audit, which left the
                      map with no introduction at all. A delegate arriving here needs to know
                      what the map is and what sponsorship does and does not confer. -->
+                <!-- Card checkout. Hidden until /api/pay-config says payment is switched
+                     on, so the site never shows a Pay button that fails: until the merchant
+                     credentials are set in Vercel every click would error. The price is not
+                     in this markup — the server decides it from the quantity, and the figure
+                     shown here is only a preview for the buyer. -->
+                <div class="pay-box" id="payBox" hidden>
+                    <div class="pay-head">
+                        <div class="pay-eyebrow">Sponsor a cell</div>
+                        <h3 class="pay-title">One cell is one square metre</h3>
+                    </div>
+                    <p class="pay-sub">Choose how many square metres to sponsor. Each carries a fixed
+                        position on the site, ten years of maintenance and irrigation, and a survival
+                        count taken twice a year.</p>
+                    <div class="pay-note" id="paySandbox" hidden>Test mode — no real card will be charged.</div>
+                    <div class="pay-row">
+                        <label class="pay-field">
+                            <span>Square metres</span>
+                            <input type="number" id="payQty" min="1" max="10000" step="1" value="10" inputmode="numeric">
+                        </label>
+                        <label class="pay-field">
+                            <span>Currency</span>
+                            <select id="payCur">
+                                <option value="MNT">MNT &middot; ₮</option>
+                                <option value="USD">USD &middot; $</option>
+                            </select>
+                        </label>
+                        <div class="pay-total">
+                            <span>Total</span>
+                            <b id="payTotal">—</b>
+                        </div>
+                    </div>
+                    <button type="button" class="pay-btn" id="payGo"><i></i>Pay by card</button>
+                    <div class="pay-msg" id="payMsg" role="status" aria-live="polite"></div>
+                    <p class="pay-fine">Payment is handled by 360 Finance. Card details are entered on
+                        their page and never touch this site. Sponsorship confers stewardship and
+                        recognition, not title to land.</p>
+                </div>
+
                 <div class="heading-section mb-48 text-center">
                     <div class="heading-sub fw-semibold effectFade fadeUp mx-auto">Cell Map</div>
                     <div class="heading-title text-gradient-3 effectFade fadeRotateX">
@@ -5018,6 +5095,87 @@
 })();
 </script>
 
+
+    <!-- Картын төлбөр. Үнийг сервер шийднэ — энд харуулж буй нийлбэр нь зөвхөн
+         худалдан авагчид зориулсан урьдчилсан харуулалт бөгөөд хүсэлт рүү
+         илгээгддэггүй. Илгээх нь ердөө {sku, currency, quantity} гурав. -->
+    <script>
+    (function () {
+        "use strict";
+        var box = document.getElementById('payBox');
+        if (!box) return;
+        var qty = document.getElementById('payQty'),
+            cur = document.getElementById('payCur'),
+            total = document.getElementById('payTotal'),
+            go = document.getElementById('payGo'),
+            msg = document.getElementById('payMsg'),
+            sandbox = document.getElementById('paySandbox');
+        var UNIT = null, MAXQ = 10000, busy = false;
+
+        function fmt(n, c) {
+            try { return new Intl.NumberFormat(c === 'USD' ? 'en-US' : 'mn-MN',
+                { style: 'currency', currency: c, maximumFractionDigits: 0 }).format(n); }
+            catch (e) { return (c === 'USD' ? '$' : '₮') + n.toLocaleString(); }
+        }
+        function readQty() {
+            var v = parseInt(qty.value, 10);
+            if (!isFinite(v)) return null;
+            return (v >= 1 && v <= MAXQ) ? v : null;
+        }
+        function paint() {
+            if (!UNIT) return;
+            var c = cur.value, n = readQty();
+            if (n === null) { total.textContent = '—'; go.disabled = true; return; }
+            total.textContent = fmt(n * (c === 'USD' ? UNIT.usd : UNIT.mnt), c);
+            go.disabled = busy;
+        }
+
+        /* Ask whether payment is switched on before showing anything. If the
+           merchant credentials are not set, the panel simply never appears. */
+        fetch('/api/pay-config').then(function (r) { return r.json(); }).then(function (d) {
+            if (!d || !d.available) return;
+            UNIT = d.unit; MAXQ = d.maxQuantity || 10000;
+            qty.max = MAXQ;
+            if (d.sandbox) sandbox.hidden = false;
+            box.hidden = false;
+            paint();
+        }).catch(function () { /* leave the panel hidden */ });
+
+        qty.addEventListener('input', paint);
+        cur.addEventListener('change', paint);
+
+        go.addEventListener('click', function () {
+            var n = readQty();
+            if (n === null || busy) return;
+            busy = true; go.disabled = true;
+            msg.className = 'pay-msg'; msg.textContent = 'Opening the secure payment page…';
+
+            fetch('/api/pay-create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                /* No amount is sent. The server prices it. */
+                body: JSON.stringify({ sku: 'm2', currency: cur.value, quantity: n })
+            })
+            .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+            .then(function (res) {
+                if (res.ok && res.d && res.d.invoice) {
+                    /* Same tab: the provider redirects back to payment-complete.html,
+                       and a popup would be blocked or orphaned on a phone. */
+                    window.location.href = res.d.invoice;
+                    return;
+                }
+                busy = false; go.disabled = false;
+                msg.className = 'pay-msg err';
+                msg.textContent = (res.d && res.d.error) || "Couldn't start the payment. Please try again.";
+            })
+            .catch(function () {
+                busy = false; go.disabled = false;
+                msg.className = 'pay-msg err';
+                msg.textContent = 'Network problem — please check your connection and try again.';
+            });
+        });
+    })();
+    </script>
 </body>
 
 </html>
