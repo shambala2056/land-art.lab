@@ -22,7 +22,7 @@ Every piece of reader-facing text on the site, extracted from the markup and fro
 ## Land Arts — the three works
 
 - Land Arts
-- Restoring the Gobi Through Land Art
+- Restoring Severely Desertified Land Through Land Art
 - (01) · 2020 → 2026
 **BE HUMAN**
 
@@ -66,7 +66,7 @@ Every piece of reader-facing text on the site, extracted from the markup and fro
 - Process
 - Work
 - sequence
-- _[alt] Hydrological survey in the Gobi_
+- _[alt] Hydrological survey in an area severely affected by desertification_
 **Survey & Design**
 
 - Hydrological and soil surveys, working drawings, and organic composting lay the groundwork before anything is built.

@@ -151,8 +151,8 @@ const BEATS=[
    p:'Three hectares of perimeter fence certify livestock exclusion. The greenhouse and compost '+
      'yard follow — <b>production infrastructure, not amenity</b>: they supply seedlings and soil '+
      'amendment to every planting cell, and deferring them forces all stock to be bought in and '+
-     'trucked across the Gobi at higher cost and lower establishment. Propagation starts; beds '+
-     'are cultivated zone by zone.',
+     'trucked across severely desertified terrain at higher cost and lower establishment. '+
+     'Propagation starts; beds are cultivated zone by zone.',
    mini:['3 ha fenced','propagation running','beds prepared']},
   {cam:{r:26,theta:1.95,phi:.92},g:0.06,y:'2027',l:'phase 3 · buildings',num:'(05)',
    h:'Phase 3 · Buildings',

@@ -8,7 +8,7 @@ land-art-lab.vercel.app
 
 ## The short version
 
-> We make land art in the Gobi that is also land restoration. Two works are already
+> We make land art on severely desertified land that is also land restoration. Two works are already
 > in the ground — 57,857 trees across 69,000 m² — and independent satellite data
 > shows the planted ground outperforming an untouched control site next to it on
 > every index measured. The third work, HEXAGON, is a hundred hexagonal cells across
@@ -21,7 +21,7 @@ land-art-lab.vercel.app
 ## 1 · Who we are
 
 Land-art Space is a programme of Shambala Carbon Offsets LLC, working on
-desertified ground in Dornogovi aimag, Erdene sum, in the Mongolian Gobi.
+severely desertified ground in Dornogovi aimag, Erdene sum, Mongolia.
 
 We work as three arms, and the relationship between them is the whole design:
 
