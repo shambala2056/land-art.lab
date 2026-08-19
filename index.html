@@ -2136,19 +2136,16 @@
                     </div>
                     <div class="canvas_center">
                         <ul class="nav-ul-mb" id="mobile-menu">
-                            <li>
-                                <div class="item">
-                                    <a href="#land-arts" class="mb-menu-link text-display-1">
-                                        <span class="text">Land Arts</span>
-                                    </a>
-                                </div>
-                            </li>
+                            <!-- "Land Arts" ба "Projects" хоёр нэг ижил хэсэг рүү
+                                 хөтөлж байсан — нэг болголоо. Бүтээлүүдийн нэр нь
+                                 "Land Arts"-ын доор сонголт болж байрлана, ингэснээр
+                                 гар утасны цэс нь дэлгэцийн цэстэй ижил бүтэцтэй. -->
                             <li>
                                 <div class="item">
                                     <div class="has-sub-menu">
                                         <a href="#dropdown-menu-1" class="mb-menu-link text-display-1 collapsed" data-bs-toggle="collapse"
                                             aria-expanded="false" aria-controls="dropdown-menu-1">
-                                            <span class="text">Projects</span>
+                                            <span class="text">Land Arts</span>
                                         </a>
                                         <div id="dropdown-menu-1" class="collapse" data-bs-parent="#mobile-menu">
                                             <ul class="sub-nav-menu">
@@ -4974,7 +4971,7 @@
             canvas.addEventListener('click', function (e) {
                 var a = e.target.closest ? e.target.closest('a[href]') : null;
                 if (!a) return;
-                if (a.getAttribute('data-bs-toggle')) return;        /* "Projects" only unfolds */
+                if (a.getAttribute('data-bs-toggle')) return;        /* "Land Arts" only unfolds */
                 if (a.classList.contains('close-mb-menu')) return;   /* main.js already closes these */
                 var href = a.getAttribute('href') || '';
                 if (href.charAt(0) !== '#' || href.length < 2) return;
