@@ -53,6 +53,37 @@ const SEASONS=[
    fog:'#EDEFF3',snow:1,grn:'#C9CBC8',bug:0}
 ];
 
+/* JACK'S COFFEE-ийн тэмдгийн битмаск. Модулийн ХАМГИЙН ГАДНА хүрээнд байх
+   ёстой: HEXAGON (56-1447 мөрийн IIFE) ба лэнд артын дүр зургууд (1452-оос
+   эхлэх IIFE) хоёр нь ТУСДАА хүрээ тул нэгнийх нь дотор зарлавал нөгөө нь
+   харахгүй. Өмнө нь HEXAGON-ы дотор байсан бөгөөд лэнд артын IIFE эхлэх
+   үедээ ReferenceError өгч, BE HUMAN, ART N TECH хоёр огт баригдахгүй
+   байсан. */
+const JACKS_SHAPE=(function(){
+      const MW=130, MH=150;
+      const B64="AAAAAAAEAAAcAAAAAAAAAAAAAAAAA4AAB4AAAAAAAAAAAAAAAAPwAAPgAAAAAAAAAAAAAAAA/gAA/AAAAAAAAAAAAAAAAD+AAH8AAAAAAAAAAAAAAAAP4AAf4AAAAAAAAAAAAAAAB/wAD/gAAAAAAAAAAAAAAAH/gAP/AAAAAAAAAAAAAAAAf/AA/8AAAAAAAAAAAAAAAB/8AH/wAAAAAAAAAAAAAAAH/4Af/gAAAAAAAAAAAAAAA//gD/+AAAAAAAAAAAAAAAD//AP/8AAAAAAAAAAAAAAAP/8A//wAAAAAAAAAAAAAAA//4H//AAAAAAAAAAAAAAAD//wf/+AAAAAAAAAAAAAAAP//D//4AAAAAAAAAAAAAAB//+P//wAAAAAAAAAAAAAAD//////AAAAAAAAAAAAAAAP/////+AAAAAAAAAAAAAAB//////4AAAAAAAAAAAAAAD//////gAAAAAAAAAAAAAAf//////AAAAAAAAAAAAAAB//////8AAAAAAAAAAAAAAH//////wAAAAAAAAAAAAAAf//////AAAAAAAAAAAAAAB//////+AAAAAAAAAAAAAAH//////4AAAAAAAAAAAAAAf//////gAAAAAAAAAAAAAB///////AAAAAAAAAAAAAAH//////8AAAAAAAAAAAAAAf//////wAAAAAAAAAAAAAB///////AAAAAAAAAAAAAAH//////+AAAAAAAAAAAAAAf//////4AAAAAAAAAAAAAB///////gAAAAAAAAAAAAAH///////AAAAAAAAAAAAAAf//////4AAAAAAAAAAAAAB///////wAAAAAAAAAAAAAH///////AAAAAAAAAAAAAAf//////8AAAAAAAAAAAAAB///////4AAAAAAAAAAAAAH///////AAAAAAAAAAAAAAf//////+AAAAAAAAAAAAAB///////4AAAAAAAAAAAAAH///////gAAAAAAAAAAAAAf//////+AAAAAAAAAAAAAB///////8AAAAAAAAAAAAAH///7///gAA////4AAAAAAf//8H+D+AAH////wAAAAAB///wP4P8AAf////AAAAAAH///A/A/wAB////8AAAAAAf//8D+B/AAH////wAAAAAB///wPwP8AAf////AAAAAAH///B/g/wAB////8AAAAAAf//+H/H/AAH////wAAAAAB///////8AAf////AAAAAAH///////wAB////8AAAAAAf///////AAH////wAAAAAB///////8AAf////AAAAAAH///////wAB////8AAAAAA////////gAP////3//f//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////7/////////////////////v////////////////////+/////////////////////z/////////////////////P////////////////////8/////////////////////j////////////////////8P////////////////////w////////////////////+D////////////////////wP///////////////////+A////////////////////wD////////////////////AP///////////////////wA///////////////////+AD///////////////////wAP//////////////////8AA///////////////////AAB//////////////////gAACtLbc3///////////+AAAAAAAAAA/////////8AAAAAAAAAAAB/////////gAAAAAAAAAAAH////////+AAAAAAAAAAAAf////////4AAAAAAAAAAAB/////////wAAAAAAAAAAAP/////////gAAAAAAAAAAB//////////AAAAAAAAAAAH/////////+AAAAAAAAAAA//////////8AAAAAAAAAAH//////////4AAAAAAAAAA///////////wAAAAAAAAAH///////////gAAAAAAAAA////////////AAAAAAAAAH///////////+AAAAAAAAA////////////8AAAAAAAAH////////////4AAAAAAAA/////////////wAAAAAAAP/////////////gAAAAAAB//////////////AAAAAAAf/////////////+AAAAAAH//////////////8AAAAAD///////g///////4AAAAB///////+B///////wAAAL////////wD///////wAAf////////+AH///////gAD/////////4AP///////AAP/////////AAf//////+AA/////////4AA///////8AD/////////AAB///////4AP////////4AAD///////wA/////////gAAH///////gD////////8AAAP///////AP////////gAAAf//////+A////////8AAAA///////8D////////gAAAB///////4P///////8AAAAD///////w////////gAAAAH///////D///////4AAAAAP//////8P///////AAAAAAf//////w///////4AAAAAA//////+D///////AAAAAAB//////wP//////wAAAAAAD/////+A//////8AAAAAAAH/////gD//////gAAAAAAAP////8AP/////4AAAAAAAAf////AA/////+AAAAAAAAA////4AD/////wAAAAAAAAB////AAP////8AAAAAAAAAD///4AA////+AAAAAAAAAAH///AAD////gAAAAAAAAAAP//wAAP///wAAAAAAAAAAAf/+AAA///wAAAAAAAAAAAA//wAAD//wAAAAAAAAAAAAB/8AAAD8AAAAAAAAAAAAAAD/gAAAAAAAAAAAAAAAAAAAH8AAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAAAAAIAAAAA=";
+      let bits=null;
+      function unpack(){
+        const raw=atob(B64), a=new Uint8Array(MW*MH);
+        for(let i=0;i<a.length;i++) a[i]=(raw.charCodeAt(i>>3)>>(7-(i&7)))&1;
+        return a;
+      }
+      return function(g,W,H){
+        if(!bits) bits=unpack();
+        g.fillStyle='#ffffff'; g.fillRect(0,0,W,H);
+        g.fillStyle='#000000';
+        const cw=W/MW, ch=H/MH;
+        for(let y=0;y<MH;y++){
+          let run=-1;
+          for(let x=0;x<=MW;x++){
+            const on = x<MW && bits[y*MW+x];
+            if(on && run<0) run=x;
+            else if(!on && run>=0){ g.fillRect(run*cw, y*ch, (x-run)*cw+0.5, ch+0.5); run=-1; }
+          }
+        }
+      };
+    })();
+
 (function(){
 "use strict";
 
@@ -308,34 +339,6 @@ const rnd=function(s){let v=Math.abs(Math.round(s*9301+49297))%233280;
 function size(){return {w:host.clientWidth||stickyEl.clientWidth,
                         h:host.clientHeight||stickyEl.clientHeight};}
 
-/* JACK'S COFFEE-ийн тэмдгийн битмаск — HEXAGON-ы дүр зураг (init3D) ба лэнд артын
-   дүр зургууд ХОЁУЛАА ашиглана. SHAPES дотор үлдээвэл зөвхөн сүүлийн IIFE-д л
-   харагдана: HEXAGON түүнээс өмнө ажилладаг тул SHAPES.jacks дуудахад
-   ReferenceError өгч, дүр зураг бүтэн баригдалгүй зогсож байв. */
-const JACKS_SHAPE=(function(){
-      const MW=130, MH=150;
-      const B64="AAAAAAAEAAAcAAAAAAAAAAAAAAAAA4AAB4AAAAAAAAAAAAAAAAPwAAPgAAAAAAAAAAAAAAAA/gAA/AAAAAAAAAAAAAAAAD+AAH8AAAAAAAAAAAAAAAAP4AAf4AAAAAAAAAAAAAAAB/wAD/gAAAAAAAAAAAAAAAH/gAP/AAAAAAAAAAAAAAAAf/AA/8AAAAAAAAAAAAAAAB/8AH/wAAAAAAAAAAAAAAAH/4Af/gAAAAAAAAAAAAAAA//gD/+AAAAAAAAAAAAAAAD//AP/8AAAAAAAAAAAAAAAP/8A//wAAAAAAAAAAAAAAA//4H//AAAAAAAAAAAAAAAD//wf/+AAAAAAAAAAAAAAAP//D//4AAAAAAAAAAAAAAB//+P//wAAAAAAAAAAAAAAD//////AAAAAAAAAAAAAAAP/////+AAAAAAAAAAAAAAB//////4AAAAAAAAAAAAAAD//////gAAAAAAAAAAAAAAf//////AAAAAAAAAAAAAAB//////8AAAAAAAAAAAAAAH//////wAAAAAAAAAAAAAAf//////AAAAAAAAAAAAAAB//////+AAAAAAAAAAAAAAH//////4AAAAAAAAAAAAAAf//////gAAAAAAAAAAAAAB///////AAAAAAAAAAAAAAH//////8AAAAAAAAAAAAAAf//////wAAAAAAAAAAAAAB///////AAAAAAAAAAAAAAH//////+AAAAAAAAAAAAAAf//////4AAAAAAAAAAAAAB///////gAAAAAAAAAAAAAH///////AAAAAAAAAAAAAAf//////4AAAAAAAAAAAAAB///////wAAAAAAAAAAAAAH///////AAAAAAAAAAAAAAf//////8AAAAAAAAAAAAAB///////4AAAAAAAAAAAAAH///////AAAAAAAAAAAAAAf//////+AAAAAAAAAAAAAB///////4AAAAAAAAAAAAAH///////gAAAAAAAAAAAAAf//////+AAAAAAAAAAAAAB///////8AAAAAAAAAAAAAH///7///gAA////4AAAAAAf//8H+D+AAH////wAAAAAB///wP4P8AAf////AAAAAAH///A/A/wAB////8AAAAAAf//8D+B/AAH////wAAAAAB///wPwP8AAf////AAAAAAH///B/g/wAB////8AAAAAAf//+H/H/AAH////wAAAAAB///////8AAf////AAAAAAH///////wAB////8AAAAAAf///////AAH////wAAAAAB///////8AAf////AAAAAAH///////wAB////8AAAAAA////////gAP////3//f//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////7/////////////////////v////////////////////+/////////////////////z/////////////////////P////////////////////8/////////////////////j////////////////////8P////////////////////w////////////////////+D////////////////////wP///////////////////+A////////////////////wD////////////////////AP///////////////////wA///////////////////+AD///////////////////wAP//////////////////8AA///////////////////AAB//////////////////gAACtLbc3///////////+AAAAAAAAAA/////////8AAAAAAAAAAAB/////////gAAAAAAAAAAAH////////+AAAAAAAAAAAAf////////4AAAAAAAAAAAB/////////wAAAAAAAAAAAP/////////gAAAAAAAAAAB//////////AAAAAAAAAAAH/////////+AAAAAAAAAAA//////////8AAAAAAAAAAH//////////4AAAAAAAAAA///////////wAAAAAAAAAH///////////gAAAAAAAAA////////////AAAAAAAAAH///////////+AAAAAAAAA////////////8AAAAAAAAH////////////4AAAAAAAA/////////////wAAAAAAAP/////////////gAAAAAAB//////////////AAAAAAAf/////////////+AAAAAAH//////////////8AAAAAD///////g///////4AAAAB///////+B///////wAAAL////////wD///////wAAf////////+AH///////gAD/////////4AP///////AAP/////////AAf//////+AA/////////4AA///////8AD/////////AAB///////4AP////////4AAD///////wA/////////gAAH///////gD////////8AAAP///////AP////////gAAAf//////+A////////8AAAA///////8D////////gAAAB///////4P///////8AAAAD///////w////////gAAAAH///////D///////4AAAAAP//////8P///////AAAAAAf//////w///////4AAAAAA//////+D///////AAAAAAB//////wP//////wAAAAAAD/////+A//////8AAAAAAAH/////gD//////gAAAAAAAP////8AP/////4AAAAAAAAf////AA/////+AAAAAAAAA////4AD/////wAAAAAAAAB////AAP////8AAAAAAAAAD///4AA////+AAAAAAAAAAH///AAD////gAAAAAAAAAAP//wAAP///wAAAAAAAAAAAf/+AAA///wAAAAAAAAAAAA//wAAD//wAAAAAAAAAAAAB/8AAAD8AAAAAAAAAAAAAAD/gAAAAAAAAAAAAAAAAAAAH8AAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAAAAAIAAAAA=";
-      let bits=null;
-      function unpack(){
-        const raw=atob(B64), a=new Uint8Array(MW*MH);
-        for(let i=0;i<a.length;i++) a[i]=(raw.charCodeAt(i>>3)>>(7-(i&7)))&1;
-        return a;
-      }
-      return function(g,W,H){
-        if(!bits) bits=unpack();
-        g.fillStyle='#ffffff'; g.fillRect(0,0,W,H);
-        g.fillStyle='#000000';
-        const cw=W/MW, ch=H/MH;
-        for(let y=0;y<MH;y++){
-          let run=-1;
-          for(let x=0;x<=MW;x++){
-            const on = x<MW && bits[y*MW+x];
-            if(on && run<0) run=x;
-            else if(!on && run>=0){ g.fillRect(run*cw, y*ch, (x-run)*cw+0.5, ch+0.5); run=-1; }
-          }
-        }
-      };
-    })();
 
 function init3D(){
   dummy=new THREE.Object3D();
