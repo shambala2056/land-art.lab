@@ -1266,6 +1266,12 @@
   font-family:'Urbanist',sans-serif;font-weight:700;font-size:13px;letter-spacing:.06em;
   text-transform:uppercase;text-decoration:none;transition:transform .15s}
 #hexagon-live .hx-claim:hover,#hx-detail .claim:hover{transform:translateY(-2px);color:#fff}
+/* Хоёр дахь товч — Jack's-ийн кофе. Лайм дэвсгэртэй тул "Claim a cell"-ээс
+   ялгарна; жижиг дэлгэц дээр доор нь бууж мөр болно. */
+#hexagon-live .hx-buy{background:var(--hx-lime);color:#101010;margin-left:12px}
+#hexagon-live .hx-buy:hover{color:#101010}
+#hexagon-live .hx-buy i{background:#101010}
+@media(max-width:600px){#hexagon-live .hx-buy{margin:12px 0 0}}
 #hexagon-live .hx-claim i,#hx-detail .claim i{width:8px;height:8px;border-radius:50%;
   background:var(--hx-lime)}
 #hx-detail .claim{background:var(--hx-lime);color:#101010;width:100%;justify-content:center;
@@ -1366,8 +1372,13 @@
 
   <div class="hx-wrap hx-cta">
     <p>Tap any cell in the scene above to see its code, size and status — then take a cell of
-      your own on the live map.</p>
+      your own on the live map. Cell A-01 is planted by Jack's Coffee: one marked cup, one elm.</p>
     <a href="#pricing" class="hx-claim"><i></i>Claim a cell</a>
+    <!-- Jack's-ийн худалдан авах товч энд ч бас байх шаардлагатай: нүүр хуудсан
+         дээрх тусдаа хэсгийг авсны дараа энэ холбоос зөвхөн A-01 нүдийг олж
+         дарсан хүнд л харагдаж байв. -->
+    <a href="https://jacks.coffee/product/cop17-bundle/" class="hx-claim hx-buy"
+       target="_blank" rel="noopener noreferrer"><i></i>Buy now — one coffee, one tree</a>
   </div>
 
 </section>
@@ -1405,7 +1416,7 @@
       this cell. The buyer names it, and it is irrigated and tended for ten years against a
       survival count taken twice a year.</p>
     <a href="https://jacks.coffee/product/cop17-bundle/" class="claim" target="_blank"
-       rel="noopener noreferrer"><i></i>One coffee, one tree — buy the COP17 edition</a>
+       rel="noopener noreferrer"><i></i>Buy now — one coffee, one tree</a>
   </div>
   <a href="#pricing" class="claim" id="hxDclaim"><i></i>Claim a cell</a>
 </div>
