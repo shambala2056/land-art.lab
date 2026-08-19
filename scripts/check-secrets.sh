@@ -68,13 +68,17 @@ else
 fi
 
 say ""
-say "5 · Git history has never contained one"
-for pattern in "MINU_PASSWORD=" "K/Uit4"; do
-    found=$(git log --all -S"$pattern" --oneline 2>/dev/null | head -3 || true)
+say "5 · Git history has never contained a real value"
+# -G takes a regex over the diff, so this matches a NAME WITH A VALUE after it.
+# Plain -S"MINU_PASSWORD=" would match .env.example, where the empty name is
+# exactly what belongs there. The checker's own source is excluded: its search
+# patterns are permanently in history and would flag forever.
+for rx in "MINU_PASSWORD=[^[:space:]\"']" "MINU_USERNAME=[^[:space:]\"']" "MINU_MERCHANT_CODE=[^[:space:]\"']" "K/Uit""4"; do
+    found=$(git log --all -G"$rx" --oneline -- . ':!scripts/check-secrets.sh' 2>/dev/null | head -3 || true)
     if [ -n "$found" ]; then
-        bad "history contains '$pattern' — rotate that credential:"; printf '%s\n' "$found"
+        bad "a real value for '$rx' is in history — ROTATE that credential now:"; printf '%s\n' "$found"
     else
-        ok "no commit has ever contained '$pattern'"
+        ok "no commit has ever carried a value for ${rx%%=*}"
     fi
 done
 
