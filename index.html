@@ -1199,6 +1199,14 @@
   color:var(--hx-soft)}
 
 /* ---- дэлгэрэнгүй цонх ---- */
+/* Өнгөний токенууд #hexagon-live дээр зарлагдсан бөгөөд custom property нь
+   зөвхөн УДАМ руугаа дамждаг. #hx-detail нь тэр хэсгийн дотор биш, ХАЖУУД нь
+   байрладаг тул дотор нь var(--hx-lime), var(--hx-ink) хоёр тодорхойгүй болж,
+   background нь тунгалаг болон унаж, товчнууд нь #101010 дэвсгэр дээр #101010
+   бичигтэй — өөрөөр хэлбэл "Claim a cell", "Buy now" хоёр огт харагдахгүй
+   байв. Токенуудыг энд давхар зарлана. */
+#hx-detail{--hx-ink:#14150F; --hx-lime:#B8E020; --hx-lime-deep:#8AAE13;
+  --hx-soft:#5E5F55; --hx-hair:#E0DACA}
 #hx-detail{position:fixed;z-index:9999;left:16px;right:16px;bottom:16px;background:#101010;
   color:#F4F2EA;border-radius:26px;padding:22px 24px;
   box-shadow:0 22px 50px rgba(60,52,32,.34);font-family:'Urbanist',sans-serif;
@@ -1929,6 +1937,35 @@
                                        rel="noopener noreferrer" title="plasticcenter.mn"
                                        aria-label="Plastic Center LLC website">
                                         <i class="icon icon-global"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 lg-mb-24">
+                            <div class="team-item h-100 effectFade fadeUp" data-delay="0.4">
+                                <div class="image">
+                                    <img loading="lazy" src="assets/images/team/Purevjargal.Ts.jpg" alt="Purevjargal.Ts">
+                                </div>
+                                <a href="#" class="name h6 fw-semibold">Purevjargal.Ts</a>
+                                <div class="sub text-body-1">CEO, Jack's Coffee</div>
+                                <!-- Гурван холбоос: вэб, Facebook, Instagram. Бусад картууд нэг
+                                     холбоостой ч Jack's-ийн хувьд COP17-ийн худалдан авалт нь
+                                     эдгээр сувгуудаар явдаг тул гурвуулаа хэрэгтэй. -->
+                                <div class="tf-social justify-content-center">
+                                    <a href="https://www.jacks.coffee/" class="social-item" target="_blank"
+                                       rel="noopener noreferrer" title="jacks.coffee"
+                                       aria-label="Jack's Coffee website">
+                                        <i class="icon icon-global"></i>
+                                    </a>
+                                    <a href="https://www.facebook.com/jacks.coffee.mongolia" class="social-item"
+                                       target="_blank" rel="noopener noreferrer" title="jacks.coffee.mongolia"
+                                       aria-label="Jack's Coffee on Facebook">
+                                        <i class="icon icon-facebook-f"></i>
+                                    </a>
+                                    <a href="https://www.instagram.com/jacks.coffee.mongolia/" class="social-item"
+                                       target="_blank" rel="noopener noreferrer" title="@jacks.coffee.mongolia"
+                                       aria-label="Jack's Coffee on Instagram">
+                                        <i class="icon icon-instagram"></i>
                                     </a>
                                 </div>
                             </div>
