@@ -5,8 +5,18 @@
  * outside the function. It speaks to Vercel KV (Upstash Redis) over its REST
  * API using fetch, with no dependency to install.
  *
- * Set in Vercel: KV_REST_API_URL and KV_REST_API_TOKEN. Creating a KV store in
- * the project dashboard sets both automatically.
+ * Set in Vercel: Storage → Create Database → Upstash → Redis, then Connect it to
+ * the project. The variables are set for you; nothing is typed by hand.
+ *
+ * Vercel used to call this "KV" and set KV_REST_API_URL / KV_REST_API_TOKEN.
+ * It is now bought through the Marketplace from Upstash, which sets
+ * UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN instead — and which pair
+ * appears depends on when the store was created. Both are accepted below so the
+ * ledger works either way, rather than failing silently on a name.
+ *
+ * Note it must be Upstash and not Redis Cloud: this speaks the REST API over
+ * plain fetch, and a redis:// connection string cannot be used from a
+ * serverless function without a client library.
  *
  * WHEN NOT CONFIGURED the ledger reports itself unavailable and every call is a
  * no-op that permits the sale. That is deliberate: a payment system that stops
@@ -27,8 +37,8 @@
 const RESERVE_SECONDS = 1800;   /* 30 minutes — the provider's token lifetime */
 
 function cfg() {
-    const url = process.env.KV_REST_API_URL;
-    const token = process.env.KV_REST_API_TOKEN;
+    const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+    const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
     return url && token ? { url: url.replace(/\/+$/, ""), token: token } : null;
 }
 
