@@ -5,12 +5,19 @@
  * the orders, then deploy it as a Web App. Setup instructions are at the bottom
  * of this file.
  *
- * It does two things:
+ * It does three things:
  *   action "order"   append a new row when an invoice is created
  *   action "status"  update that row when the bank reports the outcome
+ *   on "paid"        email the certificate and stamp when it went, and to whom
  *
- * The certificate columns are never written by this script. They are for a
- * person to fill in, and are the record of what was actually sent.
+ * Certificates are sent from this script rather than from the server, because
+ * the buyer's name and email are already in the row — nothing has to be passed
+ * anywhere, and no key has to be stored. They go from the sheet owner's own
+ * Google account, so they arrive looking like they came from you.
+ *
+ * A certificate is sent once. If "Certificate sent" already has a date the row
+ * is skipped, so a repeated callback cannot send a second one. To send again,
+ * clear that cell and use Land-art Space → Send certificate.
  */
 
 /* Must match SHEETS_WEBHOOK_SECRET in Vercel. Replace before deploying. */
@@ -32,8 +39,8 @@ var HEADERS = [
   'Paid at',
   'Bank txn',
   'Method',
-  'Certificate sent',   // ← filled in by a person: date the certificate went out
-  'Sent by',            // ← who sent it
+  'Certificate sent',   // date the certificate went out — written automatically
+  'Sent by',            // "automatic", or the name of whoever sent it by hand
   'Notes'
 ];
 
@@ -93,9 +100,94 @@ function appendOrder(sheet, b) {
     b.currency || '',
     b.status || 'pending',
     '', '', '',      // paid at, bank txn, method — filled by the status call
-    '', '', ''       // certificate sent, sent by, notes — filled by a person
+    '', '', ''       // certificate sent, sent by, notes
   ]);
   return { ok: true, row: sheet.getLastRow() };
+}
+
+/* ── Гэрчилгээ ───────────────────────────────────────────────────────────────
+ * Төлбөр батлагдмагц гэрчилгээг худалдан авагчийн имэйл рүү илгээж, илгээсэн
+ * огноог хүснэгтэд тэмдэглэнэ.
+ *
+ * Яагаад Vercel биш, эндээс илгээдэг вэ: нэр, имэйл нь энэ мөрөнд аль хэдийн
+ * байгаа тул хаашаа ч дамжуулах шаардлагагүй, түлхүүр хадгалах ч хэрэггүй.
+ * Мөн энэ нь ТАНЫ Google хаягаас илгээгддэг тул хүлээн авагчид танигдана.
+ *
+ * Хоёр удаа илгээхгүй: "Certificate sent" багана дүүрсэн бол алгасна. Callback
+ * давтагдвал ч хүн хоёр гэрчилгээ авахгүй.
+ */
+function sendCertificate(sheet, row) {
+  var v = sheet.getRange(row, 1, 1, HEADERS.length).getValues()[0];
+  var reference = v[1], name = v[2], email = v[3], cell = v[4],
+      pits = v[5], seedlings = v[6], alreadySent = v[13];
+
+  if (alreadySent) return { sent: false, reason: 'already sent' };
+  if (!email) {
+    sheet.getRange(row, 16).setValue('No email on the order — certificate not sent');
+    return { sent: false, reason: 'no email' };
+  }
+
+  var subject = 'Your trees at Erdene — certificate ' + reference;
+  var lines = [
+    'Dear ' + (name || 'sponsor') + ',',
+    '',
+    'Thank you. Your sponsorship is confirmed.',
+    '',
+    '  Reference    ' + reference,
+    '  Planting     ' + pits + ' pits, ' + seedlings + ' Siberian elm',
+    (cell ? '  Cell         ' + cell : ''),
+    '  Site         Erdene sum, Dornogovi, Mongolia',
+    '',
+    'The trees are planted in the first planting window after this confirmation,',
+    'three seedlings to a pit, 1.5 m apart. They are irrigated and maintained for',
+    'ten years, counted in full twice a year, and any that do not survive are',
+    'replanted at our cost.',
+    '',
+    'We will write once a year with what the ground is doing.',
+    '',
+    'Land-art Space',
+    'Shambala Carbon Offsets LLC',
+    'hello@shambala.today',
+    'https://www.land-art.space'
+  ].filter(function (l) { return l !== ''; }).join('\n');
+
+  try {
+    MailApp.sendEmail({ to: email, subject: subject, body: lines, name: 'Land-art Space' });
+  } catch (err) {
+    /* Тэмдэглээд өнгөрнө — гэрчилгээ илгээгдээгүй нь төлбөрийг унагаах ёсгүй. */
+    sheet.getRange(row, 16).setValue('Certificate failed: ' + String(err).slice(0, 180));
+    return { sent: false, reason: String(err) };
+  }
+
+  sheet.getRange(row, 14).setValue(new Date());   // Certificate sent
+  sheet.getRange(row, 15).setValue('automatic');  // Sent by
+  return { sent: true };
+}
+
+/* Хүснэгтийн цэснээс гараар дахин илгээх. Нэг буюу хэд хэдэн мөрийг сонгоод
+   Land-art Space → Send certificate. Аль хэдийн илгээсэн бол алгасна — дахин
+   илгээхийн тулд "Certificate sent" нүдийг эхлээд цэвэрлэнэ. */
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu('Land-art Space')
+    .addItem('Send certificate for selected rows', 'sendSelected')
+    .addToUi();
+}
+
+function sendSelected() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  if (sheet.getName() !== SHEET_NAME) {
+    SpreadsheetApp.getUi().alert('Switch to the "' + SHEET_NAME + '" tab first.');
+    return;
+  }
+  var sel = sheet.getActiveRange();
+  var sent = 0, skipped = 0;
+  for (var r = sel.getRow(); r < sel.getRow() + sel.getNumRows(); r++) {
+    if (r < 2) continue;
+    var res = sendCertificate(sheet, r);
+    if (res.sent) sent++; else skipped++;
+  }
+  SpreadsheetApp.getUi().alert('Certificates sent: ' + sent + '\nSkipped: ' + skipped);
 }
 
 function updateStatus(sheet, b) {
@@ -118,7 +210,13 @@ function updateStatus(sheet, b) {
   }
   if (b.txnId)  sheet.getRange(row, 12).setValue(b.txnId); // Bank txn
   if (b.method) sheet.getRange(row, 13).setValue(b.method);// Method
-  return { ok: true, row: row };
+
+  /* Төлбөр батлагдсан үед л гэрчилгээ явна. Цуцлагдсан, хугацаа нь дууссан,
+     амжилтгүй болсон захиалгад явахгүй. */
+  var cert = null;
+  if (String(b.status) === 'paid') cert = sendCertificate(sheet, row);
+
+  return { ok: true, row: row, certificate: cert };
 }
 
 /* Reference is column B. Read the column once rather than cell by cell — a
@@ -158,8 +256,13 @@ function reply(obj) {
  *    "Anyone" is required because Vercel's servers call this without a Google
  *    login. The SECRET is what actually protects it.
  *
- * 5. Authorise when prompted. Google will warn that the app is unverified —
- *    that is expected for your own script; choose Advanced → Go to project.
+ * 5. Authorise when prompted. It asks for two things: to edit this spreadsheet,
+ *    and to send email as you — the second is what sends the certificates.
+ *    Google will warn that the app is unverified; that is expected for your own
+ *    script, so choose Advanced → Go to project.
+ *
+ *    Sending limits: 1,500 emails a day on Google Workspace, 100 on a personal
+ *    Gmail account. Both are far above the volume here.
  *
  * 6. Copy the Web app URL. It ends in /exec.
  *
