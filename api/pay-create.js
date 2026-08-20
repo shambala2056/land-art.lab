@@ -6,6 +6,7 @@
  */
 
 const { config, describeMissing, call, login, priceOf, cellCapacity } = require("./_minu");
+const ledger = require("./_ledger");
 
 /* Payments are same-origin only. contact.js allows "*", which is harmless for a
  * message form and wrong here: an open payment endpoint lets any site create
@@ -67,12 +68,28 @@ module.exports = async function handler(req, res) {
         cellCode = String(body.cell).toUpperCase();
     }
 
-    const token = await login(cfg);
-    if (!token) {
-        return res.status(502).json({ error: "Couldn't reach the payment provider. Please try again shortly." });
+    const ref = reference();
+
+    /* Hold the pits before creating the invoice. Reserving after would let two
+       people pay for the same ground. The reservation expires on its own if the
+       payer walks away from the bank's page. */
+    if (cellCode) {
+        const held = await ledger.reserve(cellCode, price.quantity, ref, cellCapacity(cellCode));
+        if (!held.ok) {
+            return res.status(409).json({
+                error: held.remaining > 0
+                    ? "Only " + held.remaining + " pits are left in that cell."
+                    : "That cell has just sold out.",
+                remaining: held.remaining,
+            });
+        }
     }
 
-    const ref = reference();
+    const token = await login(cfg);
+    if (!token) {
+        if (cellCode) await ledger.release(ref);
+        return res.status(502).json({ error: "Couldn't reach the payment provider. Please try again shortly." });
+    }
     const invoiceRes = await call(cfg.base + "/invoice", {
         method: "POST",
         headers: {
@@ -103,6 +120,9 @@ module.exports = async function handler(req, res) {
             message: invoiceRes.body && invoiceRes.body.message,
             reference: ref,
         });
+        /* No invoice means no payment will ever arrive for this reference, so
+           the pits must go back immediately rather than sit held for 30 min. */
+        if (cellCode) await ledger.release(ref);
         return res.status(502).json({ error: "Couldn't start the payment. Please try again shortly." });
     }
 

@@ -11,6 +11,7 @@
  */
 
 const crypto = require("crypto");
+const ledger = require("./_ledger");
 /* Resend is required lazily, inside the notification block. At module scope a
  * failure to load it — a missing install, a bad version, an outage in the
  * package itself — takes the whole handler down, and this handler must always
@@ -82,7 +83,18 @@ module.exports = async function handler(req, res) {
         type: entity.type,
     });
 
-    /* No database here, so a successful payment is emailed to the team rather
+    /* Turn the reservation into a sale, or hand the pits back. Done before the
+       email so the ledger is right even if notification fails. */
+    if (reference) {
+        try {
+            if (paid) await ledger.confirm(reference);
+            else await ledger.release(reference);
+        } catch (err) {
+            console.error("ledger update failed for", reference, err && err.message);
+        }
+    }
+
+    /* No customer database here, so a successful payment is emailed to the team rather
        than silently logged. Failure to notify must not fail the callback: the
        provider retries on a non-200 and would repeat a payment we already have. */
     if (paid && process.env.RESEND_API_KEY && process.env.CONTACT_TO_EMAIL) {

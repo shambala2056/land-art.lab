@@ -769,8 +769,12 @@ function wireBuy(c,s){
       nlab=document.getElementById('buyN'), msg=document.getElementById('buyMsg');
   var busy=false;
 
+  /* Багтаамж нь эсийн нүхний тоо, ГЭХДЭЭ аль хэдийн зарагдсаныг хасна.
+     Бүртгэлийн сан тохируулагдаагүй үед үлдэгдлийг мэдэхгүй тул бүтэн
+     багтаамжийг харуулна — батлагдаагүй тоо харуулснаас дээр. */
+  var cap=s.pots;
   function read(){ var v=parseInt(qty.value,10);
-    return (isFinite(v)&&v>=1&&v<=s.pots)?v:null; }
+    return (isFinite(v)&&v>=1&&v<=cap)?v:null; }
   function paint(){
     var n=read();
     if(n===null){ tot.textContent='—'; seeds.textContent=''; go.disabled=true; return; }
@@ -798,12 +802,47 @@ function wireBuy(c,s){
         }
         busy=false; go.disabled=false; msg.className='buy-msg err';
         msg.textContent=(res.d&&res.d.error)||"Couldn't start the payment.";
+        /* Хэн нэгэн түрүүлж авсан бол хязгаарыг шинэчилнэ. */
+        if(res.d&&typeof res.d.remaining==='number'){
+          cap=res.d.remaining; qty.max=Math.max(1,cap);
+          if(cap>0&&parseInt(qty.value,10)>cap) qty.value=cap;
+          paint();
+        }
       })
       .catch(function(){ busy=false; go.disabled=false; msg.className='buy-msg err';
         msg.textContent='Network problem — please try again.'; });
   });
 
-  function reveal(){ if(PAYCFG&&PAYCFG.available){ box.hidden=false; paint(); } }
+  function reveal(){
+    if(!PAYCFG||!PAYCFG.available) return;
+    box.hidden=false; paint();
+    /* Үлдэгдлийг асууна. Хариу ирэх хүртэл бүтэн багтаамжаар үзүүлнэ. */
+    fetch('/api/pay-availability',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({cells:[c.id]})})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(!d||!d.tracked||!d.cells||!d.cells[c.id]) return;
+        var info=d.cells[c.id];
+        if(typeof info.remaining!=='number'||info.unknown) return;
+        cap=info.remaining; qty.max=Math.max(1,cap);
+        var fine=box.querySelector('.buy-fine');
+        if(cap<=0){
+          box.hidden=true;
+          if(fine) fine.textContent='';
+          var sold=document.createElement('div');
+          sold.className='buy-fine';
+          sold.textContent='Every pit in this cell has been sponsored.';
+          box.parentNode.insertBefore(sold,box);
+          return;
+        }
+        if(parseInt(qty.value,10)>cap) qty.value=cap;
+        if(fine) fine.insertAdjacentHTML('afterbegin',
+          '<b>'+cap.toLocaleString('en-US')+' of '+s.pots.toLocaleString('en-US')+
+          ' pits still available.</b> ');
+        paint();
+      })
+      .catch(function(){});
+  }
   if(PAYCFG){ reveal(); return; }
   fetch('/api/pay-config').then(function(r){return r.json();})
     .then(function(d){ PAYCFG=d||{available:false}; reveal(); })
