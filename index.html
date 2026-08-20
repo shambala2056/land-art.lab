@@ -969,7 +969,7 @@
                     </div>
                     <div class="story-row">
                         <div class="story-q">Delivered to date</div>
-                        <div class="story-a">Three works to date: two completed, one beginning 2026. 57,857 trees planted across 68,970 m², with a further 13,713 to come. <a href="#works" class="story-more">See all projects →</a></div>
+                        <div class="story-a">Three works to date: two completed, one beginning 2026. 57,857 trees planted across 68,970 m², with a further 6,057 to come. <a href="#works" class="story-more">See all projects →</a></div>
                     </div>
                     <div class="story-row">
                         <div class="story-q">Measured outcomes</div>
@@ -1393,11 +1393,13 @@
     <h3 class="hx-ph">HEXAGON</h3>
     <p class="hx-plead">The third work, and the 2026–2032 programme. Fifty-four hexagonal cells
       set out by GPS on a fenced three-hectare site, 4,571 m² of it under planting. Cells run
-      from 12 m² to 400 m², each with a fixed position, an identifier and a named steward. The
+      from 12 m² to 400 m², each with a fixed position, an identifier and a named steward. Pits are
+      dug 1.5 m apart in both directions and take three seedlings each, so a cell states the trees
+      it can actually hold. The
       build order is dependency-driven — water and power, enclosure, buildings, then planting in
       hardiness order — because on this ground the sequence, not the species list, decides
       survival.</p>
-    <div class="hx-pills"><span>30,000 m² site</span><span>4,571 m² planted</span><span>13,713 trees</span><span>54 cells</span></div>
+    <div class="hx-pills"><span>30,000 m² site</span><span>4,571 m² planted</span><span>6,057 trees</span><span>54 cells</span></div>
   </div>
 
   <div class="hx-stage" id="hxStage">
@@ -1862,16 +1864,17 @@
                 <div class="pay-box" id="payBox" hidden>
                     <div class="pay-head">
                         <div class="pay-eyebrow">Sponsor a cell</div>
-                        <h3 class="pay-title">One cell is one square metre</h3>
+                        <h3 class="pay-title">One pit, three seedlings</h3>
                     </div>
-                    <p class="pay-sub">Choose how many square metres to sponsor. Each carries a fixed
+                    <p class="pay-sub">Pits are dug 1.5 m apart in both directions and planted with
+                        three Siberian elm each. Choose how many to sponsor: each carries a fixed
                         position on the site, ten years of maintenance and irrigation, and a survival
                         count taken twice a year.</p>
                     <div class="pay-note" id="paySandbox" hidden>Test mode — no real card will be charged.</div>
                     <div class="pay-row">
                         <label class="pay-field">
-                            <span>Square metres</span>
-                            <input type="number" id="payQty" min="1" max="10000" step="1" value="10" inputmode="numeric">
+                            <span>Planting pits</span>
+                            <input type="number" id="payQty" min="1" max="4000" step="1" value="10" inputmode="numeric">
                         </label>
                         <label class="pay-field">
                             <span>Currency</span>
@@ -1881,7 +1884,7 @@
                             </select>
                         </label>
                         <div class="pay-total">
-                            <span>Total</span>
+                            <span>Total &middot; <i id="paySeeds" style="font-style:normal"></i></span>
                             <b id="payTotal">—</b>
                         </div>
                     </div>
@@ -5127,6 +5130,8 @@
             var c = cur.value, n = readQty();
             if (n === null) { total.textContent = '—'; go.disabled = true; return; }
             total.textContent = fmt(n * (c === 'USD' ? UNIT.usd : UNIT.mnt), c);
+            var seeds = document.getElementById('paySeeds');
+            if (seeds) seeds.textContent = (n * 3).toLocaleString() + ' seedlings';
             go.disabled = busy;
         }
 
@@ -5154,7 +5159,7 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 /* No amount is sent. The server prices it. */
-                body: JSON.stringify({ sku: 'm2', currency: cur.value, quantity: n })
+                body: JSON.stringify({ sku: 'pit', currency: cur.value, quantity: n })
             })
             .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
             .then(function (res) {

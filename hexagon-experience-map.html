@@ -300,19 +300,27 @@ var PAT=UPM, P4=PAT/4;                          /* хээний нүд ба ху
    зурагдсан хэмжээ зарагдсан м²-тэй үргэлж таарна. 54 нүдний нийлбэр яг
    30,000 м². Хашаа байхгүй — нүднүүд өөрсдөө талбайг бүрдүүлнэ.
    ₮100,000/м², $1 ≈ ₮3,400. */
+/* Нэгж нь НҮХ, м² биш. Нүхийг хоёр тийшээ 1.5 м зайтай ухах тул нэг нь
+   2.25 м² эзэлж, дотор нь 3 суулгац орно. 1 нүх = ₮100,000 = $30.
+   Урьд нь 1 м² = $30, 1 м²-т 3 мод гэж байсан нь 0.58 м зайг шаардах бөгөөд
+   хайлаасанд боломжгүй. Тоо бүрийг талбайгаас гаргана — 3D дүр зургийнхтай
+   ижил томьёо тул хоёр газар салах боломжгүй. */
+var SPACING=1.5, AREA_PER_PIT=SPACING*SPACING, SEEDS_PER_PIT=3;
+var PIT_MNT=100000, PIT_USD=30;
+function mkSize(area,nm){
+  var pots=Math.floor(area/AREA_PER_PIT);
+  return {area:area,pots:pots,trees:pots*SEEDS_PER_PIT,nm:nm,
+          price:'₮'+(pots*PIT_MNT).toLocaleString('en-US'),
+          usd:'$'+(pots*PIT_USD).toLocaleString('en-US')};
+}
 var SIZES={
-  /* index.html дэх 3D дүр зургийн SIZES-ийн хуулбар — талбай, нүх, үнэ бүгд ижил.
-     ₮100,000/м² · $30/м². Зурагдсан хэмжээг UPM барина. */
-  A:{area:400,pots:400,price:'₮40,000,000',usd:'$12,000',nm:'Extra large cell'},
-  B:{area:260,pots:260,price:'₮26,000,000',usd:'$7,800', nm:'Large cell'},
-  C:{area:120,pots:120,price:'₮12,000,000',usd:'$3,600', nm:'Medium cell'},
-  D:{area:90, pots:90,  price:'₮9,000,000', usd:'$2,700', nm:'Small-plus cell'},
-  E:{area:45, pots:45,  price:'₮4,500,000', usd:'$1,350', nm:'Small cell'},
-  F:{area:12, pots:12,  price:'₮1,200,000', usd:'$360',   nm:'Marker cell'}
+  A:mkSize(400,'Extra large cell'), B:mkSize(260,'Large cell'),
+  C:mkSize(120,'Medium cell'),      D:mkSize(90,'Small-plus cell'),
+  E:mkSize(45,'Small cell'),        F:mkSize(12,'Marker cell')
 };
 /* [x, y, class] — хамгийн том зургаалжны радиусыг нэгж болгосон нормчилсон байрлал */
 var SHAPE=[[-3.5764,1.0969,'A'],[1.7086,1.3346,'A'],[-1.0171,2.6433,'A'],[3.3162,-2.7075,'B'],[-5.0352,0.1615,'B'],[0.18,0.5734,'B'],[-0.8746,4.3662,'B'],[-0.4271,-1.9448,'C'],[1.3021,-1.8147,'C'],[-3.8427,-0.369,'C'],[1.4678,-0.1359,'C'],[0.4255,3.9604,'C'],[-2.6239,4.3019,'C'],[3.4772,-3.9643,'D'],[1.4779,-2.8245,'D'],[3.1652,-1.4717,'D'],[-2.3281,0.3938,'D'],[2.9329,0.609,'D'],[-0.894,1.213,'D'],[3.8001,1.786,'D'],[2.4768,2.7478,'D'],[2.7672,-4.4452,'E'],[-0.3256,-2.8523,'E'],[4.5629,-2.5821,'E'],[0.4162,-1.6095,'E'],[-1.244,-1.5901,'E'],[4.559,-1.3989,'E'],[2.0393,-1.2502,'E'],[3.0955,-0.5974,'E'],[0.1599,-0.5587,'E'],[2.4652,-0.2342,'E'],[-1.5839,0.7345,'E'],[3.7374,0.9397,'E'],[0.2559,2.2948,'E'],[0.7569,3.0645,'E'],[-1.8797,3.7723,'E'],[2.6766,-5.0259,'F'],[4.4142,-3.8249,'F'],[2.8097,-3.7506,'F'],[-0.2575,-3.437,'F'],[-0.9854,-2.4884,'F'],[0.7546,-2.3227,'F'],[5.0174,-2.2042,'F'],[5.0352,-1.7713,'F'],[-2.1755,-1.5878,'F'],[-1.7992,-1.3679,'F'],[1.4887,-1.062,'F'],[2.4737,-0.8289,'F'],[-1.0613,0.52,'F'],[-4.8788,1.1704,'F'],[-4.8796,1.5971,'F'],[0.7941,2.0702,'F'],[3.2596,2.6053,'F'],[-2.8833,5.0259,'F']];
-var TREES_PER_M2=3;   /* 3D дүр зурагтай ижил — нүх тутамд 3 хайлаас */
+/* TREES_PER_M2 хасагдав: мод нь талбайгаас биш, НҮХНЭЭС гарна (нүх тутамд 3). */
 var WIND={x:0.80,y:0.60};                       /* баруун хойноос зүүн урагш */
 
 var STAGES=[
@@ -708,7 +716,7 @@ function showIntro(){
       ['Small-plus','8 × 90 m² · $2,700'],
       ['Small','15 × 45 m² · $1,350'],
       ['Marker','18 × 12 m² · $360'],
-      ['Unit price','$30 / m²'],['Total trees','13,713 · Ulmus pumila']
+      ['Unit price','$30 / pit · 3 seedlings'],['Total trees','6,057 · Ulmus pumila']
     ])+'</ul>'+
     '<a class="d-cta" href="index.html#contact" target="_top">Enquire About Sponsoring a Cell →</a>';
   */
@@ -728,7 +736,8 @@ function showCell(id){
     (c.status==='free'?' This cell is currently available.':'')+'</p>'+
     '<ul class="d-stats">'+rows([
       ['Cell number',c.id],['Restoration area',area+' m²'],['Planting pots',pots+' · every 1 m'],
-      ['Siberian elm',(s.area*TREES_PER_M2).toLocaleString('en-US')+' saplings'],
+      ['Planting pits',s.pots.toLocaleString('en-US')+' at 1.5 m spacing'],
+      ['Siberian elm',s.trees.toLocaleString('en-US')+' saplings · 3 per pit'],
       ['Care period','10 years'],['Reporting','count every six months'],['Status',state]
     ])+'</ul>'+
     /* Доллар нь үндсэн үнэ — олон улсын түнш уншина. Төгрөг нь жижгээр хажууд нь. */

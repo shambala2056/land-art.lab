@@ -73,32 +73,45 @@ async function login(cfg) {
  * nothing else: if the amount came from the client, anyone could open the
  * console and buy a hectare for one tögrög.
  *
- * The published offer is one cell = one square metre = USD 30, and the site's
- * own cost breakdown adds to exactly that. The MNT figure is the same unit the
- * HEXAGON classes already use — cell A is ₮40,000,000 for 400 m² and cell F is
- * ₮1,200,000 for 12 m², both ₮100,000/m² — so the two models on the site agree
- * rather than quietly disagreeing. */
-const UNIT = { mnt: 100000, usd: 30 };          /* per square metre */
-const MAX_QTY = 10000;                          /* the whole hectare */
+ * THE UNIT IS A PLANTING PIT, NOT A SQUARE METRE.
+ *   1 pit = 3 seedlings = USD 30 = MNT 100,000
+ *   pits are dug 1.5 m apart in both directions, so one occupies 2.25 m²
+ *
+ * The site previously priced a square metre at USD 30 while claiming three
+ * trees per square metre. Three trees per square metre needs 0.58 m spacing,
+ * which is not plantable for elm, so the old cell prices were charging for
+ * trees that could never go in the ground. Per tree the price is unchanged at
+ * USD 10 either way — what changed is that a cell now states how many trees it
+ * can really hold. */
+const SPACING_M = 1.5;
+const AREA_PER_PIT = SPACING_M * SPACING_M;     /* 2.25 m² */
+const SEEDLINGS_PER_PIT = 3;
+const UNIT = { mnt: 100000, usd: 30 };          /* per pit */
+const MAX_QTY = 4000;                           /* ~9,000 m², more than the planted area */
+
+/* Whole-cell prices are derived, never typed in, so they cannot drift away from
+ * the unit price the way the old hand-written table did. */
+function cell(area) {
+    const pits = Math.floor(area / AREA_PER_PIT);
+    return { label: "Cell · " + area + " m² · " + pits + " pits",
+             pits: pits, trees: pits * SEEDLINGS_PER_PIT,
+             mnt: pits * UNIT.mnt, usd: pits * UNIT.usd };
+}
 
 const CATALOG = {
-    /* Priced by the square metre; the buyer chooses how many. */
-    "m2": { perUnit: true, label: "m² sponsored", mnt: UNIT.mnt, usd: UNIT.usd },
+    /* Priced by the pit; the buyer chooses how many. */
+    "pit": { perUnit: true, label: "planting pits", mnt: UNIT.mnt, usd: UNIT.usd },
     /* Whole HEXAGON cells, as offered on the purchase map. */
-    "cell-A": { label: "Cell · 400 m²", mnt: 40000000, usd: 12000 },
-    "cell-B": { label: "Cell · 260 m²", mnt: 26000000, usd: 7800 },
-    "cell-C": { label: "Cell · 120 m²", mnt: 12000000, usd: 3600 },
-    "cell-D": { label: "Cell · 90 m²",  mnt: 9000000,  usd: 2700 },
-    "cell-E": { label: "Cell · 45 m²",  mnt: 4500000,  usd: 1350 },
-    "cell-F": { label: "Cell · 12 m²",  mnt: 1200000,  usd: 360 },
+    "cell-A": cell(400), "cell-B": cell(260), "cell-C": cell(120),
+    "cell-D": cell(90),  "cell-E": cell(45),  "cell-F": cell(12),
 };
 
 /* 496 = MNT, 840 = USD, per the integration document. */
 const CURRENCY = { MNT: "496", USD: "840" };
 
 /* Quantity is only honoured for per-unit items, and is bounded. Without the
- * bound a request for a billion square metres produces an invoice for a number
- * the provider may or may not reject, and nobody wants to find out which. */
+ * bound a request for a billion pits produces an invoice for a number the
+ * provider may or may not reject, and nobody wants to find out which. */
 function priceOf(sku, currency, quantity) {
     const item = CATALOG[sku];
     if (!item) return null;
@@ -111,9 +124,14 @@ function priceOf(sku, currency, quantity) {
 
     const unit = currency === "USD" ? item.usd : item.mnt;
     const amount = unit * qty;
-    const label = item.perUnit ? qty.toLocaleString("en-US") + " " + item.label : item.label;
-    return { label: label, amount: amount, quantity: qty,
+    const trees = (item.perUnit ? qty : item.pits) * SEEDLINGS_PER_PIT;
+    const label = item.perUnit
+        ? qty.toLocaleString("en-US") + (qty === 1 ? " planting pit" : " planting pits") +
+          " · " + trees.toLocaleString("en-US") + " seedlings"
+        : item.label;
+    return { label: label, amount: amount, quantity: qty, trees: trees,
              currency: CURRENCY[currency] || CURRENCY.MNT };
 }
 
-module.exports = { config, describeMissing, call, login, priceOf, CATALOG, CURRENCY, UNIT, MAX_QTY };
+module.exports = { config, describeMissing, call, login, priceOf, CATALOG, CURRENCY,
+                   UNIT, MAX_QTY, SPACING_M, AREA_PER_PIT, SEEDLINGS_PER_PIT };
