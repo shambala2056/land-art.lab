@@ -93,10 +93,14 @@ const MAX_QTY = 4000;                           /* ~9,000 m², more than the pla
  * the unit price the way the old hand-written table did. */
 function cell(area) {
     const pits = Math.floor(area / AREA_PER_PIT);
-    return { label: "Cell · " + area + " m² · " + pits + " pits",
-             pits: pits, trees: pits * SEEDLINGS_PER_PIT,
+    /* Described in pits and seedlings, not square metres. The area is only kept
+       to derive the pit count and to draw the hexagon; it is not the unit of
+       sale and is not shown to a buyer. */
+    return { label: "Cell · " + pits + " pits · " + (pits * SEEDLINGS_PER_PIT) + " elms",
+             area: area, pits: pits, trees: pits * SEEDLINGS_PER_PIT,
              mnt: pits * UNIT.mnt, usd: pits * UNIT.usd };
 }
+
 
 const CATALOG = {
     /* Priced by the pit; the buyer chooses how many. */
@@ -105,6 +109,15 @@ const CATALOG = {
     "cell-A": cell(400), "cell-B": cell(260), "cell-C": cell(120),
     "cell-D": cell(90),  "cell-E": cell(45),  "cell-F": cell(12),
 };
+
+/* Cell codes look like A-01 … F-18. The letter gives the class, and the class
+ * gives how many pits that cell holds — nobody may buy more pits from a cell
+ * than exist in it. */
+function cellCapacity(code) {
+    if (typeof code !== "string" || !/^[A-F]-\d{2}$/.test(code)) return null;
+    const c = CATALOG["cell-" + code.charAt(0)];
+    return c ? c.pits : null;
+}
 
 /* 496 = MNT, 840 = USD, per the integration document. */
 const CURRENCY = { MNT: "496", USD: "840" };
@@ -133,5 +146,5 @@ function priceOf(sku, currency, quantity) {
              currency: CURRENCY[currency] || CURRENCY.MNT };
 }
 
-module.exports = { config, describeMissing, call, login, priceOf, CATALOG, CURRENCY,
+module.exports = { config, describeMissing, call, login, priceOf, cellCapacity, CATALOG, CURRENCY,
                    UNIT, MAX_QTY, SPACING_M, AREA_PER_PIT, SEEDLINGS_PER_PIT };

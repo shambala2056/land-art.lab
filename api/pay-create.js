@@ -5,7 +5,7 @@
  * this function's environment.
  */
 
-const { config, describeMissing, call, login, priceOf } = require("./_minu");
+const { config, describeMissing, call, login, priceOf, cellCapacity } = require("./_minu");
 
 /* Payments are same-origin only. contact.js allows "*", which is harmless for a
  * message form and wrong here: an open payment endpoint lets any site create
@@ -54,6 +54,19 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ error: "Unknown item or quantity." });
     }
 
+    /* Pits may be bought from a named cell. The cap is the cell's own pit count
+       — otherwise someone could buy 200 pits from a cell that holds five, and
+       we would owe trees there is no ground for. */
+    let cellCode = null;
+    if (sku === "pit" && body.cell !== undefined && body.cell !== null && body.cell !== "") {
+        const cap = cellCapacity(body.cell);
+        if (cap === null) return res.status(400).json({ error: "Unknown cell." });
+        if (price.quantity > cap) {
+            return res.status(400).json({ error: "That cell holds " + cap + " pits." });
+        }
+        cellCode = String(body.cell).toUpperCase();
+    }
+
     const token = await login(cfg);
     if (!token) {
         return res.status(502).json({ error: "Couldn't reach the payment provider. Please try again shortly." });
@@ -96,9 +109,11 @@ module.exports = async function handler(req, res) {
     /* The provider returns the invoice URL without a scheme in their examples. */
     const invoice = /^https?:\/\//i.test(entity.invoice) ? entity.invoice : "https://" + entity.invoice;
 
-    console.log("payment invoice created:", { reference: ref, sku: sku, qty: price.quantity, currency: currency });
+    console.log("payment invoice created:", { reference: ref, sku: sku, cell: cellCode,
+                                          qty: price.quantity, currency: currency });
 
     /* Only these three fields cross back to the browser. No token, no merchant
        code, no credentials. */
-    return res.status(200).json({ invoice: invoice, reference: ref, label: price.label });
+    return res.status(200).json({ invoice: invoice, reference: ref,
+                                 label: price.label + (cellCode ? " · cell " + cellCode : "") });
 };
