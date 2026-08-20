@@ -17,3 +17,8 @@ ECOMMERCE_CLIENT*
 # Loose uploads dropped into the project while working. Anything meant for the
 # site belongs under assets/images/ with a real name.
 /assets/Screenshot*
+
+# Uploaded working copies. The published documents live at the repo root
+# (terms.html, refunds.html, privacy.html); this folder is the drop from the
+# other machine and includes the Mongolian LAS-01, which is not published.
+/files*

@@ -125,7 +125,9 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .buy-go:disabled{opacity:.55;cursor:default}
 .buy-msg{margin-top:8px;font-size:12px;font-weight:600;min-height:16px}
 .buy-msg.err{color:#8A2E2E}
-.buy-fine{margin-top:8px;font-size:10.5px;color:#6E7064;line-height:1.5}
+.buy-fine{margin-top:8px;font-size:10.5px;color:#6E7064;line-height:1.55}
+.buy-fine b{color:var(--ink);font-weight:700}
+.buy-fine a{color:#4A4C42;text-decoration:underline;text-underline-offset:2px}
 .grand{background:var(--ink);color:#fff;border-radius:18px;padding:16px 18px;margin-top:16px;display:flex;justify-content:space-between;align-items:baseline}
 .grand .k{font-size:12px;color:#B9BBAE;letter-spacing:.1em;text-transform:uppercase}
 .grand .v{font-size:24px;font-weight:700;color:var(--lime)}
@@ -850,7 +852,11 @@ function showCell(id){
           '<button type="button" class="d-cta buy-go" id="buyGo">Sponsor '+
             '<span id="buyN">1</span> pit in '+c.id+' →</button>'+
           '<div class="buy-msg" id="buyMsg"></div>'+
-          '<div class="buy-fine">Up to '+s.pots+' pits in this cell. Payment is handled by 360 Finance.</div>'+
+          '<div class="buy-fine">Up to '+s.pots+' pits in this cell. <b>This order is final and '+
+            'non-refundable.</b> It buys pots of three saplings and confers no right over land. '+
+            '<a href="terms.html" target="_top">Terms</a> · '+
+            '<a href="refunds.html" target="_top">Refunds</a> · '+
+            '<a href="privacy.html" target="_top">Privacy</a></div>'+
         '</div>'+
         '<a class="d-cta" href="index.html#contact" target="_top">Ask About the Whole Cell →</a>'
       : '<a class="d-cta" href="index.html#contact" target="_top">'+
