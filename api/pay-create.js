@@ -7,11 +7,16 @@
 
 const { config, describeMissing, call, login, priceOf, cellCapacity } = require("./_minu");
 const ledger = require("./_ledger");
+const sheet = require("./_sheet");
 
 /* Payments are same-origin only. contact.js allows "*", which is harmless for a
  * message form and wrong here: an open payment endpoint lets any site create
  * invoices against this merchant account. */
 const ALLOWED = ["https://land-art.space", "https://www.land-art.space"];
+
+/* Catches a typo, not a fake address — the confirmation email is what proves
+ * an address is real. */
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function siteOrigin(req) {
     const origin = req.headers.origin;
@@ -47,6 +52,17 @@ module.exports = async function handler(req, res) {
     const body = req.body || {};
     const sku = typeof body.sku === "string" ? body.sku : "";
     const currency = body.currency === "USD" ? "USD" : "MNT";
+
+    /* The buyer's name and email are required, and are collected here rather
+       than at the bank. The provider returns only a reference, a status and its
+       own transaction id — no customer details at all — so if we do not ask
+       now, a completed payment leaves us unable to say who bought it. The Terms
+       of Purchase undertake to issue confirmation to a Registered Email and to
+       report on growth annually for ten years; neither is possible without it. */
+    const name = typeof body.name === "string" ? body.name.trim().slice(0, 120) : "";
+    const email = typeof body.email === "string" ? body.email.trim().slice(0, 160) : "";
+    if (!name) return res.status(400).json({ error: "Please give a name for the sponsorship." });
+    if (!EMAIL_RE.test(email)) return res.status(400).json({ error: "Please give a valid email address." });
 
     /* priceOf rejects a quantity that is not a whole number in range, so a
        fractional, negative or absurd count never reaches the provider. */
@@ -131,6 +147,19 @@ module.exports = async function handler(req, res) {
 
     console.log("payment invoice created:", { reference: ref, sku: sku, cell: cellCode,
                                           qty: price.quantity, currency: currency });
+
+    /* Record the order before the payer leaves for the bank. A row that exists
+       from this moment can be chased if the callback never arrives; a payment
+       with no name and no email cannot. Awaited so a slow sheet delays the
+       redirect rather than losing the row, but a failure never blocks payment. */
+    try {
+        await sheet.recordOrder({
+            reference: ref, name: name, email: email, cell: cellCode,
+            pits: price.quantity, amount: price.amount, currency: currency,
+        });
+    } catch (err) {
+        console.error("order not recorded in the sheet:", ref, err && err.message);
+    }
 
     /* Only these three fields cross back to the browser. No token, no merchant
        code, no credentials. */

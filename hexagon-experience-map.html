@@ -114,6 +114,15 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .buy[hidden]{display:none}
 .buy-row{display:flex;gap:11px;align-items:flex-end}
 .buy-f{display:flex;flex-direction:column;gap:5px;flex:0 0 96px}
+.buy-f.buy-wide{flex:1 1 130px}
+/* Утсан дээр нэр, имэйлийг зэрэгцүүлбэл тус бүр нь 135px болж, имэйл
+   хаяг багтахаа больдог. Нарийн дэлгэцэд доош нь өрнө. */
+@media(max-width:460px){
+  .buy-who{display:block}
+  .buy-who .buy-f{flex:none;width:100%;margin-bottom:9px}
+  .buy-who .buy-f:last-child{margin-bottom:0}
+}
+.buy-who{margin-bottom:10px}
 .buy-f span{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#6E7064;font-weight:700}
 .buy-f input{font:600 15px/1 inherit;color:var(--ink);background:#fff;border:1px solid #E0DACA;
   border-radius:11px;padding:11px 12px;width:100%}
@@ -788,9 +797,16 @@ function wireBuy(c,s){
 
   go.addEventListener('click',function(){
     var n=read(); if(n===null||busy) return;
+    var nm=(document.getElementById('buyName').value||'').trim();
+    var em=(document.getElementById('buyEmail').value||'').trim();
+    if(!nm){ msg.className='buy-msg err'; msg.textContent='Please give a name.';
+             document.getElementById('buyName').focus(); return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ msg.className='buy-msg err';
+             msg.textContent='Please give a valid email address.';
+             document.getElementById('buyEmail').focus(); return; }
     busy=true; go.disabled=true; msg.className='buy-msg'; msg.textContent='Opening the secure payment page…';
     fetch('/api/pay-create',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({sku:'pit',currency:'USD',quantity:n,cell:c.id})})
+      body:JSON.stringify({sku:'pit',currency:'USD',quantity:n,cell:c.id,name:nm,email:em})})
       .then(function(r){return r.json().then(function(d){return {ok:r.ok,d:d};});})
       .then(function(res){
         if(res.ok&&res.d&&res.d.invoice){
@@ -816,6 +832,13 @@ function wireBuy(c,s){
   function reveal(){
     if(!PAYCFG||!PAYCFG.available) return;
     box.hidden=false; paint();
+    /* Бүртгэл унтраалттай үед үлдэгдэл мэдэгдэхгүй тул эсийн багтаамжийг хэлнэ. */
+    setTimeout(function(){
+      var fine=box.querySelector('.buy-fine');
+      if(fine && !box.dataset.said)
+        fine.insertAdjacentHTML('afterbegin','<b>Up to '+s.pots.toLocaleString('en-US')+
+          ' pits in this cell.</b> ');
+    },900);
     /* Үлдэгдлийг асууна. Хариу ирэх хүртэл бүтэн багтаамжаар үзүүлнэ. */
     fetch('/api/pay-availability',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({cells:[c.id]})})
@@ -839,6 +862,7 @@ function wireBuy(c,s){
         if(fine) fine.insertAdjacentHTML('afterbegin',
           '<b>'+cap.toLocaleString('en-US')+' of '+s.pots.toLocaleString('en-US')+
           ' pits still available.</b> ');
+        box.dataset.said='1';
         paint();
       })
       .catch(function(){});
@@ -883,6 +907,12 @@ function showCell(id){
             '<a class="d-cta" href="index.html#contact" target="_top">Enquire About Another Cell →</a>')
       : c.status==='free'
       ? '<div class="buy" id="buyBox" hidden>'+
+          '<div class="buy-row buy-who">'+
+            '<label class="buy-f buy-wide"><span>Name</span>'+
+              '<input type="text" id="buyName" maxlength="120" autocomplete="name" placeholder="Name or organisation"></label>'+
+            '<label class="buy-f buy-wide"><span>Email</span>'+
+              '<input type="email" id="buyEmail" maxlength="160" autocomplete="email" placeholder="name@example.com"></label>'+
+          '</div>'+
           '<div class="buy-row">'+
             '<label class="buy-f"><span>Pits</span>'+
               '<input type="number" id="buyQty" min="1" max="'+s.pots+'" step="1" value="1" inputmode="numeric"></label>'+
@@ -891,7 +921,7 @@ function showCell(id){
           '<button type="button" class="d-cta buy-go" id="buyGo">Sponsor '+
             '<span id="buyN">1</span> pit in '+c.id+' →</button>'+
           '<div class="buy-msg" id="buyMsg"></div>'+
-          '<div class="buy-fine">Up to '+s.pots+' pits in this cell. <b>This order is final and '+
+          '<div class="buy-fine"><b>This order is final and '+
             'non-refundable.</b> It buys pots of three saplings and confers no right over land. '+
             '<a href="terms.html" target="_top">Terms</a> · '+
             '<a href="refunds.html" target="_top">Refunds</a> · '+
@@ -904,6 +934,36 @@ function showCell(id){
   var cs=document.querySelectorAll('.cell');
   for(var i=0;i<cs.length;i++) cs[i].classList.toggle('on', cs[i].dataset.id===id);
   zoomToCell(c);
+  revealDetail();
+}
+
+/* Эс дарахад зураг томорч дэлгэцийг дүүргэдэг тул доор гарч ирсэн самбар нь
+   харагдахгүй үлддэг — хүн юу ч болоогүй мэт бодно. Самбар руу гүйлгэнэ.
+   Энэ хуудас index.html дотор iframe-ээр суудаг тул ЭЦЭГ цонхыг гүйлгэх ёстой:
+   iframe өөрөө гүйдэггүй, өндрөө эцэгтээ мэдэгддэг. Хойшлуулсан нь самбар
+   зурагдаж, эцэг нь iframe-ийн шинэ өндрийг тавьж амжих хугацаа. */
+function revealDetail(){
+  setTimeout(function(){
+    var d=document.getElementById('detail');
+    if(!d) return;
+    try{
+      var fe=window.frameElement;
+      if(fe && window.parent && window.parent!==window){
+        var top=Math.max(0, fe.getBoundingClientRect().top + window.parent.scrollY
+                          + d.getBoundingClientRect().top - 80);   /* дээр нь бага зэрэг зай */
+        var from=window.parent.scrollY;
+        window.parent.scrollTo({top:top,behavior:'smooth'});
+        /* Зөөлөн гүйлгэлт зарим орчинд огт хөдөлдөггүй (багасгасан хөдөлгөөний
+           тохиргоо, зарим хөтөч). Хөдлөөгүй бол шууд үсэргэнэ — хөдөлгөөн нь
+           тансаг чимэг, самбарыг харуулах нь үүрэг. */
+        setTimeout(function(){
+          try{ if(Math.abs(window.parent.scrollY-from)<4) window.parent.scrollTo(0,top); }catch(e){}
+        },500);
+        return;
+      }
+    }catch(e){ /* өөр эх сурвалжтай бол доорхыг ашиглана */ }
+    d.scrollIntoView({behavior:'smooth',block:'start'});
+  },420);
 }
 document.addEventListener('click',function(e){
   var cb=e.target.closest('.cell'); if(cb) showCell(cb.dataset.id);

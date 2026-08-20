@@ -12,6 +12,7 @@
 
 const crypto = require("crypto");
 const ledger = require("./_ledger");
+const sheet = require("./_sheet");
 /* Resend is required lazily, inside the notification block. At module scope a
  * failure to load it — a missing install, a bad version, an outage in the
  * package itself — takes the whole handler down, and this handler must always
@@ -94,7 +95,20 @@ module.exports = async function handler(req, res) {
         }
     }
 
-    /* No customer database here, so a successful payment is emailed to the team rather
+    /* Mark the row in the order book. Statuses match what pay-status reports, so
+       the sheet and the site never disagree about an order. */
+    if (reference) {
+        try {
+            await sheet.updateStatus(reference,
+                paid ? "paid" : (String(entity.status) === "011" ? "cancelled"
+                              : String(entity.status) === "010" ? "expired" : "failed"),
+                entity.txnId, entity.type);
+        } catch (err) {
+            console.error("sheet status update failed for", reference, err && err.message);
+        }
+    }
+
+    /* A successful payment is also emailed to the team rather
        than silently logged. Failure to notify must not fail the callback: the
        provider retries on a non-200 and would repeat a payment we already have. */
     if (paid && process.env.RESEND_API_KEY && process.env.CONTACT_TO_EMAIL) {
