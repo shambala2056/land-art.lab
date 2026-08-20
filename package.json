@@ -4,6 +4,6 @@
   "private": true,
   "description": "Land-Art Lab site (static HTML) with a Vercel serverless contact-form endpoint.",
   "dependencies": {
-    "resend": "^4.0.0"
+    "resend": "^4.8.0"
   }
 }
