@@ -127,4 +127,58 @@ async function release(ref) {
     return true;
 }
 
-module.exports = { configured, takenIn, reserve, confirm, release, RESERVE_SECONDS };
+/* ── Захиалгын бүртгэл ───────────────────────────────────────────────────────
+ * Google Sheet холбогдох хүртэл захиалга хаана ч бүртгэгдэхгүй байсан. Sheet нь
+ * Apps Script deploy шаарддаг бөгөөд тэр нь удаж байгаа тул захиалгын бүрэн
+ * бичлэгийг мөн энд хадгална. Сан аль хэдийн байгаа, нэмэлт тохиргоо шаардахгүй.
+ *
+ *   order:{ref}  захиалгын JSON
+ *   orders       лавлагааны жагсаалт, шинэ нь тэргүүнд
+ *
+ * Sheet холбогдоход хоёулаа зэрэг ажиллана — нэг нь нөгөөгөө орлохгүй, аль нэг
+ * нь унасан ч бичлэг үлдэнэ.
+ */
+async function saveOrder(o) {
+    if (!configured()) return false;
+    const rec = JSON.stringify({
+        reference: o.reference, name: o.name, email: o.email,
+        cell: o.cell || "", pits: o.pits, seedlings: o.pits * 3,
+        amount: o.amount, currency: o.currency,
+        status: "pending", created: new Date().toISOString(),
+    });
+    await cmd(["SET", "order:" + o.reference, rec]);
+    /* Жагсаалтад нэг л удаа орно: давтагдсан хүсэлт мөрийг хоёр дахин
+       нэмэхгүй байхын тулд эхлээд байгаа эсэхийг шалгана. */
+    await cmd(["LREM", "orders", "0", o.reference]);
+    await cmd(["LPUSH", "orders", o.reference]);
+    return true;
+}
+
+async function markOrder(reference, status, txnId, method) {
+    if (!configured()) return false;
+    const raw = await cmd(["GET", "order:" + reference]);
+    if (!raw) return false;
+    let rec;
+    try { rec = JSON.parse(raw); } catch (e) { return false; }
+    rec.status = status;
+    if (txnId) rec.txnId = txnId;
+    if (method) rec.method = method;
+    if (status === "paid") rec.paidAt = new Date().toISOString();
+    await cmd(["SET", "order:" + reference, JSON.stringify(rec)]);
+    return true;
+}
+
+async function listOrders(limit) {
+    if (!configured()) return null;
+    const refs = await cmd(["LRANGE", "orders", "0", String((limit || 500) - 1)]);
+    if (!Array.isArray(refs) || !refs.length) return [];
+    const rows = await Promise.all(refs.map(async (r) => {
+        const raw = await cmd(["GET", "order:" + r]);
+        if (!raw) return null;
+        try { return JSON.parse(raw); } catch (e) { return null; }
+    }));
+    return rows.filter(Boolean);
+}
+
+module.exports = { configured, takenIn, reserve, confirm, release, RESERVE_SECONDS,
+                   saveOrder, markOrder, listOrders };

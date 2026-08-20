@@ -8,7 +8,7 @@
  * It does three things:
  *   action "order"   append a new row when an invoice is created
  *   action "status"  update that row when the bank reports the outcome
- *   on "paid"        email the certificate and stamp when it went, and to whom
+ *   on "paid"        email the certificate — OFF until SEND_CERTIFICATES is true
  *
  * Certificates are sent from this script rather than from the server, because
  * the buyer's name and email are already in the row — nothing has to be passed
@@ -22,6 +22,13 @@
 
 /* Must match SHEETS_WEBHOOK_SECRET in Vercel. Replace before deploying. */
 var SECRET = 'PUT-THE-SAME-LONG-RANDOM-STRING-HERE';
+
+/* Certificates are off until you are ready for them. Orders are still recorded
+ * and still marked paid — nothing else changes. Set this to true, save, and
+ * redeploy when you want them to start going out automatically. Until then the
+ * "Certificate sent" column stays empty and the menu item is the only way to
+ * send one, which is a reasonable way to try it on a single row first. */
+var SEND_CERTIFICATES = false;
 
 var SHEET_NAME = 'Orders';
 
@@ -212,9 +219,10 @@ function updateStatus(sheet, b) {
   if (b.method) sheet.getRange(row, 13).setValue(b.method);// Method
 
   /* Төлбөр батлагдсан үед л гэрчилгээ явна. Цуцлагдсан, хугацаа нь дууссан,
-     амжилтгүй болсон захиалгад явахгүй. */
+     амжилтгүй болсон захиалгад явахгүй. SEND_CERTIFICATES унтраалттай үед
+     бүртгэл хэвийн үргэлжилнэ — зөвхөн захидал явахгүй. */
   var cert = null;
-  if (String(b.status) === 'paid') cert = sendCertificate(sheet, row);
+  if (SEND_CERTIFICATES && String(b.status) === 'paid') cert = sendCertificate(sheet, row);
 
   return { ok: true, row: row, certificate: cert };
 }

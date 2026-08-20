@@ -152,14 +152,16 @@ module.exports = async function handler(req, res) {
        from this moment can be chased if the callback never arrives; a payment
        with no name and no email cannot. Awaited so a slow sheet delays the
        redirect rather than losing the row, but a failure never blocks payment. */
-    try {
-        await sheet.recordOrder({
-            reference: ref, name: name, email: email, cell: cellCode,
-            pits: price.quantity, amount: price.amount, currency: currency,
-        });
-    } catch (err) {
-        console.error("order not recorded in the sheet:", ref, err && err.message);
-    }
+    const record = {
+        reference: ref, name: name, email: email, cell: cellCode,
+        pits: price.quantity, amount: price.amount, currency: currency,
+    };
+    /* Хоёр газарт: сан ба хүснэгт. Нэг нь унасан ч захиалга үлдэнэ, аль нэг нь
+       тохируулагдаагүй ч нөгөө нь ажиллана. */
+    try { await ledger.saveOrder(record); }
+    catch (err) { console.error("order not saved to the ledger:", ref, err && err.message); }
+    try { await sheet.recordOrder(record); }
+    catch (err) { console.error("order not recorded in the sheet:", ref, err && err.message); }
 
     /* Only these three fields cross back to the browser. No token, no merchant
        code, no credentials. */

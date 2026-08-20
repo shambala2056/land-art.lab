@@ -98,6 +98,10 @@ module.exports = async function handler(req, res) {
     /* Mark the row in the order book. Statuses match what pay-status reports, so
        the sheet and the site never disagree about an order. */
     if (reference) {
+        const state = paid ? "paid" : (String(entity.status) === "011" ? "cancelled"
+                    : String(entity.status) === "010" ? "expired" : "failed");
+        try { await ledger.markOrder(reference, state, entity.txnId, entity.type); }
+        catch (err) { console.error("ledger order update failed for", reference, err && err.message); }
         try {
             await sheet.updateStatus(reference,
                 paid ? "paid" : (String(entity.status) === "011" ? "cancelled"
