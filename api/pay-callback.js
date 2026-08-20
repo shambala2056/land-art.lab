@@ -142,7 +142,10 @@ module.exports = async function handler(req, res) {
             return res.status(200).json({ status: "000", message: "Success", entity: null });
         }
         if (verdict === undefined) {
-            console.warn("accepting", reference, "on the callback's word — the provider could not be reached");
+            /* Currently the normal path: 360's lookup does not resolve our
+               references at all. The URL secret and the ledger's own record of
+               what it reserved are what stand behind the sale until it does. */
+            console.warn("accepting", reference, "on the callback's word — the provider gave no verdict");
         }
     }
 

@@ -171,11 +171,23 @@ async function checkTxn(cfg, token, ref) {
         console.error("minu status check unreachable:", { httpStatus: r.httpStatus, reference: ref });
         return { reached: false, status: undefined };
     }
+    /* "003 — Инвойс олдсонгүй" is not the denial it reads like. Against the live
+       merchant it comes back for invoices that demonstrably exist: raised
+       seconds earlier, hosted page rendering, payable. The lookup simply does
+       not resolve our referenceNumber. Treating that as "this was never paid"
+       would make the callback refuse every genuine payment — the money moves,
+       the pit is never recorded, and the buyer is owed trees we have no record
+       of. So it counts as no answer rather than as a no.
+
+       A forged reference is still harmless: the ledger only sells against a
+       reservation it made itself, and one it never issued confirms nothing.
+       Revisit once 360 can answer a lookup — a verification that never returns
+       a verdict is not protecting anything. */
     if (r.body.status !== "000") {
-        console.warn("minu has no such transaction:", {
+        console.warn("minu could not resolve the reference:", {
             status: r.body.status, message: r.body.message, reference: ref,
         });
-        return { reached: true, status: null };
+        return { reached: false, status: undefined };
     }
     return { reached: true, status: r.body.entity ? r.body.entity.status : null };
 }
