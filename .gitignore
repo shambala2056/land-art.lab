@@ -1,5 +1,11 @@
 node_modules/
 .env
+# `vercel env pull` writes the live credentials here, and `vercel dev` reads
+# them. Only ".env" was ignored, so a pull would have staged every production
+# secret for commit.
+.env.local
+.env.*.local
+.vercel
 .vercel
 .DS_Store
 
