@@ -146,5 +146,39 @@ function priceOf(sku, currency, quantity) {
              currency: CURRENCY[currency] || CURRENCY.MNT };
 }
 
-module.exports = { config, describeMissing, call, login, priceOf, cellCapacity, CATALOG, CURRENCY,
+/* Asks the provider what actually happened to a transaction.
+ *
+ * This is the only trustworthy account of a payment. A callback arrives over
+ * the open internet and says what it likes; this asks the provider directly,
+ * authenticated as the merchant. Used by pay-status to answer the payer, and by
+ * pay-callback to check a claimed payment before any pit is marked sold.
+ *
+ * Returns { reached, status }. The two must not be conflated: "the provider
+ * says there is no such transaction" is a definite no and must block a sale,
+ * while "we could not ask" is an absence of information. Treating a denial as
+ * an outage would let a forged callback through on the fallback path.
+ *
+ * An HTTP-level failure means we did not get an answer. A well-formed answer
+ * that refuses the lookup — an unknown reference, a wrong merchant code — is an
+ * answer, and the answer is no.
+ */
+async function checkTxn(cfg, token, ref) {
+    const r = await call(
+        cfg.base + "/checkTxn/" + encodeURIComponent(cfg.merchantCode) + "/" + encodeURIComponent(ref),
+        { method: "POST", headers: { Authorization: "Bearer " + token } }
+    );
+    if (!r.ok || !r.body) {
+        console.error("minu status check unreachable:", { httpStatus: r.httpStatus, reference: ref });
+        return { reached: false, status: undefined };
+    }
+    if (r.body.status !== "000") {
+        console.warn("minu has no such transaction:", {
+            status: r.body.status, message: r.body.message, reference: ref,
+        });
+        return { reached: true, status: null };
+    }
+    return { reached: true, status: r.body.entity ? r.body.entity.status : null };
+}
+
+module.exports = { config, describeMissing, call, login, checkTxn, priceOf, cellCapacity, CATALOG, CURRENCY,
                    UNIT, MAX_QTY, SPACING_M, AREA_PER_PIT, SEEDLINGS_PER_PIT };

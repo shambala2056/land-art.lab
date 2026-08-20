@@ -1,18 +1,34 @@
 /* Receives the payment result the provider posts to us.
  *
  * This endpoint is publicly reachable, so anyone on the internet can POST to it
- * claiming a payment succeeded. It is protected by HTTP Basic Auth using a
- * username and password we choose and give to the provider — stored as
- * environment variables, never in this repository.
+ * claiming a payment succeeded. Three things stand in the way, in order of how
+ * much they are relied upon:
  *
- * The provider's own credentials for calling us are separate from the ones we
- * use to call them. Reusing MINU_USERNAME/MINU_PASSWORD here would mean a bug
- * in this handler could expose the credentials that move money.
+ *   1. A secret in the webhook URL (MINU_WEBHOOK_KEY). The provider takes the
+ *      webhook address from each invoice we raise rather than from an account
+ *      setting, so it has nowhere to enter a username and password — a URL
+ *      secret is the only credential it can carry. Compared timing-safely.
+ *
+ *   2. HTTP Basic Auth (MINU_CALLBACK_USER / MINU_CALLBACK_PASS). Kept because
+ *      it costs nothing and covers the case where the provider is configured to
+ *      send credentials after all. Either mechanism alone is sufficient.
+ *
+ *   3. The provider's own account of the transaction. Before a single pit is
+ *      marked sold, this asks the provider directly whether that reference was
+ *      really paid. This is what actually protects the money: a forged callback
+ *      that guessed the URL still cannot invent a payment, because the answer
+ *      comes from the provider over our authenticated merchant session and not
+ *      from whoever sent the request.
+ *
+ * The provider's credentials for calling us are separate from the ones we use
+ * to call them. Reusing MINU_USERNAME/MINU_PASSWORD here would mean a bug in
+ * this handler could expose the credentials that move money.
  */
 
 const crypto = require("crypto");
 const ledger = require("./_ledger");
 const sheet = require("./_sheet");
+const { config, login, checkTxn } = require("./_minu");
 /* Resend is required lazily, inside the notification block. At module scope a
  * failure to load it — a missing install, a bad version, an outage in the
  * package itself — takes the whole handler down, and this handler must always
@@ -35,9 +51,18 @@ function safeEqual(a, b) {
 }
 
 function authorised(req) {
+    /* The URL secret first: it is the one the provider can actually present. */
+    const key = process.env.MINU_WEBHOOK_KEY;
+    if (key) {
+        const given = (req.query && (req.query.k || req.query.key)) || "";
+        if (given && safeEqual(given, key)) return { ok: true, by: "url-key" };
+    }
+
     const user = process.env.MINU_CALLBACK_USER;
     const pass = process.env.MINU_CALLBACK_PASS;
-    if (!user || !pass) return { ok: false, reason: "unconfigured" };
+    /* Unconfigured only if there is no way in at all. With a URL key set, Basic
+       Auth being absent is a choice rather than a fault. */
+    if (!user || !pass) return { ok: false, reason: key ? "bad-credentials" : "unconfigured" };
 
     const header = req.headers.authorization || "";
     if (!/^Basic /i.test(header)) return { ok: false, reason: "no-credentials" };
@@ -53,7 +78,32 @@ function authorised(req) {
     const okPass = safeEqual(decoded.slice(i + 1), pass);
     /* Both evaluated before returning, so a wrong username and a wrong password
        take the same time. */
-    return { ok: okUser && okPass, reason: "bad-credentials" };
+    return { ok: okUser && okPass, by: "basic", reason: "bad-credentials" };
+}
+
+/* Asks the provider whether this reference was really paid.
+ *
+ * Returns true only on a definite yes. A definite no returns false. If the
+ * provider cannot be reached the answer is undefined, and the caller falls back
+ * to the authenticated claim: refusing to record a payment because our own
+ * network call failed would lose money that has genuinely moved, and the
+ * request already carried a secret only the provider holds.
+ */
+async function reallyPaid(reference) {
+    const { cfg, missing } = config();
+    if (missing.length) return undefined;
+    try {
+        const token = await login(cfg);
+        if (!token) return undefined;
+        const r = await checkTxn(cfg, token, reference);
+        if (!r.reached) return undefined;
+        /* Reached and answered: anything that is not the provider's own success
+           code — including no such transaction at all — is a no. */
+        return String(r.status) === "000";
+    } catch (err) {
+        console.error("could not verify payment with the provider:", reference, err && err.message);
+        return undefined;
+    }
 }
 
 module.exports = async function handler(req, res) {
@@ -75,11 +125,32 @@ module.exports = async function handler(req, res) {
     const body = req.body || {};
     const entity = body.entity || body;
     const reference = entity.referenceNumber || entity.refereneceNumber || null;   /* the document spells it both ways */
-    const paid = String(entity.status) === "000";
+    const claimed = String(entity.status) === "000";
+
+    /* Never take the caller's word for a payment. Only a success is checked: a
+       claimed failure releases pits, which is safe to act on either way, and a
+       forged failure can at worst free a reservation that the payer can retry. */
+    let paid = claimed;
+    if (claimed && reference) {
+        const verdict = await reallyPaid(reference);
+        if (verdict === false) {
+            console.warn("callback claimed a payment the provider does not have:", reference);
+            paid = false;
+            /* Not treated as a cancellation either — the pits stay reserved
+               until they expire, in case this was a race rather than a forgery
+               and the real confirmation is still on its way. */
+            return res.status(200).json({ status: "000", message: "Success", entity: null });
+        }
+        if (verdict === undefined) {
+            console.warn("accepting", reference, "on the callback's word — the provider could not be reached");
+        }
+    }
 
     console.log("payment callback:", {
         reference: reference,
         status: entity.status,
+        verified: claimed ? (paid ? "confirmed with provider" : "rejected") : "n/a",
+        by: auth.by,
         txnId: entity.txnId,
         type: entity.type,
     });

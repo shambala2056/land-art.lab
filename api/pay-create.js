@@ -119,8 +119,13 @@ module.exports = async function handler(req, res) {
             currency: price.currency,
             /* Both must be absolute and on our own domain. The webhook is where
                the provider posts the result; the redirect is where the payer's
-               browser lands afterwards. */
-            webhook: origin + "/api/pay-callback",
+               browser lands afterwards.
+               The provider reads the webhook address from this invoice rather
+               than from an account setting, so there is nowhere for it to enter
+               a username and password: the secret travels in the URL, which is
+               the only credential the callback can carry. */
+            webhook: origin + "/api/pay-callback" +
+                     (process.env.MINU_WEBHOOK_KEY ? "?k=" + encodeURIComponent(process.env.MINU_WEBHOOK_KEY) : ""),
             /* Explicit .html: Vercel does not serve extensionless paths unless
                cleanUrls is turned on, and turning it on would change every URL
                on the site. A payer must never land on a 404. */
