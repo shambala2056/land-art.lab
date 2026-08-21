@@ -1,10 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    {
-      "comment": "The provider appends its result to the return address with a slash rather than a question mark — '.../referenceNumber=a40&status=success&code=200'. Without this the buyer lands on a 404 at the end of a successful payment, which is what happened to the first one. Everything after the function name is handed over as 'extra' and parsed there.",
-      "source": "/api/pay-return/:extra*",
-      "destination": "/api/pay-return?extra=:extra*"
-    }
+    { "source": "/api/pay-return/:extra*", "destination": "/api/pay-return?extra=:extra*" }
   ]
 }

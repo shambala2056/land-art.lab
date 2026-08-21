@@ -6,9 +6,17 @@
  *     .../referenceNumber=a40&status=success&code=200
  *
  * Note the separator in their own example is a slash, not a question mark, so
- * the address we are sent to may be either shape. vercel.json rewrites the
- * slash form onto this function; both are parsed below. Guessing wrong is what
- * sent the first live buyer to a 404 instead of a thank-you page.
+ * the address we are sent to may be either shape. Guessing wrong is what sent
+ * the first live buyer to a 404 instead of a thank-you page.
+ *
+ * The slash form arrives here through the one rewrite in vercel.json:
+ *
+ *     /api/pay-return/:extra*  ->  /api/pay-return?extra=:extra*
+ *
+ * That file cannot carry a comment of its own — Vercel validates the schema and
+ * rejects any property it does not recognise, including "comment" — so the
+ * explanation lives here. Everything after the function name is handed over as
+ * "extra" and unpacked below.
  *
  * It settles the payment before redirecting. That matters more than the page it
  * ends on: the server-to-server callback is the intended record, and when it

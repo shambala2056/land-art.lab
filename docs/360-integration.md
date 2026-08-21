@@ -1,100 +1,103 @@
-# Land-art Space — integration details for 360 Finance
+# Land-art Space — 360 Finance холболтын мэдээлэл
 
-**Merchant:** LANDART · Shambala Carbon Offsets LLC
-**Environment:** production — `https://api.minu.mn/oncom`
-**Contact:** hello@shambala.today
-**Reference format:** `LA-XXXXXXXX-XXXXXXXX` (uppercase, letters, digits, hyphens)
+**Мерчант:** LANDART · Шамбала Карбон Оффсет ХХК
+**Орчин:** production — `https://api.minu.mn/oncom`
+**Холбоо барих:** hello@shambala.today
+**Лавлагааны хэлбэр:** `LA-XXXXXXXX-XXXXXXXX` (том үсэг, тоо, зураас)
 
 ---
 
-## 1. Callback — transaction response (document section 5)
+## 1. Callback — гүйлгээний хариу (баримтын 5-р бүлэг)
 
 ```
 https://www.land-art.space/api/pay-callback
 ```
 
-- **Method:** POST, `Content-Type: application/json`
-- **Sent on:** every completed transaction, card and QR alike
-- **Response:** HTTP 200 with `{"status":"000","message":"Success","entity":null}`
-- **Retries:** safe. The same reference may be sent any number of times; it is
-  recorded once.
+| | |
+|---|---|
+| Арга | `POST`, `Content-Type: application/json` |
+| Хэзээ | гүйлгээ бүрт — карт болон QR хоёуланд |
+| Хариу | `HTTP 200` · `{"status":"000","message":"Success","entity":null}` |
+| Давтан илгээх | аюулгүй. Нэг лавлагаа хэдэн ч удаа ирсэн нэг л удаа бүртгэгдэнэ |
 
-### The query string must be preserved
+### Query string-ийг заавал хэвээр нь дуудна уу
 
-This address is supplied on every `/invoice` request in the `webhook` field, and
-it carries a secret:
+Энэ хаягийг `/invoice` хүсэлт бүрийн `webhook` талбарт дамжуулдаг бөгөөд дотроо
+нууц түлхүүр агуулна:
 
 ```
-https://www.land-art.space/api/pay-callback?k=<48-character key>
+https://www.land-art.space/api/pay-callback?k=<48 тэмдэгт>
 ```
 
-**Please call the address exactly as it appears on the invoice, query string
-included.** The key is how the endpoint knows the call is genuine; a request
-without it is answered `401` and the payment is not recorded.
+**Нэхэмжлэх дээр ирсэн хаягийг query string-ийн хамт яг тэр хэвээр нь дуудна уу.**
+Тэр түлхүүр нь дуудлага жинхэнэ эсэхийг батлах цорын ганц хэрэгсэл — түлхүүргүй
+хүсэлт `401` авах бөгөөд төлбөр бүртгэгдэхгүй.
 
-HTTP Basic Auth is also accepted as an alternative, if that suits your system
-better. Credentials on request.
+Хэрэв танай системд илүү тохиромжтой бол **HTTP Basic Auth** мөн ажиллана.
+Нэвтрэх мэдээллийг тусад нь дамжуулна.
 
 ---
 
-## 2. Redirect — payment response (document section 6)
+## 2. Redirect — төлбөрийн хариу (баримтын 6-р бүлэг)
 
 ```
 https://www.land-art.space/api/pay-return
 ```
 
-- **Method:** GET redirect, in the buyer's browser
-- Supplied on every `/invoice` request in the `redirectUtl` field, as
-  `https://www.land-art.space/api/pay-return?ref=LA-...`
+| | |
+|---|---|
+| Арга | `GET redirect`, худалдан авагчийн хөтөч дээр |
+| Хаанаас | `/invoice` хүсэлт бүрийн `redirectUtl` талбар |
+| Хэлбэр | `https://www.land-art.space/api/pay-return?ref=LA-...` |
 
-This endpoint accepts the result appended in any of the forms in circulation —
-`?referenceNumber=…&status=success&code=200`, the same parameters after a
-slash, or with `&` onto the existing query — and redirects the buyer to a
-confirmation page.
-
----
-
-## 3. Please use `www.`
-
-Both addresses must keep the `www.` prefix.
-
-`land-art.space` without it answers every request with a **308 redirect** to
-`www.land-art.space`. A browser follows that silently, but a server-side HTTP
-client will often refuse to follow a redirect on POST, or follow it having
-dropped the request body. A callback sent to the apex will not arrive.
+Энэ хаяг үр дүнг **аль ч хэлбэрээр** хүлээж авна — `?referenceNumber=…&status=success&code=200`,
+эсвэл ижил параметрүүд ард нь `/` тусгаарлагчаар, эсвэл байгаа query дээр `&`-ээр
+залгасан байсан ч. Дараа нь худалдан авагчийг баталгаажуулах хуудас руу
+шилжүүлнэ.
 
 ---
 
-## 4. Questions
+## 3. `www.` угтварыг заавал хэвээр нь
 
-1. **Is the callback in section 5 sent for card transactions, or only for QR?**
-   We have a completed card payment for which no callback reached us.
+Хоёр хаягийг **`www.`** угтвартай нь дуудна уу.
 
-2. **Was a callback attempted for the transactions below?** If so, what response
-   did our endpoint return?
-
-   | Date | Cell | Pits | Amount |
-   |---|---|---|---|
-   | 2026-08-21 | F-01 | 3 | — |
-   | 2026-08-21 | F-12 | 1 | — |
-
-   *(references available on request)*
-
-3. **`checkTxn` — which identifier does it expect?**
-   `POST /checkTxn/{merchantCode}/{referenceNumber}` returns
-   `003 — Инвойс олдсонгүй` for invoices raised minutes earlier under the same
-   merchant code, whose hosted pages render and are payable.
-
-4. **Is the merchant code we hold the production one?** Invoices are created
-   successfully against `/oncom`, and we would like that confirmed rather than
-   assumed.
-
-5. **Invoice validity — how long does a hosted invoice remain payable?**
+Угтваргүй `land-art.space` нь бүх хүсэлтэд **308 redirect** буцаадаг. Хөтөч
+үүнийг чимээгүй дагана, харин сервер талын HTTP клиент `POST` дээр redirect-ийг
+ихэвчлэн дагадаггүй, эсвэл дагахдаа их биеийг нь хаядаг. Угтваргүй хаяг руу
+илгээсэн callback хүрэхгүй.
 
 ---
 
-## 5. Note on the hosted invoice page
+## 4. Тодруулах асуултууд
 
-`api.minu.mn/oncom/invoice` has no `<!DOCTYPE html>`, so browsers render it in
-Quirks Mode and warn in the console. It does not affect payment; passing it on
-in case it is useful.
+**1. 5-р бүлгийн callback картын гүйлгээнд илгээгддэг үү, эсвэл зөвхөн QR-т юу?**
+Амжилттай хийгдсэн картын гүйлгээ бидэнд байгаа боловч түүнд callback ирээгүй.
+
+**2. Дараах гүйлгээнүүдэд callback илгээхийг оролдсон уу? Оролдсон бол манай хаяг
+ямар хариу буцаасан бэ?**
+
+| Огноо | Cell | Нүх |
+|---|---|---|
+| 2026-08-21 | F-01 | 3 |
+| 2026-08-21 | F-12 | 1 |
+
+*(лавлагааны дугаарыг хүсэлтээр илгээнэ)*
+
+**3. `checkTxn` ямар танигч хүлээж авах вэ?**
+`POST /checkTxn/{merchantCode}/{referenceNumber}` дуудахад, ижил merchant code-оор
+хэдхэн минутын өмнө үүсгэсэн, хуудас нь бүрэн харагдаж, төлж болохоор нэхэмжлэхэд
+ч `003 — Инвойс олдсонгүй` гэж буцаана.
+
+**4. Бидний хэрэглэж буй merchant code production-ынх мөн үү?**
+`/oncom` дээр нэхэмжлэх амжилттай үүсч байгаа боловч үүнийг таамаглахын оронд
+баталгаажуулахыг хүсэж байна.
+
+**5. Нэхэмжлэх үүссэнээс хойш хэдэн минут төлөгдөх боломжтой хэвээр байдаг вэ?**
+
+---
+
+## 5. Нэмэлт ажиглалт
+
+`api.minu.mn/oncom/invoice` хуудсанд `<!DOCTYPE html>` байхгүй тул хөтөч түүнийг
+Quirks Mode-оор дүрсэлж, консол дээр анхааруулга өгдөг. Төлбөрт нөлөөлөхгүй,
+зөвхөн мэдээлэл болгон дамжуулж байна.
