@@ -293,7 +293,12 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
       logo file's own width/height ratio (e.g. a 1209×708 file is 1.71) —
       it keeps wide wordmark logos from being cropped or shrunk oddly;
       leave it out only for roughly square/icon logos, where 1 is fine.
-   The logo then renders centered inside that cell automatically. ────── */
+   The logo then places itself. A cell big enough to hold it legibly gets it
+   centred inside; one that is not gets it on a white label above the cell,
+   joined by a short line, because a wordmark shrunk into a 12 m² marker cell
+   comes out two pixels tall and shows the sponsor nothing. Labels are drawn
+   after every cell and step upwards off each other, so none is covered.
+   Nothing to configure — `aspect` is all either path needs. ────── */
 var PARTNERS = {
   'B-01': { name:'EFES GROUP', logo:'assets/images/partner/hexagon-cells/EFES-GROUP_L.png', aspect:1.41 },
   'C-02': { name:'TIMBERLAND', logo:'assets/images/partner/hexagon-cells/Timberland_M.svg', aspect:5.70 },
@@ -379,6 +384,25 @@ var MON=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'
 /* ══════════ 3. ТУСЛАХ ══════════ */
 var NS='http://www.w3.org/2000/svg', map=document.getElementById('map');
 function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+/* Хамгийн том төвлөрсөн тэгш өнцөгт: өгөгдсөн харьцаатай лого зургаалжинд яг
+   багтах хэмжээ. Өмнө нь дүрсийн ХЯЛБАЙГ дотоод тойрогт багтаадаг байсан нь
+   өргөн бичээст хэт харам — зургаалжингийн булангийн зай ашиглагдалгүй үлдэж,
+   лого байвал зохих хэмжээнийхээ гуравны хоёр орчим болж жижигрэнэ.
+   Зургаалжин бол гурван зурвасын огтлолцол; ирмэг бүрийн нормаль дээрх
+   тэгш өнцөгтийн проекц апотемээс хэтрэхгүй байхад л багтана:
+       a·|cos φ| + b·|sin φ| ≤ apothem,  φ ∈ {30°, 90°, 150°}
+   b = a/ar тул a-г шууд бодож болно. Тайралт шаардлагагүй, хэлбэр гажихгүй. */
+function logoFit(R,ar){
+  var ap=R*0.8660254;                              /* апотем = R·cos30° */
+  var a=ap/(0.8660254+0.5/ar);                     /* 30° ба 150° хоёр адил хатуу */
+  if(a/ar>ap) a=ap*ar;                             /* 90°: маш өндөр логод л хүчинтэй */
+  return {w:2*a*0.97,h:2*a/ar*0.97};               /* 3% зай — ирмэгт наалдахгүй */
+}
+/* Уншигдах доод хязгаар, зургийн нэгжээр. viewBox 940 өргөн бөгөөд ойролцоогоор
+   тэр хэрээр пикселээр дүрслэгддэг тул нэгж ≈ пиксел. 11-ээс доош бичээс
+   уншигдахаа болино. */
+var MIN_LOGO_H=11, callouts=[];
+
 function hexPts(cx,cy,r){var p=[];for(var i=0;i<6;i++){var a=Math.PI/180*(60*i);p.push((cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1));}return p.join(' ');}
 var seed=20261122; function rnd(){seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff;}
 function lerp(a,b,t){return a+(b-a)*t;}
@@ -486,21 +510,70 @@ CELLS.forEach(function(c){
   if(c.status==='held')
     g.appendChild(el('polygon',{'class':'st',points:hexPts(c.x,c.y,c.R),fill:'#FFD300',opacity:'.52','pointer-events':'none'}));
   if(c.logo){
-    var lr=c.R*0.72;
-    var clip=el('clipPath',{id:'clip-'+c.id});
-    clip.appendChild(el('polygon',{points:hexPts(c.x,c.y,lr)}));
-    defs.appendChild(clip);
-    g.appendChild(el('polygon',{points:hexPts(c.x,c.y,lr),fill:'#fff',opacity:'.92','pointer-events':'none'}));
-    /* Size the image box to the logo's own aspect ratio, capped by the
-       hex's inscribed circle (lr*0.86) so every corner stays inside the
-       hex — no cropping, no shrink-to-fit-in-a-square distortion. */
-    var ar=c.logoAspect||1, diag=lr*0.86*2*0.98;
-    var ih=diag/Math.sqrt(1+ar*ar), iw=ih*ar;
-    g.appendChild(el('image',{href:c.logo,x:c.x-iw/2,y:c.y-ih/2,width:iw,height:ih,
-      preserveAspectRatio:'xMidYMid meet','clip-path':'url(#clip-'+c.id+')','pointer-events':'none'}));
+    var fit=logoFit(c.R,c.logoAspect||1);
+    if(fit.h>=MIN_LOGO_H){
+      /* Big enough to sit inside the cell, where it belongs. */
+      var lr=c.R*0.86;
+      var clip=el('clipPath',{id:'clip-'+c.id});
+      clip.appendChild(el('polygon',{points:hexPts(c.x,c.y,lr)}));
+      defs.appendChild(clip);
+      g.appendChild(el('polygon',{points:hexPts(c.x,c.y,lr),fill:'#fff',opacity:'.92','pointer-events':'none'}));
+      g.appendChild(el('image',{href:c.logo,x:c.x-fit.w/2,y:c.y-fit.h/2,width:fit.w,height:fit.h,
+        preserveAspectRatio:'xMidYMid meet','clip-path':'url(#clip-'+c.id+')','pointer-events':'none'}));
+    }else{
+      /* Too small to hold its own logo. A marker cell is 12 m² on a 30,000 m²
+         map — about eight units across — and a wordmark shrunk into that is
+         two pixels tall. Rendering it there is not showing the sponsor, it is
+         hiding them behind a smudge. The logo goes above the cell instead, at
+         a size that can be read, and the cell keeps a white centre so it still
+         reads as taken. Collected and drawn after every cell so a neighbour
+         cannot overlap it. */
+      g.appendChild(el('polygon',{points:hexPts(c.x,c.y,c.R*0.5),fill:'#fff',opacity:'.92','pointer-events':'none'}));
+      callouts.push(c);
+    }
   }
   if(c.cls!=='S'&&!c.logo){var t=el('text',{'class':'lab',x:c.x,y:c.y+3});t.textContent=c.id;g.appendChild(t);}
   field.appendChild(g);
+});
+
+/* Жижиг эсийн лого — эсийн дээр талд, уншигдах хэмжээгээр.
+   Бүх эс зурагдсаны дараа нэг давхарга болж ордог тул хөрш эс дарж халхлахгүй.
+   Товч холбоос нь аль эсийнх болохыг заана; товчлуур нь эс өөрөө хэвээр тул
+   дарахад ижил зүйл болно. */
+/* Шошгын өндөр ба хамгийн бага өргөн. Хоёулаа хэрэгтэй: өргөн бичээс өндрөөрөө
+   уншигдана, харин тэмдэг дээрээ жижиг бичээс залгасан лого өндрөө барихад л
+   тэр бичээс нь салдаггүй. Тийм логод өргөнөөр нь тулгаж томсгоно. */
+var PLATE_H=16, PLATE_MIN_W=34, PLATE_PAD=3.4, placed=[];
+callouts.sort(function(a,b){return a.y-b.y;}).forEach(function(c){
+  var ar=c.logoAspect||1;
+  /* Өргөн бичээс өөрөө уншигдана, харин нарийн тэмдэг өндрөө бүтэн авах ёстой.
+     Өндрийг тогтмол барьж, өргөнийг харьцаанаас гаргана. */
+  var h=PLATE_H, w=h*ar;
+  if(w<PLATE_MIN_W){w=PLATE_MIN_W; h=w/ar;}
+  var pw=w+PLATE_PAD*2, ph=h+PLATE_PAD*2;
+  var cy=c.y-c.R-ph/2-3;
+
+  /* Хоёр шошго давхцвал аль нэг нь уншигдахгүй. Дээшээ алхам алхмаар зайлж,
+     сул зай олдтол хайна — эсийн байрлал өөрчлөгдөхгүй, зөвхөн шошго нүүнэ. */
+  for(var tries=0;tries<8;tries++){
+    var box={x1:c.x-pw/2,y1:cy-ph/2,x2:c.x+pw/2,y2:cy+ph/2}, hit=false;
+    for(var i=0;i<placed.length;i++){
+      var o=placed[i];
+      if(box.x1<o.x2+1.5&&box.x2>o.x1-1.5&&box.y1<o.y2+1.5&&box.y2>o.y1-1.5){hit=true;break;}
+    }
+    if(!hit){placed.push(box);break;}
+    cy-=ph+2.5;
+  }
+
+  var gg=el('g',{'class':'cell callout',tabindex:'0',role:'button','aria-label':'Cell '+c.id+' — '+(c.partner||'')});
+  gg.dataset.id=c.id;
+  gg.appendChild(el('line',{x1:c.x,y1:c.y-c.R,x2:c.x,y2:cy+ph/2,
+    stroke:'#4A4C40','stroke-width':'1',opacity:'.5','pointer-events':'none'}));
+  gg.appendChild(el('rect',{x:c.x-pw/2,y:cy-ph/2,width:pw,height:ph,rx:3.6,
+    fill:'#fff',opacity:'.96',stroke:'#CFC8B6','stroke-width':'0.8'}));
+  gg.appendChild(el('image',{href:c.logo,x:c.x-w/2,y:cy-h/2,width:w,height:h,
+    preserveAspectRatio:'xMidYMid meet','pointer-events':'none'}));
+  field.appendChild(gg);
 });
 map.appendChild(field);
 
