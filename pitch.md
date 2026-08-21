@@ -110,7 +110,7 @@ ground.
 
 | Years | Stage | |
 |---|---|---|
-| 0–2 | **Start** | Seedlings go into the hexagonal cell structure, drip irrigation feeds each cell separately. The most fragile stage — roots have not reached depth, so irrigation never stops. Survival is counted in full twice a year and losses are replanted. |
+| 0–2 | **Start** | Seedlings go into the hexagonal cell structure, drip irrigation feeds each cell separately. The most fragile stage — roots have not reached depth, so irrigation never stops. The trees are assessed once a year and losses are replanted. |
 | 3–7 | **Nebkha effect** | Young trees slow the wind, sand settles, micro-dunes form. Soil builds and wild bees return. A sapling that survives three summers usually stays alive. |
 | 8–15 | **Moisture retention** | Roots deepen and reach groundwater. Soil moisture stabilises; insects and rodents nest. |
 | 15+ | **Ecosystem network** | The canopy closes, birds nest, and pollination, decomposition and nutrient cycling become self-sustaining. |

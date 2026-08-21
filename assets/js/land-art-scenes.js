@@ -238,11 +238,11 @@ const BEATS=[
   {cam:{r:31.5,theta:1.571,phi:1.30},g:0.86,y:'2032',l:'phase 7 · monitoring',num:'(09)',
    h:'Phase 7 · Monitoring and Reporting',
    p:'Running continuously since the laboratory was commissioned. Irrigation is telemetered and '+
-     'solar-powered; <b>every planted cell is counted in full twice a year</b>; NDVI and land '+
+     'solar-powered; <b>every planted cell is assessed once a year</b>; NDVI and land '+
      'cover are read annually against the pre-planting baseline and ground-truthed; soil organic '+
      'carbon is cored every three years to an accredited laboratory; pollinators, decomposers, '+
      'small mammals and nesting birds are surveyed annually.',
-   mini:['census · twice a year','NDVI · annual','soil carbon · every 3 years']}
+   mini:['assessment · annual','NDVI · annual','soil carbon · every 3 years']}
 ];
 /* Лавлагааны хэлбэр цагираган торлолоос бараг хоёр дахин өргөн (хагас алгасал
    31.7 м → 62.4 м) тул хэсгүүдийн камерын зайг мөн хэмжээгээр татна. Тус бүрийг
@@ -1762,7 +1762,7 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
          'continuous canopy.'},
       {f:.54,th:1.95,ph:.78,g:.34,y:'2027',l:'first summer',n:'(04)',h:'Establishment',
        p:'The most fragile interval. Root systems have not reached depth, so irrigation does not '+
-         'stop, and <b>survival is counted in full twice a year</b> with losses replanted — the '+
+         'stop, and <b>the trees are assessed once a year</b> with losses replanted — the '+
          'same reporting cadence applied to every other planting on this site.'},
       {f:.48,th:2.30,ph:.86,g:.56,y:'2029',l:'three summers',n:'(05)',h:'The Risk Window Closes',
        p:'A sapling through three summers has anchored its roots and is unlikely to be lost. The '+

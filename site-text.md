@@ -473,8 +473,8 @@ Built at runtime rather than written in the markup, so it will not appear in a n
 - 100 kW solar field, water harvesting tanks, recycling point, research station, bird refuge,
 - pollinator meadow and community ground .
 - The most fragile stage. Roots have not reached depth, so irrigation never stops .
-- Survival is counted in full twice a year and losses are replanted.
-- census · twice a year
+- The trees are assessed once a year and losses are replanted.
+- assessment · annual
 - A sapling that survives three summers usually stays alive. Drip lines run across the whole site .
 - Wind still moves the open sand.
 - risk window closes

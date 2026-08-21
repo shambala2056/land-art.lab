@@ -56,7 +56,10 @@
     .receipt dd { margin:0; font-weight:600; font-size:14.5px; text-align:right; }
     .receipt[hidden] { display:none; }
 
-    .next { margin:20px 0 0; padding:0 0 0 20px; color:var(--soft); font-size:13.5px; }
+    .lbl { font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+           color:var(--soft); font-weight:700; margin:20px 0 8px; }
+    .lbl[hidden] { display:none; }
+    .next { margin:0; padding:0 0 0 18px; color:var(--soft); font-size:13.5px; }
     .next li { margin:0 0 7px; }
     .next[hidden] { display:none; }
 </style>
@@ -79,17 +82,22 @@
         <div><dt>Site</dt><dd>Erdene sum, Dornogovi</dd></div>
     </dl>
 
-    <div id="refWrap" hidden><span class="ref" id="ref"></span></div>
+    <div id="refWrap" hidden>
+        <div class="lbl">Reference</div>
+        <span class="ref" id="ref"></span>
+    </div>
 
-    <!-- Shown only on a confirmed payment: what happens next, so nobody is left
-         wondering whether anything is coming. -->
+    <!-- Shown only on a confirmed payment. Two things, both of them about what
+         the buyer will receive and when — this page is a receipt, not a second
+         copy of the programme. What the sponsorship covers is described on the
+         site and set out in the Terms; repeating it here would put the same
+         commitments in two places, where they can drift apart. -->
+    <div class="lbl" id="nextLbl" hidden>What happens next</div>
     <ol class="next" id="next" hidden>
-        <li>A certificate with this reference goes to your email.</li>
-        <li>Your seedlings are planted in the next planting window — three to a
-            pit, 1.5 m apart.</li>
-        <li>They are irrigated and maintained for ten years, counted twice a
-            year, and replanted at our cost if any do not survive.</li>
-        <li>We write once a year with what the ground is doing.</li>
+        <li>A confirmation and your sponsorship certificate are sent to the
+            email address given with this order.</li>
+        <li>Planting takes place in the next planting season. We write to you
+            once your seedlings are in the ground.</li>
     </ol>
 
     <div class="actions">
@@ -127,8 +135,8 @@
     }
 
     var COPY = {
-        paid:      ["Thank you. Your trees are sponsored.",
-                    "Your payment is confirmed and this ground is now yours to have planted. Keep the reference below — it identifies your planting for the whole ten years."],
+        paid:      ["Payment confirmed",
+                    "Thank you. Your sponsorship is recorded and the planting below is reserved in your name."],
         pending:   ["Payment not confirmed yet",
                     "The bank hasn't confirmed this one yet. If you completed the payment it may take a moment; this page checks again on its own."],
         cancelled: ["Payment cancelled", "Nothing has been charged. You can start again whenever you're ready."],
@@ -149,6 +157,7 @@
         stateText.textContent = status.charAt(0).toUpperCase() + status.slice(1);
         again.hidden = (status === "paid" || status === "pending");
         next.hidden = (status !== "paid");
+        document.getElementById("nextLbl").hidden = next.hidden;
 
         /* Only shown once there is something real to show. An empty receipt
            under a thank-you reads worse than no receipt at all. */
