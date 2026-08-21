@@ -29,7 +29,6 @@
     .dot { width:11px; height:11px; border-radius:50%; background:var(--soft); flex:none; }
     .state.paid .dot { background:var(--good); }
     .state.pending .dot { background:var(--warn); animation:pulse 1.3s ease-in-out infinite; }
-    .state.failed .dot, .state.cancelled .dot, .state.expired .dot { background:var(--bad); }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
     @media (prefers-reduced-motion: reduce) { .state.pending .dot { animation:none } }
     .actions { margin-top:26px; display:flex; flex-wrap:wrap; gap:10px; }
@@ -37,10 +36,6 @@
             background:var(--ink); color:#fff; border-radius:100px; padding:13px 26px;
             font-weight:700; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; }
     a.btn.alt { background:var(--lime); color:var(--ink); }
-    /* An explicit display beats the hidden attribute, so without this the
-       "Try again" button shows even on a successful payment — inviting someone
-       who has just paid to pay a second time. */
-    a.btn[hidden] { display:none; }
     a.btn i { width:7px; height:7px; border-radius:50%; background:var(--lime); }
     a.btn.alt i { background:var(--ink); }
     .foot { margin-top:24px; padding-top:18px; border-top:1px solid var(--hair);
@@ -59,9 +54,6 @@
     .lbl { font-size:10px; letter-spacing:.14em; text-transform:uppercase;
            color:var(--soft); font-weight:700; margin:20px 0 8px; }
     .lbl[hidden] { display:none; }
-    .next { margin:0; padding:0 0 0 18px; color:var(--soft); font-size:13.5px; }
-    .next li { margin:0 0 7px; }
-    .next[hidden] { display:none; }
 </style>
 </head>
 <body>
@@ -87,22 +79,8 @@
         <span class="ref" id="ref"></span>
     </div>
 
-    <!-- Shown only on a confirmed payment. Two things, both of them about what
-         the buyer will receive and when — this page is a receipt, not a second
-         copy of the programme. What the sponsorship covers is described on the
-         site and set out in the Terms; repeating it here would put the same
-         commitments in two places, where they can drift apart. -->
-    <div class="lbl" id="nextLbl" hidden>What happens next</div>
-    <ol class="next" id="next" hidden>
-        <li>A confirmation and your sponsorship certificate are sent to the
-            email address given with this order.</li>
-        <li>Planting takes place in the next planting season. We write to you
-            once your seedlings are in the ground.</li>
-    </ol>
-
     <div class="actions">
         <a class="btn" href="/"><i></i>Back to the site</a>
-        <a class="btn alt" href="/#pricing" id="again" hidden><i></i>Try again</a>
     </div>
 
     <div class="foot">
@@ -126,38 +104,38 @@
     var head = document.getElementById("head"),
         msg = document.getElementById("msg"),
         state = document.getElementById("state"),
-        stateText = document.getElementById("stateText"),
-        again = document.getElementById("again");
+        stateText = document.getElementById("stateText");
 
     if (ref) {
         document.getElementById("ref").textContent = ref;
         document.getElementById("refWrap").hidden = false;
     }
 
+    /* Two outcomes only. The provider reports five — paid, pending, cancelled,
+       expired, failed — but four of them mean the same thing to the person
+       reading: their certificate has not been sent yet. Naming each one invites
+       a buyer to diagnose a payment system, and "expired" or "failed" reads as
+       lost money to someone whose account has already been debited. Anything
+       not confirmed is pending, and pending is honest: we are still waiting to
+       hear, and the certificate follows when we do. */
     var COPY = {
-        paid:      ["Payment confirmed",
-                    "Thank you. Your sponsorship is recorded and the planting below is reserved in your name."],
-        pending:   ["Payment not confirmed yet",
-                    "The bank hasn't confirmed this one yet. If you completed the payment it may take a moment; this page checks again on its own."],
-        cancelled: ["Payment cancelled", "Nothing has been charged. You can start again whenever you're ready."],
-        expired:   ["This payment expired", "Nothing has been charged. Invoices are only valid for a short time — please start a new one."],
-        failed:    ["Payment didn't go through", "Nothing has been charged. Please try again, or use a different card."],
-        unknown:   ["We couldn't check this payment",
-                    "Something went wrong on our side, not with your card. Email us with the reference and we'll confirm it by hand."]
+        confirmed: ["Payment confirmed",
+                    "Thank you for your contribution to the fight against desertification. Your tree certificate will be sent to your email."],
+        pending:   ["Payment awaiting confirmation",
+                    "Your payment is still being confirmed. We will send your tree certificate to your email as soon as it is."]
     };
 
-    var receipt = document.getElementById("receipt"),
-        next = document.getElementById("next");
+    var receipt = document.getElementById("receipt");
 
     function show(status, order) {
-        var c = COPY[status] || COPY.unknown;
+        var key = (status === "paid") ? "confirmed" : "pending";
+        var c = COPY[key];
         head.textContent = c[0];
         msg.textContent = c[1];
-        state.className = "state " + status;
-        stateText.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-        again.hidden = (status === "paid" || status === "pending");
-        next.hidden = (status !== "paid");
-        document.getElementById("nextLbl").hidden = next.hidden;
+        /* The dot keeps the provider's own distinction: green once confirmed,
+           amber and pulsing while we are still waiting. */
+        state.className = "state " + (key === "confirmed" ? "paid" : "pending");
+        stateText.textContent = key === "confirmed" ? "Confirmed" : "Pending";
 
         /* Only shown once there is something real to show. An empty receipt
            under a thank-you reads worse than no receipt at all. */
@@ -175,13 +153,11 @@
         }
     }
 
-    if (!ref) {
-        head.textContent = "No payment reference";
-        msg.textContent = "This page needs a payment reference to check anything. If you've just paid, the confirmation email is the reliable record.";
-        state.className = "state";
-        stateText.textContent = "Nothing to check";
-        return;
-    }
+    /* No reference to check, so there is nothing to confirm — which is
+       pending, told plainly. Anyone who reaches this page without one has
+       either typed the address or lost the redirect, and neither is their
+       problem to solve. */
+    if (!ref) { show("pending"); return; }
 
     /* A card can settle a second or two after the redirect, so a single check
        would often show "pending" for a payment that actually succeeded. Poll a
@@ -200,11 +176,13 @@
                 show(d.status, d.order);
                 if (d.status === "pending" && tries < MAX) setTimeout(check, 1200 * tries);
             } else {
-                show("unknown");
+                show("pending");
             }
         })
         .catch(function () {
-            if (tries < MAX) { setTimeout(check, 1500 * tries); } else { show("unknown"); }
+            /* A network failure is not news the buyer can act on: they are told
+               the same thing as anyone else still waiting. */
+            if (tries < MAX) { setTimeout(check, 1500 * tries); } else { show("pending"); }
         });
     }
     check();

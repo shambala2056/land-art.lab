@@ -14,6 +14,14 @@ const sheet = require("./_sheet");
  * invoices against this merchant account. */
 const ALLOWED = ["https://land-art.space", "https://www.land-art.space"];
 
+/* The addresses put on an invoice are always canonical, never taken from the
+ * request. The apex answers every request with a 308 to www — harmless in a
+ * browser, and quietly fatal for a callback: server-side HTTP clients commonly
+ * refuse to follow a redirect on POST, or follow it having dropped the body.
+ * The provider would be calling an address that never delivers, and a payment
+ * would complete with nothing recorded, which is exactly what happened. */
+const CANONICAL = "https://www.land-art.space";
+
 /* Catches a typo, not a fake address — the confirmation email is what proves
  * an address is real. */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -124,7 +132,7 @@ module.exports = async function handler(req, res) {
                than from an account setting, so there is nowhere for it to enter
                a username and password: the secret travels in the URL, which is
                the only credential the callback can carry. */
-            webhook: origin + "/api/pay-callback" +
+            webhook: CANONICAL + "/api/pay-callback" +
                      (process.env.MINU_WEBHOOK_KEY ? "?k=" + encodeURIComponent(process.env.MINU_WEBHOOK_KEY) : ""),
             /* Not the thank-you page directly. The provider appends its result
                to this address — and appends it with a slash, per its own
@@ -132,7 +140,7 @@ module.exports = async function handler(req, res) {
                path that does not exist, and the buyer's reward for paying is a
                404. pay-return absorbs whatever shape arrives, records the sale
                in case the callback never comes, and forwards to the page. */
-            redirectUtl: origin + "/api/pay-return?ref=" + encodeURIComponent(ref),
+            redirectUtl: CANONICAL + "/api/pay-return?ref=" + encodeURIComponent(ref),
         }),
     });
 
