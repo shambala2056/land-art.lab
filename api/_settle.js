@@ -65,28 +65,45 @@ async function settle(reference, claimed, txnId, method, source, trustClaim) {
     if (!reference) return "unknown";
 
     const verified = await verify(reference);
-    let state = verified === undefined ? wordFor(claimed) : wordFor(verified);
+    const said = wordFor(verified);        /* "pending" when unpaid or unasked */
+    const claim = wordFor(claimed);
 
-    /* Without a verdict from the provider, whether the claim may stand depends
-       on who is making it.
+    /* A sale and a release are held to different standards, because getting
+       them wrong costs different things.
 
-       The callback came over an authenticated connection carrying a secret only
-       the provider holds, so it is believed — refusing it would lose a payment
-       that really happened whenever the lookup is down.
+       SELLING needs the provider to say so. It says "000" or nothing is sold —
+       with one exception: when the provider cannot be reached at all, the
+       callback's word stands, because it came over an authenticated connection
+       carrying a secret only the provider holds, and refusing it would lose a
+       payment that really happened. The browser return gets no such credit: it
+       is a URL someone's browser was pointed at, and anyone can type
+       "status=success" into one.
 
-       The browser return is a URL someone's browser was pointed at. Anyone can
-       type "status=success" into it. Unverified, a claimed payment there is
-       held at pending: the reservation stands, the callback or the page's own
-       polling settles it, and nothing is sold on the strength of an address
-       bar. A claimed failure is still acted on — releasing pits early is safe
-       whoever asks, and at worst frees a reservation the payer can remake. */
-    if (verified === undefined && state === "paid" && !trustClaim) {
-        console.warn("not selling against an unverified claim on the", source,
-                     "path:", reference);
-        state = "pending";
+       RELEASING acts on the claim. When a payer cancels, the provider still
+       reports the invoice as open — its own record does not distinguish "not
+       paid yet" from "walked away" — so waiting for a verdict would hold the
+       pits for the full half-hour of the reservation. In a five-pit cell that
+       means someone who cancels and immediately tries again is told the cell
+       has sold out, by their own abandoned attempt. Freeing a reservation is
+       the safe direction to be wrong in: nothing is lost that cannot be
+       reserved again a second later. */
+    let state;
+    if (said === "paid") {
+        state = "paid";
     } else if (verified === undefined) {
-        console.warn("settling", reference, "as", state,
-                     "on the", source, "path — the provider gave no verdict");
+        state = (claim === "paid" && !trustClaim) ? "pending" : claim;
+        if (claim === "paid" && !trustClaim) {
+            console.warn("not selling against an unverified claim on the", source,
+                         "path:", reference);
+        } else {
+            console.warn("settling", reference, "as", state,
+                         "on the", source, "path — the provider gave no verdict");
+        }
+    } else if (said === "pending" && claim !== "paid" && claim !== "pending") {
+        /* The provider still shows it open; the caller says it ended. */
+        state = claim;
+    } else {
+        state = said;
     }
 
     /* The ledger first: it decides whether the ground is spoken for, and must be
