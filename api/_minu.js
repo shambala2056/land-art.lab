@@ -161,6 +161,13 @@ function priceOf(sku, currency, quantity) {
  * An HTTP-level failure means we did not get an answer. A well-formed answer
  * that refuses the lookup — an unknown reference, a wrong merchant code — is an
  * answer, and the answer is no.
+ *
+ * "003 — Инвойс олдсонгүй" means the reference does not belong to the merchant
+ * code doing the asking. It reads like a fault in the endpoint and is not one:
+ * looking up an invoice raised by the live merchant while authenticated as the
+ * test merchant returns exactly this, which is correct and is the answer we
+ * want. A lookup that succeeds returns 000 with entity.status — null while the
+ * invoice is unpaid, "000" once it is paid.
  */
 async function checkTxn(cfg, token, ref) {
     const r = await call(
@@ -171,23 +178,11 @@ async function checkTxn(cfg, token, ref) {
         console.error("minu status check unreachable:", { httpStatus: r.httpStatus, reference: ref });
         return { reached: false, status: undefined };
     }
-    /* "003 — Инвойс олдсонгүй" is not the denial it reads like. Against the live
-       merchant it comes back for invoices that demonstrably exist: raised
-       seconds earlier, hosted page rendering, payable. The lookup simply does
-       not resolve our referenceNumber. Treating that as "this was never paid"
-       would make the callback refuse every genuine payment — the money moves,
-       the pit is never recorded, and the buyer is owed trees we have no record
-       of. So it counts as no answer rather than as a no.
-
-       A forged reference is still harmless: the ledger only sells against a
-       reservation it made itself, and one it never issued confirms nothing.
-       Revisit once 360 can answer a lookup — a verification that never returns
-       a verdict is not protecting anything. */
     if (r.body.status !== "000") {
-        console.warn("minu could not resolve the reference:", {
+        console.warn("minu has no such transaction:", {
             status: r.body.status, message: r.body.message, reference: ref,
         });
-        return { reached: false, status: undefined };
+        return { reached: true, status: null };
     }
     return { reached: true, status: r.body.entity ? r.body.entity.status : null };
 }
