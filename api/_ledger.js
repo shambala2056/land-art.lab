@@ -178,6 +178,30 @@ async function markOrder(reference, status, txnId, method) {
     return true;
 }
 
+/* One order, by reference. Lets the thank-you page name what was bought —
+ * "3 pits in F-01" reads as a receipt where a reference number alone reads as
+ * an error code. */
+async function readOrder(reference) {
+    if (!configured()) return null;
+    const raw = await cmd(["GET", "order:" + reference]);
+    if (!raw) return null;
+    try { return JSON.parse(raw); } catch (e) { return null; }
+}
+
+/* Claims a one-off action, so two racing callers cannot both perform it.
+ *
+ * SET NX either sets the key or does not, in one step, and only one caller can
+ * be the one that set it. Used to keep a payment that arrives down both the
+ * callback and the browser-return path from being announced twice.
+ *
+ * Without a ledger there is nowhere to record the claim, so it grants — a
+ * duplicate notification is a far smaller harm than a silent one. */
+async function claimOnce(key, seconds) {
+    if (!configured()) return true;
+    const r = await cmd(["SET", key, "1", "NX", "EX", String(seconds || 86400)]);
+    return r !== null && r !== undefined;
+}
+
 async function listOrders(limit) {
     if (!configured()) return null;
     const refs = await cmd(["LRANGE", "orders", "0", String((limit || 500) - 1)]);
@@ -191,4 +215,4 @@ async function listOrders(limit) {
 }
 
 module.exports = { configured, takenIn, reserve, confirm, release, RESERVE_SECONDS,
-                   saveOrder, markOrder, listOrders };
+                   saveOrder, markOrder, listOrders, claimOnce, readOrder };

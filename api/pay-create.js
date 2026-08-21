@@ -126,10 +126,13 @@ module.exports = async function handler(req, res) {
                the only credential the callback can carry. */
             webhook: origin + "/api/pay-callback" +
                      (process.env.MINU_WEBHOOK_KEY ? "?k=" + encodeURIComponent(process.env.MINU_WEBHOOK_KEY) : ""),
-            /* Explicit .html: Vercel does not serve extensionless paths unless
-               cleanUrls is turned on, and turning it on would change every URL
-               on the site. A payer must never land on a 404. */
-            redirectUtl: origin + "/payment-complete.html?ref=" + encodeURIComponent(ref),
+            /* Not the thank-you page directly. The provider appends its result
+               to this address — and appends it with a slash, per its own
+               example — so a static page with a query string on it becomes a
+               path that does not exist, and the buyer's reward for paying is a
+               404. pay-return absorbs whatever shape arrives, records the sale
+               in case the callback never comes, and forwards to the page. */
+            redirectUtl: origin + "/api/pay-return?ref=" + encodeURIComponent(ref),
         }),
     });
 

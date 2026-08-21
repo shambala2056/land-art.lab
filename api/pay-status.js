@@ -6,6 +6,7 @@
  */
 
 const { config, describeMissing, call, login } = require("./_minu");
+const ledger = require("./_ledger");
 
 const ALLOWED = ["https://land-art.space", "https://www.land-art.space"];
 
@@ -62,10 +63,15 @@ module.exports = async function handler(req, res) {
         return res.status(502).json({ error: "Couldn't check that payment." });
     }
 
-    /* Deliberately narrow: a word and the reference. The provider's transaction
-       id and raw payload stay on the server. */
+    /* Deliberately narrow: a word, the reference, and what was bought. The
+       provider's transaction id and raw payload stay on the server, and so do
+       the buyer's name and email — the page needs neither, and a reference is
+       not a credential worth handing personal details to. */
+    const order = await ledger.readOrder(ref);
     return res.status(200).json({
         reference: ref,
         status: readableStatus(entity && entity.status),
+        order: order ? { cell: order.cell || null, pits: order.pits || null,
+                         seedlings: order.seedlings || null } : null,
     });
 };

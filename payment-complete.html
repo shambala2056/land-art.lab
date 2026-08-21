@@ -45,6 +45,20 @@
     a.btn.alt i { background:var(--ink); }
     .foot { margin-top:24px; padding-top:18px; border-top:1px solid var(--hair);
             font-size:12.5px; color:var(--soft); }
+
+    /* The receipt. Rows rather than a table so it reflows on a narrow phone
+       instead of squeezing two columns into nothing. */
+    .receipt { margin:18px 0 0; padding:16px 18px; background:#EFEDE4; border-radius:16px;
+               display:grid; gap:9px; }
+    .receipt div { display:flex; justify-content:space-between; align-items:baseline; gap:16px; }
+    .receipt dt { font-size:11px; letter-spacing:.11em; text-transform:uppercase;
+                  color:var(--soft); font-weight:700; }
+    .receipt dd { margin:0; font-weight:600; font-size:14.5px; text-align:right; }
+    .receipt[hidden] { display:none; }
+
+    .next { margin:20px 0 0; padding:0 0 0 20px; color:var(--soft); font-size:13.5px; }
+    .next li { margin:0 0 7px; }
+    .next[hidden] { display:none; }
 </style>
 </head>
 <body>
@@ -55,7 +69,28 @@
     <p id="msg">One moment — we're confirming this with the bank.</p>
 
     <div class="state pending" id="state"><span class="dot"></span><span id="stateText">Checking</span></div>
+
+    <!-- What was bought, once we know. A reference number on its own reads as
+         an error code; "3 pits · 9 elms · cell F-01" reads as a receipt. -->
+    <dl class="receipt" id="receipt" hidden>
+        <div><dt>Planting</dt><dd id="rPits">—</dd></div>
+        <div><dt>Seedlings</dt><dd id="rTrees">—</dd></div>
+        <div id="rCellRow"><dt>Cell</dt><dd id="rCell">—</dd></div>
+        <div><dt>Site</dt><dd>Erdene sum, Dornogovi</dd></div>
+    </dl>
+
     <div id="refWrap" hidden><span class="ref" id="ref"></span></div>
+
+    <!-- Shown only on a confirmed payment: what happens next, so nobody is left
+         wondering whether anything is coming. -->
+    <ol class="next" id="next" hidden>
+        <li>A certificate with this reference goes to your email.</li>
+        <li>Your seedlings are planted in the next planting window — three to a
+            pit, 1.5 m apart.</li>
+        <li>They are irrigated and maintained for ten years, counted twice a
+            year, and replanted at our cost if any do not survive.</li>
+        <li>We write once a year with what the ground is doing.</li>
+    </ol>
 
     <div class="actions">
         <a class="btn" href="/"><i></i>Back to the site</a>
@@ -92,8 +127,8 @@
     }
 
     var COPY = {
-        paid:      ["Thank you — payment received",
-                    "Your sponsorship is confirmed. We'll be in touch by email with your cell's location and its reporting schedule."],
+        paid:      ["Thank you. Your trees are sponsored.",
+                    "Your payment is confirmed and this ground is now yours to have planted. Keep the reference below — it identifies your planting for the whole ten years."],
         pending:   ["Payment not confirmed yet",
                     "The bank hasn't confirmed this one yet. If you completed the payment it may take a moment; this page checks again on its own."],
         cancelled: ["Payment cancelled", "Nothing has been charged. You can start again whenever you're ready."],
@@ -103,13 +138,32 @@
                     "Something went wrong on our side, not with your card. Email us with the reference and we'll confirm it by hand."]
     };
 
-    function show(status) {
+    var receipt = document.getElementById("receipt"),
+        next = document.getElementById("next");
+
+    function show(status, order) {
         var c = COPY[status] || COPY.unknown;
         head.textContent = c[0];
         msg.textContent = c[1];
         state.className = "state " + status;
         stateText.textContent = status.charAt(0).toUpperCase() + status.slice(1);
         again.hidden = (status === "paid" || status === "pending");
+        next.hidden = (status !== "paid");
+
+        /* Only shown once there is something real to show. An empty receipt
+           under a thank-you reads worse than no receipt at all. */
+        if (order && order.pits) {
+            document.getElementById("rPits").textContent =
+                order.pits + (order.pits === 1 ? " planting pit" : " planting pits");
+            document.getElementById("rTrees").textContent =
+                (order.seedlings || order.pits * 3) + " Siberian elm";
+            if (order.cell) {
+                document.getElementById("rCell").textContent = order.cell;
+            } else {
+                document.getElementById("rCellRow").hidden = true;
+            }
+            receipt.hidden = false;
+        }
     }
 
     if (!ref) {
@@ -134,7 +188,7 @@
         .then(function (r) { return r.json(); })
         .then(function (d) {
             if (d && d.status) {
-                show(d.status);
+                show(d.status, d.order);
                 if (d.status === "pending" && tries < MAX) setTimeout(check, 1200 * tries);
             } else {
                 show("unknown");

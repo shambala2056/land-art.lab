@@ -26,15 +26,9 @@
  */
 
 const crypto = require("crypto");
-const ledger = require("./_ledger");
-const sheet = require("./_sheet");
-const { config, login, checkTxn } = require("./_minu");
-/* Resend is required lazily, inside the notification block. At module scope a
- * failure to load it — a missing install, a bad version, an outage in the
- * package itself — takes the whole handler down, and this handler must always
- * answer 200 once a payment is confirmed. A 500 here makes the provider retry a
- * payment we have already accepted, and the money moves while our record of it
- * does not. Notifying is best-effort; confirming is not. */
+/* Recording the payment lives in _settle, shared with the browser-return path.
+ * Either can be the first — or the only — way a payment reaches us. */
+const { settle } = require("./_settle");
 
 /* Compares without leaking length or position through timing. A plain ===
  * returns early on the first wrong byte, which is enough to guess a secret one
@@ -81,31 +75,6 @@ function authorised(req) {
     return { ok: okUser && okPass, by: "basic", reason: "bad-credentials" };
 }
 
-/* Asks the provider whether this reference was really paid.
- *
- * Returns true only on a definite yes. A definite no returns false. If the
- * provider cannot be reached the answer is undefined, and the caller falls back
- * to the authenticated claim: refusing to record a payment because our own
- * network call failed would lose money that has genuinely moved, and the
- * request already carried a secret only the provider holds.
- */
-async function reallyPaid(reference) {
-    const { cfg, missing } = config();
-    if (missing.length) return undefined;
-    try {
-        const token = await login(cfg);
-        if (!token) return undefined;
-        const r = await checkTxn(cfg, token, reference);
-        if (!r.reached) return undefined;
-        /* Reached and answered: anything that is not the provider's own success
-           code — including no such transaction at all — is a no. */
-        return String(r.status) === "000";
-    } catch (err) {
-        console.error("could not verify payment with the provider:", reference, err && err.message);
-        return undefined;
-    }
-}
-
 module.exports = async function handler(req, res) {
     if (req.method !== "POST") return res.status(405).json({ status: "001", message: "Method not allowed" });
 
@@ -125,83 +94,30 @@ module.exports = async function handler(req, res) {
     const body = req.body || {};
     const entity = body.entity || body;
     const reference = entity.referenceNumber || entity.refereneceNumber || null;   /* the document spells it both ways */
-    const claimed = String(entity.status) === "000";
 
-    /* Never take the caller's word for a payment. Only a success is checked: a
-       claimed failure releases pits, which is safe to act on either way, and a
-       forged failure can at worst free a reservation that the payer can retry. */
-    let paid = claimed;
-    if (claimed && reference) {
-        const verdict = await reallyPaid(reference);
-        if (verdict === false) {
-            console.warn("callback claimed a payment the provider does not have:", reference);
-            paid = false;
-            /* Not treated as a cancellation either — the pits stay reserved
-               until they expire, in case this was a race rather than a forgery
-               and the real confirmation is still on its way. */
-            return res.status(200).json({ status: "000", message: "Success", entity: null });
-        }
-        if (verdict === undefined) {
-            console.warn("accepting", reference, "on the callback's word — the provider could not be reached");
+    /* Everything after this — verifying with the provider, the ledger, the order
+       book, the sheet, the notification — is shared with the browser-return
+       path, because a payment can reach us down either one and must be recorded
+       identically whichever arrives first. See _settle.js. */
+    let state = "unknown";
+    if (reference) {
+        try {
+            state = await settle(reference, entity.status, entity.txnId, entity.type, "callback", true);
+        } catch (err) {
+            /* Never fail the callback on an internal error: a non-200 makes the
+               provider retry a payment we have already accepted. */
+            console.error("could not settle", reference, "from the callback:", err && err.message);
         }
     }
 
     console.log("payment callback:", {
         reference: reference,
-        status: entity.status,
-        verified: claimed ? (paid ? "confirmed with provider" : "rejected") : "n/a",
+        claimed: entity.status,
+        settled: state,
         by: auth.by,
         txnId: entity.txnId,
         type: entity.type,
     });
-
-    /* Turn the reservation into a sale, or hand the pits back. Done before the
-       email so the ledger is right even if notification fails. */
-    if (reference) {
-        try {
-            if (paid) await ledger.confirm(reference);
-            else await ledger.release(reference);
-        } catch (err) {
-            console.error("ledger update failed for", reference, err && err.message);
-        }
-    }
-
-    /* Mark the row in the order book. Statuses match what pay-status reports, so
-       the sheet and the site never disagree about an order. */
-    if (reference) {
-        const state = paid ? "paid" : (String(entity.status) === "011" ? "cancelled"
-                    : String(entity.status) === "010" ? "expired" : "failed");
-        try { await ledger.markOrder(reference, state, entity.txnId, entity.type); }
-        catch (err) { console.error("ledger order update failed for", reference, err && err.message); }
-        try {
-            await sheet.updateStatus(reference,
-                paid ? "paid" : (String(entity.status) === "011" ? "cancelled"
-                              : String(entity.status) === "010" ? "expired" : "failed"),
-                entity.txnId, entity.type);
-        } catch (err) {
-            console.error("sheet status update failed for", reference, err && err.message);
-        }
-    }
-
-    /* A successful payment is also emailed to the team rather
-       than silently logged. Failure to notify must not fail the callback: the
-       provider retries on a non-200 and would repeat a payment we already have. */
-    if (paid && process.env.RESEND_API_KEY && process.env.CONTACT_TO_EMAIL) {
-        try {
-            const { Resend } = require("resend");
-            await new Resend(process.env.RESEND_API_KEY).emails.send({
-                from: process.env.CONTACT_FROM_EMAIL || "Land-Art Lab <onboarding@resend.dev>",
-                to: process.env.CONTACT_TO_EMAIL,
-                subject: "Payment received — " + (reference || "no reference"),
-                text: "Reference: " + reference +
-                      "\nProvider transaction: " + entity.txnId +
-                      "\nMethod: " + (entity.type || "—") +
-                      "\nStatus: " + entity.status,
-            });
-        } catch (err) {
-            console.error("payment received but the notification email failed:", err && err.message);
-        }
-    }
 
     /* The provider expects its own success envelope. */
     return res.status(200).json({ status: "000", message: "Success", entity: null });
