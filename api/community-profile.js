@@ -46,22 +46,29 @@ module.exports = async function handler(req, res) {
         });
     }
 
+    /* The shape the form expects. Stored profiles are merged over this rather
+     * than returned raw: an entry written before a field existed would
+     * otherwise come back missing that key, and the form would bind to
+     * undefined. New fields therefore arrive empty instead of broken. */
+    const BLANK = {
+        username: member.u,
+        org: member.n || "",
+        country: "",
+        sector: "",
+        about: "",
+        initiative: "",
+        initiativeBody: "",
+        offering: "",
+        seeking: "",
+        contact: "",
+        website: "",
+        visible: false,
+        joinedAt: null,
+    };
+
     if (req.method === "GET") {
-        const profile = (await getProfile(member.u)) || {
-            username: member.u,
-            org: member.n || "",
-            country: "",
-            sector: "",
-            about: "",
-            initiative: "",
-            initiativeBody: "",
-            offering: "",
-            seeking: "",
-            contact: "",
-            website: "",
-            visible: false,
-        };
-        return res.status(200).json({ ok: true, profile });
+        const stored = await getProfile(member.u);
+        return res.status(200).json({ ok: true, profile: { ...BLANK, ...(stored || {}) } });
     }
 
     if (req.method !== "POST") {
@@ -87,7 +94,9 @@ module.exports = async function handler(req, res) {
         contact: clean(b.contact, LIMITS.contact),
         website: clean(b.website, LIMITS.website),
         visible: b.visible === true,
-        joinedAt: (existing && existing.joinedAt) || new Date().toISOString(),
+        joinedAt:
+            (existing && (existing.joinedAt || existing.updatedAt)) ||
+            new Date().toISOString(),
         updatedAt: new Date().toISOString(),
     };
 
