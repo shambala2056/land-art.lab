@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Community Sign-in — Land Art Space</title>
+<meta name="description" content="Sign-in for the HEXAGON community: staff, youth cohorts and volunteers working the 54 cells at Erdene sum, Dornogovi.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://www.land-art.space/community.html">
+<link rel="icon" href="assets/images/logo/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="assets/community.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- The installation: 54 hexagonal cells across three hectares -->
+  <section class="field">
+    <div class="cells" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <div class="field-body">
+      <div class="mark" aria-hidden="true"></div>
+      <h1>HEXAGON</h1>
+      <p class="stat">54 cells · 3 ha · Dornogovi</p>
+      <p>
+        Water and power come first, then enclosure and soil, then the pioneer
+        plantings that make the canopy species survivable. The sequence is
+        dependency-driven — departing from it moves cost into the maintenance
+        period as replanting.
+      </p>
+      <span class="where">Erdene sum, Dornogovi · Shambala Carbon Offsets LLC</span>
+    </div>
+  </section>
+
+  <!-- Sign-in -->
+  <main class="panel">
+    <div class="card">
+      <a class="back" href="index.html">← Return to land-art.space</a>
+
+      <h2>Community sign-in</h2>
+      <p class="sub">For staff, youth cohorts and volunteers on the installation.</p>
+
+      <form id="form" novalidate>
+        <label>
+          <span>Member name</span>
+          <input id="username" name="username" autocomplete="username" placeholder="e.g. field" required>
+        </label>
+
+        <label>
+          <span>Password</span>
+          <span class="pw">
+            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
+            <button type="button" id="toggle" aria-label="Show password">Show</button>
+          </span>
+        </label>
+
+        <button class="submit" type="submit" id="submit">Sign in</button>
+      </form>
+
+      <div class="message" id="message" hidden role="status"></div>
+
+      <p class="foot">
+        Credentials are checked on the server, never in this page. Set
+        <code>COMMUNITY_MEMBERS</code> and <code>COMMUNITY_SECRET</code> in
+        Vercel → Settings → Environment Variables. The member area is not built
+        yet; signing in establishes the session it will use.
+      </p>
+    </div>
+  </main>
+
+</div>
+
+<script>
+(function () {
+  var form = document.getElementById("form");
+  var submit = document.getElementById("submit");
+  var message = document.getElementById("message");
+  var toggle = document.getElementById("toggle");
+  var password = document.getElementById("password");
+
+  toggle.addEventListener("click", function () {
+    var shown = password.type === "text";
+    password.type = shown ? "password" : "text";
+    toggle.textContent = shown ? "Show" : "Hide";
+    toggle.setAttribute("aria-label", shown ? "Show password" : "Hide password");
+  });
+
+  function say(text, kind) {
+    message.textContent = text;
+    message.className = "message " + kind;
+    message.hidden = false;
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    message.hidden = true;
+    submit.disabled = true;
+    submit.textContent = "Checking…";
+
+    fetch("/api/community-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: document.getElementById("username").value,
+        password: password.value
+      })
+    })
+      .then(function (r) {
+        return r.json().then(function (data) { return { status: r.status, data: data }; });
+      })
+      .then(function (res) {
+        if (res.status === 200 && res.data.ok) {
+          say("Signed in as " + res.data.member.name + ". The member area is not connected yet.", "ok");
+          form.reset();
+          return;
+        }
+        if (res.status === 503) {
+          say(res.data.message, "info");
+          return;
+        }
+        say(res.data.message || "Sign-in failed.", "error");
+      })
+      .catch(function () {
+        say("Could not reach the server. Check your connection and try again.", "error");
+      })
+      .then(function () {
+        submit.disabled = false;
+        submit.textContent = "Sign in";
+      });
+  });
+})();
+</script>
+
+</body>
+</html>
