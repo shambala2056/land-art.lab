@@ -84,6 +84,118 @@ const JACKS_SHAPE=(function(){
       };
     })();
 
+/* ── JACK'S нүдний тарилтын зохиомж — хоёр дүр зураг хуваалцана ────────────
+ * Энэ нь HEXAGON-ы plantJacksCell дотор байсан кодыг тэр чигээр нь гаргасан
+ * бөгөөд одоо хоёр газраас дуудагдана: HEXAGON-ы A-01 нүд, мөн лэнд артын
+ * хэсэг дэх Jack's-ийн тусдаа дүр зураг. Хоёулаа НЭГ эх сурвалжаас цэгээ
+ * авдаг тул хэзээ ч салж явахгүй — нэгийг нь өөрчилбөл нөгөө нь дагана.
+ *
+ * JACKS_SHAPE-тэй ижил шалтгаанаар энд, IIFE-үүдээс дээш байрлана: доорх хоёр
+ * хаалттай хамрах хүрээ хоёулаа үүнийг харах ёстой.
+ *
+ * Буцаах утга нь зөвхөн ЦЭГҮҮД — {x, z, hedge}. Мод хэрхэн зурагдах нь дуудсан
+ * дүр зургийн хэрэг: HEXAGON өөрийн instance-даа, projects өөрийнхөө загвараар
+ * тарина. Тиймээс энэ функц ямар ч рендерээс хамааралгүй.
+ */
+window.__jacksCell = (function(){
+  /* Тайлбарт бичсэн 10,000 модыг зурагт нь ч тарина: 126×145 нь тэмдэгт 9,891,
+     хашаанд ~38 өгч, нийт 9,929 — бичсэн тооноос 0.7%-ийн зөрүүтэй. */
+  function mask(){
+    const MW=126,MH=145;
+    const cv=document.createElement('canvas'); cv.width=MW; cv.height=MH;
+    const g=cv.getContext('2d');
+    g.fillStyle='#ffffff'; g.fillRect(0,0,MW,MH);
+    g.fillStyle='#000000'; g.strokeStyle='#000000';
+    g.lineJoin='round'; g.lineCap='round';
+    /* Нэрээр нь шууд дуудна, window-оор биш: JACKS_SHAPE нь дээд түвшний
+       const бөгөөд тийм зарлал глобал ЛЕКСИК хамрах хүрээнд ордог болохоос
+       window объектод шинж чанар болж суудаггүй. window.JACKS_SHAPE нь
+       undefined байсан тул энэ функц ачаалахад л унаж байв. */
+    JACKS_SHAPE(g,MW,MH);
+    const d=g.getImageData(0,0,MW,MH).data;
+    const on=new Uint8Array(MW*MH);
+    for(let i=0;i<MW*MH;i++) on[i]= d[i*4]<120 ? 1 : 0;
+
+    /* ── Муурын нүдийг нээх ─────────────────────────────────────────────
+       Маскад нүд нь нүх боловч ердөө долоон пиксел өргөн буюу газар дээр
+       ~70 см. Модны титэм түүнээс өргөн тул ургахдаа нүдийг бүрхэж, царай
+       цул ногоон болдог. Энэ нь эх кодод аль хэдийн тэмдэглэгдсэн асуудал:
+       "10,000 титэм … нүд, мөчрийн хоорондох цоорхойг бүрхэж, тэмдэг нэг
+       цул ногоон болно."
+
+       Тарихаас өмнө нүхийг өргөсгөж шийднэ. Захаас дүүргэж гадна талын
+       хоосон зайг тэмдэглэвэл үлдсэн хоосон нь дотоод нүх — өөрөөр хэлбэл
+       нүд. Тэдгээрээс EYE_CLEAR пикселийн дотор байгаа модыг хасна.
+
+       EYE_CLEAR-ийн утга санамсаргүй биш. Хоёр нүдний хооронд ердөө зургаан
+       пикселийн зай бий тул хэмжив:
+
+           K=2  →  нүд 11 px,  гүүрт 3 мод
+           K=3  →  нүд 14 px,  гүүрт 1 мод      ← дээд хязгаар
+           K=4  →  нүд 16 px,  гүүр АЛГА, хоёр нүд нийлж нэг ангархай болно
+
+       Иймд 3. Гадна контур хөндөгдөхгүй — элэгдэл зөвхөн дотоод нүхнээс
+       дотогш явна, гадна талын хоосон зайнаас биш. */
+    const outside=new Uint8Array(MW*MH), st=[];
+    for(let x=0;x<MW;x++){ st.push(x); st.push((MH-1)*MW+x); }
+    for(let y=0;y<MH;y++){ st.push(y*MW); st.push(y*MW+MW-1); }
+    while(st.length){
+      const i=st.pop();
+      if(on[i]||outside[i]) continue;
+      outside[i]=1;
+      const x=i%MW, y=(i-x)/MW;
+      if(x>0) st.push(i-1);
+      if(x<MW-1) st.push(i+1);
+      if(y>0) st.push(i-MW);
+      if(y<MH-1) st.push(i+MW);
+    }
+    const EYE_CLEAR=3, pts=[];
+    for(let y=0;y<MH;y++) for(let x=0;x<MW;x++){
+      if(!on[y*MW+x]) continue;
+      let nearHole=false;
+      for(let dy=-EYE_CLEAR; dy<=EYE_CLEAR && !nearHole; dy++){
+        const yy=y+dy; if(yy<0||yy>=MH) continue;
+        for(let dx=-EYE_CLEAR; dx<=EYE_CLEAR; dx++){
+          const xx=x+dx; if(xx<0||xx>=MW) continue;
+          if(dx*dx+dy*dy>EYE_CLEAR*EYE_CLEAR) continue;
+          const j=yy*MW+xx;
+          if(!on[j] && !outside[j]){ nearHole=true; break; }
+        }
+      }
+      if(!nearHole) pts.push({u:(x+.5)/MW-.5, v:(y+.5)/MH-.5});
+    }
+    return pts;
+  }
+  let cached=null;
+  /* rad — зургаалжны радиус. HEXAGON дээр h.radius*.92 өгдөг. */
+  return function(rad){
+    const apo=rad*0.8660254, out=[];
+    /* 1 · хашаа — зургаалжны зургаан ирмэгийн дагуу хайлаас */
+    const corner=function(k){const a=Math.PI/180*(60*k-90);
+      return {x:rad*Math.cos(a), z:rad*Math.sin(a)};};
+    const step=rad*0.16;
+    for(let k=0;k<6;k++){
+      const a=corner(k), b=corner((k+1)%6);
+      const len=Math.hypot(b.x-a.x,b.z-a.z), n=Math.max(2,Math.round(len/step));
+      for(let i=0;i<n;i++){
+        const t=i/n;
+        out.push({x:a.x+(b.x-a.x)*t, z:a.z+(b.z-a.z)*t, hedge:.62});   // хашаа — арай өндөр
+      }
+    }
+    /* 2 · тэмдэг — хашааны дотор, эсийн 62%-д багтаана.
+       Мод бүрийн титэм өндрөөсөө хамаарч томордог тул 10,000 титэм 2032 он
+       гэхэд нүд, мөчрийн хоорондох цоорхойг бүрхэж, тэмдэг нэг цул ногоон
+       болно. Модыг цөөлөх нь буруу — энэ бол урлагийн бүтээл. Оронд нь
+       тайруулж барина: тэмдгийн мод намхан, хашааных арай өндөр. */
+    const fit=apo*1.24;                       // тэмдгийн өндөр
+    if(!cached) cached=mask();
+    cached.forEach(function(p){
+      out.push({x:p.u*fit*0.867, z:p.v*fit, hedge:.45});               // тэмдэг — тайруулсан
+    });
+    return out;
+  };
+})();
+
 (function(){
 "use strict";
 
@@ -129,12 +241,15 @@ const THEMED={
     "canopy, shelter and water together, so the ground returns as habitat and not as a "+
     "plantation."],
   'D-01':['Solar field · 100 kW','energy','100 kW installed capacity — irrigation pumps, lighting, sensor network and battery reserve'],
-  'D-02':['Water harvesting','water','Rainwater and fog-dew capture system with storage tanks'],
-  'D-03':['Recycling point','waste','Plastic, glass and metal sorting plus a composting yard'],
+  /* "Fog" биш: энэ бол эх газрын цөл, эрэг орчмынх биш — манан бараг байхгүй,
+     шүүдэр, цан л байна. Мөн энэ нь усны эх үүсвэр биш нэмэлт: эх үүсвэр нь
+     гүний худаг. */
+  'D-02':['Water harvesting','water','Dew and hoarfrost capture with covered storage — a supplement to the borehole, not a supply'],
+  'D-03':['Recycling and compost','waste','Sorting bays and a shaded composting yard — the compost returns to the planting pits'],
   'D-04':['Research station','research','Weather and soil sensors, biodiversity monitoring'],
   /* D-05 сул боллоо: шувууны хоргодох газар A-01 руу нүүсэн тул энэ нүд
      энгийн тарилтын нүд болж, ивээн тэтгэхэд нээлттэй болов. */
-  'D-06':['Pollinator meadow','insect','Beehives and a flowering field — fruit set and plant regeneration'],
+  'D-06':['Pollinator cell','insect','A nesting bank and forage for the bees native to this ground — no hives; see BUILD.insect for why'],
   'D-07':['Community ground','community','Playground, outdoor classroom, ger and gathering space']
 };
 /* Түншүүд өмнөх зэрэглэлдээ хамгийн ойр шинэ ангид шилжсэн */
@@ -527,46 +642,15 @@ function init3D(){
      маскаас уншиж, эсийн дотор багтаана.
      Тайлбар дахь 10,000 мод ба 2,500 м² нь бүтээлийн баримт — энд зөвхөн
      зурагдах хэлбэр өөрчлөгдөнө. */
-  function jacksMask(){
-    /* Тайлбарт бичсэн 10,000 модыг зурагт нь ч тарина: 126×145 нь тэмдэгт 9,891,
-       хашаанд ~38 өгч, нийт 9,929 — бичсэн тооноос 0.7%-ийн зөрүүтэй. */
-    const MW=126,MH=145;
-    const cv=document.createElement('canvas'); cv.width=MW; cv.height=MH;
-    const g=cv.getContext('2d');
-    g.fillStyle='#ffffff'; g.fillRect(0,0,MW,MH);
-    g.fillStyle='#000000'; g.strokeStyle='#000000';
-    g.lineJoin='round'; g.lineCap='round';
-    JACKS_SHAPE(g,MW,MH);
-    const d=g.getImageData(0,0,MW,MH).data, pts=[];
-    for(let y=0;y<MH;y++) for(let x=0;x<MW;x++)
-      if(d[(y*MW+x)*4]<120) pts.push({u:(x+.5)/MW-.5, v:(y+.5)/MH-.5});
-    return pts;
-  }
+  /* Маск ба зохиомжийн код энэ функцээс гарч, файлын дээд талын __jacksCell
+     руу шилжсэн — лэнд артын хэсэг дэх Jack's-ийн тусдаа дүр зураг мөн адил
+     түүнийг дуудна. Энд байлгавал зөвхөн энэ IIFE хардаг байсан. */
   function plantJacksCell(h){
-    const rad=h.radius*.92, apo=rad*0.8660254;
-    const R=rnd(h.i*17+5), cf=PITCH/3.05, out=[];
-    /* 1 · хашаа — зургаалжны зургаан ирмэгийн дагуу хайлаас */
-    const corner=function(k){const a=Math.PI/180*(60*k-90);
-      return {x:rad*Math.cos(a), z:rad*Math.sin(a)};};
-    const step=rad*0.16;
-    for(let k=0;k<6;k++){
-      const a=corner(k), b=corner((k+1)%6);
-      const len=Math.hypot(b.x-a.x,b.z-a.z), n=Math.max(2,Math.round(len/step));
-      for(let i=0;i<n;i++){
-        const t=i/n;
-        out.push({x:a.x+(b.x-a.x)*t, z:a.z+(b.z-a.z)*t, hedge:.62});   // хашаа — арай өндөр
-      }
-    }
-    /* 2 · тэмдэг — хашааны дотор, эсийн 62%-д багтаана */
-    /* Мод бүрийн титэм өндрөөсөө хамаарч томордог тул 10,000 титэм 2032 он гэхэд
-       нүд, мөчрийн хоорондох цоорхойг бүрхэж, тэмдэг нэг цул ногоон болно. Модыг
-       цөөлөх нь буруу — энэ бол урлагийн бүтээл. Оронд нь тайруулж барина: тэмдгийн
-       мод намхан, хашааных арай өндөр. Газар дээр хийгддэг арчилгаа яг ийм. */
-    const fit=apo*1.24;                       // тэмдгийн өндөр
-    jacksMask().forEach(function(p){
-      out.push({x:p.u*fit*0.867, z:p.v*fit, hedge:.45});             // тэмдэг — тайруулсан
-    });
-    out.forEach(function(p){
+    const R=rnd(h.i*17+5), cf=PITCH/3.05;
+    /* Хашаа ба тэмдгийн зохиомж нь файлын дээд талын __jacksCell дотор.
+       Лэнд артын хэсэг дэх Jack's-ийн тусдаа дүр зураг яг үүнийг дуудна —
+       нэг эх сурвалж, хоёр газар. Энд өөрчлөлт хийвэл тэнд ч дагана. */
+    window.__jacksCell(h.radius*.92).forEach(function(p){
       TREES.push({x:h.x+p.x, z:h.z+p.z, base:h.top,
         H:(0.42+R()*0.22)*cf*(p.hedge||.5), off:R()*.34, sway:R()*6.28, spin:R()*6.28, e:0});
     });
@@ -804,11 +888,29 @@ function init3D(){
     },
     waste:function(g){                                    // компостын хашлага, дардас
       pad(g,1.05); garden(g,16,1.20,1.55);
-      // модон хашлага — үйлдвэрийн биш, цэцэрлэгийн компост шиг
+      /* Модон хашлага — үйлдвэрийн биш, цэцэрлэгийн компост шиг.
+         Object3D.add нь нэмсэн зүйлээ биш ЭЦГИЙГ нь буцаадаг тул эргэлтийг
+         хананд нь өгөх ёстой; өмнө нь бүлэг өөрөө эргэж, дөрвөн хана
+         дөрвөлжин үүсгэхийн оронд зэрэгцээ зогсож байв. */
       for(let i=0;i<4;i++){
         const a=i*Math.PI/2;
-        g.add(put(bx(1.5,.30,.07,M.wood2),Math.cos(a)*.72,.16,Math.sin(a)*.72)).rotation.y=-a;
+        /* Хананы нимгэн тэнхлэг (дотоод +z) нь гадагшаа харсан нормаль дагуу
+           байх ёстой: rotation.y = π/2 − a. −a нь ханыг радиусын дагуу зогсоож,
+           дөрвөлжин үүсгэхийн оронд гадагш цухуйлгана. */
+        const w=bx(1.46,.30,.07,M.wood2); w.rotation.y=Math.PI/2-a;
+        g.add(put(w,Math.cos(a)*.72,.16,Math.sin(a)*.72));
       }
+      /* Сүүдрэвч. Энд компостыг хязгаарлагч нь тэжээл биш чийг: наранд задгай
+         байгаа овоолго сүүдэрт байгаагаас 10–15°C халуун байж, боловсорч
+         амжихаасаа өмнө хатна. */
+      for(let i=0;i<4;i++){
+        const px=(i%2?1:-1)*.78, pz=(i<2?-1:1)*.78;
+        g.add(put(cy(.035,.035,.78,6,M.wood),px,.39,pz));
+      }
+      /* Сийрэг сараалж, битүү дээвэр биш: сүүдэр өгөхөд хангалттай, доорх
+         савнууд налуу өнцгөөс харагдахаар хангалттай задгай. */
+      for(let i=0;i<6;i++)
+        g.add(put(bx(1.72,.03,.055,M.wood2),0,.79,-.73+i*.29));
       for(let i=0;i<3;i++){
         const x=(i-1)*.42;
         g.add(put(bx(.30,.44,.30,i===1?M.leaf:(i===0?M.grey:M.wood)),x,.22,-.35));
@@ -876,16 +978,37 @@ function init3D(){
         d.wr.rotation.z=f; d.wl.rotation.z=-f;
       });};
     },
-    insect:function(g){                                   // зөгий үүр ба цэцгийн хооронд
-      pad(g,1.05,0,-.30); garden(g,22,1.20,1.55);
-      for(let i=0;i<3;i++){
-        const x=(i-1)*.62, z=-.30;
-        for(let k=0;k<3;k++) g.add(put(bx(.34,.13,.30,M.pale),x,.07+k*.14,z));
-        g.add(put(bx(.38,.04,.10,M.wood),x,.02,z+.19));
-        g.add(put(bx(.40,.05,.34,M.grey),x,.50,z));
+    insect:function(g){                                   // уугуул тоос хүртээгчид
+      /* Зөгийн үүр байхгүй болов — санаатайгаар.
+         Зөгий (Apis mellifera) Монголд уугуул биш, 1959 оноос хойш оруулж
+         ирсэн, ямар ч бүл −16…−32°C өвлийг хүний асаргаагүйгээр давдаггүй, тус
+         улсын зөгийн аж ахуй ойт хээрт байдаг — цөлд биш. Дээрээс нь өндөр
+         нягтралтай зөгийн үүр ойролцоох зэрлэг зөгийн илрэлтийг 55% хүртэл
+         бууруулж, нөлөө нь 600–1,100 м-т хүрдэг: 3 га талбайг бүхэлд нь
+         хамарна. Өөрөөр хэлбэл үүр нь энэ нүдний зорилгыг өөрийг нь сарниулна.
+         Оронд нь зүйлүүдийн ~70% нь хөрсөнд үүрлэдэг уугуул зөгийд
+         зориулав: өмнө зүг харсан элсэн хана, хөндөгдөөгүй нүцгэн газар,
+         богино улирлыг дүүргэх тэжээлийн цэцэг. */
+      pad(g,1.12,0,.22); garden(g,20,1.26,1.55);
+
+      /* Үүрлэх хана — нарлаг, босоо, ил задгай нүүр; ард нь налуу элс */
+      g.add(put(bx(1.66,.42,.44,M.grav),0,.21,-.70));
+      const back=bx(1.66,.07,.70,M.grav); back.rotation.x=-.55;
+      g.add(put(back,0,.33,-1.02));
+      for(let i=0;i<12;i++){                              // үүрний амсарууд
+        const h=cy(.020,.020,.06,6,M.dark); h.rotation.x=Math.PI/2;
+        g.add(put(h,-.70+i*.127,.20+((i*5)%3)*.07,-.475));
       }
-      for(let i=0;i<9;i++){const a=i*.7+1, r=.35+(i%3)*.22;
-        g.add(put(cy(.015,.015,.22,4,M.leaf),Math.cos(a)*r,.11,.55+Math.sin(a)*r*.5));}
+
+      /* Тэжээл — улирал богино тул хэд хэдэн зүйл, өөр өөр хугацаанд цэцэглэнэ */
+      const petal=[M.lime,M.clay,M.pale];
+      for(let i=0;i<26;i++){
+        const a=i*2.399, r=.30+(((i*3)%5)/4)*.72;
+        const x=Math.cos(a)*r, z=.26+Math.sin(a)*r*.72;
+        g.add(put(cy(.012,.012,.20,4,M.leaf),x,.10,z));
+        g.add(put(sp(.035,petal[i%3]),x,.21,z));
+      }
+
       const bm=new THREE.MeshBasicMaterial({color:SC('#6A5C2E')});
       const bees=[];
       for(let i=0;i<5;i++){
@@ -1745,34 +1868,48 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
       {f:.48,th:2.30,ph:.84,g:.52,y:'2026',l:'second summer',n:'(06)',h:'Canopies Spread',
        p:'Canopies begin to spread and close the distance between the rows. The ring road and the '+
          'three spurs stand out sharply against the greening ground.'}],
+    /* ── Текст нь jacks.coffee-ийн өөрийнх нь хуудсуудаас ─────────────────
+       Компанийн түүх /about-аас (2013 кофе шоп, 2016 үйлдвэр, 2025 өргөжилт),
+       хөтөлбөрийн тайлбар /cop17-оос (One Coffee One Tree, гурван ундаа,
+       98,000₮, модоо нэрлэх, жил бүрийн и-мэйл, COP17-ийн огноо, Монголын
+       нутгийн 77% доройтолд өртсөн).
+
+       ОРУУЛААГҮЙ ГУРВАН ТОО. Тэдний хуудсан дээр 166,000 мод, 109,000 м²,
+       186.7 тн CO₂ гэж бичсэн байдаг ч гурвуулаа энэ сайтын өөрийн тоотой
+       зөрж байна (57,857 мод, 68,970 м²), нүүрстөрөгчийнх нь аудитын 7.65
+       тонноос 24 дахин их. Түншийн хуудсан дээрх тоог шалгалгүй энд
+       хуулбарлавал энэ сайтын тоонууд өөр хоорондоо зөрчилдөнө. */
     jacks:[
-      {f:1.00,th:1.571,ph:.32,g:0,y:'2026',l:'the ground',n:'(01)',h:'Baseline and Set-out',
-       p:'Degraded rangeland at Erdene sum, Dornogovi — the same starting condition as the three '+
-         'works before it. The plot is surveyed and the mark set out on the ground before any '+
-         'planting: <b>2,500 m²</b>, a quarter of a hectare, positioned by GPS so the geometry is '+
-         'fixed on the ground rather than approximated during planting.'},
+      {f:1.00,th:1.571,ph:.32,g:0,y:'2026',l:'the ground',n:'(01)',h:'One Coffee, One Tree',
+       p:'A coffee roaster and a land-art programme, on the same ground. Jack\'s Coffee has '+
+         'roasted in Ulaanbaatar since <b>2013</b> and built its own roastery in <b>2016</b>; '+
+         'this is where the sales go. The plot is degraded rangeland at Erdene sum, Dornogovi — '+
+         'one of the areas worst affected by desertification in a country where <b>77% of the '+
+         'territory</b> is degraded.'},
       {f:.86,th:1.40,ph:.46,g:0,y:'2026',l:'water · fence',n:'(02)',h:'Water and Enclosure',
        p:'Water reaches the plot and the perimeter is closed to livestock. The order is not '+
          'negotiable and does not change with the size of the work: on a quarter hectare as on '+
-         'thirty, <b>the conditions are built before the planting</b>, not around it.'},
-      {f:.66,th:1.62,ph:.68,g:.14,y:'2026',l:'planting',n:'(03)',h:'Ten Thousand Elms',
-       p:'<b>10,000 Siberian elm</b> · <i>Ulmus pumila</i> at half-metre spacing, four to the '+
-         'square metre. The density is set by the mark rather than by forestry practice: at wider '+
-         'spacing the symbol would read as rows of dots from the air instead of closing into '+
-         'continuous canopy.'},
-      {f:.54,th:1.95,ph:.78,g:.34,y:'2027',l:'first summer',n:'(04)',h:'Establishment',
-       p:'The most fragile interval. Root systems have not reached depth, so irrigation does not '+
-         'stop, and <b>the trees are assessed once a year</b> with losses replanted — the '+
-         'same reporting cadence applied to every other planting on this site.'},
+         'thirty, <b>the conditions are built before the planting</b>, not around it. Irrigation '+
+         'here runs on solar.'},
+      {f:.66,th:1.62,ph:.68,g:.14,y:'2026',l:'planting',n:'(03)',h:'Three Drinks, Ten Thousand Elms',
+       p:'Three COP17 editions are served at <b>98,000₮</b> each — a sea-buckthorn matcha latte, '+
+         'an anise espresso and an ube latte with lily root. Every one plants an elm. <b>10,000 '+
+         'Siberian elm</b> · <i>Ulmus pumila</i> go in at half-metre spacing, four to the square '+
+         'metre: the density is set by the mark, not by forestry practice.'},
+      {f:.54,th:1.95,ph:.78,g:.34,y:'2027',l:'first summer',n:'(04)',h:'A Tree With a Name On It',
+       p:'The buyer <b>names their own tree</b> and is written to once a year with what it is '+
+         'doing. That is also the interval the planting is assessed on: root systems have not '+
+         'reached depth in the first summer, so irrigation does not stop and <b>losses are '+
+         'replanted</b>.'},
       {f:.48,th:2.30,ph:.86,g:.56,y:'2029',l:'three summers',n:'(05)',h:'The Risk Window Closes',
        p:'A sapling through three summers has anchored its roots and is unlikely to be lost. The '+
          'canopy closes and the mark becomes legible from the air — <b>2,500 m² of recovered '+
          'ground</b> that happens to be shaped like a company\'s symbol.'},
       {f:1.00,th:1.571,ph:.20,g:.78,y:'2036',l:'ten years',n:'(06)',h:'Ten Years of Care',
-       p:'Every marked cup served at COP17 funded one of these trees, and each carries <b>ten '+
-         'years of maintenance and irrigation</b>. That interval, not the planting day, decides '+
-         'whether restoration holds — and it is what the collaboration should be measured '+
-         'against.'}]
+       p:'The campaign ran alongside <b>UNCCD COP17</b> in Ulaanbaatar, 17–28 August 2026. Every '+
+         'marked cup served there funded one of these trees, and each carries <b>ten years of '+
+         'maintenance and irrigation</b>. That interval, not the planting day, decides whether '+
+         'restoration holds — and it is what the collaboration should be measured against.'}]
   };
 
   function build(sec){
@@ -1821,12 +1958,253 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
        нарийсаж (метрт 2 пиксел) step=1 болмогц хучаас зайнаасаа 3.3 дахин том
        болж, зэргэлдээ дискүүд давхцан z-fighting үүсгэж анивчиж байв.
        step×scale нь дэлхийн зай тул харьцаа гурван бүтээлд ижил хэвээр. */
-    const SPC=MK.step*MK.scale;             // хоёр модны хоорондын дэлхийн зай
-    const GS=SPC*(5/3);
-    const TSC=MK.tree||1;                   // нягт бүтээлд модыг жижигрүүлнэ
+    let SPC=MK.step*MK.scale;               // хоёр модны хоорондын дэлхийн зай
+    let GS=SPC*(5/3);                       // (JACK'S дээр доор дахин тооцогдоно)
+    let TSC=MK.tree||1;                     // нягт бүтээлд модыг жижигрүүлнэ
+                                            // (JACK'S дээр доор дахин тооцогдоно)
     const PTS=maskPoints(SHAPES[key],MK.W,MK.H,MK.step,MK.scale);
+
+    /* ── JACK'S — HEXAGON доторх A-01 нүдний харагдац ──────────────────────
+       Энэ бүтээл нь тусдаа талбай биш, HEXAGON-ы A-01 нүд. Тиймээс тэндхийн
+       харагдацаараа зурагдана: зургаалжин шал, зургаан ирмэгийн дагуу
+       хайлаасан хашаа, дотор нь тэмдэг, чөлөө газарт нь үүрний хайрцаг, усны
+       цэг, эргэлдэх шувууд. Өмнө нь хавтгай газар дээрх ганц тэмдэг байсан
+       нь HEXAGON дээр харагддагаас огт өөр зүйл болж байв.
+
+       Хэмжээг тэмдгээсээ гаргана, гараар бичихгүй: plantJacksCell дээр
+       тэмдгийн өндөр нь apothem×1.24 тул apo = өндөр/1.24, зургаалжны радиус
+       = apo/cos30°. Ингэснээр тэмдэг ба нүдний харьцаа хоёр дүр зурагт яг
+       ижил гарна — маскийн масштаб өөрчлөгдвөл ч дагаж тохирно. */
+    const JCK={birds:[],props:null};
+    if(key==='jacks'){
+      let mz=0; PTS.forEach(function(p){ mz=Math.max(mz,Math.abs(p.z)); });
+      const apo=(mz*2)/1.24, cellR=apo/0.8660254;
+      const U=0.62;                                  /* нэгж ≈ нэг модны өндөр */
+
+      /* Хашаа ба тэмдгийг ГАРААР зурахгүй. HEXAGON-ы A-01 нүд яг ижил
+         зохиомжийг __jacksCell-ээс авдаг тул энд ч түүнийг дуудна — нэг эх
+         сурвалж. Маскаас ирсэн PTS-ийг бүрэн орлуулна, эс бөгөөс тэмдэг
+         хоёр давхар таригдана.
+
+         hedge утга нь HEXAGON дээр модны өндрийн үржүүлэгч (хашаа .62,
+         тэмдэг .45). Энд өөр модны загвар тул харьцааг нь хадгалж, .45-ыг
+         нэг гэж авч масштаблана: хашаа = .62/.45 = 1.38 дахин өндөр. */
+      PTS.length=0;
+      window.__jacksCell(cellR).forEach(function(p){
+        /* Зургаалжныг тойрсон хашааг энэ дүр зурагт зурахгүй — нүд ганцаараа
+           зогсох тул ирмэгийг тодруулах шаардлагагүй, харин тэмдгийг халхалж
+           байв. Шүүлт нь ЗӨВХӨН энд: __jacksCell өөрөө хэвээрээ, тиймээс
+           HEXAGON-ы A-01 хашаагаа хадгална. hedge .62 = хашаа, .45 = тэмдэг. */
+        if(p.hedge>0.5) return;
+        PTS.push({x:p.x, z:p.z, tall:1});
+      });
+
+      /* Модны хэмжээг мөн HEXAGON-ы харьцаанд тааруулна. Тэнд тэмдгийн мод
+             H = (0.42+R·0.22) · (PITCH/3.05) · 0.45
+         бөгөөд нүдний радиус нь 0.828·PITCH. Өөрөөр хэлбэл мод нь нүдний
+         радиусын 0.075–0.114. Энэ дүр зурагт анхдагчаар 0.022 л байсан —
+         дөрөв дахин жижиг, тиймээс тэмдэг цул ногоон болохын оронд цацсан
+         цэг шиг, харьцангуйгаар үүр, цөөрөм асар том харагдаж байв.
+         PITCH-ийг cellR/0.828-аар орлуулж тэр томьёог эргүүлнэ. */
+      /* × 0.55 — муурын нүд ургасан хойно ч уншигдаж байхын тулд.
+         Титмийн өргөн нь модны өндөртэй пропорциональ (навчны хавтгай нь
+         p.r·H·2.1). Бүтэн өндөр дээр титэм 1.1–2.4 м болдог бол элэгдлийн
+         дараах нүд ердөө ~1.1 м — нэг титэм түүнийг бүтнээр нь бүрхэнэ.
+         Элэгдлийг цааш нэмэх боломжгүй: хоёр нүдний хооронд зургаан
+         пикселийн зай тул 3-аас дээш авбал нүд нийлнэ. Иймд титмийг
+         жижигрүүлэх ганц зам үлдэнэ — эх кодын өөрийнх нь шийдэл ч энэ:
+         "тэмдгийн мод намхан, хашааных арай өндөр". */
+      TSC=(cellR/0.828)/3.05*0.45*0.55;
+
+      /* Хучаасын хэмжээг мөн дахин тооцно. SPC нь MK.step×MK.scale-аас
+         гардаг бөгөөд тэр нь маскийг ХОЁР пиксел алхмаар уншсаны зай. Гэтэл
+         __jacksCell тэмдгийг бүтэн нарийвчлалаар өгдөг тул жинхэнэ зай хоёр
+         дахин бага болсон: хучаас зайнаасаа хоёр дахин том болж, зэргэлдээ
+         дискүүд давхцан газар нүх нүхтэй харагдаж байв. Эх кодод яг энэ
+         тухай сануулга бий — "step=1 болмогц хучаас зайнаасаа 3.3 дахин том
+         болж … анивчиж байв". Жинхэнэ зай нь тэмдгийн өндөр ÷ маскийн мөр. */
+      SPC=(mz*2)/145;
+      GS=SPC*(5/3);
+
+      /* Нүдний шал. HEXAGON дээр сэдэвт нүд ургахын хэрээр ногоон болдог
+         (h.mat.color.lerp(GREEN,…)) тул энд ч зүлгэн ногоон. Элсэн өнгөтэй
+         үлдээвэл нүд эргэн тойрны хоосон газраас ялгарахгүй байв.
+         Мод y=0 дээр суудаг тул шалыг өргөхгүй — нимгэн хавтан. */
+      const padMat=new THREE.MeshStandardMaterial({color:SCp('#CFC2A4'),roughness:1});
+      const pad=new THREE.Mesh(
+        /* HEXAGON дээр нүдний биет нь h.radius-аар зурагддаг бөгөөд cellR нь
+           түүний 0.92 тул буцааж хуваана — тавцан яг тэр хэмжээтэй. */
+        new THREE.CylinderGeometry(cellR/0.92,cellR/0.92,.06,6,1),padMat);
+      pad.position.y=.03; pad.receiveShadow=true; scene.add(pad);
+      JCK.pad=padMat;                       /* ургахын хэрээр ногоон болно */
+
+      /* ── Түншийн туг ────────────────────────────────────────────────────
+         HEXAGON дээр A-01 нь FLAG_LOGOS-д бүртгэлтэй тул тугтай гардаг.
+         makeFlag нь init3D-ийн IIFE дотор хаалттай учир энд ижил харьцаагаар
+         дахин барина: шонгийн өндөр PITCH×1.15 буюу эсийн радиусын 1.28,
+         даавуу нь өндрийнхөө 0.62×0.34. Тугийг эсийн ТӨВӨӨС зөөнө — тэнд
+         тэмдэг тарьсан тул мачт нь дундуур нь гарах ёсгүй. */
+      (function(){
+        /* HEXAGON дээр шон нь нүдний радиусын 1.389 дахин (poleH = PITCH·1.15,
+           радиус = 0.828·PITCH). Тэнд туг нь 54 нүдний дундаас өөрийн нүдийг
+           заах үүрэгтэй тул өндөр байх учиртай. Энд нүд ганцаараа зогсох тул
+           тийм өндөр туг кадрыг эзэлж, тэмдгээс анхаарал сарниулж байв. */
+        const poleH=cellR*0.34, cw=poleH*0.62, ch=poleH*0.34;
+        const fg=new THREE.Group();
+        fg.position.set(0.56*cellR, 0, -0.60*cellR);
+        const pole=new THREE.Mesh(
+          new THREE.CylinderGeometry(poleH*.012,poleH*.016,poleH,6),
+          new THREE.MeshStandardMaterial({color:SCp('#8A8578'),roughness:.6,metalness:.3}));
+        pole.position.y=poleH/2; pole.castShadow=true; fg.add(pole);
+        /* Логог цагаан даавуун дээр буулгана: PNG тунгалаг дэвсгэртэй тул
+           шууд наавал туг цоорхойтой болно. Зураг ирэх хүртэл цагаан туг. */
+        const cv=document.createElement('canvas'); cv.width=512; cv.height=Math.round(512*ch/cw);
+        const cx=cv.getContext('2d');
+        cx.fillStyle='#FFFFFF'; cx.fillRect(0,0,cv.width,cv.height);
+        cx.strokeStyle='#15160F'; cx.lineWidth=Math.max(3,cv.width*0.012);
+        cx.strokeRect(cx.lineWidth/2,cx.lineWidth/2,cv.width-cx.lineWidth,cv.height-cx.lineWidth);
+        cx.fillStyle='#B2D135'; cx.fillRect(0,0,Math.max(6,cv.width*0.028),cv.height);
+        const tex=new THREE.CanvasTexture(cv);
+        if(THREE.SRGBColorSpace&&tex.colorSpace!==undefined) tex.colorSpace=THREE.SRGBColorSpace;
+        else if(THREE.sRGBEncoding&&tex.encoding!==undefined) tex.encoding=THREE.sRGBEncoding;
+        const img=new Image();
+        img.onload=function(){
+          const AR=0.546, pd=cv.width*0.09, aw=cv.width-pd*2, ah=cv.height-pd*2;
+          const s=Math.min(aw/AR,ah), dw=s*AR, dh=s;
+          cx.drawImage(img,(cv.width-dw)/2,(cv.height-dh)/2,dw,dh);
+          tex.needsUpdate=true;
+        };
+        img.src='assets/images/partner/hexagon-cells/JACKS-COFFEE_A.png';
+        const cloth=new THREE.Mesh(new THREE.PlaneGeometry(cw,ch,14,8),
+          new THREE.MeshStandardMaterial({color:0xffffff,map:tex,roughness:.85,
+                                          side:THREE.DoubleSide}));
+        cloth.position.set(cw/2,poleH-ch*0.62,0);   /* мачт нь даавууны зүүн ирмэг дээр */
+        fg.add(cloth); scene.add(fg);
+        JCK.flag={cloth:cloth,base:cloth.geometry.attributes.position.array.slice(),cw:cw};
+      })();
+
+      /* Үүрний хайрцаг ба усны цэг. Тэмдэг нүдний дунд бүсийг эзэлдэг тул
+         дээд, доод оройн чөлөө рүү тавина — plantJacksCell мөн яг ийм
+         шалтгаанаар тэднийг хажуу тийш зөөсөн байдаг. */
+      /* Координатууд нь HEXAGON-ы BUILD.birds-ийнх — үсэг үсгээрээ адил.
+         Тэдгээр нь 1.9407 нэгж радиустай нүдэнд зохиогдсон бөгөөд HEXAGON
+         бүлгийг нь нүднийхээ радиустай пропорциональ томсгодог:
+             scale = infra × 1.26 × (radius / 1.9407)
+         Эхэндээ би оронд нь тогтмол тоо хэрэглэсэн нь алдаа байв — нүд
+         томрох тусам үүр, цөөрөм харьцангуй жижигхэн үлдэж байлаа. Энд ч
+         тэр дүрмийг дагана. cellR нь HEXAGON-ы radius×0.92-той тэнцүү тул
+         буцааж хуваана. */
+      const props=new THREE.Group(); scene.add(props);
+      /* Эцсийн масштаб. HEXAGON дээр байгууламж ургалттай хамт томордог
+         (infra·1.26·radius/1.9407) тул энд ч мөн адил — доорх кадрын код
+         үүнийг growth-оор үржүүлнэ. Шууд бүрэн хэмжээгээр гарч ирвэл
+         суулгац дөнгөж соёолж байхад үүрний шон бүтэн өндөртөө зогсоно. */
+      JCK.propScale=1.26*(cellR/0.92)/1.9407;
+      props.scale.setScalar(.001);
+      /* Оройгоороо дээш харсан зургаалжин: өргөн нь apothem, өндөр нь радиус.
+         Тавцан кадраас гарахгүйн тулд камерын тохируулгад үүнийг өгнө. */
+      JCK.extent={x:cellR*0.8660254*1.06, z:cellR*1.06};
+      const mWood=new THREE.MeshStandardMaterial({color:SCp('#8A6A46'),roughness:.9});
+      const mPale=new THREE.MeshStandardMaterial({color:SCp('#D9CFB6'),roughness:.85});
+      const mGrey=new THREE.MeshStandardMaterial({color:SCp('#9A958A'),roughness:.9});
+      const mWatr=new THREE.MeshStandardMaterial({color:SCp('#6E93A8'),roughness:.3});
+      const put=function(m,x,y,z){ m.position.set(x,y,z); m.castShadow=true; props.add(m); };
+      /* Гурван үүр — өнцөг, радиус нь BUILD.birds дээрхтэй ижил гурвалжин.
+         Хайрцаг, шонгийн ХЭМЖЭЭГ NB дахин томсгов: HEXAGON дээр эдгээр нь
+         бүтэн талбайн дундах жижиг нарийн ширийн зүйл, харин энд нүд ганцаараа
+         бүтээл болж зогсох тул уншигдахуйц байх ёстой. Байрлал хэвээр. */
+      /* 1.0 = HEXAGON-тай яг тэнцүү — тэнд ч ижил масштабын дүрэм. Түүнээс
+         дээш томсгох гэж 1.3, 1.8 хоёрыг туршсан ч хоёулаа тэмдгээ дарж,
+         доороос нь цухуйж байв. Эх харьцаа нь шалтгаантай: эдгээр нь нүдний
+         нарийн ширийн зүйл болохоос бүтээл өөрөө биш. */
+      const NB=0.68;
+      /* Байрлалыг дотогш татна. Үүр 1.34, цөөрөм 1.20 радиуст зогсдог нь
+         apothem-ийн (0.866) гадна унана: томсгосон хайрцаг ирмэгээс гарч
+         байв. HEXAGON дээр энэ мэдрэгддэггүй — тэнд нүд нь 54-ийн нэг тул
+         гарсан ч зэргэлдээ нүд рүү ордог. Энд нүд ганцаараа зогсох тул
+         бүх зүйл дотроо багтах ёстой. */
+      /* ── Байрлалыг маскаас нь асууна ──────────────────────────────────
+         BUILD.birds дээрх өнцгүүд (0°, 120°, 240°) нь HEXAGON-д зохистой:
+         тэнд нүд нь 54-ийн нэг тул байгууламж тэмдэг рүү унасан ч зэргэлдээ
+         нүд рүүгээ ордог. Энд нүд ганцаараа зогсох тул тогтмол өнцөг нь
+         тэмдгийн мөчир дээр таарч, мод дундуураас цухуйж байв.
+
+         Тогтмол өнцгийг орхиод чөлөө газрыг ТООЦНО: нүдний дотор олон цэг
+         туршиж, тэмдгийн хамгийн ойрын модноос хэр хол байгааг хэмжинэ.
+         Хамгийн чөлөөтэй дөрвийг нь сонгоно — гурав нь үүр, нэг нь цөөрөм.
+         Тэмдэг өөрчлөгдвөл байрлал нь дагаж шинэчлэгдэнэ. */
+      const apoW=cellR*0.8660254;
+      const cand=[];
+      for(let a=0;a<360;a+=4){
+        const th=a*Math.PI/180;
+        /* Ирмэг рүү шахсан радиусууд. 0.60-аас эхлэхэд тэмдгийн хөл дэлгэрсэн
+           доод хэсэгт чөлөө газар багатай тул сонголт мөчир дээр таарч байв.
+           0.88 нь apothem-ийн дотор үлдэх дээд хязгаар — хайрцгийн хагас өргөн
+           багтана. */
+        [0.72,0.80,0.88].forEach(function(rr){
+          const x=Math.cos(th)*apoW*rr, z=Math.sin(th)*apoW*rr;
+          let best=Infinity;
+          /* Долоо тутмын нэг цэгийг шалгана — 10,000 модыг бүгдийг үзэх
+             шаардлагагүй, тэд цул талбай тул ойролцоолол хангалттай. */
+          for(let i=0;i<PTS.length;i+=7){
+            const dx=PTS[i].x-x, dz=PTS[i].z-z, d=dx*dx+dz*dz;
+            if(d<best) best=d;
+          }
+          cand.push({x:x,z:z,clear:Math.sqrt(best)});
+        });
+      }
+      cand.sort(function(p,q){ return q.clear-p.clear; });
+      /* Зөвхөн эрэмбэлээд дээрээс нь авах нь хангалтгүй байв: тэмдгийн хөл
+         дэлгэрсэн доод хэсэгт бүх сонголт муу байсан ч хамгийн муу дундаас
+         нь "хамгийн сайн"-ыг сонгоод, байгууламж модны ирмэг дээр таарч,
+         доороосоо урсан гарч байв. Одоо ХАМГИЙН БАГА ЗАЙГ шаардана: тухайн
+         байгууламжийн хагас өргөнөөс хоёр дахин их зайтай байх ёстой. Хангах
+         цэг олдохгүй бол тэр байгууламжийг огт тавихгүй — модон дээр
+         буулгахаас тавихгүй нь дээр. */
+      const need=(0.26*NB/2)*JCK.propScale*2.4;
+      const spots=[];
+      cand.some(function(c){
+        if(c.clear<need) return true;          /* эрэмбэлсэн тул цаашид бүр муу */
+        const far=spots.every(function(s){
+          return Math.hypot(s.x-c.x,s.z-c.z)>apoW*0.62; });
+        if(far) spots.push(c);
+        return spots.length>=4;
+      });
+      /* Бүлэг нь propScale-аар томордог тул дотоод координат руу хөрвүүлнэ. */
+      const toLocal=function(v){ return v/JCK.propScale; };
+
+      /* Хангалттай чөлөөтэй цэг цөөн олдвол цөөхнийг нь тавина. */
+      const NESTS=spots.slice(0,3);
+      NESTS.forEach(function(s){
+        const x=toLocal(s.x), z=toLocal(s.z);
+        put(new THREE.Mesh(new THREE.CylinderGeometry(.032*NB,.032*NB,.92*NB,6),mWood),x,.46*NB,z);
+        put(new THREE.Mesh(new THREE.BoxGeometry(.20*NB,.24*NB,.18*NB),mPale),x,1.03*NB,z);
+        put(new THREE.Mesh(new THREE.BoxGeometry(.26*NB,.05*NB,.24*NB),mGrey),x,1.17*NB,z);
+      });
+      /* Усны цэг — хайрган хүрээ, дотор нь ус. Хамгийн чөлөөтэй дөрөв дэх цэг. */
+      const PW=1.0;
+      const pnd=spots[3]||spots[spots.length-1];
+      const pxL=pnd?toLocal(pnd.x):0, pzL=pnd?toLocal(pnd.z):0;
+      put(new THREE.Mesh(new THREE.CylinderGeometry(.28*PW,.28*PW,.05,14),mGrey),pxL,.01,pzL);
+      put(new THREE.Mesh(new THREE.CylinderGeometry(.23*PW,.23*PW,.07,14),mWatr),pxL,.04,pzL);
+
+      /* Шувууд бүлэг дотроо — ингэснээр байгууламжтай ижил масштабаар
+         томорно. BUILD.birds дээрх r, h, sp, ph утгууд хэвээр. */
+      for(let i=0;i<5;i++){
+        const bd=window.__bird3d(THREE,SCp('#4A463F'),.11), b=bd.g;
+        props.add(b);
+        JCK.birds.push({b:b,wl:bd.wl,wr:bd.wr,
+                        r:.85+i*.20,h:1.55+i*.20,sp:.42+i*.07,ph:i*1.31});
+      }
+      props.visible=false; JCK.props=props;
+    }
+
     let maxX=1,maxZ=1;
     PTS.forEach(function(p){maxX=Math.max(maxX,Math.abs(p.x));maxZ=Math.max(maxZ,Math.abs(p.z));});
+    /* JACK'S: хашаа хасагдсан тул PTS зөвхөн тэмдгийг хамрах болсон бөгөөд
+       камер түүгээр тохирвол зургаалжны ирмэг кадраас гарна. Нүдний өөрийнх
+       нь хэмжээгээр өргөтгөнө — тавцан бүтнээрээ багтана. */
+    if(JCK.extent){ maxX=Math.max(maxX,JCK.extent.x); maxZ=Math.max(maxZ,JCK.extent.z); }
     const Rf=Math.sqrt(maxX*maxX+maxZ*maxZ);      // бүтээлийг бүрэн багтаах радиус
     /* Сүүдрийн камерыг бүтээлийн хэмжээнд тааруулна. Тогтмол ±52 нэгжийн хайрцаг
        нь том бүтээлд тохирдог ч жижигт нь гүний нарийвчлал сарниж, элсэн дээр
@@ -1851,7 +2229,9 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
     const TR=[], TP=[], LP=[];
     PTS.forEach(function(p,i){
       const R=Math.abs(Math.sin(i*12.9898)*43758.5453)%1;
-      TR.push({x:p.x,z:p.z,H:(.46+R*.24)*TSC,off:R*.36,sway:R*6.28,spin:R*6.28,e:0});
+      /* tall — зөвхөн JACK'S-ийн хашааны мод авдаг. Хашаа тэмдгээсээ өндөр
+         байснаар нүдний ирмэг тодорч, тэмдэг хаана дуусахыг нүд шууд уншина. */
+      TR.push({x:p.x,z:p.z,H:(.46+R*.24)*TSC*(p.tall||1),off:R*.36,sway:R*6.28,spin:R*6.28,e:0});
     });
     const BR=[{oy:0,len:.48,rad:.055,tx:0,tz:0},
               {oy:.38,len:.42,rad:.032,tx:0,tz:.44},
@@ -2153,14 +2533,21 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
       if(i===capIdx) return; capIdx=i; const b=B[i];
       cap.classList.add('out');
       setTimeout(function(){
-        cap.innerHTML='<div class="yr">'+b.y+' · '+b.l+'</div>'+
-          '<h3>'+b.n+' '+b.h+'</h3><p>'+b.p+'</p>';
+        /* PLAIN дүр зурагт таймлайн байхгүй тул түүнийг заасан бичвэр ч
+           байхгүй: он, үе шатны нэр, дарааллын дугаар аль нь ч гарахгүй —
+           зөвхөн тайлбар. */
+        cap.innerHTML=(PLAIN?'':'<div class="yr">'+b.y+' · '+b.l+'</div>')+
+          '<h3>'+(PLAIN?'':b.n+' ')+b.h+'</h3><p>'+b.p+'</p>';
         cap.classList.remove('out');
       },180);
     }
     /* Дүр зураг өөрөө гүйнэ; он тус бүрийн цэг нь гар удирдлага */
     const STEP_SPEED=2.4, PLAY_SECS=14;
-    let manual=false, target=0, TL=null, auto=false, played=false;
+    /* data-loop дээр тэмдэглэсэн дүр зураг төгсгөлдөө хоёр секунд зогсоод
+       эхнээсээ дахин гүйнэ — таймлайн, Play товчгүй хэсэгт зориулав. */
+    const LOOP=!!stage.getAttribute('data-loop'), LOOP_HOLD=2.0;
+    const PLAIN=!!stage.getAttribute('data-plain');
+    let manual=false, target=0, TL=null, auto=false, played=false, holdT=0;
     function goTo(v){ setPlay(false); target=Math.max(0,Math.min(B.length-1,v)); }
     /* Өөрөө эхлэхгүй: дүр зураг сүүлийн он дээрээ буюу бэлэн үр дүн дээрээ зогсоно.
        Play дарахад эхнээс нь гүйж, дуусаад дахин сүүлийн он дээр зогсоно. */
@@ -2239,9 +2626,17 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
       const t=clock.getElapsedTime();
       const dt=Math.min(.05,t-plt); plt=t;
 
-      if(auto){                      // Play дарсны дараа гүйнэ
+      if(holdT>0){                   // төгсгөлөө барина, дараа нь эхнээс нь
+        holdT-=dt;
+        if(holdT<=0){ beatF=0; target=0; applyBeat(); }
+      } else if(auto){               // Play дарсны дараа гүйнэ
         beatF+=dt*(B.length-1)/PLAY_SECS;
-        if(beatF>=B.length-1){ beatF=B.length-1; setPlay(false); }
+        if(beatF>=B.length-1){
+          beatF=B.length-1;
+          /* Таймлайнгүй дүр зураг давтана: Play товч байхгүй тул нэг удаа
+             тоглоод зогсвол хоёр дахь удаагаа үзэх арга үлдэхгүй. */
+          if(LOOP) holdT=LOOP_HOLD; else setPlay(false);
+        }
         target=beatF; applyBeat();
       } else if(beatF!==target){     // сонгосон он руу жигд гүйнэ
         const d=target-beatF, k=Math.min(1,dt*STEP_SPEED);
@@ -2364,6 +2759,49 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
             a.wr.rotation.x=-fl; a.wl.rotation.x=fl;
           }
         });
+        /* JACK'S-ийн нүдний байгууламж. HEXAGON дээр эдгээр нь ургалт
+           тодорхой хэмжээнд хүрсний дараа гарч ирдэг — "байгууламж өөрөө
+           амьтан татахгүй, тэжээл нь эхэлж байх ёстой" гэсэн зарчмаар.
+           Энд ч мөн адил: бүрхэвч хаагдаж эхэлмэгц үүр, ус, шувууд гарна. */
+        if(JCK.props){
+          /* Шал ургахын хэрээр элсэн өнгөнөөс зүлгэн ногоон руу — HEXAGON
+             дээр сэдэвт нүд яг ийм замаар ногоон болдог. */
+          if(JCK.pad) JCK.pad.color.copy(SCp('#CFC2A4'))
+                        .lerp(SCp('#7D9A46'),Math.min(1,growth*1.15));
+          /* Даавуу салхинд намирна: хоёр өөр давтамжийн синусаар — нэг нь
+             урт, нэг нь богино — тул хэмнэл давтагдсан мэт харагдахгүй.
+             Мачтын ирмэг (x≈0) хөдөлгөөнгүй, үзүүр рүүгээ чөлөөтэй. */
+          if(JCK.flag){
+            const F=JCK.flag, pos=F.cloth.geometry.attributes.position,
+                  arr=pos.array, b=F.base;
+            for(let i=0;i<arr.length;i+=3){
+              const u=b[i]/F.cw;
+              arr[i+2]=Math.sin(u*6.0-t*3.1)*.10*F.cw*u
+                      +Math.sin(u*2.4-t*1.7)*.05*F.cw*u;
+              arr[i+1]=b[i+1]+Math.sin(u*3.2-t*2.3)*.03*F.cw*u;
+            }
+            pos.needsUpdate=true; F.cloth.geometry.computeVertexNormals();
+          }
+          const on=growth>.34;
+          JCK.props.visible=on;
+          /* Бүрэн хэмжээгээрээ шууд гарна — томрох хөдөлгөөнгүй.
+             Өмнө нь HEXAGON-ы infra-г дуурайж .001-ээс аажим томсгож байсан
+             нь энэ дүр зурагт буруу уншигдаж байв: үүр, цөөрөм газраас урган
+             гарч, тэмдгийн доороос урсаж байгаа мэт харагдана. HEXAGON дээр
+             энэ нь зохимжтой — тэнд камер хол, 54 нүд зэрэг ургаж байдаг тул
+             нэг нүдний байгууламж томрох нь ерөнхий ургалтын нэг хэсэг болж
+             ордог. Энд нүд ганцаараа, камер ойрхон тул тэр хөдөлгөөн өөрөө
+             анзаарагдаж, хачирхалтай харагдана. */
+          if(on) JCK.props.scale.setScalar(JCK.propScale);
+          JCK.birds.forEach(function(d,i){
+            d.b.visible=on; if(!on) return;
+            const a=t*d.sp+d.ph;
+            d.b.position.set(Math.cos(a)*d.r,d.h+Math.sin(a*2.1+i)*.16,Math.sin(a)*d.r);
+            d.b.rotation.y=-a;
+            const f=Math.sin(t*6.5+d.ph)*.62;
+            d.wr.rotation.z=f; d.wl.rotation.z=-f;
+          });
+        }
         const flyOn=growth>.62;
         FLOCK.forEach(function(d,i){
           d.b.visible=flyOn; if(!flyOn) return;
