@@ -162,7 +162,8 @@
       <img src="assets/images/logo/hexagon-community.png" alt="HEXAGON — Land Art Community" width="514" height="142">
     </a>
     <nav class="tabs">
-      <button class="tab is-on" data-view="directory">Directory</button>
+      <button class="tab is-on" data-view="news">Newsroom</button>
+      <button class="tab" data-view="directory">Directory</button>
       <button class="tab" data-view="profile">Your organisation</button>
     </nav>
     <div class="who">
@@ -171,8 +172,21 @@
     </div>
   </header>
 
+  <!-- Newsroom -->
+  <main class="view" id="view-news">
+    <div class="masthead">
+      <div>
+        <h2>Newsroom</h2>
+        <p>Who has joined, and what they are starting.</p>
+      </div>
+      <span class="issue" id="issueDate"></span>
+    </div>
+    <div id="newsMessage" class="message" hidden role="status"></div>
+    <div id="newsBody"></div>
+  </main>
+
   <!-- Directory -->
-  <main class="view" id="view-directory">
+  <main class="view" id="view-directory" hidden>
     <div class="lede">
       <h2>Member organisations</h2>
       <p>
@@ -206,6 +220,13 @@
       </div>
       <label><span>Sector or field</span><input id="p-sector" maxlength="80" placeholder="Rangeland restoration, finance, research…"></label>
       <label><span>What your organisation does</span><textarea id="p-about" rows="4" maxlength="600"></textarea></label>
+
+      <fieldset class="initiative">
+        <legend>What you are initiating</legend>
+        <p class="hint">This is what appears in the Newsroom. Write the headline the way you would want another member to read it.</p>
+        <label><span>Headline</span><input id="p-initiative" maxlength="140" placeholder="Opening 200 ha of degraded pasture for co-funded restoration trials"></label>
+        <label><span>Detail</span><textarea id="p-initiativeBody" rows="4" maxlength="600" placeholder="What it is, what stage it is at, what a partner would be joining."></textarea></label>
+      </fieldset>
       <div class="row2">
         <label><span>What you can offer</span><textarea id="p-offering" rows="3" maxlength="400" placeholder="Field sites, funding, data, seedlings, expertise…"></textarea></label>
         <label><span>What you are looking for</span><textarea id="p-seeking" rows="3" maxlength="400" placeholder="Partners, co-funding, species trials, monitoring…"></textarea></label>
@@ -286,6 +307,7 @@
       Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (t) {
         t.classList.toggle("is-on", t === tab);
       });
+      $("view-news").hidden = tab.dataset.view !== "news";
       $("view-directory").hidden = tab.dataset.view !== "directory";
       $("view-profile").hidden = tab.dataset.view !== "profile";
     });
@@ -300,7 +322,7 @@
   });
 
   /* ── profile ── */
-  var FIELDS = ["org", "country", "sector", "about", "offering", "seeking", "contact", "website"];
+  var FIELDS = ["org", "country", "sector", "about", "initiative", "initiativeBody", "offering", "seeking", "contact", "website"];
 
   function loadProfile() {
     api("/api/community-profile").then(function (res) {
@@ -348,8 +370,61 @@
       if (res.status !== 200) { say(msg, res.data.message || "Could not load the directory.", res.status === 503 ? "info" : "error"); return; }
       msg.hidden = true;
       everyone = res.data.members || [];
-      render(everyone, res.data.me);
+      renderNews(everyone, res.data.me);
+      render(everyone.slice().sort(function (a, b) {
+        return String(a.org || "").localeCompare(String(b.org || ""));
+      }), res.data.me);
     });
+  }
+
+  function when(iso) {
+    if (!iso) return "";
+    var d = new Date(iso);
+    if (isNaN(d)) return "";
+    return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  }
+
+  function renderNews(list, me) {
+    var box = $("newsBody");
+    $("issueDate").textContent = new Date().toLocaleDateString("en-GB", {
+      weekday: "long", day: "numeric", month: "long", year: "numeric"
+    });
+
+    var listed = list.filter(function (p) { return p.visible === true || p.username === me; });
+    if (!listed.length) {
+      box.innerHTML = '<p class="empty">Nothing filed yet. Open <b>Your organisation</b>, write what you are initiating, and it runs here.</p>';
+      return;
+    }
+
+    var lead = listed[0];
+    var rest = listed.slice(1);
+
+    function meta(p) {
+      return [esc(p.country), esc(p.sector), when(p.joinedAt)].filter(Boolean).join(" · ");
+    }
+
+    var html = '<article class="lead">' +
+      '<p class="kicker">' + (lead.initiative ? "Initiative" : "New member") + '</p>' +
+      '<h3>' + esc(lead.initiative || (lead.org + " joins the community")) + '</h3>' +
+      '<p class="byline">' + esc(lead.org) + (meta(lead) ? ' <span>' + meta(lead) + '</span>' : '') + '</p>' +
+      (lead.initiativeBody || lead.about
+        ? '<p class="body">' + esc(lead.initiativeBody || lead.about) + '</p>' : '') +
+      (lead.seeking ? '<p class="calls"><b>Looking for</b> ' + esc(lead.seeking) + '</p>' : '') +
+      '</article>';
+
+    if (rest.length) {
+      html += '<div class="wire">' + rest.map(function (p) {
+        return '<article class="item">' +
+          '<p class="kicker">' + (p.initiative ? "Initiative" : "New member") + '</p>' +
+          '<h4>' + esc(p.initiative || (p.org + " joins the community")) + '</h4>' +
+          '<p class="byline">' + esc(p.org) + (meta(p) ? ' <span>' + meta(p) + '</span>' : '') + '</p>' +
+          (p.initiativeBody ? '<p class="body">' + esc(p.initiativeBody) + '</p>' : '') +
+          (p.seeking ? '<p class="calls"><b>Looking for</b> ' + esc(p.seeking) + '</p>' : '') +
+          '</article>';
+      }).join("") + '</div>';
+    }
+
+    box.innerHTML = html;
   }
 
   function render(list, me) {

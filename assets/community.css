@@ -393,3 +393,104 @@ button.submit[disabled] { background: var(--bio-muted); cursor: default; }
   .topbar { gap: 12px; }
   .tabs { margin-left: 0; order: 3; width: 100%; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+   NEWSROOM
+   A member arriving wants the same thing a reader wants: what happened,
+   who did it, and whether it concerns them. So it is set as a wire — one
+   lead, then the file — with the organisation as the byline and the ask
+   printed under each item, since the ask is the part that gets answered.
+   ══════════════════════════════════════════════════════════════════════ */
+
+.masthead {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 20px; flex-wrap: wrap;
+  padding-bottom: 16px; margin-bottom: 28px;
+  border-bottom: 2px solid var(--bio-ink);
+}
+.masthead h2 {
+  font-family: "Urbanist", "Roboto", sans-serif;
+  font-size: clamp(26px, 3.4vw, 38px); font-weight: 800;
+  letter-spacing: -0.02em; margin: 0;
+}
+.masthead p { font-size: 13.5px; color: var(--bio-muted); margin: 6px 0 0; }
+.issue {
+  font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--bio-muted); white-space: nowrap;
+}
+
+.kicker {
+  font-family: "Urbanist", "Roboto", sans-serif;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--bio-ink);
+  margin: 0 0 10px;
+}
+.kicker::before {
+  content: ""; display: inline-block;
+  width: 9px; height: 10px; margin-right: 8px; vertical-align: -1px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background: var(--bio-lime);
+}
+
+/* ── Lead story ── */
+.lead { padding-bottom: 32px; border-bottom: 1px solid var(--bio-line); }
+.lead h3 {
+  font-family: "Urbanist", "Roboto", sans-serif;
+  font-size: clamp(24px, 3.4vw, 40px); font-weight: 700;
+  line-height: 1.14; letter-spacing: -0.02em;
+  margin: 0 0 14px; max-width: 22ch; text-wrap: balance;
+}
+.lead .body { font-size: 15.5px; line-height: 1.8; margin: 16px 0 0; max-width: 62ch; }
+
+/* ── The wire ── */
+.wire {
+  display: grid; gap: 1px; margin-top: 32px;
+  background: var(--bio-line);
+  border-top: 1px solid var(--bio-line); border-bottom: 1px solid var(--bio-line);
+  grid-template-columns: repeat(2, 1fr);
+}
+.wire .item { background: var(--bio-bg); padding: 26px clamp(16px, 2.6vw, 32px); }
+.wire h4 {
+  font-family: "Urbanist", "Roboto", sans-serif;
+  font-size: 18px; font-weight: 700; line-height: 1.28;
+  letter-spacing: -0.01em; margin: 0 0 10px; max-width: 26ch;
+}
+.wire .body { font-size: 13.5px; line-height: 1.72; margin: 12px 0 0; max-width: 46ch; }
+
+/* ── Byline and ask ── */
+.byline {
+  font-family: "Urbanist", "Roboto", sans-serif;
+  font-size: 13px; font-weight: 700; color: var(--bio-ink); margin: 0;
+}
+.byline span {
+  display: block; font-weight: 400; font-size: 11.5px;
+  color: var(--bio-muted); margin-top: 3px; letter-spacing: 0;
+}
+.calls {
+  font-size: 12.5px; line-height: 1.65; color: var(--bio-muted);
+  margin: 14px 0 0; padding-left: 13px;
+  border-left: 3px solid var(--bio-lime);
+  max-width: 52ch;
+}
+.calls b {
+  display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--bio-ink); margin-bottom: 3px;
+}
+
+/* ── Initiative fieldset on the profile form ── */
+.initiative {
+  border: 1px solid var(--bio-line); border-radius: 12px;
+  padding: 20px 22px 6px; margin: 0;
+}
+.initiative legend {
+  font-family: "Urbanist", "Roboto", sans-serif;
+  font-size: 13px; font-weight: 700; padding: 0 8px;
+}
+.initiative .hint {
+  font-size: 11.5px; line-height: 1.65; color: var(--bio-muted);
+  margin: 0 0 16px; max-width: 56ch;
+}
+
+@media (max-width: 760px) {
+  .wire { grid-template-columns: 1fr; }
+}

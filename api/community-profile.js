@@ -14,7 +14,11 @@
 
 const { session, getProfile, putProfile, storeConfigured } = require("./_members");
 
-const LIMITS = { org: 120, country: 60, sector: 80, about: 600, offering: 400, seeking: 400, contact: 160, website: 200 };
+const LIMITS = {
+    org: 120, country: 60, sector: 80, about: 600,
+    initiative: 140, initiativeBody: 600,
+    offering: 400, seeking: 400, contact: 160, website: 200,
+};
 
 function clean(value, max) {
     if (typeof value !== "string") return "";
@@ -49,6 +53,8 @@ module.exports = async function handler(req, res) {
             country: "",
             sector: "",
             about: "",
+            initiative: "",
+            initiativeBody: "",
             offering: "",
             seeking: "",
             contact: "",
@@ -63,17 +69,25 @@ module.exports = async function handler(req, res) {
     }
 
     const b = req.body || {};
+
+    /* joinedAt is set once and never rewritten: the newsroom orders on it, and a
+     * member editing their entry should not jump back to the top of the feed. */
+    const existing = await getProfile(member.u);
+
     const profile = {
         username: member.u,
         org: clean(b.org, LIMITS.org) || member.n || member.u,
         country: clean(b.country, LIMITS.country),
         sector: clean(b.sector, LIMITS.sector),
         about: clean(b.about, LIMITS.about),
+        initiative: clean(b.initiative, LIMITS.initiative),
+        initiativeBody: clean(b.initiativeBody, LIMITS.initiativeBody),
         offering: clean(b.offering, LIMITS.offering),
         seeking: clean(b.seeking, LIMITS.seeking),
         contact: clean(b.contact, LIMITS.contact),
         website: clean(b.website, LIMITS.website),
         visible: b.visible === true,
+        joinedAt: (existing && existing.joinedAt) || new Date().toISOString(),
         updatedAt: new Date().toISOString(),
     };
 

@@ -35,9 +35,14 @@ module.exports = async function handler(req, res) {
     }
 
     const all = (await allProfiles()) || [];
+
+    /* Newest first: the front page reads as a feed of who has joined and what
+     * they are starting, so recency is the useful order. The directory view
+     * sorts alphabetically in the page, where the reader is looking something
+     * up rather than catching up. */
     const listed = all
         .filter((p) => p && (p.visible === true || p.username === member.u))
-        .sort((a, b) => String(a.org || "").localeCompare(String(b.org || "")));
+        .sort((a, b) => String(b.joinedAt || "").localeCompare(String(a.joinedAt || "")));
 
     return res.status(200).json({
         ok: true,
