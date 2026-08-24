@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Community Sign-in — Land Art Space</title>
-<meta name="description" content="Sign-in for the HEXAGON community: staff, youth cohorts and volunteers working the 54 cells at Erdene sum, Dornogovi.">
+<title>Community — Land Art Space</title>
+<meta name="description" content="Directory and collaboration space for organisations with a tree standing on the HEXAGON at Erdene sum, Dornogovi.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="canonical" href="https://www.land-art.space/community.html">
 <link rel="icon" href="assets/images/logo/favicon.svg" type="image/svg+xml">
@@ -13,9 +13,8 @@
 </head>
 <body>
 
-<div class="wrap">
-
-  <!-- The installation: 54 hexagonal cells across three hectares -->
+<!-- ══ SIGN IN ══ -->
+<div class="wrap" id="gate">
   <section class="field">
     <div class="cells" aria-hidden="true">
       <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
@@ -30,111 +29,291 @@
       <h1>HEXAGON</h1>
       <p class="stat">54 cells · 3 ha · Dornogovi</p>
       <p>
-        Water and power come first, then enclosure and soil, then the pioneer
-        plantings that make the canopy species survivable. The sequence is
-        dependency-driven — departing from it moves cost into the maintenance
-        period as replanting.
+        A tree standing on the installation is a membership. This is where the
+        organisations that hold one find each other — the parties who did not
+        get to meet across a fortnight in Ulaanbaatar, and the work each is
+        carrying on after it.
       </p>
       <span class="where">Erdene sum, Dornogovi · Shambala Carbon Offsets LLC</span>
     </div>
   </section>
 
-  <!-- Sign-in -->
   <main class="panel">
     <div class="card">
       <a class="back" href="index.html">← Return to land-art.space</a>
-
       <h2>Community sign-in</h2>
-      <p class="sub">For staff, youth cohorts and volunteers on the installation.</p>
+      <p class="sub">For organisations with a cell on the HEXAGON.</p>
 
       <form id="form" novalidate>
         <label>
           <span>Member name</span>
-          <input id="username" name="username" autocomplete="username" placeholder="e.g. field" required>
+          <input id="username" autocomplete="username" placeholder="your organisation's member name" required>
         </label>
-
         <label>
           <span>Password</span>
           <span class="pw">
-            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
+            <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
             <button type="button" id="toggle" aria-label="Show password">Show</button>
           </span>
         </label>
-
         <button class="submit" type="submit" id="submit">Sign in</button>
       </form>
 
       <div class="message" id="message" hidden role="status"></div>
 
       <p class="foot">
-        Credentials are checked on the server, never in this page. Set
-        <code>COMMUNITY_MEMBERS</code> and <code>COMMUNITY_SECRET</code> in
-        Vercel → Settings → Environment Variables. The member area is not built
-        yet; signing in establishes the session it will use.
+        Credentials are checked on the server, never in this page. If your
+        organisation holds a cell and has no member name yet, write to
+        <a href="index.html#contact">the team</a>.
       </p>
     </div>
+  </main>
+</div>
+
+<!-- ══ PORTAL ══ -->
+<div class="portal" id="portal" hidden>
+
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="mark sm" aria-hidden="true"></span>
+      <span><b>HEXAGON</b><small>Community</small></span>
+    </a>
+    <nav class="tabs">
+      <button class="tab is-on" data-view="directory">Directory</button>
+      <button class="tab" data-view="profile">Your organisation</button>
+    </nav>
+    <div class="who">
+      <span id="whoName"></span>
+      <button id="signout" title="Sign out">Sign out</button>
+    </div>
+  </header>
+
+  <!-- Directory -->
+  <main class="view" id="view-directory">
+    <div class="lede">
+      <h2>Member organisations</h2>
+      <p>
+        Everyone listed here holds a cell on the HEXAGON. Say what you are
+        working on and what you are looking for, and the next party who reads it
+        can pick up the thread without waiting for another conference.
+      </p>
+      <label class="search">
+        <input id="search" placeholder="Search by organisation, country, sector or topic" autocomplete="off">
+      </label>
+    </div>
+    <div id="dirMessage" class="message" hidden role="status"></div>
+    <div class="grid" id="dirGrid"></div>
+  </main>
+
+  <!-- Own profile -->
+  <main class="view" id="view-profile" hidden>
+    <div class="lede">
+      <h2>Your organisation</h2>
+      <p>
+        This is what other members see. Nothing is listed until you turn on
+        <b>List in the directory</b> — until then only you can read it.
+      </p>
+    </div>
+    <div id="profMessage" class="message" hidden role="status"></div>
+
+    <form class="profile" id="profileForm" novalidate>
+      <div class="row2">
+        <label><span>Organisation</span><input id="p-org" maxlength="120" required></label>
+        <label><span>Country</span><input id="p-country" maxlength="60" placeholder="Mongolia"></label>
+      </div>
+      <label><span>Sector or field</span><input id="p-sector" maxlength="80" placeholder="Rangeland restoration, finance, research…"></label>
+      <label><span>What your organisation does</span><textarea id="p-about" rows="4" maxlength="600"></textarea></label>
+      <div class="row2">
+        <label><span>What you can offer</span><textarea id="p-offering" rows="3" maxlength="400" placeholder="Field sites, funding, data, seedlings, expertise…"></textarea></label>
+        <label><span>What you are looking for</span><textarea id="p-seeking" rows="3" maxlength="400" placeholder="Partners, co-funding, species trials, monitoring…"></textarea></label>
+      </div>
+      <div class="row2">
+        <label><span>Contact for members</span><input id="p-contact" maxlength="160" placeholder="name@organisation.org"></label>
+        <label><span>Website</span><input id="p-website" maxlength="200" placeholder="https://"></label>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="p-visible">
+        <span>List in the directory so other members can find us</span>
+      </label>
+      <button class="submit" type="submit" id="saveBtn">Save</button>
+    </form>
   </main>
 
 </div>
 
 <script>
 (function () {
-  var form = document.getElementById("form");
-  var submit = document.getElementById("submit");
-  var message = document.getElementById("message");
-  var toggle = document.getElementById("toggle");
-  var password = document.getElementById("password");
+  var $ = function (id) { return document.getElementById(id); };
 
-  toggle.addEventListener("click", function () {
-    var shown = password.type === "text";
-    password.type = shown ? "password" : "text";
-    toggle.textContent = shown ? "Show" : "Hide";
-    toggle.setAttribute("aria-label", shown ? "Show password" : "Hide password");
-  });
-
-  function say(text, kind) {
-    message.textContent = text;
-    message.className = "message " + kind;
-    message.hidden = false;
+  /* ── shared ── */
+  function say(el, text, kind) {
+    el.textContent = text;
+    el.className = "message " + kind;
+    el.hidden = false;
+  }
+  function api(path, options) {
+    return fetch(path, Object.assign({ credentials: "same-origin" }, options || {}))
+      .then(function (r) { return r.json().then(function (d) { return { status: r.status, data: d }; }); });
+  }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
   }
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    message.hidden = true;
-    submit.disabled = true;
-    submit.textContent = "Checking…";
+  /* ── sign in ── */
+  var gate = $("gate"), portal = $("portal");
 
-    fetch("/api/community-login", {
+  $("toggle").addEventListener("click", function () {
+    var p = $("password"), shown = p.type === "text";
+    p.type = shown ? "password" : "text";
+    this.textContent = shown ? "Show" : "Hide";
+  });
+
+  $("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var btn = $("submit"), msg = $("message");
+    msg.hidden = true; btn.disabled = true; btn.textContent = "Checking…";
+
+    api("/api/community-login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: document.getElementById("username").value,
-        password: password.value
-      })
-    })
-      .then(function (r) {
-        return r.json().then(function (data) { return { status: r.status, data: data }; });
-      })
-      .then(function (res) {
-        if (res.status === 200 && res.data.ok) {
-          say("Signed in as " + res.data.member.name + ". The member area is not connected yet.", "ok");
-          form.reset();
-          return;
-        }
-        if (res.status === 503) {
-          say(res.data.message, "info");
-          return;
-        }
-        say(res.data.message || "Sign-in failed.", "error");
-      })
-      .catch(function () {
-        say("Could not reach the server. Check your connection and try again.", "error");
-      })
-      .then(function () {
-        submit.disabled = false;
-        submit.textContent = "Sign in";
-      });
+      body: JSON.stringify({ username: $("username").value, password: $("password").value })
+    }).then(function (res) {
+      if (res.status === 200 && res.data.ok) { enter(res.data.member); return; }
+      say(msg, res.data.message || "Sign-in failed.", res.status === 503 ? "info" : "error");
+    }).catch(function () {
+      say(msg, "Could not reach the server. Check your connection and try again.", "error");
+    }).then(function () {
+      btn.disabled = false; btn.textContent = "Sign in";
+    });
   });
+
+  function enter(member) {
+    gate.hidden = true;
+    portal.hidden = false;
+    $("whoName").textContent = member.org || member.username;
+    loadProfile();
+    loadDirectory();
+  }
+
+  /* ── tabs ── */
+  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (tab) {
+    tab.addEventListener("click", function () {
+      Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (t) {
+        t.classList.toggle("is-on", t === tab);
+      });
+      $("view-directory").hidden = tab.dataset.view !== "directory";
+      $("view-profile").hidden = tab.dataset.view !== "profile";
+    });
+  });
+
+  $("signout").addEventListener("click", function () {
+    api("/api/community-logout", { method: "POST" }).then(function () {
+      portal.hidden = true; gate.hidden = false;
+      $("username").value = ""; $("password").value = "";
+      $("message").hidden = true;
+    });
+  });
+
+  /* ── profile ── */
+  var FIELDS = ["org", "country", "sector", "about", "offering", "seeking", "contact", "website"];
+
+  function loadProfile() {
+    api("/api/community-profile").then(function (res) {
+      if (res.status !== 200) { say($("profMessage"), res.data.message || "Could not load your profile.", res.status === 503 ? "info" : "error"); return; }
+      var p = res.data.profile;
+      FIELDS.forEach(function (f) { $("p-" + f).value = p[f] || ""; });
+      $("p-visible").checked = p.visible === true;
+    });
+  }
+
+  $("profileForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var btn = $("saveBtn"), msg = $("profMessage");
+    msg.hidden = true; btn.disabled = true; btn.textContent = "Saving…";
+
+    var body = { visible: $("p-visible").checked };
+    FIELDS.forEach(function (f) { body[f] = $("p-" + f).value; });
+
+    api("/api/community-profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }).then(function (res) {
+      if (res.status === 200 && res.data.ok) {
+        say(msg, res.data.profile.visible
+          ? "Saved and listed in the directory."
+          : "Saved. Not listed yet — turn on the checkbox when you are ready.", "ok");
+        loadDirectory();
+        return;
+      }
+      say(msg, res.data.message || "Could not save.", res.status === 503 ? "info" : "error");
+    }).catch(function () {
+      say(msg, "Could not reach the server.", "error");
+    }).then(function () {
+      btn.disabled = false; btn.textContent = "Save";
+    });
+  });
+
+  /* ── directory ── */
+  var everyone = [];
+
+  function loadDirectory() {
+    api("/api/community-directory").then(function (res) {
+      var msg = $("dirMessage");
+      if (res.status !== 200) { say(msg, res.data.message || "Could not load the directory.", res.status === 503 ? "info" : "error"); return; }
+      msg.hidden = true;
+      everyone = res.data.members || [];
+      render(everyone, res.data.me);
+    });
+  }
+
+  function render(list, me) {
+    var grid = $("dirGrid");
+    if (!list.length) {
+      grid.innerHTML = '<p class="empty">No organisation has listed itself yet. Be the first — open <b>Your organisation</b> and turn on listing.</p>';
+      return;
+    }
+    grid.innerHTML = list.map(function (p) {
+      var mine = p.username === me;
+      return '<article class="member' + (mine ? " mine" : "") + '">' +
+        '<header>' +
+          '<h3>' + esc(p.org) + (mine ? ' <em>you</em>' : '') + '</h3>' +
+          (p.country || p.sector
+            ? '<p class="meta">' + [esc(p.country), esc(p.sector)].filter(Boolean).join(" · ") + '</p>'
+            : '') +
+          (!p.visible && mine ? '<p class="meta unlisted">Not listed — only you see this</p>' : '') +
+        '</header>' +
+        (p.about ? '<p class="about">' + esc(p.about) + '</p>' : '') +
+        (p.offering ? '<div class="pair"><b>Offers</b><span>' + esc(p.offering) + '</span></div>' : '') +
+        (p.seeking ? '<div class="pair"><b>Looking for</b><span>' + esc(p.seeking) + '</span></div>' : '') +
+        (p.contact || p.website
+          ? '<footer>' +
+            (p.contact ? '<a href="mailto:' + esc(p.contact) + '">' + esc(p.contact) + '</a>' : '') +
+            (p.website ? '<a href="' + esc(p.website) + '" target="_blank" rel="noreferrer">Website</a>' : '') +
+            '</footer>'
+          : '') +
+        '</article>';
+    }).join("");
+  }
+
+  $("search").addEventListener("input", function () {
+    var q = this.value.trim().toLowerCase();
+    if (!q) { render(everyone, null); return; }
+    render(everyone.filter(function (p) {
+      return [p.org, p.country, p.sector, p.about, p.offering, p.seeking]
+        .join(" ").toLowerCase().indexOf(q) !== -1;
+    }), null);
+  });
+
+  /* Already signed in? The cookie is httpOnly, so ask the server. */
+  api("/api/community-profile").then(function (res) {
+    if (res.status === 200 || res.status === 503) {
+      var p = (res.data && res.data.profile) || {};
+      enter({ org: p.org, username: p.username });
+    }
+  }).catch(function () { /* stay on the sign-in screen */ });
 })();
 </script>
 
