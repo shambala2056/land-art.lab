@@ -37,139 +37,197 @@ body {
    explicitly or the sign-in screen stays on top of the portal after signing in. */
 .wrap[hidden] { display: none; }
 
-/* ── Left: the installation ── */
+/* ══════════════════════════════════════════════════════════════════════
+   THE MEMBERS' FRONT PAGE
+   Not a public marketing page: it is what a member meets before signing in,
+   so it argues the case for keeping the network alive rather than selling
+   anything. Editorial density over hero decoration — the figures carry it.
+   ══════════════════════════════════════════════════════════════════════ */
 
-.field {
+#gate[hidden] { display: none; }
+
+/* ── Hero ── */
+
+.hero {
   position: relative;
-  width: 46%;
-  max-width: 600px;
-  flex-shrink: 0;
   overflow: hidden;
   background: var(--bio-ink);
   color: var(--bio-bg);
+  padding: 0 0 clamp(56px, 9vw, 104px);
+  min-height: 88vh;
   display: flex;
-  align-items: center;
-  padding: 56px 52px;
+  flex-direction: column;
 }
 
 .cells {
   position: absolute;
-  inset: -14% -24% auto auto;
-  width: 132%;
+  inset: -18% -30% auto auto;
+  width: 128%;
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 12px;
   transform: rotate(-12deg);
   pointer-events: none;
 }
-
 .cells i {
   aspect-ratio: 1 / 1.1;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  background: rgba(239, 239, 234, 0.05);
+  background: rgba(239, 239, 234, 0.045);
 }
-.cells i:nth-child(4n) { background: rgba(195, 240, 60, 0.13); }
-.cells i:nth-child(7n) { background: rgba(255, 211, 0, 0.11); }
+.cells i:nth-child(5n) { background: rgba(195, 240, 60, 0.12); }
+.cells i:nth-child(8n) { background: rgba(255, 211, 0, 0.10); }
 
-.field-body { position: relative; max-width: 400px; }
+.hero-nav {
+  position: relative;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  padding: 20px clamp(20px, 5vw, 56px);
+  border-bottom: 1px solid rgba(239, 239, 234, 0.12);
+}
+/* The supplied mark is white on transparent: it reads as-is on the dark hero,
+   and is flipped to ink for the light portal bar rather than shipping a second
+   file that could drift out of step with this one. */
+.brand img { display: block; height: 34px; width: auto; }
+.brand.ink img { filter: brightness(0) saturate(100%); }
+.ghost {
+  border: 1px solid rgba(239, 239, 234, 0.28); border-radius: 999px;
+  padding: 9px 18px; color: var(--bio-bg); text-decoration: none;
+  font-family: "Urbanist", "Roboto", sans-serif; font-size: 13px; font-weight: 700;
+}
+.ghost:hover { border-color: var(--bio-lime); color: var(--bio-lime); }
 
-.mark {
-  width: 44px;
-  height: 49px;
-  margin-bottom: 26px;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  background: var(--bio-lime);
+.hero-body {
+  position: relative;
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+  padding: clamp(44px, 8vw, 88px) clamp(20px, 5vw, 56px) 0;
+  max-width: 980px;
 }
 
-.field h1 {
+.eyebrow {
   font-family: "Urbanist", "Roboto", sans-serif;
-  font-size: 38px;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  line-height: 1.05;
-  margin: 0;
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--bio-lime); margin: 0 0 22px;
 }
+.eyebrow.dark { color: var(--bio-muted); }
 
-.stat {
+.slogan {
   font-family: "Urbanist", "Roboto", sans-serif;
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: var(--bio-lime);
-  margin: 12px 0 0;
+  font-size: clamp(38px, 7.2vw, 84px);
+  font-weight: 800; line-height: 1.02; letter-spacing: -0.03em;
+  margin: 0; text-wrap: balance;
 }
 
-.field p {
-  font-size: 14px;
-  line-height: 1.8;
+.hero-sub {
+  font-size: clamp(15px, 1.5vw, 18px); line-height: 1.75;
   color: rgba(239, 239, 234, 0.72);
-  margin: 22px 0 0;
+  margin: 26px 0 0; max-width: 60ch;
 }
 
-.where {
+.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+.hero-cta .primary, .hero-cta .secondary {
+  font-family: "Urbanist", "Roboto", sans-serif;
+  font-size: 14px; font-weight: 700; text-decoration: none;
+  padding: 13px 26px; border-radius: 999px;
+}
+.hero-cta .primary { background: var(--bio-lime); color: var(--bio-ink); }
+.hero-cta .primary:hover { background: #D4F76A; }
+.hero-cta .secondary { border: 1px solid rgba(239, 239, 234, 0.3); color: var(--bio-bg); }
+.hero-cta .secondary:hover { border-color: var(--bio-bg); }
+
+/* ── Figures band ── */
+
+.ticker { background: var(--bio-lime); color: var(--bio-ink); }
+.ticker-in {
+  max-width: 1180px; margin: 0 auto;
+  padding: 26px clamp(20px, 5vw, 56px);
+  display: grid; gap: 22px 40px;
+  grid-template-columns: repeat(4, auto);
+  align-items: baseline;
+}
+.ticker-in > div b {
   display: block;
-  margin-top: 28px;
-  font-size: 11.5px;
-  color: var(--bio-sand);
+  font-family: "Urbanist", "Roboto", sans-serif;
+  font-size: clamp(22px, 2.6vw, 32px); font-weight: 800;
+  letter-spacing: -0.02em; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.ticker-in > div span {
+  display: block; font-size: 11.5px; line-height: 1.45;
+  color: rgba(21, 22, 15, 0.7); margin-top: 6px; max-width: 22ch;
+}
+.ticker-in .src {
+  grid-column: 1 / -1;
+  font-size: 11px; line-height: 1.6;
+  color: rgba(21, 22, 15, 0.62);
+  padding-top: 16px; border-top: 1px solid rgba(21, 22, 15, 0.18);
 }
 
-/* ── Right: the form ── */
+/* ── About ── */
 
-.panel {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
+.about {
+  max-width: 1180px; margin: 0 auto;
+  padding: clamp(56px, 9vw, 104px) clamp(20px, 5vw, 56px) clamp(40px, 6vw, 64px);
+}
+.about-head { max-width: 66ch; margin-bottom: clamp(34px, 5vw, 54px); }
+.about-head h2 {
+  font-family: "Urbanist", "Roboto", sans-serif;
+  font-size: clamp(26px, 3.6vw, 40px); font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 18px;
+  text-wrap: balance;
+}
+.about-lede { font-size: clamp(14.5px, 1.4vw, 17px); line-height: 1.8; color: var(--bio-muted); margin: 0; }
+
+.about-grid {
+  display: grid; gap: 1px; background: var(--bio-line);
+  border-top: 1px solid var(--bio-line); border-bottom: 1px solid var(--bio-line);
+  grid-template-columns: repeat(2, 1fr);
+}
+.about-grid article { background: var(--bio-bg); padding: 30px clamp(18px, 3vw, 36px); }
+.about-grid h3 {
+  font-family: "Urbanist", "Roboto", sans-serif;
+  font-size: 17px; font-weight: 700; margin: 0 0 10px;
+}
+.about-grid p { font-size: 13.5px; line-height: 1.75; color: var(--bio-muted); margin: 0; max-width: 46ch; }
+
+/* ── Sign in ── */
+
+.signin {
+  max-width: 1180px; margin: 0 auto;
+  padding: clamp(40px, 6vw, 72px) clamp(20px, 5vw, 56px) clamp(64px, 9vw, 104px);
+  display: grid; gap: clamp(24px, 4vw, 48px);
+  grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
+  align-items: start;
 }
 
 .card {
-  width: 100%;
-  max-width: 384px;
   background: var(--bio-card);
   border: 1px solid var(--bio-line);
   border-radius: 14px;
   padding: 32px;
 }
-
-.back {
-  display: inline-block;
-  font-size: 11.5px;
-  color: var(--bio-muted);
-  text-decoration: none;
-  margin-bottom: 22px;
-}
-.back:hover { color: var(--bio-ink); }
-
-.card h2 {
-  font-family: "Urbanist", "Roboto", sans-serif;
-  font-size: 21px;
-  font-weight: 700;
-  margin: 0;
-}
-
+.card h2 { font-family: "Urbanist", "Roboto", sans-serif; font-size: 21px; font-weight: 700; margin: 0; }
 .card .sub { font-size: 13px; color: var(--bio-muted); margin: 6px 0 24px; }
 
-label { display: block; margin-bottom: 15px; }
+.join { padding-top: 8px; }
+.join h3 { font-family: "Urbanist", "Roboto", sans-serif; font-size: 19px; font-weight: 700; margin: 0 0 12px; }
+.join p { font-size: 14px; line-height: 1.8; color: var(--bio-muted); margin: 0 0 20px; max-width: 46ch; }
+.join .secondary {
+  display: inline-block;
+  font-family: "Urbanist", "Roboto", sans-serif; font-size: 14px; font-weight: 700;
+  color: var(--bio-ink); text-decoration: none;
+  border-bottom: 2px solid var(--bio-lime); padding-bottom: 2px;
+}
+.join .where { font-size: 11.5px; color: var(--bio-muted); margin-top: 32px; }
 
+label { display: block; margin-bottom: 15px; }
 label > span {
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--bio-muted);
-  margin-bottom: 6px;
+  display: block; font-size: 12px; font-weight: 600;
+  color: var(--bio-muted); margin-bottom: 6px;
 }
 
 input {
-  width: 100%;
-  padding: 11px 12px;
-  border: 1px solid var(--bio-line);
-  border-radius: 8px;
-  background: #fff;
-  font-family: inherit;
-  font-size: 14px;
-  color: var(--bio-ink);
+  width: 100%; padding: 11px 12px;
+  border: 1px solid var(--bio-line); border-radius: 8px; background: #fff;
+  font-family: inherit; font-size: 14px; color: var(--bio-ink);
 }
 input:focus { outline: none; border-color: var(--bio-ink); }
 input::placeholder { color: #ABAEA1; }
@@ -177,44 +235,26 @@ input::placeholder { color: #ABAEA1; }
 .pw { position: relative; }
 .pw input { padding-right: 44px; }
 .pw button {
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 32px;
-  height: 32px;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--bio-muted);
-  font-size: 11px;
-  font-family: inherit;
-  cursor: pointer;
+  position: absolute; right: 5px; top: 50%; transform: translateY(-50%);
+  width: 32px; height: 32px; border: 0; border-radius: 6px;
+  background: transparent; color: var(--bio-muted);
+  font-size: 11px; font-family: inherit; cursor: pointer;
 }
 .pw button:hover { color: var(--bio-ink); }
 
 button.submit {
-  width: 100%;
-  margin-top: 6px;
-  padding: 13px 16px;
-  border: 0;
-  border-radius: 8px;
-  background: var(--bio-ink);
-  color: var(--bio-bg);
+  width: 100%; margin-top: 6px; padding: 13px 16px;
+  border: 0; border-radius: 8px;
+  background: var(--bio-ink); color: var(--bio-bg);
   font-family: "Urbanist", "Roboto", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
+  font-size: 14px; font-weight: 700; cursor: pointer;
 }
 button.submit:hover { background: #000; }
 button.submit[disabled] { background: var(--bio-muted); cursor: default; }
 
 .message {
-  margin-top: 16px;
-  padding: 11px 13px;
-  border-radius: 8px;
-  font-size: 12.5px;
-  line-height: 1.6;
+  margin-top: 16px; padding: 11px 13px; border-radius: 8px;
+  font-size: 12.5px; line-height: 1.6;
 }
 .message.error { background: #F7E4DF; border: 1px solid #E3BFB4; color: var(--bio-danger); }
 .message.ok { background: #EAF6D2; border: 1px solid #CBE59A; color: #3F5510; }
@@ -222,23 +262,26 @@ button.submit[disabled] { background: var(--bio-muted); cursor: default; }
 .message[hidden] { display: none; }
 
 .foot {
-  margin-top: 22px;
-  padding-top: 16px;
+  margin-top: 22px; padding-top: 16px;
   border-top: 1px solid var(--bio-line);
-  font-size: 11px;
-  line-height: 1.7;
-  color: var(--bio-muted);
+  font-size: 11px; line-height: 1.7; color: var(--bio-muted);
 }
-.foot code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 10px;
-  background: #E9E9E2;
-  border-radius: 3px;
-  padding: 1px 4px;
+.foot a { color: var(--bio-ink); }
+
+.mark {
+  width: 44px; height: 49px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background: var(--bio-lime);
 }
+.mark.sm { width: 26px; height: 29px; }
 
 @media (max-width: 900px) {
-  .field { display: none; }
+  .ticker-in { grid-template-columns: repeat(2, auto); }
+  .about-grid { grid-template-columns: 1fr; }
+  .signin { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .ticker-in { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
