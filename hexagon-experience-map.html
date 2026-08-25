@@ -525,6 +525,27 @@ CELLS.forEach(function(c){
   if(d>R_FIELD) R_FIELD=d;
 });
 
+/* Зурагдах бүх муж. Урьд нь 940×860 гэж гурван газарт гараар бичигдсэн байсан
+   бөгөөд эсүүд түүнээс дөрвөн талаараа давдаг байв — зүүнээс 146, дээрээс 128
+   нэгж тайрагдаж, захын нүднүүд хагасаараа харагдана. Одоо эсүүдээс өөрсдөөс нь
+   гарна: газар, хайргын давхарга, зам, харагдах цонх дөрвүүлээ үүнийг уншина,
+   тул дахин салах боломжгүй.
+
+   Харьцааг анх зурсан 940:860-д барина. SVG өргөнөөрөө сунадаг тул мужийг
+   зөвхөн ТОМРУУЛЖ тэгшитгэнэ — багасгавал эргээд тайрна. */
+var FIELD=(function(){
+  var pad=26, x0=1e9, y0=1e9, x1=-1e9, y1=-1e9;
+  CELLS.forEach(function(c){
+    if(c.x-c.R<x0) x0=c.x-c.R;  if(c.x+c.R>x1) x1=c.x+c.R;
+    if(c.y-c.R<y0) y0=c.y-c.R;  if(c.y+c.R>y1) y1=c.y+c.R;
+  });
+  x0-=pad; y0-=pad; x1+=pad; y1+=pad;
+  var w=x1-x0, h=y1-y0, want=860/940;
+  if(h/w < want){ var nh=w*want; y0-=(nh-h)/2; h=nh; }
+  else           { var nw=h/want; x0-=(nw-w)/2; w=nw; }
+  return {x:x0,y:y0,w:w,h:h};
+})();
+
 /* ══════════ 5. DEFS: хайрга, гурван тарилтын хээ ══════════ */
 var defs=el('defs');
 var pat='';
@@ -546,9 +567,9 @@ defs.innerHTML=
 map.appendChild(defs);
 
 /* ══════════ 6. ГАЗАР ══════════ */
-var groundRect=el('rect',{x:0,y:0,width:940,height:860,fill:'#E7DCC5',id:'ground'});
+var groundRect=el('rect',{x:FIELD.x,y:FIELD.y,width:FIELD.w,height:FIELD.h,fill:'#E7DCC5',id:'ground'});
 map.appendChild(groundRect);
-map.appendChild(el('rect',{x:0,y:0,width:940,height:860,filter:'url(#grit)'}));
+map.appendChild(el('rect',{x:FIELD.x,y:FIELD.y,width:FIELD.w,height:FIELD.h,filter:'url(#grit)'}));
 map.appendChild(el('path',{'class':'wash',d:'M 20 690 C 190 640, 300 720, 470 668 S 760 590, 930 640'}));
 map.appendChild(el('path',{'class':'wash',d:'M 60 120 C 210 190, 330 130, 452 196 S 700 250, 900 190',opacity:'.55'}));
 
@@ -562,7 +583,7 @@ for(var i=0;i<170;i++){
 map.appendChild(shrubs);
 
 /* Хашаа байхгүй: 54 зургаалжин өөрсдөө 30,000 м²-г бүрдүүлнэ. Зөвхөн орох зам үлдэнэ. */
-map.appendChild(el('path',{'class':'track',d:'M 470 860 L 470 '+(CY+R_FIELD+22).toFixed(0)}));
+map.appendChild(el('path',{'class':'track',d:'M '+CX+' '+(FIELD.y+FIELD.h).toFixed(0)+' L '+CX+' '+(CY+R_FIELD+22).toFixed(0)}));
 
 /* доод давхаргын халих */
 var halo=el('g',{id:'halo',filter:'url(#soft)',opacity:'0'});
@@ -721,7 +742,17 @@ function shelterAt(x,y){
 
 /* ══════════ 8. САЛХИНЫ ХЭСГҮҮД (canvas) ══════════ */
 var cvs=$('wind'), ctx=cvs.getContext('2d'), inner=$('mapinner');
-var VB={x:0,y:0,w:940,h:860}, VB_BASE={x:0,y:0,w:940,h:860};
+/* Талбайн харагдах муж нь эсүүдээс өөрсдөөс нь гарна, гараар бичсэн тооноос
+   биш. Урьд нь 940×860 гэж тогтоосон байсан нь хонхорцгийг дөрвөн талаас нь
+   тайрч байв — зүүн талаас 146, дээрээс 128 нэгж. Эсийн хэмжээ, байрлал
+   өөрчлөгдвөл энэ нь дагаж өөрчлөгдөнө, дахин тайрахгүй.
+
+   Зургийн харьцааг хадгална: SVG нь өргөнөөрөө сунадаг тул мужийг зөвхөн
+   томруулж тэгшитгэнэ — жижигрүүлбэл эргээд тайрна. */
+var VB_BASE={x:FIELD.x,y:FIELD.y,w:FIELD.w,h:FIELD.h};
+var VB={x:VB_BASE.x,y:VB_BASE.y,w:VB_BASE.w,h:VB_BASE.h};
+map.setAttribute('viewBox',
+  VB.x.toFixed(1)+' '+VB.y.toFixed(1)+' '+VB.w.toFixed(1)+' '+VB.h.toFixed(1));
 var DPR=Math.min(2,window.devicePixelRatio||1), CW=1, CH=1;
 function sizeCanvas(){
   var r=inner.getBoundingClientRect();
