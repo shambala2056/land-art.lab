@@ -23,9 +23,9 @@ function tokenOk(given) {
     return crypto.timingSafeEqual(a, b);
 }
 
-const COLUMNS = ["created", "reference", "name", "email", "cell", "pits",
-                 "seedlings", "amount", "currency", "status", "paidAt",
-                 "txnId", "method"];
+const COLUMNS = ["created", "reference", "name", "certName", "email", "phone",
+                 "cell", "pits", "seedlings", "treePrefix", "treeFirst", "treeLast",
+                 "amount", "currency", "status", "paidAt", "txnId", "method"];
 
 /* Quote every field: a name with a comma in it would otherwise split into two
  * columns, and a quote inside a value has to be doubled. */

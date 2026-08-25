@@ -108,9 +108,26 @@ async function reserve(cell, qty, ref, capacity) {
 async function confirm(ref) {
     if (!configured()) return false;
     const raw = await cmd(["GET", "ref:" + ref]);
-    if (!raw) { console.warn("ledger: no reservation for", ref); return false; }
-    const i = String(raw).lastIndexOf(":");
-    const cell = String(raw).slice(0, i), qty = Number(String(raw).slice(i + 1)) || 0;
+    let cell, qty;
+    if (raw) {
+        const i = String(raw).lastIndexOf(":");
+        cell = String(raw).slice(0, i); qty = Number(String(raw).slice(i + 1)) || 0;
+    } else {
+        /* No reservation. Either this is being confirmed twice — the first call
+           deletes it — or it is a payment being recovered long after the hold
+           expired, which is exactly what reconciliation does. The order record
+           still says what was bought, so the sale can still be recorded.
+           Claimed once, because the deleted reservation is what used to stop a
+           second call counting the same pits again, and there isn't one. */
+        const o = await readOrder(ref);
+        if (!o || !o.cell || !o.pits) { console.warn("ledger: no reservation for", ref); return false; }
+        if (!(await claimOnce("confirmed:" + ref, 86400 * 400))) {
+            console.log("ledger: already confirmed, not counting twice:", ref);
+            return false;
+        }
+        cell = o.cell; qty = Number(o.pits) || 0;
+        console.log("ledger: reservation had expired, confirming from the order:", ref);
+    }
     if (!cell || !qty) return false;
 
     await cmd(["INCRBY", "sold:" + cell, String(qty)]);
@@ -152,6 +169,12 @@ async function saveOrder(o) {
     if (!configured()) return false;
     const rec = JSON.stringify({
         reference: o.reference, name: o.name, email: o.email,
+        /* The name for the certificate is asked for separately from the name on
+           the order: people buy for someone else, and a certificate carrying the
+           payer's name is the wrong certificate. Stored empty when they are the
+           same, and resolved at render time rather than copied, so correcting
+           one later corrects the other. */
+        certName: o.certName || "", phone: o.phone || "",
         cell: o.cell || "", pits: o.pits, seedlings: o.pits * 3,
         amount: o.amount, currency: o.currency,
         status: "pending", created: new Date().toISOString(),
@@ -162,6 +185,69 @@ async function saveOrder(o) {
     await cmd(["LREM", "orders", "0", o.reference]);
     await cmd(["LPUSH", "orders", o.reference]);
     return true;
+}
+
+/* Gives a paid order its block of tree numbers, one per pit.
+ *
+ * A pit is three saplings and one certificate, so a two-pit order takes two
+ * numbers, not six.
+ *
+ * NUMBERS MUST NEVER COLLIDE. Two things guarantee it, and both are needed:
+ *
+ *   1. Each cell counts on its own key, trees:{cell}, and the certificate
+ *      carries the cell code as its prefix — D-06-0007. Two cells cannot
+ *      produce the same code however their counters run, because the prefixes
+ *      differ.
+ *   2. Within a cell, INCRBY is one atomic round trip that returns the value
+ *      AFTER adding. Whichever caller arrives first takes that block; a caller
+ *      arriving in the same millisecond takes the next one, never the same one.
+ *      A read-then-write would hand both callers the same number, which is
+ *      precisely the bug this avoids.
+ *
+ * Numbers are allocated on payment, not on order: an abandoned checkout must
+ * not burn a number and leave a hole in a cell's sequence for ever.
+ *
+ * Idempotent. A payment reaches settlement down two paths — the provider's
+ * callback and the buyer's browser returning — and both call this. An order
+ * that already holds a block keeps it rather than taking a second one.
+ *
+ * `cell` is the hexagon code the pits were bought from. Purchases are made by
+ * clicking a cell, so it is always there; the fallback prefix exists so that an
+ * order somehow lacking one still gets a unique code rather than no code, and
+ * it deliberately lives in its own counter so it cannot collide either.
+ */
+const NO_CELL_PREFIX = "LA";
+
+async function assignTrees(reference, count, cell) {
+    if (!configured()) return null;
+    const n = Number(count);
+    if (!Number.isInteger(n) || n < 1 || n > 100000) return null;
+
+    const raw = await cmd(["GET", "order:" + reference]);
+    if (!raw) return null;
+    let rec;
+    try { rec = JSON.parse(raw); } catch (e) { return null; }
+    if (rec.treeFirst && rec.treeLast) {
+        return { first: rec.treeFirst, last: rec.treeLast,
+                 prefix: rec.treePrefix || NO_CELL_PREFIX };       /* already has one */
+    }
+
+    /* Uppercased and constrained: the prefix becomes part of a redis key and of
+       a printed certificate code, and neither should take whatever arrives.
+       A cell code is now one or two letters and is the prefix as it stands. */
+    const code = String(cell || "").toUpperCase();
+    const prefix = /^[A-Z]{1,2}$/.test(code) ? code : NO_CELL_PREFIX;
+
+    const last = await cmd(["INCRBY", "trees:" + prefix, String(n)]);
+    if (last === null || last === undefined) return null;
+    const lastNum = Number(last);
+    if (!Number.isFinite(lastNum) || lastNum < n) return null;
+    const first = lastNum - n + 1;
+
+    rec.treeFirst = first; rec.treeLast = lastNum; rec.treePrefix = prefix;
+    rec.treesAssignedAt = new Date().toISOString();
+    await cmd(["SET", "order:" + reference, JSON.stringify(rec)]);
+    return { first: first, last: lastNum, prefix: prefix };
 }
 
 async function markOrder(reference, status, txnId, method) {
@@ -215,4 +301,8 @@ async function listOrders(limit) {
 }
 
 module.exports = { configured, takenIn, reserve, confirm, release, RESERVE_SECONDS,
-                   saveOrder, markOrder, listOrders, claimOnce, readOrder };
+                   /* Raw access, for the one-off cell-code migration only. Named
+                      with an underscore because nothing in the normal payment
+                      path should reach past the functions above. */
+                   _cmd: cmd,
+                   saveOrder, markOrder, listOrders, claimOnce, readOrder, assignTrees };

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Orders · Land-art Space</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+:root{--shell:#F2F0EA;--card:#FBFAF6;--ink:#14150F;--soft:#5E5F55;--hair:#E0DACA;
+  --lime:#B8E020;--lime-deep:#8AAE13;--good:#3E7B3B;--warn:#8A6A1C;--bad:#8A2E2E}
+*{box-sizing:border-box}
+body{margin:0;background:var(--shell);color:var(--ink);
+  font-family:'Roboto',system-ui,sans-serif;font-size:14px;line-height:1.55}
+.wrap{max-width:1500px;margin:0 auto;padding:30px 20px 80px}
+h1{font-family:'Urbanist',sans-serif;font-weight:600;font-size:30px;letter-spacing:-.02em;margin:0}
+.eyebrow{font-family:'Urbanist',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--lime-deep)}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0}
+.bar[hidden]{display:none}
+input[type=password],input[type=search]{border:1px solid var(--hair);background:var(--card);
+  border-radius:100px;padding:11px 17px;font:inherit;color:var(--ink);min-width:230px}
+input:focus{outline:2px solid var(--lime-deep);outline-offset:1px}
+button,a.btn{border:0;cursor:pointer;background:var(--ink);color:#fff;border-radius:100px;
+  padding:11px 22px;font-family:'Urbanist',sans-serif;font-weight:700;font-size:12px;
+  letter-spacing:.06em;text-transform:uppercase;text-decoration:none;display:inline-block}
+button.ghost,a.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--hair)}
+button[disabled]{opacity:.45;cursor:default}
+.note{color:var(--soft);font-size:13px;margin:0}
+.note.err{color:var(--bad)}
+
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:22px 0}
+.tile{background:var(--card);border-radius:16px;padding:15px 17px;border:1px solid var(--hair)}
+.tile b{display:block;font-family:'Urbanist',sans-serif;font-size:26px;font-weight:600;line-height:1.1}
+.tile span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);
+  font-family:'Urbanist',sans-serif;font-weight:700}
+
+.scroller{overflow-x:auto;background:var(--card);border:1px solid var(--hair);border-radius:16px}
+table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}
+th,td{padding:10px 13px;text-align:left;border-bottom:1px solid var(--hair);vertical-align:middle}
+th{font-family:'Urbanist',sans-serif;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--soft);position:sticky;top:0;background:var(--card);cursor:pointer;user-select:none}
+th:hover{color:var(--ink)}
+th .ar{opacity:.4;font-size:9px}
+tbody tr:hover{background:#F4F2EA}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+td.wrap{white-space:normal;min-width:150px}
+.pill{display:inline-block;border-radius:100px;padding:3px 10px;font-size:11px;font-weight:700;
+  font-family:'Urbanist',sans-serif}
+.pill.paid{background:#E4F0DC;color:var(--good)}
+.pill.pending{background:#F4EBD4;color:var(--warn)}
+.pill.other{background:#F0E0DC;color:var(--bad)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+a.cert{color:var(--lime-deep);font-weight:700;text-decoration:none}
+a.cert:hover{text-decoration:underline}
+.empty{padding:40px;text-align:center;color:var(--soft)}
+.out{margin:16px 0 0;background:#14150F;color:#C9D3B8;border-radius:12px;padding:15px 17px;
+  font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.65;
+  white-space:pre-wrap;word-break:break-word;max-height:420px;overflow:auto}
+.out[hidden]{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Land-art Space</div>
+  <h1>Orders</h1>
+
+  <!-- The token is never stored. It is typed each time on purpose: this list is
+       every buyer's name, email and phone number, and a token left in
+       localStorage turns one borrowed laptop into a data breach. -->
+  <div class="bar">
+    <input type="password" id="token" placeholder="Orders token" autocomplete="off" spellcheck="false">
+    <button id="load">Load</button>
+    <input type="search" id="q" placeholder="Filter by name, email, reference, cell…">
+    <button class="ghost" id="csv" disabled>Download CSV</button>
+  </div>
+  <!-- The two maintenance runs. Here rather than as a URL you paste, because
+       pasting means the token goes in the address bar and from there into
+       browser history and the server's access log. The page already holds it
+       in memory; these send it as a header. -->
+  <div class="bar" id="admin" hidden>
+    <button class="ghost" id="recon">Check pending against the bank</button>
+    <button class="ghost" id="migrate">Move history to the new cell codes</button>
+    <input type="search" id="keep" placeholder="Last real order to keep, LA-…" style="min-width:280px">
+    <button class="ghost" id="purge">Delete test orders after it</button>
+  </div>
+  <pre class="out" id="out" hidden></pre>
+  <p class="note" id="note">Paste the ORDERS_TOKEN to read the order book.</p>
+
+  <div class="tiles" id="tiles" hidden>
+    <div class="tile"><b id="tOrders">—</b><span>Orders</span></div>
+    <div class="tile"><b id="tPaid">—</b><span>Paid</span></div>
+    <div class="tile"><b id="tPits">—</b><span>Pits sold</span></div>
+    <div class="tile"><b id="tTrees">—</b><span>Trees</span></div>
+    <div class="tile"><b id="tCerts">—</b><span>Certificates issued</span></div>
+    <div class="tile"><b id="tMNT">—</b><span>Paid · MNT</span></div>
+    <div class="tile"><b id="tUSD">—</b><span>Paid · USD</span></div>
+  </div>
+
+  <div class="scroller" id="scroller" hidden>
+    <table>
+      <thead><tr id="head"></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <div class="empty" id="empty" hidden>No orders yet.</div>
+</div>
+
+<script>
+(function () {
+    "use strict";
+
+    var COLS = [
+        { k: "created",   t: "Date",        fmt: "date" },
+        { k: "reference", t: "Reference",   fmt: "mono" },
+        { k: "name",      t: "Buyer",       fmt: "wrap" },
+        { k: "certName",  t: "On certificate", fmt: "wrap" },
+        { k: "email",     t: "Email",       fmt: "wrap" },
+        { k: "phone",     t: "Phone" },
+        { k: "cell",      t: "Cell" },
+        { k: "pits",      t: "Pits",        fmt: "num" },
+        { k: "seedlings", t: "Trees",       fmt: "num" },
+        { k: "treeFirst", t: "Certificate no.", fmt: "trees" },
+        { k: "amount",    t: "Amount",      fmt: "num" },
+        { k: "currency",  t: "Cur" },
+        { k: "status",    t: "Status",      fmt: "status" },
+        { k: "paidAt",    t: "Paid",        fmt: "date" },
+        { k: "method",    t: "Method" },
+        { k: "_cert",     t: "Certificate", fmt: "cert" }
+    ];
+
+    var all = [], sortKey = "created", sortDir = -1, token = "";
+
+    var els = {};
+    ["token","load","q","csv","note","tiles","scroller","head","rows","empty"]
+        .forEach(function (id) { els[id] = document.getElementById(id); });
+
+    function say(text, bad) {
+        els.note.textContent = text;
+        els.note.className = "note" + (bad ? " err" : "");
+    }
+
+    function esc(v) {
+        return String(v === undefined || v === null ? "" : v)
+            .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function fmtDate(v) {
+        if (!v) return "";
+        var d = new Date(v);
+        if (isNaN(d)) return esc(v);
+        var p = function (n) { return (n < 10 ? "0" : "") + n; };
+        return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) +
+               " " + p(d.getHours()) + ":" + p(d.getMinutes());
+    }
+
+    function cell(r, c) {
+        var v = r[c.k];
+        if (c.fmt === "date") return '<td>' + fmtDate(v) + '</td>';
+        if (c.fmt === "mono") return '<td class="mono">' + esc(v) + '</td>';
+        if (c.fmt === "num") return '<td class="num">' +
+            (v === undefined || v === null || v === "" ? "" : Number(v).toLocaleString("en-US")) + '</td>';
+        if (c.fmt === "wrap") return '<td class="wrap">' + esc(v) + '</td>';
+        if (c.fmt === "trees") {
+            /* Certificates are numbered under their cell — AK-0007 — so a
+               bare integer here would not match what is printed. */
+            if (!r.treeFirst) return '<td class="mono"></td>';
+            var p = (r.treePrefix || String(r.cell || "LA")) + "-";
+            var pad = function (n) { var t = String(n); while (t.length < 3) t = "0" + t; return t; };
+            var b = r.treeLast || r.treeFirst;
+            return '<td class="mono">' + p + pad(r.treeFirst) +
+                   (b > r.treeFirst ? "…" + pad(b) : "") + "</td>";
+        }
+        if (c.fmt === "status") {
+            var k = v === "paid" ? "paid" : v === "pending" ? "pending" : "other";
+            return '<td><span class="pill ' + k + '">' + esc(v || "—") + '</span></td>';
+        }
+        if (c.fmt === "cert") {
+            if (r.status !== "paid" || !r.treeFirst) return '<td></td>';
+            return '<td><a class="cert" target="_blank" rel="noopener noreferrer" href="certificate.html?ref=' +
+                   encodeURIComponent(r.reference) + '">Open</a></td>';
+        }
+        return '<td>' + esc(v) + '</td>';
+    }
+
+    function visible() {
+        var q = els.q.value.trim().toLowerCase();
+        if (!q) return all;
+        return all.filter(function (r) {
+            return ["reference","name","certName","email","phone","cell","status"]
+                .some(function (k) { return String(r[k] || "").toLowerCase().indexOf(q) > -1; });
+        });
+    }
+
+    function paint() {
+        var rows = visible().slice().sort(function (a, b) {
+            var x = a[sortKey], y = b[sortKey];
+            if (x === undefined || x === null || x === "") return 1;   /* blanks last, both ways */
+            if (y === undefined || y === null || y === "") return -1;
+            if (typeof x === "number" && typeof y === "number") return (x - y) * sortDir;
+            return String(x).localeCompare(String(y)) * sortDir;
+        });
+
+        els.head.innerHTML = COLS.map(function (c) {
+            var mark = c.k === sortKey ? (sortDir > 0 ? " ▲" : " ▼") : "";
+            return '<th data-k="' + c.k + '">' + c.t + '<span class="ar">' + mark + '</span></th>';
+        }).join("");
+        Array.prototype.forEach.call(els.head.querySelectorAll("th"), function (th) {
+            th.onclick = function () {
+                var k = th.dataset.k;
+                if (k === sortKey) { sortDir = -sortDir; } else { sortKey = k; sortDir = 1; }
+                paint();
+            };
+        });
+
+        els.rows.innerHTML = rows.map(function (r) {
+            return "<tr>" + COLS.map(function (c) { return cell(r, c); }).join("") + "</tr>";
+        }).join("");
+
+        els.scroller.hidden = rows.length === 0;
+        els.empty.hidden = rows.length !== 0;
+    }
+
+    function tiles() {
+        var paid = all.filter(function (r) { return r.status === "paid"; });
+        var sum = function (rows, k) {
+            return rows.reduce(function (n, r) { return n + (Number(r[k]) || 0); }, 0);
+        };
+        var money = function (cur) {
+            return sum(paid.filter(function (r) { return r.currency === cur; }), "amount")
+                   .toLocaleString("en-US");
+        };
+        document.getElementById("tOrders").textContent = all.length.toLocaleString("en-US");
+        document.getElementById("tPaid").textContent = paid.length.toLocaleString("en-US");
+        document.getElementById("tPits").textContent = sum(paid, "pits").toLocaleString("en-US");
+        document.getElementById("tTrees").textContent = sum(paid, "seedlings").toLocaleString("en-US");
+        document.getElementById("tCerts").textContent = paid.reduce(function (n, r) {
+            return n + (r.treeFirst ? (r.treeLast || r.treeFirst) - r.treeFirst + 1 : 0);
+        }, 0).toLocaleString("en-US");
+        document.getElementById("tMNT").textContent = money("MNT");
+        document.getElementById("tUSD").textContent = money("USD");
+        els.tiles.hidden = false;
+    }
+
+    function load() {
+        token = els.token.value.trim();
+        if (!token) { say("Paste the ORDERS_TOKEN first.", true); return; }
+        els.load.disabled = true;
+        say("Reading the order book…");
+        fetch("/api/pay-orders?limit=2000&token=" + encodeURIComponent(token))
+            .then(function (r) {
+                return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; });
+            })
+            .then(function (res) {
+                els.load.disabled = false;
+                if (!res.ok) {
+                    say(res.status === 401
+                        ? "That token was refused."
+                        : (res.d && res.d.error) || "Couldn't read the order book.", true);
+                    return;
+                }
+                all = (res.d && res.d.orders) || [];
+                els.csv.disabled = all.length === 0;
+                say(all.length + " orders · " + (res.d.paid || 0) + " paid.");
+                document.getElementById("admin").hidden = false;
+                tiles();
+                paint();
+            })
+            .catch(function () {
+                els.load.disabled = false;
+                say("Network problem — please try again.", true);
+            });
+    }
+
+    /* Sample rows, so the table can be looked at before any real order exists —
+       and so it can be looked at locally, where there is no ledger to read. The
+       banner says what it is; nothing is fetched and nothing is written.
+         orders.html?demo=1                                                  */
+    function demo() {
+        var t = Date.parse("2026-08-24T09:00:00Z");
+        var mk = function (i, o) {
+            return Object.assign({
+                created: new Date(t - i * 5400000).toISOString(),
+                reference: "LA-DEMO" + (100 + i), currency: "USD", status: "paid",
+                paidAt: new Date(t - i * 5400000 + 120000).toISOString(), method: "card",
+            }, o);
+        };
+        all = [
+            mk(0, { name: "Ts. Purevjargal", certName: "Jack's Coffee", email: "purevjargal@jackscoffee.mn",
+                    phone: "+976 8000 6824", cell: "AH", pits: 4, seedlings: 12,
+                    treeFirst: 1, treeLast: 12, amount: 120 }),
+            mk(1, { name: "Oyundari", certName: "", email: "hello@shambala.today",
+                    phone: "", cell: "AK", pits: 1, seedlings: 3,
+                    treeFirst: 13, treeLast: 15, amount: 30 }),
+            mk(2, { name: "Timberland Mongolia", certName: "TIMBERLAND", email: "office@example.com",
+                    phone: "+976 9911 2233", cell: "R", pits: 17, seedlings: 51,
+                    treeFirst: 16, treeLast: 66, amount: 510 }),
+            mk(3, { name: "B. Enkhtuya", certName: "Ээж минь", email: "enkhtuya@example.com",
+                    phone: "+976 9500 1122", cell: "", pits: 2, seedlings: 6,
+                    status: "pending", paidAt: "", method: "", amount: 60 }),
+        ];
+        els.csv.disabled = true;
+        say("Demo data — four made-up orders, so the table can be seen before there are real ones.");
+        tiles();
+        paint();
+    }
+
+    if (new URLSearchParams(location.search).get("demo")) {
+        document.querySelector(".bar").hidden = true;
+        demo();
+    }
+
+    /* Both runs report before they act. The first press is always a dry run;
+       only a second press, after the report has been read, changes anything. */
+    function admin(path, label, extra) {
+        var out = document.getElementById("out");
+        var confirmed = false;
+        return function () {
+            var dry = !confirmed;
+            out.hidden = false;
+            out.textContent = (dry ? "Asking (nothing will change)…" : "Running…");
+            fetch("/api/" + path + (dry ? "?dry=1" : "") + (extra || ""),
+                  { headers: { "x-orders-token": token } })
+                .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+                .then(function (res) {
+                    out.textContent = JSON.stringify(res.d, null, 2);
+                    if (!res.ok) { confirmed = false; return; }
+                    if (dry) {
+                        confirmed = true;
+                        out.textContent = "DRY RUN — nothing was changed.\n" +
+                            "Press \"" + label + "\" again to apply it.\n\n" + out.textContent;
+                    } else {
+                        confirmed = false;
+                        load();      /* the table is now out of date */
+                    }
+                })
+                .catch(function (e) { out.textContent = "Network problem: " + e.message; });
+        };
+    }
+
+    els.load.onclick = load;
+    els.token.addEventListener("keydown", function (e) { if (e.key === "Enter") load(); });
+    els.q.addEventListener("input", paint);
+    document.getElementById("recon").onclick =
+        admin("pay-reconcile", "Check pending against the bank");
+    document.getElementById("migrate").onclick =
+        admin("pay-migrate-cells", "Move history to the new cell codes");
+    /* Deletion is not reversible, so this one carries its own confirm wording
+       and takes the cut-off from the field beside it. */
+    document.getElementById("purge").onclick = function () {
+        var ref = document.getElementById("keep").value.trim().toUpperCase();
+        if (!/^LA-[A-Z0-9-]{4,}$/.test(ref)) {
+            var o = document.getElementById("out");
+            o.hidden = false;
+            o.textContent = "Type the reference of the LAST REAL order first. " +
+                            "Everything created after it will be deleted.";
+            return;
+        }
+        purgeRun(ref)();
+    };
+    var purgeState = {};
+    function purgeRun(ref) {
+        return function () {
+            var out = document.getElementById("out");
+            var dry = purgeState[ref] !== true;
+            out.hidden = false;
+            out.textContent = dry ? "Checking what would go…" : "Deleting…";
+            fetch("/api/pay-purge-tests?after=" + encodeURIComponent(ref) + (dry ? "" : "&apply=1"),
+                  { headers: { "x-orders-token": token } })
+                .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+                .then(function (res) {
+                    out.textContent = JSON.stringify(res.d, null, 2);
+                    if (!res.ok) { purgeState[ref] = false; return; }
+                    if (dry) {
+                        purgeState[ref] = true;
+                        out.textContent = "NOTHING DELETED YET — " + (res.d.summary.ordersAfter || 0) +
+                            " order(s) would go.\nPress the button again to delete them. " +
+                            "This cannot be undone.\n\n" + out.textContent;
+                    } else {
+                        purgeState[ref] = false;
+                        load();
+                    }
+                })
+                .catch(function (e) { out.textContent = "Network problem: " + e.message; });
+        };
+    }
+    /* Straight from the API rather than rebuilt here: the CSV a spreadsheet gets
+       should be the same bytes whatever downloaded it. */
+    els.csv.onclick = function () {
+        window.location.href = "/api/pay-orders?format=csv&limit=2000&token=" + encodeURIComponent(token);
+    };
+})();
+</script>
+</body>
+</html>

@@ -61,8 +61,12 @@ async function verify(reference) {
  *
  * Returns the word the buyer should be shown.
  */
-async function settle(reference, claimed, txnId, method, source, trustClaim) {
+async function settle(reference, claimed, txnId, method, source, trustClaim, opts) {
     if (!reference) return "unknown";
+    /* Recovering a payment that was handled by hand must not tell the buyer
+       about it again. Reconciliation sweeps up months-old orders, and some of
+       them have already had a certificate posted by a person. */
+    const quiet = Boolean(opts && opts.quiet);
 
     const verified = await verify(reference);
     const said = wordFor(verified);        /* "pending" when unpaid or unasked */
@@ -123,11 +127,33 @@ async function settle(reference, claimed, txnId, method, source, trustClaim) {
     if (state !== "pending") {
         try { await ledger.markOrder(reference, state, txnId, method); }
         catch (err) { console.error("ledger order update failed for", reference, err && err.message); }
-        try { await sheet.updateStatus(reference, state, txnId, method); }
+        try { await sheet.updateStatus(reference, state, txnId, method, { quiet: quiet }); }
         catch (err) { console.error("sheet status update failed for", reference, err && err.message); }
     }
 
-    if (state === "paid") await notify(reference, txnId, method, source);
+    /* One certificate per PIT — a pit is three saplings and one certificate,
+       not three. The numbers are handed out here: after the money is real,
+       before anyone is told to go and collect them. Safe to reach twice, since
+       a payment settles down both the callback and the browser return, and an
+       order that already holds a block of numbers keeps it. */
+    if (state === "paid") {
+        try {
+            const order = await ledger.readOrder(reference);
+            const pits = order && Number(order.pits);
+            /* The cell code is the certificate's prefix, so numbering is per
+               cell and two cells can never produce the same code. */
+            if (pits > 0) await ledger.assignTrees(reference, pits, order.cell);
+        } catch (err) {
+            /* A certificate that has to be issued by hand is a nuisance; a
+               payment rejected because numbering failed is a lost sale. */
+            console.error("tree numbers not assigned for", reference, err && err.message);
+        }
+    }
+
+    if (state === "paid" && !quiet) await notify(reference, txnId, method, source);
+    if (state === "paid" && quiet) {
+        console.log("settled quietly, no notification sent:", reference);
+    }
     return state;
 }
 
