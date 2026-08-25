@@ -387,43 +387,52 @@ async function purgeTests(req, res) {
     if (!tokenOk(token)) return res.status(401).json({ error: "Unauthorized." });
     if (!ledger.configured()) return res.status(503).json({ error: "No ledger is connected." });
 
+    /* Two directions, because the rubbish has turned up on both sides of a
+       real order. ?after= names the last order to keep and clears what came
+       later; ?before= names the first order to keep and clears what came
+       earlier. Neither ever touches a paid order — that is checked below and
+       the whole run is refused if one is in range. */
     const after = String((req.query && req.query.after) || "").trim().toUpperCase();
-    if (!/^LA-[A-Z0-9-]{4,}$/.test(after)) {
+    const before = String((req.query && req.query.before) || "").trim().toUpperCase();
+    const pivot = after || before;
+    if (Boolean(after) === Boolean(before)) {
         return res.status(400).json({
-            error: "Name the last order to KEEP, as ?after=LA-… — everything created after it goes.",
+            error: "Give exactly one of ?after=LA-… (clear what came after it) " +
+                   "or ?before=LA-… (clear what came before it).",
         });
+    }
+    if (!/^LA-[A-Z0-9-]{4,}$/.test(pivot)) {
+        return res.status(400).json({ error: "That does not look like one of our references." });
     }
     const apply = String((req.query && req.query.apply) || "") === "1";
 
     const rows = await ledger.listOrders(2000);
     if (!rows) return res.status(502).json({ error: "Couldn't read the order book." });
 
-    const cutoff = rows.filter(function (r) { return r.reference === after; })[0];
-    if (!cutoff) return res.status(404).json({ error: "No order with reference " + after + "." });
+    const cutoff = rows.filter(function (r) { return r.reference === pivot; })[0];
+    if (!cutoff) return res.status(404).json({ error: "No order with reference " + pivot + "." });
     const line = Date.parse(cutoff.created || "");
     if (!line) return res.status(400).json({ error: "That order has no usable created date." });
 
-    /* Strictly after, so the named order itself always survives. */
+    /* Strictly one side or the other, so the named order itself always
+       survives whichever direction was asked for. */
     const later = rows.filter(function (r) {
         const t = Date.parse(r.created || "");
-        return t && t > line;
+        if (!t) return false;
+        return after ? t > line : t < line;
     });
 
+    /* A paid order is money that moved, and nothing here may delete one. They
+       are lifted out of the range rather than used to refuse it: the rubbish
+       from a week of testing sits on both sides of the real sales, and a rule
+       that stops at the first paid order can never clear it. They are reported
+       so the count is never silently smaller than it looks. */
     const paid = later.filter(function (r) { return r.status === "paid"; });
-    if (paid.length) {
-        return res.status(409).json({
-            error: "Refusing: " + paid.length + " paid order(s) are newer than the cut-off. " +
-                   "A paid order is money that moved. Check the cut-off before going further.",
-            paid: paid.map(function (r) {
-                return { reference: r.reference, cell: r.cell, name: r.name,
-                         amount: r.amount, paidAt: r.paidAt };
-            }),
-        });
-    }
+    const doomed = later.filter(function (r) { return r.status !== "paid"; });
 
     const cmd = ledger._cmd;
     const removed = [];
-    for (const r of later) {
+    for (const r of doomed) {
         removed.push({ reference: r.reference, created: r.created, cell: r.cell || null,
                        name: r.name || null, email: r.email || null,
                        status: r.status || "pending" });
@@ -438,9 +447,12 @@ async function purgeTests(req, res) {
     }
 
     const summary = {
-        keptUpToAndIncluding: after,
+        direction: after ? "cleared everything after" : "cleared everything before",
+        pivot: pivot,
         cutoffCreated: cutoff.created,
-        ordersAfter: later.length,
+        inRange: later.length,
+        paidKept: paid.length,
+        toDelete: doomed.length,
         deleted: apply ? removed.length : 0,
         applied: apply,
         note: apply
@@ -448,7 +460,14 @@ async function purgeTests(req, res) {
             : "Nothing was deleted. Add apply=1 to carry it out.",
     };
     console.log("purge tests:", JSON.stringify(summary));
-    return res.status(200).json({ summary: summary, orders: removed });
+    return res.status(200).json({
+        summary: summary,
+        keptBecausePaid: paid.map(function (r) {
+            return { reference: r.reference, cell: r.cell, pits: r.pits,
+                     amount: r.amount, paidAt: r.paidAt };
+        }),
+        orders: removed,
+    });
 }
 
 /* Writes down the ground that was spoken for before the site could sell it.
@@ -476,6 +495,22 @@ const BASELINE = {
     "H":  { pits: 40, who: "KHULAN UUL" },
     "L":  { pits: 40, who: "EFES CONSTRUCTION" },
     "AJ": { pits: 20, who: "EFES INTERNATIONAL" },
+
+    /* The two orders that were actually paid on the old site, under the cell
+       codes it used then: F-01 is now A, C-04 is now AE. Their pits were never
+       counted against the lettered cells because the migration was never run
+       in production. */
+    "A":  { pits: 1, who: "paid on the old site as cell F-01" },
+    "AE": { pits: 2, who: "paid on the old site as cell C-04" },
+
+    /* A number to hold back rather than ground to hold back.
+       imy's certificate was written by hand and reads F-12. Under the old
+       scheme that was a cell code; under this one it is what the twelfth
+       certificate in cell F would say. Two certificates reading F-12 is exactly
+       what this numbering exists to prevent, so cell F starts at F-013 and the
+       numbers below it are never issued. No pit is withheld — the ground in F
+       is still for sale. */
+    "F":  { pits: 0, trees: 12, who: "reserving F-012 — issued to imy by hand" },
 };
 
 async function baseline(req, res) {
@@ -496,12 +531,15 @@ async function baseline(req, res) {
 
     for (const cell of Object.keys(BASELINE)) {
         const want = BASELINE[cell].pits;
+        /* Numbers and ground move together unless an entry says otherwise —
+           a reserved number is not a sold pit. */
+        const wantTrees = BASELINE[cell].trees === undefined ? want : BASELINE[cell].trees;
         const cap = cellCapacity(cell);
         if (cap === null) {
             rows.push({ cell: cell, error: "unknown cell" });
             continue;
         }
-        if (want > cap) {
+        if (want > cap || wantTrees > cap) {
             /* Refuse rather than truncate: a partner allocated more pits than
                their cell holds is a placement to settle on the map, not a
                number to quietly round down here. */
@@ -513,7 +551,7 @@ async function baseline(req, res) {
         const trees = Number(await cmd(["GET", "trees:" + cell])) || 0;
         const row = { cell: cell, who: BASELINE[cell].who, pits: want, capacity: cap,
                       soldWas: sold, treesWas: trees,
-                      soldNow: Math.max(sold, want), treesNow: Math.max(trees, want) };
+                      soldNow: Math.max(sold, want), treesNow: Math.max(trees, wantTrees) };
         row.changed = row.soldNow !== sold || row.treesNow !== trees;
         if (apply && row.changed) {
             if (row.soldNow !== sold)  await cmd(["SET", "sold:"  + cell, String(row.soldNow)]);
