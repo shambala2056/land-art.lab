@@ -13,6 +13,7 @@
  */
 
 const ledger = require("./_ledger");
+const { cellCapacity } = require("./_minu");
 const { settle, verify, wordFor } = require("./_settle");
 const crypto = require("crypto");
 
@@ -450,4 +451,98 @@ async function purgeTests(req, res) {
     return res.status(200).json({ summary: summary, orders: removed });
 }
 
-module.exports = { reconcile, migrateCells, purgeTests };
+/* Writes down the ground that was spoken for before the site could sell it.
+ *
+ * The organisations came first: they were given pits, and certificates were
+ * printed for them, by hand and off the ledger. The ledger therefore believes
+ * those cells are empty — so the first sponsor to buy into cell R would be
+ * handed R-001, a number a partner is already holding on paper. That is the one
+ * failure this numbering was built to make impossible, and it has to be closed
+ * before the site takes a real order rather than after.
+ *
+ * Two counters per cell, both raised to the number already taken:
+ *   sold:{cell}   what is gone, so availability does not oversell the cell
+ *   trees:{cell}  the last certificate number issued, so the next one is +1
+ *
+ * Only ever raises. Running it twice changes nothing, and a cell that has since
+ * sold past the baseline on its own is left alone — this is a floor, not a
+ * correction. Nothing here touches an order record: these pits are not web
+ * orders and must not appear in the order book as though they were.
+ */
+const BASELINE = {
+    /* Partners, and the pits each was allocated. */
+    "R":  { pits: 50, who: "TIMBERLAND" },
+    "P":  { pits: 50, who: "YVES ROCHER" },
+    "H":  { pits: 40, who: "KHULAN UUL" },
+    "L":  { pits: 40, who: "EFES CONSTRUCTION" },
+    "AJ": { pits: 20, who: "EFES INTERNATIONAL" },
+};
+
+async function baseline(req, res) {
+    res.setHeader("Cache-Control", "no-store");
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+
+    const token = req.headers["x-orders-token"] || "";
+    if (req.query && req.query.token) {
+        return res.status(400).json({ error: "Send the token as an x-orders-token header, not in the URL." });
+    }
+    if (!process.env.ORDERS_TOKEN) return res.status(503).json({ error: "Not configured." });
+    if (!tokenOk(token)) return res.status(401).json({ error: "Unauthorized." });
+    if (!ledger.configured()) return res.status(503).json({ error: "No ledger is connected." });
+
+    const apply = String((req.query && req.query.apply) || "") === "1";
+    const cmd = ledger._cmd;
+    const rows = [];
+
+    for (const cell of Object.keys(BASELINE)) {
+        const want = BASELINE[cell].pits;
+        const cap = cellCapacity(cell);
+        if (cap === null) {
+            rows.push({ cell: cell, error: "unknown cell" });
+            continue;
+        }
+        if (want > cap) {
+            /* Refuse rather than truncate: a partner allocated more pits than
+               their cell holds is a placement to settle on the map, not a
+               number to quietly round down here. */
+            rows.push({ cell: cell, who: BASELINE[cell].who, pits: want, capacity: cap,
+                        error: "allocation exceeds the cell — move them to a larger cell first" });
+            continue;
+        }
+        const sold  = Number(await cmd(["GET", "sold:"  + cell])) || 0;
+        const trees = Number(await cmd(["GET", "trees:" + cell])) || 0;
+        const row = { cell: cell, who: BASELINE[cell].who, pits: want, capacity: cap,
+                      soldWas: sold, treesWas: trees,
+                      soldNow: Math.max(sold, want), treesNow: Math.max(trees, want) };
+        row.changed = row.soldNow !== sold || row.treesNow !== trees;
+        if (apply && row.changed) {
+            if (row.soldNow !== sold)  await cmd(["SET", "sold:"  + cell, String(row.soldNow)]);
+            if (row.treesNow !== trees) await cmd(["SET", "trees:" + cell, String(row.treesNow)]);
+        }
+        rows.push(row);
+    }
+
+    const bad = rows.filter(function (r) { return r.error; });
+    const summary = {
+        cells: rows.length,
+        pits: rows.reduce(function (n, r) { return n + (r.error ? 0 : r.pits); }, 0),
+        changed: rows.filter(function (r) { return r.changed; }).length,
+        problems: bad.length,
+        applied: apply && !bad.length,
+        note: bad.length
+            ? "Nothing was written: fix the cells listed with an error first."
+            : apply ? "Written. The next certificate in each cell follows the numbers already issued."
+                    : "Nothing was written. Add apply=1 to carry it out.",
+    };
+    /* All or nothing when something is wrong — a half-applied baseline is
+       harder to reason about than none at all. */
+    if (bad.length && apply) {
+        console.error("baseline refused:", JSON.stringify(bad));
+        return res.status(409).json({ summary: summary, cells: rows });
+    }
+    console.log("baseline:", JSON.stringify(summary));
+    return res.status(200).json({ summary: summary, cells: rows });
+}
+
+module.exports = { reconcile, migrateCells, purgeTests, baseline };
+

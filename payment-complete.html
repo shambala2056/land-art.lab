@@ -10,7 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
     :root { --ink:#14150F; --soft:#5E5F55; --shell:#F2F0EA; --card:#FBFAF6;
-            --hair:#E0DACA; --lime:#B8E020; --good:#3E7B3B; --warn:#8A6A1C; --bad:#8A2E2E; }
+            --hair:#E0DACA; --lime:#B8E020; --lime-deep:#8AAE13;
+            --good:#3E7B3B; --warn:#8A6A1C; --bad:#8A2E2E; }
     * { box-sizing: border-box; }
     body { margin:0; background:var(--shell); color:var(--ink); min-height:100vh;
            font-family:'Urbanist',system-ui,-apple-system,sans-serif; font-size:16px; line-height:1.6;
@@ -38,6 +39,11 @@
     a.btn.alt { background:var(--lime); color:var(--ink); }
     a.btn i { width:7px; height:7px; border-radius:50%; background:var(--lime); }
     a.btn.alt i { background:var(--ink); }
+    /* The quieter half of the pair — and what "back to the site" becomes once
+       there is a certificate to collect, because that is the thing to press. */
+    a.btn.ghost { background:var(--shell); color:var(--ink); border:1px solid var(--hair); }
+    a.btn.ghost i { background:var(--lime-deep); }
+    #certActions[hidden] { display:none; }
     .foot { margin-top:24px; padding-top:18px; border-top:1px solid var(--hair);
             font-size:12.5px; color:var(--soft); }
 
@@ -54,6 +60,14 @@
     .lbl { font-size:10px; letter-spacing:.14em; text-transform:uppercase;
            color:var(--soft); font-weight:700; margin:20px 0 8px; }
     .lbl[hidden] { display:none; }
+
+    .codes { display:flex; flex-wrap:wrap; gap:7px; margin:20px 0 8px; }
+    .codes[hidden] { display:none; }
+    .codes b { background:var(--lime); border-radius:100px; padding:6px 15px;
+               font:700 13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;
+               letter-spacing:.04em; }
+    .codes-note { font-size:13px; }
+    .codes-note[hidden] { display:none; }
 </style>
 </head>
 <body>
@@ -64,6 +78,12 @@
     <p id="msg">One moment — we're confirming this with the bank.</p>
 
     <div class="state pending" id="state"><span class="dot"></span><span id="stateText">Checking</span></div>
+
+    <!-- The tree numbers. Shown above the receipt because they are what the
+         buyer came for: the certificate is printed from them and the number is
+         what is marked on the ground. -->
+    <div class="codes" id="codes" hidden></div>
+    <p class="codes-note" id="codesNote" hidden></p>
 
     <!-- What was bought, once we know. A reference number on its own reads as
          an error code; "3 pits · 9 elms · cell F-01" reads as a receipt. -->
@@ -79,8 +99,16 @@
         <span class="ref" id="ref"></span>
     </div>
 
+    <!-- The two certificate buttons appear only once the payment is confirmed
+         and the tree numbers exist. Both open the same certificate; one goes
+         straight to downloading it, the other to making a story out of it. -->
+    <div class="actions" id="certActions" hidden>
+        <a class="btn" id="certDl" href="#"><i></i>Download certificate</a>
+        <a class="btn ghost" id="certStory" href="#"><i></i>Share as story</a>
+    </div>
+
     <div class="actions">
-        <a class="btn" href="/"><i></i>Back to the site</a>
+        <a class="btn ghost" href="/"><i></i>Back to the site</a>
     </div>
 
     <div class="foot">
@@ -118,18 +146,33 @@
        lost money to someone whose account has already been debited. Anything
        not confirmed is pending, and pending is honest: we are still waiting to
        hear, and the certificate follows when we do. */
+    /* Two versions of each, because whether a certificate is emailed is a
+       setting that can be off. Promising an email that is not being sent is
+       worse than saying nothing: it sends someone to watch an inbox, and then
+       to write and ask where the message is. pay-config reports the switch. */
     var COPY = {
         confirmed: ["Payment confirmed",
                     "Thank you for your contribution to the fight against desertification. Your tree certificate will be sent to your email."],
+        confirmedNoMail: ["Payment confirmed",
+                    "Thank you for your contribution to the fight against desertification. Your certificate is ready to download below — keep the file, or note your tree number."],
         pending:   ["Payment awaiting confirmation",
-                    "Your payment is still being confirmed. We will send your tree certificate to your email as soon as it is."]
+                    "Your payment is still being confirmed. We will send your tree certificate to your email as soon as it is."],
+        pendingNoMail: ["Payment awaiting confirmation",
+                    "Your payment is still being confirmed. Your certificate appears here as soon as it is."]
     };
+
+    /* Defaults to "no email promised" until pay-config answers: the quiet
+       version is true either way, where the other one might not be. */
+    var mailOn = false;
+    fetch("/api/pay-config").then(function (r) { return r.json(); })
+        .then(function (d) { mailOn = Boolean(d && d.treeLetter); })
+        .catch(function () {});
 
     var receipt = document.getElementById("receipt");
 
-    function show(status, order) {
+    function show(status, order, cert) {
         var key = (status === "paid") ? "confirmed" : "pending";
-        var c = COPY[key];
+        var c = COPY[mailOn ? key : key + "NoMail"] || COPY[key];
         head.textContent = c[0];
         msg.textContent = c[1];
         /* The dot keeps the provider's own distinction: green once confirmed,
@@ -150,6 +193,30 @@
                 document.getElementById("rCellRow").hidden = true;
             }
             receipt.hidden = false;
+        }
+
+        /* Not shown at all until the numbers have been issued: a button that
+           leads to "not ready yet" is worse than no button. How many
+           certificates there are is the certificate page's business to say —
+           a count on the button reads as a quantity of downloads. */
+        if (status === "paid" && cert && cert.first) {
+            var codes = [], n;
+            for (n = cert.first; n <= (cert.last || cert.first); n++) {
+                codes.push(cert.prefix + "-" + String(n).padStart(3, "0"));
+            }
+            document.getElementById("codes").innerHTML =
+                codes.map(function (x) { return "<b>" + x + "</b>"; }).join("");
+            document.getElementById("codes").hidden = false;
+            var note = document.getElementById("codesNote");
+            note.textContent = codes.length === 1
+                ? "This is your tree's number. It is printed on your certificate and marked on the ground."
+                : "These are your trees' numbers. Each one is a pit of three elms with its own certificate.";
+            note.hidden = false;
+
+            var href = "certificate.html?ref=" + encodeURIComponent(ref);
+            document.getElementById("certDl").href = href;
+            document.getElementById("certStory").href = href + "&story=1";
+            document.getElementById("certActions").hidden = false;
         }
     }
 
@@ -173,7 +240,7 @@
         .then(function (r) { return r.json(); })
         .then(function (d) {
             if (d && d.status) {
-                show(d.status, d.order);
+                show(d.status, d.order, d.certificate);
                 if (d.status === "pending" && tries < MAX) setTimeout(check, 1200 * tries);
             } else {
                 show("pending");

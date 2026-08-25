@@ -82,6 +82,9 @@ function updateStatus(reference, status, txnId, method, opts) {
            being recovered months later, which may already have been answered by
            hand. The sweep says so, and the script honours it. */
         suppressCertificate: Boolean(opts && opts.quiet),
+        /* The certificate numbers, once they exist. Written into the sheet so
+           the team can see what a buyer was sold without opening the ledger. */
+        trees: (opts && opts.trees) || "",
     });
 }
 

@@ -124,29 +124,50 @@ async function settle(reference, claimed, txnId, method, source, trustClaim, opt
         console.error("ledger update failed for", reference, err && err.message);
     }
 
-    if (state !== "pending") {
-        try { await ledger.markOrder(reference, state, txnId, method); }
-        catch (err) { console.error("ledger order update failed for", reference, err && err.message); }
-        try { await sheet.updateStatus(reference, state, txnId, method, { quiet: quiet }); }
-        catch (err) { console.error("sheet status update failed for", reference, err && err.message); }
-    }
-
     /* One certificate per PIT — a pit is three saplings and one certificate,
        not three. The numbers are handed out here: after the money is real,
        before anyone is told to go and collect them. Safe to reach twice, since
        a payment settles down both the callback and the browser return, and an
-       order that already holds a block of numbers keeps it. */
+       order that already holds a block of numbers keeps it.
+
+       Before the sheet is written, not after. The sheet is where the team
+       works, and a row that says "paid" without saying which trees were sold
+       sends somebody to look the answer up somewhere else. */
+    let order = null, cert = null;
     if (state === "paid") {
         try {
-            const order = await ledger.readOrder(reference);
+            order = await ledger.readOrder(reference);
             const pits = order && Number(order.pits);
             /* The cell code is the certificate's prefix, so numbering is per
                cell and two cells can never produce the same code. */
-            if (pits > 0) await ledger.assignTrees(reference, pits, order.cell);
+            if (pits > 0) cert = await ledger.assignTrees(reference, pits, order.cell);
         } catch (err) {
             /* A certificate that has to be issued by hand is a nuisance; a
                payment rejected because numbering failed is a lost sale. */
             console.error("tree numbers not assigned for", reference, err && err.message);
+        }
+    }
+
+    if (state !== "pending") {
+        try { await ledger.markOrder(reference, state, txnId, method); }
+        catch (err) { console.error("ledger order update failed for", reference, err && err.message); }
+        try {
+            await sheet.updateStatus(reference, state, txnId, method,
+                                     { quiet: quiet, trees: describeTrees(cert) });
+        }
+        catch (err) { console.error("sheet status update failed for", reference, err && err.message); }
+    }
+
+    /* The letter from the tree, which cannot be written until the tree has a
+       number. Quiet settlements skip it for the same reason they skip the team
+       notification: an order being recovered months later may already have been
+       answered by a person. */
+    if (cert && !quiet) {
+        try {
+            const { sendTreeLetter } = require("./_mail");
+            await sendTreeLetter(order, cert);
+        } catch (err) {
+            console.error("tree letter failed for", reference, err && err.message);
         }
     }
 
@@ -180,6 +201,15 @@ async function notify(reference, txnId, method, source) {
     } catch (err) {
         console.error("payment received but the notification email failed:", err && err.message);
     }
+}
+
+/* "AM-001" for one, "AM-001 to AM-003" for a block — one cell in the sheet,
+ * readable at a glance, and the same codes the certificates carry. */
+function describeTrees(cert) {
+    if (!cert || !cert.prefix || !cert.first) return "";
+    const pad = (n) => cert.prefix + "-" + String(n).padStart(3, "0");
+    const last = cert.last || cert.first;
+    return last > cert.first ? pad(cert.first) + " to " + pad(last) : pad(cert.first);
 }
 
 module.exports = { settle, verify, wordFor };

@@ -1,0 +1,46 @@
+{
+  "_readme": [
+    "Where the two variable fields sit on the certificate artwork.",
+    "This file is the whole contract between the artwork and the code: change the",
+    "artwork, change these numbers, and certificate.html needs no editing.",
+    "Coordinates are in artwork pixels, origin top-left. y is the text BASELINE.",
+    "Measured off Hexagon certificate.png: the label 'THIS CERTIFICATE IS PROUDLY",
+    "PRESENTED TO' sits at x=251 with its baseline at y=1763, and the rule under",
+    "'TREE NUMBER:' runs at y=3047 from x=254 to x=2494."
+  ],
+
+  "sheet": {
+    "art": "assets/tree-certificate/certificate.png",
+    "width": 2670,
+    "height": 3698,
+    "name": {
+      "x": 251, "y": 2150, "align": "left",
+      "font": "400 230px 'Abril Fatface', Georgia, serif",
+      "colour": "#272727",
+      "maxWidth": 2170,
+      "maxLines": 2,
+      "lineHeight": 1.02,
+      "_note": "Left-aligned to the label above it. Set as large as it goes and allowed a second line; the size only comes down when two lines still will not hold the name. Two lines sit either side of this baseline, so the block stays in the gap the artwork leaves between y=1800 and y=2470."
+    },
+    "number": {
+      "x": 254, "y": 3320, "align": "left",
+      "font": "700 248px Montserrat, Arial, sans-serif",
+      "colour": "#272727",
+      "letterSpacing": 12,
+      "maxWidth": 2240,
+      "_note": "Below the printed rule (which runs at y=3047), not on it, and set large — the number is what a holder looks for. At this size the baseline has to sit well down: the caps rise about 180px, so anything higher than ~3230 would climb back through the rule."
+    }
+  },
+
+  "story": {
+    "_note": "No separate story artwork was supplied, so the story is the certificate itself on a 9:16 ground rather than an invented second design. The ground is the cream from the certificate's own head, not the green — on green the lower half of the certificate loses its edge. Supply a 1080x1920 file and give it an 'art' key to replace this.",
+    "width": 1080,
+    "height": 1920,
+    "background": "#FFFAF1",
+    "pad": 40
+  },
+
+  "numberFormat": "{prefix}-{n}",
+  "_numberFormatNote": "The artwork already prints 'TREE NUMBER:', so no label here. {prefix} is the hexagon cell the pits were bought from, with its hyphen removed, and {n} counts within that cell — D06-007. Three digits is enough for good: the largest cell holds 177 pits today, and 792 even if the planted area grew to the 9,000-pit target, both under 999. Numbering site-wide instead would have needed four. Numbering per cell rather than site-wide is what makes a collision impossible: two cells cannot produce the same code however their counters run.",
+  "numberPad": 3
+}

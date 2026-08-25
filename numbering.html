@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Tree numbering plan · HEXAGON</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+:root{--shell:#F2F0EA;--card:#FBFAF6;--ink:#14150F;--soft:#5E5F55;--hair:#E0DACA;
+  --lime:#B8E020;--lime-deep:#8AAE13;
+  --shadow:10px 10px 26px rgba(60,52,32,.10),-8px -8px 22px rgba(255,255,255,.92)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--shell);color:var(--ink);
+  font-family:'Roboto',system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto;padding:40px 22px 100px}
+.eyebrow{font-family:'Urbanist',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--lime-deep)}
+h1{font-family:'Urbanist',sans-serif;font-weight:600;letter-spacing:-.02em;
+  font-size:clamp(28px,4.4vw,44px);line-height:1.05;margin:10px 0 12px}
+.lead{color:var(--soft);font-size:15px;max-width:660px;margin:0}
+h2{font-family:'Urbanist',sans-serif;font-weight:600;font-size:20px;
+  margin:44px 0 4px;letter-spacing:-.01em}
+h2+p{margin:0 0 18px;color:var(--soft);font-size:13.5px;max-width:660px}
+
+/* the code, taken apart */
+.anat{margin-top:30px;background:var(--card);border-radius:20px;padding:30px 32px;
+  box-shadow:var(--shadow)}
+.code{font-family:'Urbanist',sans-serif;font-weight:700;
+  font-size:clamp(38px,7vw,64px);letter-spacing:.02em;line-height:1}
+.code .cell{color:var(--lime-deep)}
+.code .seq{color:var(--ink)}
+.code .dash{color:var(--hair)}
+.legs{display:flex;gap:0;margin-top:6px;font-size:12.5px;color:var(--soft)}
+.legs div{flex:0 0 auto}
+.legs .a{width:clamp(96px,17vw,158px)}
+.anat ul{margin:22px 0 0;padding-left:20px;font-size:13.5px;color:var(--soft);line-height:1.75}
+.anat b{color:var(--ink)}
+
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:20px}
+.tile{background:var(--card);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow)}
+.tile b{display:block;font-family:'Urbanist',sans-serif;font-size:28px;font-weight:600;line-height:1.1}
+.tile span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--soft);font-family:'Urbanist',sans-serif;font-weight:700}
+
+.plan{margin-top:20px;background:var(--card);border-radius:20px;padding:22px;
+  box-shadow:var(--shadow)}
+.plan svg{display:block;width:100%;height:auto}
+.key{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;font-size:12.5px;color:var(--soft)}
+.key i{display:inline-block;width:13px;height:13px;border-radius:3px;margin-right:7px;
+  vertical-align:-2px;border:1px solid rgba(20,21,15,.35)}
+
+.scroller{margin-top:20px;overflow-x:auto;background:var(--card);
+  border-radius:16px;box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}
+th,td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--hair)}
+th{font-family:'Urbanist',sans-serif;font-size:10px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);position:sticky;top:0;background:var(--card)}
+tr:last-child td{border-bottom:0}
+td.l{font-family:'Urbanist',sans-serif;font-weight:700;font-size:15px}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+td.c{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--soft)}
+tr.infra td.l,tr.partner td.l,tr.jacks td.l{color:var(--soft)}
+tr.jacks{background:#EEF3E2}
+tr.infra,tr.partner{color:var(--soft)}
+.foot{margin-top:40px;font-size:12.5px;color:var(--soft)}
+@media print{body{background:#fff}.wrap{padding:0}.anat,.plan,.scroller,.tile{box-shadow:none;border:1px solid var(--hair)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">HEXAGON · Erdene sum, Dornogovi</div>
+  <h1>Tree numbering plan</h1>
+  <p class="lead">Every certificate carries a code that says which hexagon the trees are in and
+    which certificate it is within that hexagon. This is the whole scheme: the letter each cell
+    carries, where it sits on the ground, and the codes it will issue.</p>
+
+  <div class="anat">
+    <div class="code"><span class="cell">AB</span><span class="dash">-</span><span class="seq">007</span></div>
+    <div class="legs">
+      <div class="a">the hexagon</div>
+      <div>the seventh certificate in it</div>
+    </div>
+    <ul>
+      <li><b>One letter per hexagon.</b> A to Z, then AA to BB — fifty-four in all, one for
+        every cell on the site.</li>
+      <li><b>Letters run across the ground</b>, north-west to south-east, so neighbouring cells
+        carry neighbouring letters and a cell can be found by walking to it.</li>
+      <li><b>Three digits</b>, counted within that cell. The largest cell holds 863 pits, so
+        three is enough for good.</li>
+      <li><b>No code can ever repeat.</b> Each cell counts on its own, and the letter in front
+        keeps two cells apart however their counts run. Within a cell the number comes from a
+        single atomic step, so two payments landing in the same instant take different numbers.</li>
+      <li><b>Numbers are issued when a payment clears</b>, never when an order is started — an
+        abandoned checkout must not leave a hole in a cell's sequence.</li>
+      <li><b>One pit is three saplings and one certificate.</b></li>
+    </ul>
+  </div>
+
+  <div class="tiles">
+    <div class="tile"><b>54</b><span>Hexagons</span></div>
+    <div class="tile"><b>53</b><span>Issuing cells</span></div>
+    <div class="tile"><b>9,000</b><span>Pits · certificates</span></div>
+    <div class="tile"><b>27,000</b><span>Trees</span></div>
+    <div class="tile"><b>863</b><span>Largest cell</span></div>
+    <div class="tile"><b>25</b><span>Smallest cell</span></div>
+  </div>
+
+  <h2>Where each letter is</h2>
+  <p>Drawn to scale — each hexagon at its true relative area, in its true position. North is up.</p>
+  <div class="plan">
+    <svg viewBox="-587 -525 1113 1050"
+         font-family="Urbanist, sans-serif">
+<g><polygon points="-260.2,57.3 -260.2,153.3 -343.3,201.3 -426.5,153.3 -426.5,57.3 -343.3,9.3" fill="#5F8438" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-343.3" y="117.2" text-anchor="middle" font-size="34.0" font-weight="700" fill="#14150F">AH</text></g>
+<g><polygon points="247.2,80.1 247.2,176.1 164.0,224.1 80.9,176.1 80.9,80.1 164.0,32.1" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="164.0" y="140.0" text-anchor="middle" font-size="34.0" font-weight="700" fill="#14150F">AM</text></g>
+<g><polygon points="-14.5,205.8 -14.5,301.8 -97.6,349.8 -180.8,301.8 -180.8,205.8 -97.6,157.8" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-97.6" y="265.7" text-anchor="middle" font-size="34.0" font-weight="700" fill="#14150F">AS</text></g>
+<g><polygon points="385.4,-298.6 385.4,-221.2 318.4,-182.5 251.3,-221.2 251.3,-298.6 318.4,-337.3" fill="#8C93A0" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="318.4" y="-248.0" text-anchor="middle" font-size="34.0" font-weight="700" fill="#14150F">K</text></g>
+<g><polygon points="-416.4,-23.2 -416.4,54.2 -483.4,92.9 -550.4,54.2 -550.4,-23.2 -483.4,-61.9" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-483.4" y="27.4" text-anchor="middle" font-size="34.0" font-weight="700" fill="#14150F">AB</text></g>
+<g><polygon points="84.3,16.3 84.3,93.7 17.3,132.4 -49.7,93.7 -49.7,16.3 17.3,-22.4" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="17.3" y="66.9" text-anchor="middle" font-size="34.0" font-weight="700" fill="#14150F">AL</text></g>
+<g><polygon points="-16.9,380.5 -16.9,457.9 -84.0,496.6 -151.0,457.9 -151.0,380.5 -84.0,341.8" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-84.0" y="431.1" text-anchor="middle" font-size="34.0" font-weight="700" fill="#14150F">BA</text></g>
+<g><polygon points="4.5,-213.0 4.5,-160.4 -41.0,-134.1 -86.5,-160.4 -86.5,-213.0 -41.0,-239.3" fill="#8C93A0" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-41.0" y="-178.2" text-anchor="middle" font-size="24.2" font-weight="700" fill="#14150F">P</text></g>
+<g><polygon points="170.5,-200.5 170.5,-147.9 125.0,-121.6 79.5,-147.9 79.5,-200.5 125.0,-226.8" fill="#8C93A0" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="125.0" y="-165.7" text-anchor="middle" font-size="24.2" font-weight="700" fill="#14150F">R</text></g>
+<g><polygon points="-323.4,-61.7 -323.4,-9.1 -368.9,17.2 -414.4,-9.1 -414.4,-61.7 -368.9,-88.0" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-368.9" y="-27.0" text-anchor="middle" font-size="24.2" font-weight="700" fill="#14150F">AC</text></g>
+<g><polygon points="186.4,-39.3 186.4,13.2 140.9,39.5 95.4,13.2 95.4,-39.3 140.9,-65.6" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="140.9" y="-4.6" text-anchor="middle" font-size="24.2" font-weight="700" fill="#14150F">AE</text></g>
+<g><polygon points="86.4,353.9 86.4,406.5 40.8,432.8 -4.7,406.5 -4.7,353.9 40.8,327.6" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="40.8" y="388.7" text-anchor="middle" font-size="24.2" font-weight="700" fill="#14150F">AY</text></g>
+<g><polygon points="-206.4,386.7 -206.4,439.3 -251.9,465.6 -297.4,439.3 -297.4,386.7 -251.9,360.4" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-251.9" y="421.4" text-anchor="middle" font-size="24.2" font-weight="700" fill="#14150F">AZ</text></g>
+<g><polygon points="373.2,-403.3 373.2,-357.8 333.8,-335.0 294.4,-357.8 294.4,-403.3 333.8,-426.1" fill="#C9C2AC" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="333.8" y="-373.2" text-anchor="middle" font-size="20.9" font-weight="700" fill="#14150F">E</text></g>
+<g><polygon points="181.3,-293.9 181.3,-248.4 141.9,-225.6 102.4,-248.4 102.4,-293.9 141.9,-316.7" fill="#C9C2AC" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="141.9" y="-263.8" text-anchor="middle" font-size="20.9" font-weight="700" fill="#14150F">J</text></g>
+<g><polygon points="343.3,-164.1 343.3,-118.5 303.9,-95.7 264.4,-118.5 264.4,-164.1 303.9,-186.8" fill="#C9C2AC" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="303.9" y="-134.0" text-anchor="middle" font-size="20.9" font-weight="700" fill="#14150F">S</text></g>
+<g><polygon points="-184.1,15.0 -184.1,60.6 -223.5,83.3 -262.9,60.6 -262.9,15.0 -223.5,-7.7" fill="#C9C2AC" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-223.5" y="45.1" text-anchor="middle" font-size="20.9" font-weight="700" fill="#14150F">AD</text></g>
+<g><polygon points="321.0,35.7 321.0,81.2 281.6,104.0 242.1,81.2 242.1,35.7 281.6,12.9" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="281.6" y="65.8" text-anchor="middle" font-size="20.9" font-weight="700" fill="#14150F">AN</text></g>
+<g><polygon points="-46.4,93.7 -46.4,139.2 -85.8,162.0 -125.3,139.2 -125.3,93.7 -85.8,70.9" fill="#C9C2AC" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-85.8" y="123.8" text-anchor="middle" font-size="20.9" font-weight="700" fill="#14150F">AK</text></g>
+<g><polygon points="404.2,148.7 404.2,194.2 364.8,217.0 325.4,194.2 325.4,148.7 364.8,125.9" fill="#C9C2AC" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="364.8" y="178.8" text-anchor="middle" font-size="20.9" font-weight="700" fill="#14150F">AR</text></g>
+<g><polygon points="277.2,241.0 277.2,286.6 237.8,309.3 198.3,286.6 198.3,241.0 237.8,218.3" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="237.8" y="271.1" text-anchor="middle" font-size="20.9" font-weight="700" fill="#14150F">AV</text></g>
+<g><polygon points="293.5,-442.8 293.5,-410.6 265.7,-394.5 237.8,-410.6 237.8,-442.8 265.7,-458.9" fill="#8C93A0" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="265.7" y="-421.6" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">B</text></g>
+<g><polygon points="-3.4,-289.9 -3.4,-257.7 -31.3,-241.6 -59.1,-257.7 -59.1,-289.9 -31.3,-306.0" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-31.3" y="-268.6" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">H</text></g>
+<g><polygon points="465.9,-264.0 465.9,-231.8 438.0,-215.7 410.2,-231.8 410.2,-264.0 438.0,-280.1" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="438.0" y="-242.7" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">L</text></g>
+<g><polygon points="67.8,-170.6 67.8,-138.4 40.0,-122.3 12.1,-138.4 12.1,-170.6 40.0,-186.7" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="40.0" y="-149.3" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">Q</text></g>
+<g><polygon points="-91.5,-168.7 -91.5,-136.5 -119.4,-120.5 -147.3,-136.5 -147.3,-168.7 -119.4,-184.8" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-119.4" y="-147.5" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">O</text></g>
+<g><polygon points="465.5,-150.4 465.5,-118.2 437.7,-102.1 409.8,-118.2 409.8,-150.4 437.7,-166.5" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="437.7" y="-129.1" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">T</text></g>
+<g><polygon points="223.7,-136.1 223.7,-103.9 195.8,-87.8 167.9,-103.9 167.9,-136.1 195.8,-152.2" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="195.8" y="-114.8" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">Y</text></g>
+<g><polygon points="325.1,-73.5 325.1,-41.3 297.2,-25.2 269.3,-41.3 269.3,-73.5 297.2,-89.5" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="297.2" y="-52.2" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">AA</text></g>
+<g><polygon points="43.2,-69.7 43.2,-37.5 15.4,-21.4 -12.5,-37.5 -12.5,-69.7 15.4,-85.8" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="15.4" y="-48.5" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">W</text></g>
+<g><polygon points="264.5,-38.6 264.5,-6.4 236.7,9.7 208.8,-6.4 208.8,-38.6 236.7,-54.7" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="236.7" y="-17.3" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">AF</text></g>
+<g><polygon points="-124.2,54.4 -124.2,86.6 -152.1,102.7 -179.9,86.6 -179.9,54.4 -152.1,38.3" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-152.1" y="75.7" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">AI</text></g>
+<g><polygon points="386.7,74.1 386.7,106.3 358.8,122.4 330.9,106.3 330.9,74.1 358.8,58.0" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="358.8" y="95.4" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">AO</text></g>
+<g><polygon points="52.5,204.2 52.5,236.4 24.6,252.5 -3.3,236.4 -3.3,204.2 24.6,188.1" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="24.6" y="225.5" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">AT</text></g>
+<g><polygon points="100.5,278.1 100.5,310.3 72.7,326.4 44.8,310.3 44.8,278.1 72.7,262.0" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="72.7" y="299.4" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">AU</text></g>
+<g><polygon points="-152.6,346.0 -152.6,378.2 -180.5,394.3 -208.3,378.2 -208.3,346.0 -180.5,329.9" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-180.5" y="367.3" text-anchor="middle" font-size="14.8" font-weight="700" fill="#14150F">AX</text></g>
+<g><polygon points="271.4,-490.8 271.4,-474.2 257.0,-465.9 242.6,-474.2 242.6,-490.8 257.0,-499.1" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="257.0" y="-478.6" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">A</text></g>
+<g><polygon points="438.2,-375.5 438.2,-358.9 423.8,-350.6 409.4,-358.9 409.4,-375.5 423.8,-383.8" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="423.8" y="-363.3" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">F</text></g>
+<g><polygon points="284.1,-368.4 284.1,-351.7 269.7,-343.4 255.3,-351.7 255.3,-368.4 269.7,-376.7" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="269.7" y="-356.2" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">D</text></g>
+<g><polygon points="-10.3,-338.3 -10.3,-321.6 -24.7,-313.3 -39.1,-321.6 -39.1,-338.3 -24.7,-346.6" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-24.7" y="-326.1" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">C</text></g>
+<g><polygon points="-80.2,-247.2 -80.2,-230.6 -94.6,-222.3 -109.0,-230.6 -109.0,-247.2 -94.6,-255.5" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-94.6" y="-235.0" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">G</text></g>
+<g><polygon points="86.8,-231.3 86.8,-214.7 72.4,-206.4 58.0,-214.7 58.0,-231.3 72.4,-239.6" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="72.4" y="-219.1" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">I</text></g>
+<g><polygon points="496.1,-219.9 496.1,-203.3 481.7,-195.0 467.3,-203.3 467.3,-219.9 481.7,-228.2" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="481.7" y="-207.8" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">U</text></g>
+<g><polygon points="497.8,-178.4 497.8,-161.7 483.4,-153.4 469.0,-161.7 469.0,-178.4 483.4,-186.7" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="483.4" y="-166.2" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">V</text></g>
+<g><polygon points="-194.4,-160.7 -194.4,-144.1 -208.8,-135.8 -223.2,-144.1 -223.2,-160.7 -208.8,-169.1" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-208.8" y="-148.6" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">M</text></g>
+<g><polygon points="-158.3,-139.6 -158.3,-123.0 -172.7,-114.7 -187.1,-123.0 -187.1,-139.6 -172.7,-147.9" fill="#8C93A0" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-172.7" y="-127.5" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">N</text></g>
+<g><polygon points="157.3,-110.3 157.3,-93.6 142.9,-85.3 128.5,-93.6 128.5,-110.3 142.9,-118.6" fill="#8C93A0" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="142.9" y="-98.1" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">X</text></g>
+<g><polygon points="251.9,-87.9 251.9,-71.3 237.5,-62.9 223.1,-71.3 223.1,-87.9 237.5,-96.2" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="237.5" y="-75.7" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">Z</text></g>
+<g><polygon points="-87.5,41.6 -87.5,58.2 -101.9,66.5 -116.3,58.2 -116.3,41.6 -101.9,33.3" fill="#8C93A0" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-101.9" y="53.8" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">AJ</text></g>
+<g><polygon points="-454.0,104.0 -454.0,120.7 -468.4,129.0 -482.8,120.7 -482.8,104.0 -468.4,95.7" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-468.4" y="116.2" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">AG</text></g>
+<g><polygon points="-454.0,145.0 -454.0,161.6 -468.4,169.9 -482.8,161.6 -482.8,145.0 -468.4,136.7" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-468.4" y="157.2" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">AP</text></g>
+<g><polygon points="90.6,190.4 90.6,207.1 76.2,215.4 61.8,207.1 61.8,190.4 76.2,182.1" fill="#8C93A0" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="76.2" y="202.6" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">AQ</text></g>
+<g><polygon points="327.3,241.8 327.3,258.4 312.9,266.7 298.5,258.4 298.5,241.8 312.9,233.5" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="312.9" y="254.0" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">AW</text></g>
+<g><polygon points="-262.4,474.2 -262.4,490.8 -276.8,499.1 -291.2,490.8 -291.2,474.2 -276.8,465.9" fill="#B8E020" stroke="#14150F" stroke-width="1.1" stroke-opacity=".45"/><text x="-276.8" y="486.3" text-anchor="middle" font-size="11.0" font-weight="700" fill="#14150F">BB</text></g>
+    </svg>
+    <div class="key">
+      <span><i style="background:#B8E020"></i>For sale</span>
+      <span><i style="background:#5F8438"></i>Jack's Coffee — not numbered here</span>
+      <span><i style="background:#C9C2AC"></i>Infrastructure</span>
+      <span><i style="background:#8C93A0"></i>Already partnered</span>
+    </div>
+  </div>
+
+  <h2>Every cell, and the codes it issues</h2>
+  <p>In letter order, which is also the order the letters run across the site.</p>
+  <div class="scroller">
+    <table>
+      <thead><tr>
+        <th>Cell</th><th>Class</th><th>Area</th><th>Pits</th><th>Trees</th>
+        <th>Certificate codes</th><th>Use</th>
+      </tr></thead>
+      <tbody>
+<tr class="sale"><td class="l">A</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">A-001 … A-025</td><td>For sale</td></tr>
+<tr class="partner"><td class="l">B</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">B-001 … B-098</td><td>KHARKHORUM</td></tr>
+<tr class="sale"><td class="l">C</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">C-001 … C-025</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">D</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">D-001 … D-025</td><td>For sale</td></tr>
+<tr class="infra"><td class="l">E</td><td>Small-plus</td><td class="n">90 m²</td><td class="n">194</td><td class="n">582</td><td class="c">E-001 … E-194</td><td>Solar field</td></tr>
+<tr class="sale"><td class="l">F</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">F-001 … F-025</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">G</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">G-001 … G-025</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">H</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">H-001 … H-098</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">I</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">I-001 … I-025</td><td>For sale</td></tr>
+<tr class="infra"><td class="l">J</td><td>Small-plus</td><td class="n">90 m²</td><td class="n">194</td><td class="n">582</td><td class="c">J-001 … J-194</td><td>Water harvesting</td></tr>
+<tr class="partner"><td class="l">K</td><td>Large</td><td class="n">260 m²</td><td class="n">562</td><td class="n">1,686</td><td class="c">K-001 … K-562</td><td>EFES GROUP</td></tr>
+<tr class="sale"><td class="l">L</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">L-001 … L-098</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">M</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">M-001 … M-025</td><td>For sale</td></tr>
+<tr class="partner"><td class="l">N</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">N-001 … N-025</td><td>KHULAN UUL</td></tr>
+<tr class="sale"><td class="l">O</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">O-001 … O-098</td><td>For sale</td></tr>
+<tr class="partner"><td class="l">P</td><td>Medium</td><td class="n">120 m²</td><td class="n">259</td><td class="n">777</td><td class="c">P-001 … P-259</td><td>YVES ROCHER</td></tr>
+<tr class="sale"><td class="l">Q</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">Q-001 … Q-098</td><td>For sale</td></tr>
+<tr class="partner"><td class="l">R</td><td>Medium</td><td class="n">120 m²</td><td class="n">259</td><td class="n">777</td><td class="c">R-001 … R-259</td><td>TIMBERLAND</td></tr>
+<tr class="infra"><td class="l">S</td><td>Small-plus</td><td class="n">90 m²</td><td class="n">194</td><td class="n">582</td><td class="c">S-001 … S-194</td><td>Recycling and compost</td></tr>
+<tr class="sale"><td class="l">T</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">T-001 … T-098</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">U</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">U-001 … U-025</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">V</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">V-001 … V-025</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">W</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">W-001 … W-098</td><td>For sale</td></tr>
+<tr class="partner"><td class="l">X</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">X-001 … X-025</td><td>EFES CONSTRUCTION</td></tr>
+<tr class="sale"><td class="l">Y</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">Y-001 … Y-098</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">Z</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">Z-001 … Z-025</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AA</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">AA-001 … AA-098</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AB</td><td>Large</td><td class="n">260 m²</td><td class="n">562</td><td class="n">1,686</td><td class="c">AB-001 … AB-562</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AC</td><td>Medium</td><td class="n">120 m²</td><td class="n">259</td><td class="n">777</td><td class="c">AC-001 … AC-259</td><td>For sale</td></tr>
+<tr class="infra"><td class="l">AD</td><td>Small-plus</td><td class="n">90 m²</td><td class="n">194</td><td class="n">582</td><td class="c">AD-001 … AD-194</td><td>Research station</td></tr>
+<tr class="sale"><td class="l">AE</td><td>Medium</td><td class="n">120 m²</td><td class="n">259</td><td class="n">777</td><td class="c">AE-001 … AE-259</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AF</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">AF-001 … AF-098</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AG</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">AG-001 … AG-025</td><td>For sale</td></tr>
+<tr class="jacks"><td class="l">AH</td><td>Extra large</td><td class="n">400 m²</td><td class="n">863</td><td class="n">2,589</td><td class="c">—</td><td>Jack's Coffee — planted as their mark</td></tr>
+<tr class="sale"><td class="l">AI</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">AI-001 … AI-098</td><td>For sale</td></tr>
+<tr class="partner"><td class="l">AJ</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">AJ-001 … AJ-025</td><td>EFES INTERNATIONAL</td></tr>
+<tr class="infra"><td class="l">AK</td><td>Small-plus</td><td class="n">90 m²</td><td class="n">194</td><td class="n">582</td><td class="c">AK-001 … AK-194</td><td>Pollinator cell</td></tr>
+<tr class="sale"><td class="l">AL</td><td>Large</td><td class="n">260 m²</td><td class="n">562</td><td class="n">1,686</td><td class="c">AL-001 … AL-562</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AM</td><td>Extra large</td><td class="n">400 m²</td><td class="n">863</td><td class="n">2,589</td><td class="c">AM-001 … AM-863</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AN</td><td>Small-plus</td><td class="n">90 m²</td><td class="n">194</td><td class="n">582</td><td class="c">AN-001 … AN-194</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AO</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">AO-001 … AO-098</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AP</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">AP-001 … AP-025</td><td>For sale</td></tr>
+<tr class="partner"><td class="l">AQ</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">AQ-001 … AQ-025</td><td>EFEC SUPERMARKET</td></tr>
+<tr class="infra"><td class="l">AR</td><td>Small-plus</td><td class="n">90 m²</td><td class="n">194</td><td class="n">582</td><td class="c">AR-001 … AR-194</td><td>Community ground</td></tr>
+<tr class="sale"><td class="l">AS</td><td>Extra large</td><td class="n">400 m²</td><td class="n">863</td><td class="n">2,589</td><td class="c">AS-001 … AS-863</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AT</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">AT-001 … AT-098</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AU</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">AU-001 … AU-098</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AV</td><td>Small-plus</td><td class="n">90 m²</td><td class="n">194</td><td class="n">582</td><td class="c">AV-001 … AV-194</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AW</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">AW-001 … AW-025</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AX</td><td>Small</td><td class="n">45 m²</td><td class="n">98</td><td class="n">294</td><td class="c">AX-001 … AX-098</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AY</td><td>Medium</td><td class="n">120 m²</td><td class="n">259</td><td class="n">777</td><td class="c">AY-001 … AY-259</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">AZ</td><td>Medium</td><td class="n">120 m²</td><td class="n">259</td><td class="n">777</td><td class="c">AZ-001 … AZ-259</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">BA</td><td>Large</td><td class="n">260 m²</td><td class="n">562</td><td class="n">1,686</td><td class="c">BA-001 … BA-562</td><td>For sale</td></tr>
+<tr class="sale"><td class="l">BB</td><td>Marker</td><td class="n">12 m²</td><td class="n">25</td><td class="n">75</td><td class="c">BB-001 … BB-025</td><td>For sale</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="foot">
+    Generated from the site's own cell table — the same letters and pit counts
+    <code>api/_minu.js</code> and the cell map use, so this sheet cannot describe a scheme the
+    code does not implement. Regenerate after any change to the cells.
+  </div>
+</div>
+</body>
+</html>

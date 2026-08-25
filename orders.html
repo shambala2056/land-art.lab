@@ -247,7 +247,11 @@ a.cert:hover{text-decoration:underline}
         if (!token) { say("Paste the ORDERS_TOKEN first.", true); return; }
         els.load.disabled = true;
         say("Reading the order book…");
-        fetch("/api/pay-orders?limit=2000&token=" + encodeURIComponent(token))
+        /* The token goes in a header, never in the URL. A URL reaches the
+           browser's history, the server's access log and any proxy in between,
+           and this token opens a list of every buyer's name, email and phone
+           number. */
+        fetch("/api/pay-orders?limit=2000", { headers: { "x-orders-token": token } })
             .then(function (r) {
                 return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; });
             })
@@ -386,9 +390,33 @@ a.cert:hover{text-decoration:underline}
         };
     }
     /* Straight from the API rather than rebuilt here: the CSV a spreadsheet gets
-       should be the same bytes whatever downloaded it. */
+       should be the same bytes whatever downloaded it.
+       Fetched rather than navigated to. Navigating would put the token in the
+       address bar, and a download URL is the worst place for one: it is typed
+       into history, kept in the download list, and logged by the server with
+       the token still attached. */
     els.csv.onclick = function () {
-        window.location.href = "/api/pay-orders?format=csv&limit=2000&token=" + encodeURIComponent(token);
+        if (!token) { say("Load the order book first.", true); return; }
+        els.csv.disabled = true;
+        fetch("/api/pay-orders?format=csv&limit=2000", { headers: { "x-orders-token": token } })
+            .then(function (r) {
+                if (!r.ok) throw new Error(r.status === 401 ? "That token was refused." : "HTTP " + r.status);
+                return r.blob();
+            })
+            .then(function (blob) {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement("a");
+                a.href = url; a.download = "land-art-orders.csv";
+                document.body.appendChild(a); a.click(); a.remove();
+                /* Released on the next turn of the loop: revoking immediately
+                   can cancel the download in some browsers. */
+                setTimeout(function () { URL.revokeObjectURL(url); }, 30000);
+                els.csv.disabled = false;
+            })
+            .catch(function (e) {
+                els.csv.disabled = false;
+                say("Could not download the CSV: " + e.message, true);
+            });
     };
 })();
 </script>

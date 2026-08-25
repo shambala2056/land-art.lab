@@ -236,39 +236,47 @@ const THEMED={
   /* JACK'S COFFEE — хамгийн том ангийн нүд (A, 400 м²). Шувууны хоргодох
      байгууламж мөн энд байрлана: тэмдгийн эргэн тойрны чөлөөнд үүрний хайрцаг,
      усны цэг. Жижиг D нүдэнд тэмдэг уншигдахгүй байсан тул томд нь шилжив. */
-  'A-01':["Small Cup, Big Impact",'birds',"The Jack's Coffee land art: 10,000 Siberian elm "+
+  'AH':["Small Cup, Big Impact",'birds',"The Jack's Coffee land art: 10,000 Siberian elm "+
     "planted in the form of the company's mark, with nest boxes and a pond on the same cell — "+
     "canopy, shelter and water together, so the ground returns as habitat and not as a "+
     "plantation."],
-  'D-01':['Solar field · 100 kW','energy','100 kW installed capacity — irrigation pumps, lighting, sensor network and battery reserve'],
+  'E':['Solar field · 100 kW','energy','100 kW installed capacity — irrigation pumps, lighting, sensor network and battery reserve'],
   /* "Fog" биш: энэ бол эх газрын цөл, эрэг орчмынх биш — манан бараг байхгүй,
      шүүдэр, цан л байна. Мөн энэ нь усны эх үүсвэр биш нэмэлт: эх үүсвэр нь
      гүний худаг. */
-  'D-02':['Water harvesting','water','Dew and hoarfrost capture with covered storage — a supplement to the borehole, not a supply'],
-  'D-03':['Recycling and compost','waste','Sorting bays and a shaded composting yard — the compost returns to the planting pits'],
-  'D-04':['Research station','research','Weather and soil sensors, biodiversity monitoring'],
+  'J':['Water harvesting','water','Dew and hoarfrost capture with covered storage — a supplement to the borehole, not a supply'],
+  'S':['Recycling and compost','waste','Sorting bays and a shaded composting yard — the compost returns to the planting pits'],
+  'AD':['Research station','research','Weather and soil sensors, biodiversity monitoring'],
   /* D-05 сул боллоо: шувууны хоргодох газар A-01 руу нүүсэн тул энэ нүд
      энгийн тарилтын нүд болж, ивээн тэтгэхэд нээлттэй болов. */
-  'D-06':['Pollinator cell','insect','A nesting bank and forage for the bees native to this ground — no hives; see BUILD.insect for why'],
-  'D-07':['Community ground','community','Playground, outdoor classroom, ger and gathering space']
+  'AK':['Pollinator cell','insect','A nesting bank and forage for the bees native to this ground — no hives; see BUILD.insect for why'],
+  'AR':['Community ground','community','Playground, outdoor classroom, ger and gathering space']
 };
 /* Түншүүд өмнөх зэрэглэлдээ хамгийн ойр шинэ ангид шилжсэн */
-const PARTNERS={'B-01':'EFES GROUP','C-01':'YVES ROCHER','C-02':'TIMBERLAND',
-  'E-01':'KHARKHORUM',
+const PARTNERS={'K':'EFES GROUP','P':'YVES ROCHER','R':'TIMBERLAND',
+  'B':'KHARKHORUM',
   /* EFES Group-ийн дөрвөн компани тус тусдаа хөрөнгө оруулсан тул тус бүр
      өөрийн нүд, өөрийн тугтай. Хамгийн жижиг анги (F, 12 м²).
      Талбайн өмнөд захын нүднүүд (F-01..F-04, төвөөс 43–73 м) дээр байхад
      тугнууд хэтэрхий жижиг харагдаж, аль компанийх нь ялгарахгүй байв. Иймд
      төвд хамгийн ойр дөрвөн F нүд рүү шилжүүлэв (14–28 м), дөрвөн өөр зүг рүү
      тарсан тул бие биенээ халхлахгүй. */
-  'F-13':'EFES INTERNATIONAL','F-11':'EFES CONSTRUCTION',
-  'F-16':'EFEC SUPERMARKET','F-10':'KHULAN UUL'};
+  'AJ':'EFES INTERNATIONAL','X':'EFES CONSTRUCTION',
+  'AQ':'EFEC SUPERMARKET','N':'KHULAN UUL'};
+/* CELL CODES. One letter per hexagon — A…Z then AA…BB, which is exactly 54.
+   Ordered across the ground, north-west to south-east, so neighbouring cells
+   carry neighbouring letters: the point of lettering them is that a cell can be
+   found and reported on in the field, and letters that jumped between size
+   classes would not do that.
+   Indexed by position in SHAPE, so this file and the other one that walks SHAPE
+   cannot drift apart. The size class is no longer readable from the code, so
+   pit counts are stated per cell rather than derived from the letter. */
+const LETTERS=["AH","AM","AS","K","AB","AL","BA","P","R","AC","AE","AY","AZ","E","J","S","AD","AN","AK","AR","AV","B","H","L","Q","O","T","Y","AA","W","AF","AI","AO","AT","AU","AX","A","F","D","C","G","I","U","V","M","N","X","Z","AJ","AG","AP","AQ","AW","BB"];
 const CELLS=[];
 (function(){
-  const seq={A:0,B:0,C:0,D:0,E:0,F:0};
-  SHAPE.forEach(function(h){
-    const key=h[2], S=SIZES[key], i=++seq[key];
-    const code=key+'-'+String(i).padStart(2,'0'), th=THEMED[code];
+  SHAPE.forEach(function(h,idx){
+    const key=h[2], S=SIZES[key];
+    const code=LETTERS[idx], th=THEMED[code];
     CELLS.push({code:code,sizeKey:key,S:S,themed:!!th,cat:th?th[1]:'flora',
       name:th?th[0]:'Elm woodland',
       role:th?th[2]:S.area+' m² — '+S.pots+' pits at 1.5 m spacing, '+S.trees+

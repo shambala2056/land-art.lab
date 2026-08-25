@@ -88,10 +88,30 @@ function readBody(req) {
     });
 }
 
+/* Demo mode. Stands a fake bank and an in-memory ledger up on this same server
+   and points the real code at them, so the whole checkout — invoice, hosted
+   payment page, webhook, settlement, tree numbers, order book — can be walked
+   through on a laptop with no credentials and no money. Off unless asked for. */
+const DEMO = process.env.DEMO === "1";
+let mock = null;
+if (DEMO) {
+    mock = require("./dev-mock.js");
+    mock.env("http://localhost:" + PORT);
+}
+
 const server = http.createServer(async function (req, res) {
     shim(res);
     const url = new URL(req.url, "http://localhost:" + PORT);
     let pathname = decodeURIComponent(url.pathname);
+
+    if (mock && pathname.indexOf("/__mock/") === 0) {
+        req.body = await readBody(req);
+        req.query = Object.fromEntries(url.searchParams);
+        const done = await mock.handle(pathname, req, res, req.body,
+                                       "http://localhost:" + PORT);
+        if (done !== false) return;
+        return res.status(404).json({ error: "Not found" });
+    }
 
     /* api/ routes. Files starting with _ are helpers, not endpoints — the same
        rule Vercel applies, which is why api/_minu.js is not reachable. */
@@ -133,6 +153,13 @@ const server = http.createServer(async function (req, res) {
 });
 
 server.listen(PORT, function () {
-    console.log("site  http://localhost:" + PORT + "/");
-    console.log("api   http://localhost:" + PORT + "/api/pay-create  (POST)");
+    const at = "http://localhost:" + PORT;
+    console.log("site  " + at + "/");
+    console.log("api   " + at + "/api/pay-create  (POST)");
+    if (DEMO) {
+        console.log("");
+        console.log("DEMO MODE — fake bank, in-memory ledger, no credentials, no money.");
+        console.log("  walkthrough   " + at + "/demo.html");
+        console.log("  orders token  demo-orders-token");
+    }
 });

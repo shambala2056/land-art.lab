@@ -79,6 +79,16 @@ module.exports = async function handler(req, res) {
        moment to ask afterwards. */
     const certName = typeof body.certName === "string" ? body.certName.trim().slice(0, 80) : "";
     if (!certName) return res.status(400).json({ error: "Please give the name to print on the certificate." });
+    /* Latin only, checked here as well as in the browser. The certificate is set
+       in Abril Fatface, which carries no Cyrillic: a Mongolian name typed into
+       that field renders as a row of empty boxes on a printed certificate, and
+       nobody finds out until it is in someone's hands. Cheaper to refuse the
+       order than to reissue the paper. */
+    if (!/^[A-Za-z][A-Za-z .'\u2019-]*$/.test(certName)) {
+        return res.status(400).json({
+            error: "The certificate name must use Latin letters only — please write it as it is spelled in a passport.",
+        });
+    }
 
     /* Required too. The confirmation and the annual report go by email; the
        number is what makes a person reachable when an address bounces and a

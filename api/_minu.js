@@ -115,12 +115,12 @@ const UNIT = { mnt: 100000, usd: 30 };          /* per pit */
    the shape of their mark, sold a cup at a time on their own site, and listed
    here only so the map can draw it. */
 const PITS = {
-    A:25, B:98, C:25, D:25, E:194, F:25, G:25, H:98, I:25,
-    J:194, K:562, L:98, M:25, N:25, O:98, P:259, Q:98, R:259,
-    S:194, T:98, U:25, V:25, W:98, X:25, Y:98, Z:25, AA:98,
-    AB:562, AC:259, AD:194, AE:259, AF:98, AG:25, AH:863, AI:98, AJ:25,
-    AK:194, AL:562, AM:863, AN:194, AO:98, AP:25, AQ:25, AR:194, AS:863,
-    AT:98, AU:98, AV:194, AW:25, AX:98, AY:259, AZ:259, BA:562, BB:25
+    AH: 991, AM: 991, AS: 991, K: 647, AB: 647, AL: 647, BA: 647, P: 297, R: 297,
+    AC: 297, AE: 297, AY: 297, AZ: 297, E: 223, J: 223, S: 223, AD: 223, AN: 223,
+    AK: 223, AR: 223, AV: 223, B: 112, H: 112, L: 112, Q: 112, O: 112, T: 112,
+    Y: 112, AA: 112, W: 112, AF: 112, AI: 112, AO: 112, AT: 112, AU: 112, AX: 112,
+    A: 29, F: 29, D: 29, C: 29, G: 29, I: 29, U: 29, V: 29, M: 29,
+    N: 29, X: 29, Z: 29, AJ: 29, AG: 29, AP: 29, AQ: 29, AW: 29, BB: 29,
 };
 const TOTAL_PITS = 9000;
 const MAX_QTY = TOTAL_PITS;                     /* nobody can buy more than exists */
@@ -129,7 +129,23 @@ const MAX_QTY = TOTAL_PITS;                     /* nobody can buy more than exis
  * bought a cup at a time on their own site; a pit here would sell the same
  * ground twice. Enforced on the server, not only hidden in the map — the API is
  * what decides. */
-const NOT_FOR_SALE = { "AH": "the Jack's Coffee land art" };
+/* Cells that exist but are not sponsorship. The cell map has always refused
+ * these, and the server did not: a request naming one straight to this API, or a
+ * hand-edited ?cell= in the address bar, bought pits in the solar field. The two
+ * lists have to be the same list, and this is the one that decides, because it
+ * is the one the money passes through.
+ *
+ * These six carry pit counts in the table below because they are real ground
+ * with real area — but nothing is planted in them, so nothing in them is sold. */
+const NOT_FOR_SALE = {
+    "AH": "the Jack's Coffee land art",
+    "E":  "the solar field",
+    "J":  "the water harvesting works",
+    "S":  "the recycling point",
+    "AD": "the research station",
+    "AK": "the pollinator meadow",
+    "AR": "the community ground",
+};
 
 /* One SKU. The whole-cell SKUs are gone: they were keyed by size class, and a
  * code that no longer carries a class cannot address one — nor is a cell sold
