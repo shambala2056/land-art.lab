@@ -7,6 +7,7 @@
 
 const { config, describeMissing, call, login } = require("./_minu");
 const ledger = require("./_ledger");
+const { settle } = require("./_settle");
 
 const ALLOWED = ["https://land-art.space", "https://www.land-art.space"];
 
@@ -72,7 +73,37 @@ module.exports = async function handler(req, res) {
        the buyer chose the name for that purpose, and the certificate is meant
        to be shared. */
     const state = readableStatus(entity && entity.status);
-    const order = await ledger.readOrder(ref);
+
+    /* Record what we just learned.
+     *
+     * A payment is written down when the provider's webhook arrives, or when
+     * the buyer's browser is redirected back. Both can fail — a webhook is
+     * refused if the key on the invoice no longer matches, a browser gets
+     * closed — and when both fail nothing ever tries again. The payment stays
+     * pending for ever while the money is long gone.
+     *
+     * But this endpoint is the third witness, and the one that almost always
+     * shows up: the thank-you page polls it six times over half a minute, and
+     * every one of those calls asks the provider directly. It has been throwing
+     * that answer away. Now it keeps it.
+     *
+     * Only ever acts on the provider's own verdict, which is the same standard
+     * settle() holds every other path to — this is not the browser being
+     * believed, it is the provider being asked. Safe to run on every poll:
+     * settle() is idempotent and the notification is claimed once. */
+    let order = await ledger.readOrder(ref);
+    const stored = order && order.status;
+    if (state !== "pending" && stored !== state) {
+        try {
+            await settle(ref, entity && entity.status, entity && entity.txnId,
+                         entity && entity.type, "status poll", false);
+            order = await ledger.readOrder(ref);
+        } catch (err) {
+            /* Reporting the status matters more than recording it; the buyer is
+               waiting on this response and reconciliation can catch the rest. */
+            console.error("could not settle", ref, "from a status poll:", err && err.message);
+        }
+    }
     const cert = (state === "paid" && order && order.treeFirst)
         ? { name: order.certName || order.name || "",
             first: order.treeFirst, last: order.treeLast,
