@@ -5,7 +5,7 @@
  * this function's environment.
  */
 
-const { config, describeMissing, call, login, priceOf, cellCapacity } = require("./_minu");
+const { config, describeMissing, call, login, priceOf, cellCapacity, NOT_FOR_SALE } = require("./_minu");
 const ledger = require("./_ledger");
 const sheet = require("./_sheet");
 
@@ -72,6 +72,24 @@ module.exports = async function handler(req, res) {
     if (!name) return res.status(400).json({ error: "Please give a name for the sponsorship." });
     if (!EMAIL_RE.test(email)) return res.status(400).json({ error: "Please give a valid email address." });
 
+    /* The certificate carries its own name, and it is required. Asked for before
+       payment rather than after, because a certificate issued against a
+       completed payment cannot be reissued under a different name without
+       reopening the question of who the trees belong to — so there is no good
+       moment to ask afterwards. */
+    const certName = typeof body.certName === "string" ? body.certName.trim().slice(0, 80) : "";
+    if (!certName) return res.status(400).json({ error: "Please give the name to print on the certificate." });
+
+    /* Required too. The confirmation and the annual report go by email; the
+       number is what makes a person reachable when an address bounces and a
+       certificate is owed. Checked for a plausible amount of digits rather than
+       a format — a validator strict enough to catch a typo also rejects
+       legitimate international numbers, and that costs more than it saves. */
+    const phone = typeof body.phone === "string" ? body.phone.trim().slice(0, 40) : "";
+    if ((phone.match(/\d/g) || []).length < 6) {
+        return res.status(400).json({ error: "Please give a phone number." });
+    }
+
     /* priceOf rejects a quantity that is not a whole number in range, so a
        fractional, negative or absurd count never reaches the provider. */
     const price = priceOf(sku, currency, body.quantity);
@@ -84,6 +102,15 @@ module.exports = async function handler(req, res) {
        we would owe trees there is no ground for. */
     let cellCode = null;
     if (sku === "pit" && body.cell !== undefined && body.cell !== null && body.cell !== "") {
+        const asked = String(body.cell).toUpperCase();
+        /* Some cells are not on sale here at all. Saying so beats "unknown
+           cell", which reads as our mistake rather than as the answer. */
+        if (NOT_FOR_SALE[asked]) {
+            return res.status(400).json({
+                error: "Cell " + asked + " is " + NOT_FOR_SALE[asked] +
+                       " and is not sponsored through this map.",
+            });
+        }
         const cap = cellCapacity(body.cell);
         if (cap === null) return res.status(400).json({ error: "Unknown cell." });
         if (price.quantity > cap) {
@@ -169,7 +196,8 @@ module.exports = async function handler(req, res) {
        with no name and no email cannot. Awaited so a slow sheet delays the
        redirect rather than losing the row, but a failure never blocks payment. */
     const record = {
-        reference: ref, name: name, email: email, cell: cellCode,
+        reference: ref, name: name, email: email,
+        certName: certName, phone: phone, cell: cellCode,
         pits: price.quantity, amount: price.amount, currency: currency,
     };
     /* Хоёр газарт: сан ба хүснэгт. Нэг нь унасан ч захиалга үлдэнэ, аль нэг нь

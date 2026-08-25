@@ -65,13 +65,25 @@ module.exports = async function handler(req, res) {
 
     /* Deliberately narrow: a word, the reference, and what was bought. The
        provider's transaction id and raw payload stay on the server, and so do
-       the buyer's name and email — the page needs neither, and a reference is
-       not a credential worth handing personal details to. */
+       the buyer's email and phone number — the page needs neither, and a
+       reference is not a credential worth handing personal details to.
+       The certificate name and the tree numbers are the exception, and only
+       once the payment is real: they are exactly what the certificate prints,
+       the buyer chose the name for that purpose, and the certificate is meant
+       to be shared. */
+    const state = readableStatus(entity && entity.status);
     const order = await ledger.readOrder(ref);
+    const cert = (state === "paid" && order && order.treeFirst)
+        ? { name: order.certName || order.name || "",
+            first: order.treeFirst, last: order.treeLast,
+            /* The cell code the certificate is numbered under — D-06-0007. */
+            prefix: order.treePrefix || order.cell || "LA" }
+        : null;
     return res.status(200).json({
         reference: ref,
-        status: readableStatus(entity && entity.status),
+        status: state,
         order: order ? { cell: order.cell || null, pits: order.pits || null,
                          seedlings: order.seedlings || null } : null,
+        certificate: cert,
     });
 };

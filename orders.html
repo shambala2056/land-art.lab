@@ -319,7 +319,8 @@ a.cert:hover{text-decoration:underline}
             var dry = !confirmed;
             out.hidden = false;
             out.textContent = (dry ? "Asking (nothing will change)…" : "Running…");
-            fetch("/api/" + path + (dry ? "?dry=1" : "") + (extra || ""),
+            fetch("/api/" + path + (path.indexOf("?") > -1 ? "&" : "?") +
+                  (dry ? "dry=1" : "live=1") + (extra || ""),
                   { headers: { "x-orders-token": token } })
                 .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
                 .then(function (res) {
@@ -342,9 +343,9 @@ a.cert:hover{text-decoration:underline}
     els.token.addEventListener("keydown", function (e) { if (e.key === "Enter") load(); });
     els.q.addEventListener("input", paint);
     document.getElementById("recon").onclick =
-        admin("pay-reconcile", "Check pending against the bank");
+        admin("pay-orders?action=reconcile", "Check pending against the bank");
     document.getElementById("migrate").onclick =
-        admin("pay-migrate-cells", "Move history to the new cell codes");
+        admin("pay-orders?action=migrate", "Move history to the new cell codes");
     /* Deletion is not reversible, so this one carries its own confirm wording
        and takes the cut-off from the field beside it. */
     document.getElementById("purge").onclick = function () {
@@ -365,7 +366,7 @@ a.cert:hover{text-decoration:underline}
             var dry = purgeState[ref] !== true;
             out.hidden = false;
             out.textContent = dry ? "Checking what would go…" : "Deleting…";
-            fetch("/api/pay-purge-tests?after=" + encodeURIComponent(ref) + (dry ? "" : "&apply=1"),
+            fetch("/api/pay-orders?action=purge&after=" + encodeURIComponent(ref) + (dry ? "" : "&apply=1"),
                   { headers: { "x-orders-token": token } })
                 .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
                 .then(function (res) {

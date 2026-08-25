@@ -58,6 +58,19 @@ module.exports = async function handler(req, res) {
         return res.status(503).json({ error: "No ledger is connected, so no orders are stored." });
     }
 
+    /* The maintenance runs live behind this same authenticated route rather
+       than as routes of their own: the plan allows twelve serverless functions
+       and api/ already holds twelve. They are guarded exactly as this listing
+       is, and each re-checks the token for itself. */
+    const action = (req.query && req.query.action) || "";
+    if (action) {
+        const admin = require("./_admin");
+        if (action === "reconcile") return admin.reconcile(req, res);
+        if (action === "migrate")   return admin.migrateCells(req, res);
+        if (action === "purge")     return admin.purgeTests(req, res);
+        return res.status(400).json({ error: "Unknown action." });
+    }
+
     const limit = Math.max(1, Math.min(2000, parseInt((req.query && req.query.limit) || "500", 10) || 500));
     const rows = await ledger.listOrders(limit);
     if (!rows) return res.status(502).json({ error: "Couldn't read the order book." });

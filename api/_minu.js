@@ -83,40 +83,71 @@ async function login(cfg) {
  * trees that could never go in the ground. Per tree the price is unchanged at
  * USD 10 either way — what changed is that a cell now states how many trees it
  * can really hold. */
-const SPACING_M = 1.5;
-const AREA_PER_PIT = SPACING_M * SPACING_M;     /* 2.25 m² */
 const SEEDLINGS_PER_PIT = 3;
 const UNIT = { mnt: 100000, usd: 30 };          /* per pit */
-const MAX_QTY = 4000;                           /* ~9,000 m², more than the planted area */
 
-/* Whole-cell prices are derived, never typed in, so they cannot drift away from
- * the unit price the way the old hand-written table did. */
-function cell(area) {
-    const pits = Math.floor(area / AREA_PER_PIT);
-    /* Described in pits and seedlings, not square metres. The area is only kept
-       to derive the pit count and to draw the hexagon; it is not the unit of
-       sale and is not shown to a buyer. */
-    return { label: "Cell · " + pits + " pits · " + (pits * SEEDLINGS_PER_PIT) + " elms",
-             area: area, pits: pits, trees: pits * SEEDLINGS_PER_PIT,
-             mnt: pits * UNIT.mnt, usd: pits * UNIT.usd };
-}
+/* HOW MANY PITS A CELL HOLDS.
+ *
+ * Stated, not derived. Pit counts used to come out of area ÷ 1.5 m spacing,
+ * which made the site's capacity a consequence of a drawing rather than a
+ * decision — and gave 2,019 pits when the programme is sized at 9,000.
+ *
+ * The site holds 9,000 pits across 53 cells. Fifty-four are drawn; A-01 is the
+ * Jack's Coffee land art, which is planted in the shape of their mark and is
+ * not sold or counted here, so it is not one of the 53.
+ *
+ * The split is in proportion to cell area, so a bigger cell still holds more,
+ * with the rounding resolved so the total is exactly 9,000 rather than nearly:
+ *
+ *   A  2 cells × 863 = 1,726        D   8 × 194 = 1,552
+ *   B  4 cells × 562 = 2,248        E  15 ×  98 = 1,470
+ *   C  6 cells × 259 = 1,554        F  18 ×  25 =   450
+ *                                   ── 53 cells = 9,000 pits
+ *
+ * 9,000 pits · 27,000 seedlings · 9,000 certificates, one per pit.
+ */
+/* One entry per hexagon. The code is a letter, not a size class, so the count
+   cannot be worked out from it — it is stated. Every number here also appears
+   in the map's own PITS table; they are checked against each other by the fact
+   that both are generated from the same source.
 
+   AH is the Jack's Coffee cell and is NOT part of the 9,000: it is planted in
+   the shape of their mark, sold a cup at a time on their own site, and listed
+   here only so the map can draw it. */
+const PITS = {
+    A:25, B:98, C:25, D:25, E:194, F:25, G:25, H:98, I:25,
+    J:194, K:562, L:98, M:25, N:25, O:98, P:259, Q:98, R:259,
+    S:194, T:98, U:25, V:25, W:98, X:25, Y:98, Z:25, AA:98,
+    AB:562, AC:259, AD:194, AE:259, AF:98, AG:25, AH:863, AI:98, AJ:25,
+    AK:194, AL:562, AM:863, AN:194, AO:98, AP:25, AQ:25, AR:194, AS:863,
+    AT:98, AU:98, AV:194, AW:25, AX:98, AY:259, AZ:259, BA:562, BB:25
+};
+const TOTAL_PITS = 9000;
+const MAX_QTY = TOTAL_PITS;                     /* nobody can buy more than exists */
 
+/* Not for sale through the map, and not part of the 9,000. Jack's Coffee is
+ * bought a cup at a time on their own site; a pit here would sell the same
+ * ground twice. Enforced on the server, not only hidden in the map — the API is
+ * what decides. */
+const NOT_FOR_SALE = { "AH": "the Jack's Coffee land art" };
+
+/* One SKU. The whole-cell SKUs are gone: they were keyed by size class, and a
+ * code that no longer carries a class cannot address one — nor is a cell sold
+ * whole any more, since the buyer picks a number of pits from the cell they
+ * clicked on the map. */
 const CATALOG = {
-    /* Priced by the pit; the buyer chooses how many. */
     "pit": { perUnit: true, label: "planting pits", mnt: UNIT.mnt, usd: UNIT.usd },
-    /* Whole HEXAGON cells, as offered on the purchase map. */
-    "cell-A": cell(400), "cell-B": cell(260), "cell-C": cell(120),
-    "cell-D": cell(90),  "cell-E": cell(45),  "cell-F": cell(12),
 };
 
-/* Cell codes look like A-01 … F-18. The letter gives the class, and the class
- * gives how many pits that cell holds — nobody may buy more pits from a cell
- * than exist in it. */
+/* Cell codes are one or two letters, A…Z then AA…BB. The table above says how
+ * many pits each holds — nobody may buy more from a cell than exist in it — and
+ * a cell that is not for sale reports no capacity at all. */
 function cellCapacity(code) {
-    if (typeof code !== "string" || !/^[A-F]-\d{2}$/.test(code)) return null;
-    const c = CATALOG["cell-" + code.charAt(0)];
-    return c ? c.pits : null;
+    if (typeof code !== "string") return null;
+    const c = code.toUpperCase();
+    if (!/^[A-Z]{1,2}$/.test(c)) return null;
+    if (NOT_FOR_SALE[c]) return null;
+    return Object.prototype.hasOwnProperty.call(PITS, c) ? PITS[c] : null;
 }
 
 /* 496 = MNT, 840 = USD, per the integration document. */
@@ -188,4 +219,4 @@ async function checkTxn(cfg, token, ref) {
 }
 
 module.exports = { config, describeMissing, call, login, checkTxn, priceOf, cellCapacity, CATALOG, CURRENCY,
-                   UNIT, MAX_QTY, SPACING_M, AREA_PER_PIT, SEEDLINGS_PER_PIT };
+                   UNIT, MAX_QTY, SEEDLINGS_PER_PIT, PITS, TOTAL_PITS, NOT_FOR_SALE };
