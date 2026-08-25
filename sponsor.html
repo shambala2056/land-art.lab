@@ -202,7 +202,7 @@
         <h1>Payment</h1>
         <div class="waiting">
             <div class="spin"></div>
-            <p class="lead" id="payLead">The secure payment page is opening in a new tab. Pay there — by card or by scanning the QR with your banking app — and this page will confirm it by itself.</p>
+            <p class="lead" id="payLead">The secure payment page is opening in a new tab. Pay there — by card or by scanning the QR with your banking app. That tab closes on its own the moment the payment clears, and your certificate appears here.</p>
             <p class="lead" id="payHold"><b>Keep this tab open.</b></p>
             <div class="payagain">Nothing opened? <a href="#" id="payLink" target="_blank" rel="noopener noreferrer">Open the payment page</a></div>
         </div>
@@ -253,6 +253,7 @@
     var SEEDS_PER_PIT = 3;
 
     var pick = null;        /* {cell, pits} chosen on step 1 */
+    var payWindow = null;   /* the provider's tab, so it can be closed again */
     var price = null;       /* what pay-config says a pit costs */
     var cap = null;         /* pits still free in the chosen cell */
     var ref = null;         /* our reference, once the invoice exists */
@@ -413,6 +414,7 @@
            inside a promise callback is not a user gesture any more and browsers
            block it. It is filled in when the invoice comes back. */
         var win = window.open("", "_blank");
+        payWindow = win;
 
         fetch("/api/pay-create", {
             method: "POST", headers: { "Content-Type": "application/json" },
@@ -482,7 +484,29 @@
         })();
     }
 
+    /* Shuts the provider's tab and comes back to this one.
+     *
+     * Paying by QR leaves that tab sitting on the bank's page with nothing
+     * further to do — the phone did the work — and the buyer had to find their
+     * way back here by hand to see that it had worked. A window opened by
+     * script may be closed by script, whatever it navigated to since, and
+     * closing the front tab returns the browser to the one behind it.
+     *
+     * Wrapped because a popup blocker may have refused the window in the first
+     * place, and because a buyer who closed it themselves leaves a reference
+     * that no longer answers. Neither is a reason to fail. */
+    function closePayWindow() {
+        try {
+            if (payWindow && !payWindow.closed) payWindow.close();
+        } catch (e) { /* not ours to close any more */ }
+        payWindow = null;
+        /* Some browsers hand focus back on their own; asking costs nothing and
+           is ignored where it is not allowed. */
+        try { window.focus(); } catch (e) {}
+    }
+
     function failed() {
+        closePayWindow();
         $("payLead").textContent = "That payment did not go through. Nothing has been charged, and the pits are free again.";
         document.querySelector(".spin").style.display = "none";
         /* Both of these tell someone to wait, and there is nothing left to wait
@@ -495,6 +519,7 @@
     }
 
     function confirmed(d) {
+        closePayWindow();
         var c = d.certificate, o = d.order || {};
         var codes = [];
         for (var n = c.first; n <= (c.last || c.first); n++) {
