@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Your tree certificate · Land-art Space</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<!-- The certificate is set in these two. Loaded here rather than in fonts.css
+     because no other page needs them, and a canvas draws in the fallback
+     without a word of warning if they are not in memory first. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Montserrat:wght@700&display=swap">
+<style>
+:root{--shell:#F2F0EA;--card:#FBFAF6;--ink:#14150F;--soft:#5E5F55;--hair:#E0DACA;
+  --lime:#B8E020;--lime-deep:#8AAE13;
+  --shadow:10px 10px 26px rgba(60,52,32,.10),-8px -8px 22px rgba(255,255,255,.92)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--shell);color:var(--ink);
+  font-family:'Roboto',system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:38px 22px 90px}
+.logo{height:30px;display:block;margin-bottom:26px}
+.eyebrow{font-family:'Urbanist',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--lime-deep)}
+h1{font-family:'Urbanist',sans-serif;font-weight:600;letter-spacing:-.02em;
+  font-size:clamp(26px,4vw,40px);line-height:1.05;margin:10px 0 8px}
+.lead{color:var(--soft);font-size:14.5px;max-width:620px;margin:0}
+
+.msg{margin-top:26px;padding:16px 18px;border-radius:14px;background:var(--card);
+  box-shadow:var(--shadow);font-size:14px;color:var(--soft)}
+.msg b{color:var(--ink)}
+.msg.err{color:#8C3A2B}
+
+/* The certificate itself. Drawn to a canvas so what downloads is exactly what
+   is on screen — an HTML mock-up and a downloaded PNG drift apart the moment
+   anyone edits one of them. */
+.sheet{margin-top:26px;background:var(--card);border-radius:20px;padding:14px;
+  box-shadow:var(--shadow)}
+.sheet canvas{display:block;width:100%;height:auto;border-radius:10px}
+.sheet.story canvas{max-width:380px;margin:0 auto}
+
+.pick{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.pick button{border:1px solid var(--hair);background:var(--card);color:var(--soft);
+  border-radius:100px;padding:8px 15px;cursor:pointer;font-family:'Urbanist',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:.04em}
+.pick button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pickhint{font-size:12.5px;color:var(--soft);margin-top:10px}
+
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:10px;border:0;cursor:pointer;
+  background:var(--ink);color:#fff;border-radius:100px;padding:15px 28px;
+  font-family:'Urbanist',sans-serif;font-weight:700;font-size:13px;
+  letter-spacing:.06em;text-transform:uppercase;text-decoration:none;
+  transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn[disabled]{opacity:.45;cursor:default;transform:none}
+.btn i{width:8px;height:8px;border-radius:50%;background:var(--lime)}
+.btn.ghost{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+.btn.ghost i{background:var(--lime-deep)}
+
+.share{margin-top:20px;padding:18px 20px;border-radius:16px;background:var(--card);
+  box-shadow:var(--shadow)}
+.share[hidden]{display:none}
+.share h2{font-family:'Urbanist',sans-serif;font-size:15px;margin:0 0 8px}
+.share p{margin:0 0 14px;font-size:13.5px;color:var(--soft)}
+.share .row{display:flex;flex-wrap:wrap;gap:10px}
+.share a{font-family:'Urbanist',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.04em;text-decoration:none;color:var(--ink);background:var(--shell);
+  border:1px solid var(--hair);border-radius:100px;padding:9px 16px}
+.share a:hover{border-color:var(--ink)}
+
+.foot{margin-top:44px;font-size:12.5px;color:var(--soft)}
+.foot a{color:var(--soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <img class="logo" src="assets/images/logo/land-art-logo.png" alt="Land-art Space">
+  <div class="eyebrow">One tree, one certificate</div>
+  <h1 id="head">Preparing your certificate…</h1>
+  <p class="lead" id="lead">One moment — we're confirming the payment and reading your tree numbers.</p>
+
+  <div class="msg" id="msg" hidden></div>
+
+  <div class="pick" id="pick" hidden></div>
+  <div class="pickhint" id="pickhint" hidden></div>
+
+  <div class="sheet" id="sheet" hidden><canvas id="cv"></canvas></div>
+
+  <div class="actions" id="actions" hidden>
+    <button class="btn" id="dl"><i></i>Download certificate</button>
+    <button class="btn ghost" id="st"><i></i>Share as story</button>
+  </div>
+
+  <div class="share" id="share" hidden>
+    <h2>Story is ready</h2>
+    <p id="shareTxt"></p>
+    <div class="row">
+      <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Open Instagram</a>
+      <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Open Facebook</a>
+      <a href="#" id="againDl">Download it again</a>
+    </div>
+  </div>
+
+  <div class="foot">
+    Questions? Email <a href="mailto:hello@shambala.today">hello@shambala.today</a> and quote your
+    reference.<br>
+    <a href="/">Back to the site</a> · <a href="terms.html">Terms of Purchase</a>
+  </div>
+</div>
+
+<script>
+(function () {
+    "use strict";
+
+    var qs = new URLSearchParams(location.search);
+    var ref = (qs.get("ref") || qs.get("reference") || "").trim();
+
+    var head = document.getElementById("head"), lead = document.getElementById("lead"),
+        msg = document.getElementById("msg"), sheet = document.getElementById("sheet"),
+        cv = document.getElementById("cv"), pick = document.getElementById("pick"),
+        pickhint = document.getElementById("pickhint"), actions = document.getElementById("actions"),
+        dl = document.getElementById("dl"), st = document.getElementById("st"),
+        share = document.getElementById("share"), shareTxt = document.getElementById("shareTxt");
+
+    function say(text, bad) {
+        msg.hidden = false;
+        msg.className = "msg" + (bad ? " err" : "");
+        msg.innerHTML = text;
+    }
+
+    /* ---------- drawing ----------
+       The artwork is an image and the two variable fields are painted over it,
+       at coordinates that live in layout.json. Nothing about the artwork is
+       known here, which is the point: a new certificate design is a new file
+       plus new numbers, not a code change. */
+    var LAYOUT = null, ART = {};
+
+    function loadImage(src) {
+        return new Promise(function (ok, no) {
+            var im = new Image();
+            im.onload = function () { ok(im); };
+            im.onerror = function () { no(new Error("could not load " + src)); };
+            im.src = src;
+        });
+    }
+
+    /* AK-0007. The prefix is the cell, so the code says where the tree is as
+       well as which one it is. */
+    function treeCode(n) {
+        return LAYOUT.numberFormat
+            .replace("{prefix}", prefix)
+            .replace("{n}", padded(n, LAYOUT.numberPad || 3));
+    }
+
+    function padded(n, width) {
+        var s = String(n);
+        while (s.length < width) s = "0" + s;
+        return s;
+    }
+
+    /* Canvas has no letter-spacing before recent browsers, and a certificate
+       number set solid reads as a serial number rather than a title. Drawn a
+       character at a time so it works everywhere. */
+    function drawTracked(ctx, text, x, y, spacing, align) {
+        if (!spacing) { ctx.textAlign = align || "center"; ctx.fillText(text, x, y); return; }
+        var chars = String(text).split("");
+        var total = 0, i;
+        for (i = 0; i < chars.length; i++) total += ctx.measureText(chars[i]).width + spacing;
+        total -= spacing;
+        var cursor = align === "left" ? x : align === "right" ? x - total : x - total / 2;
+        ctx.textAlign = "left";
+        for (i = 0; i < chars.length; i++) {
+            ctx.fillText(chars[i], cursor, y);
+            cursor += ctx.measureText(chars[i]).width + spacing;
+        }
+    }
+
+    /* Greedy word wrap at the current font. A single word longer than the
+       measure comes back as one over-wide line, which the caller answers by
+       trying a smaller size rather than by breaking the word — a name split
+       across a hyphen is worse than a small name. */
+    function wrap(ctx, text, maxWidth) {
+        var words = String(text).split(/\s+/).filter(Boolean);
+        if (!words.length) return [""];
+        var lines = [], line = words[0];
+        for (var i = 1; i < words.length; i++) {
+            var next = line + " " + words[i];
+            if (ctx.measureText(next).width <= maxWidth) { line = next; }
+            else { lines.push(line); line = words[i]; }
+        }
+        lines.push(line);
+        return lines;
+    }
+
+    /* Names are set as large as they go and are allowed a second line: a long
+       name shrunk to fit one line ends up smaller than the label above it,
+       which reads as a mistake. Only when two lines still will not hold it does
+       the size come down. */
+    function fit(ctx, spec, text) {
+        var maxLines = spec.maxLines || 1;
+        var m = spec.font.match(/(\d+(?:\.\d+)?)px/);
+        var base = m ? parseFloat(m[1]) : 48;
+        for (var size = base; size >= 16; size -= 4) {
+            var font = spec.font.replace(/\d+(?:\.\d+)?px/, size + "px");
+            ctx.font = font;
+            var lines = maxLines > 1 ? wrap(ctx, text, spec.maxWidth) : [String(text)];
+            var widest = 0;
+            for (var i = 0; i < lines.length; i++) {
+                widest = Math.max(widest, ctx.measureText(lines[i]).width);
+            }
+            if (lines.length <= maxLines && (!spec.maxWidth || widest <= spec.maxWidth)) {
+                return { font: font, size: size, lines: lines };
+            }
+        }
+        ctx.font = spec.font;
+        return { font: spec.font, size: base, lines: [String(text)] };
+    }
+
+    function drawField(ctx, spec, text) {
+        if (!spec) return;
+        ctx.fillStyle = spec.colour || "#14150F";
+        ctx.textBaseline = "alphabetic";
+        var f = fit(ctx, spec, text);
+        ctx.font = f.font;
+        /* Two lines sit either side of the single-line baseline, so the block
+           stays where the artwork leaves room for it however many lines it
+           turns out to need. */
+        var gap = f.size * (spec.lineHeight || 1.04);
+        var n = f.lines.length;
+        for (var i = 0; i < n; i++) {
+            var y = spec.y + (i - (n - 1) / 2) * gap;
+            drawTracked(ctx, f.lines[i], spec.x, y,
+                        spec.letterSpacing || 0, spec.align || "center");
+        }
+    }
+
+    function renderSheet(name, treeNo, canvas) {
+        var L = LAYOUT.sheet;
+        var c = canvas || document.createElement("canvas");
+        c.width = L.width; c.height = L.height;
+        var ctx = c.getContext("2d");
+        ctx.clearRect(0, 0, c.width, c.height);
+        ctx.drawImage(ART.sheet, 0, 0, c.width, c.height);
+        drawField(ctx, L.name, name);
+        drawField(ctx, L.number, treeCode(treeNo));
+        return c;
+    }
+
+    /* The story is the finished certificate on a 9:16 ground. No separate story
+       artwork was supplied, and inventing a second design would be inventing —
+       this way the two can never say different things, and the day a real story
+       file arrives it drops in as story.art. */
+    function renderStory(name, treeNo, canvas) {
+        var L = LAYOUT.story;
+        var c = canvas || document.createElement("canvas");
+        c.width = L.width; c.height = L.height;
+        var ctx = c.getContext("2d");
+        ctx.fillStyle = L.background || "#B2D135";
+        ctx.fillRect(0, 0, c.width, c.height);
+
+        var art = ART.story || renderSheet(name, treeNo);
+        var pad = L.pad || 0;
+        var k = Math.min((c.width - pad * 2) / art.width, (c.height - pad * 2) / art.height);
+        var w = art.width * k, h = art.height * k;
+        ctx.drawImage(art, (c.width - w) / 2, (c.height - h) / 2, w, h);
+        return c;
+    }
+
+    function render(kind, name, treeNo, canvas) {
+        return kind === "story" ? renderStory(name, treeNo, canvas)
+                                : renderSheet(name, treeNo, canvas);
+    }
+
+    function toBlob(canvas) {
+        return new Promise(function (ok) { canvas.toBlob(ok, "image/png"); });
+    }
+
+    function saveBlob(blob, filename) {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+    }
+
+    /* ---------- state ---------- */
+    var certName = "", first = 0, last = 0, current = 0, prefix = "LA";
+
+    function fileStem(n) {
+        var safe = certName.replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-|-$/g, "").slice(0, 40);
+        return "land-art-" + treeCode(n) + (safe ? "-" + safe : "");
+    }
+
+    var previewKind = "sheet";
+    function paint() {
+        render(previewKind, certName, current, cv);
+        var buttons = pick.querySelectorAll("button");
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].className = (Number(buttons[i].dataset.n) === current) ? "on" : "";
+        }
+    }
+
+    function buildPicker() {
+        var count = last - first + 1;
+        if (count < 2) return;
+        pick.hidden = false; pickhint.hidden = false;
+        pickhint.textContent = "You have " + count + " certificates — one per pit of three saplings. " +
+            "Pick a number to see and download it.";
+        for (var n = first; n <= last; n++) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.dataset.n = String(n);
+            b.textContent = treeCode(n);
+            b.onclick = (function (num) {
+                return function () { current = num; paint(); share.hidden = true; };
+            })(n);
+            pick.appendChild(b);
+        }
+    }
+
+    dl.addEventListener("click", function () {
+        toBlob(render("sheet", certName, current)).then(function (b) {
+            saveBlob(b, fileStem(current) + ".png");
+        });
+    });
+
+    /* Instagram has no way for a web page to place an image into someone's
+       story — there is no such API, and anything claiming otherwise is a native
+       app. What does work is handing the image to the phone's own share sheet,
+       which lists Instagram Stories among its targets. On a desktop, or where
+       the browser will not share files, the honest fallback is to save the
+       image and open the app. */
+    st.addEventListener("click", function () {
+        var canvas = render("story", certName, current);
+        toBlob(canvas).then(function (blob) {
+            var name = fileStem(current) + "-story.png";
+            var file = new File([blob], name, { type: "image/png" });
+            var payload = {
+                files: [file],
+                title: "One tree planted",
+                text: "One tree planted in my name at Erdene sum, Dornogovi. land-art.space",
+            };
+            if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+                navigator.share(payload).catch(function () { /* dismissed — not an error */ });
+                return;
+            }
+            saveBlob(blob, name);
+            share.hidden = false;
+            shareTxt.textContent = "Saved " + name + " to your device at 1080×1920. " +
+                "Open Instagram or Facebook, start a story, and choose it from your photos — " +
+                "no website can place an image into a story for you.";
+            document.getElementById("againDl").onclick = function (e) {
+                e.preventDefault(); saveBlob(blob, name);
+            };
+            share.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+    });
+
+    /* ---------- load ----------
+       Preview mode draws the certificate from the query string and never calls
+       the payment API. It is how the artwork gets checked — someone replacing
+       certificate.svg needs to see the name and the number land in the right
+       place without making a payment to do it. It reads nothing and writes
+       nothing, and says on screen that it is a preview.
+         certificate.html?preview=1&name=Оюундарь&n=42&of=3               */
+    if (qs.get("preview")) {
+        certName = qs.get("name") || "ОЮУНДАРЬ БАТСҮХ";
+        prefix = (qs.get("cell") || "AK").toUpperCase().replace("-", "");
+        if (qs.get("kind") === "story") previewKind = "story";
+        first = Math.max(1, parseInt(qs.get("n") || "1", 10) || 1);
+        last = first + Math.max(1, parseInt(qs.get("of") || "1", 10) || 1) - 1;
+        current = first;
+        fetch("assets/tree-certificate/layout.json")
+            .then(function (r) { return r.json(); })
+            .then(function (L) {
+                LAYOUT = L;
+                var fonts = [L.sheet.name.font, L.sheet.number.font];
+                var ready = document.fonts
+                    ? Promise.all(fonts.map(function (f) { return document.fonts.load(f, "Aa0123"); }))
+                             .then(function () { return document.fonts.ready; })
+                    : Promise.resolve();
+                return Promise.all([ready,
+                    loadImage(L.sheet.art).then(function (im) { ART.sheet = im; }),
+                    L.story.art ? loadImage(L.story.art).then(function (im) { ART.story = im; })
+                                : Promise.resolve()]);
+            })
+            .then(function () {
+                head.textContent = "Certificate preview";
+                lead.textContent = "";
+                say("<b>Preview — " + previewKind + ".</b> Nothing here is a real order: the name " +
+                    "and number come from the address bar, so the artwork and the field positions " +
+                    "in <code>assets/tree-certificate/layout.json</code> can be checked without " +
+                    "taking a payment. Both buttons work. Add <code>&amp;kind=story</code> to see " +
+                    "the 1080×1920 version.");
+                sheet.hidden = false; actions.hidden = false;
+                sheet.className = "sheet" + (previewKind === "story" ? " story" : "");
+                buildPicker();
+                paint();
+            })
+            .catch(function (err) {
+                head.textContent = "Preview failed";
+                say("Could not load the artwork or layout.json. " + err.message, true);
+            });
+        return;
+    }
+
+    if (!ref) {
+        head.textContent = "No certificate to show";
+        lead.textContent = "";
+        say("This page needs the reference from your payment. Open it from the link on your " +
+            "confirmation page or email, or write to us and quote your reference.", true);
+        return;
+    }
+
+    Promise.all([
+        fetch("assets/tree-certificate/layout.json").then(function (r) { return r.json(); }),
+        fetch("/api/pay-status", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reference: ref }),
+        }).then(function (r) { return r.json(); }),
+    ])
+    .then(function (both) {
+        LAYOUT = both[0];
+        var d = both[1];
+
+        if (!d || !d.status) throw new Error("no status");
+        if (d.status !== "paid") {
+            head.textContent = "Not ready yet";
+            lead.textContent = "";
+            say(d.status === "pending"
+                ? "This payment hasn't been confirmed yet. Certificates are issued the moment it " +
+                  "clears — reload in a minute, or wait for the confirmation email."
+                : "This payment shows as <b>" + d.status + "</b>, so there is no certificate for it. " +
+                  "If you believe that is wrong, email us and quote your reference.", true);
+            return null;
+        }
+        if (!d.certificate || !d.certificate.first) {
+            head.textContent = "Almost there";
+            lead.textContent = "";
+            say("The payment is confirmed but the tree numbers haven't been issued yet. " +
+                "Reload in a moment; if it persists, email us and quote your reference.", true);
+            return null;
+        }
+
+        certName = d.certificate.name || "";
+        prefix = d.certificate.prefix || (d.order && String(d.order.cell || "")) || "LA";
+        first = d.certificate.first;
+        last = d.certificate.last || d.certificate.first;
+        current = first;
+
+        /* The webfont has to be in memory before anything is drawn, or the
+           canvas silently falls back and the certificate ships in the wrong
+           typeface. */
+        var fonts = [LAYOUT.sheet.name.font, LAYOUT.sheet.number.font];
+        var ready = document.fonts
+            ? Promise.all(fonts.map(function (f) { return document.fonts.load(f, "Aa0123"); }))
+                     .then(function () { return document.fonts.ready; })
+            : Promise.resolve();
+
+        return Promise.all([
+            ready,
+            loadImage(LAYOUT.sheet.art).then(function (im) { ART.sheet = im; }),
+            LAYOUT.story.art
+                ? loadImage(LAYOUT.story.art).then(function (im) { ART.story = im; })
+                : Promise.resolve(),
+        ]);
+    })
+    .then(function (loaded) {
+        if (!loaded) return;
+        var count = last - first + 1;
+        head.textContent = count > 1 ? "Your " + count + " certificates" : "Your certificate";
+        lead.textContent = certName
+            ? "Issued to " + certName + " · " +
+              (count > 1 ? treeCode(first) + " to " + treeCode(last) : treeCode(first))
+            : "";
+        msg.hidden = true;
+        sheet.hidden = false; actions.hidden = false;
+        buildPicker();
+        paint();
+
+        /* Arrived from the story button. The share sheet cannot be opened
+           without a tap — browsers require a gesture, and a page that tried
+           would simply be blocked — so the story button is put under the
+           reader's thumb instead of pretending to have opened it. */
+        if (qs.get("story")) {
+            st.focus({ preventScroll: true });
+            st.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    })
+    .catch(function (err) {
+        head.textContent = "Couldn't load your certificate";
+        lead.textContent = "";
+        say("Something went wrong reading this certificate. Please reload, or email " +
+            "hello@shambala.today quoting your reference.", true);
+        console.error(err);
+    });
+})();
+</script>
+</body>
+</html>

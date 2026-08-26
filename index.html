@@ -983,7 +983,7 @@
                     </div>
                     <div class="story-row">
                         <div class="story-q">Delivered to date</div>
-                        <div class="story-a">Three works to date: two completed, one beginning 2026. 57,857 trees planted across 68,970 m², with a further 6,057 to come. <a href="#works" class="story-more">See all projects →</a></div>
+                        <div class="story-a">Three works to date: two completed, one beginning 2026. 57,857 trees planted across 68,970 m², with a further 27,000 to come. <a href="#works" class="story-more">See all projects →</a></div>
                     </div>
                     <div class="story-row">
                         <div class="story-q">Measured outcomes</div>
@@ -991,7 +991,7 @@
                     </div>
                     <div class="story-row">
                         <div class="story-q">Forthcoming work</div>
-                        <div class="story-a">HEXAGON, beginning 2026: 54 hexagonal cells set out across a fenced three-hectare site, 4,571 m² under planting. Each cell is sponsored individually and reported on individually, so a contribution corresponds to a located area of ground rather than to a share of a site average. <a href="#pricing" class="story-more">See the cell map →</a></div>
+                        <div class="story-a">HEXAGON, beginning 2026: 54 hexagonal cells set out across a fenced three-hectare site, 9,000 planting pits in all. Each cell is sponsored individually and reported on individually, so a contribution corresponds to a located area of ground rather than to a share of a site average. <a href="#pricing" class="story-more">See the cell map →</a></div>
                     </div>
                     <div class="story-row">
                         <div class="story-q">Risk assessment</div>
@@ -1043,6 +1043,12 @@
   font-family:'Urbanist',sans-serif; font-size:15px; line-height:1.6;
 }
 #hexagon-live *{box-sizing:border-box}
+/* Энэ хэсгийн ард "Work sequence" гэсэн цагаан карт шууд наалддаг байв. Түүний
+   .box-white нь дээрээсээ зайгүй, өнгө нь энэ хэсгийн дэвсгэртэй ойрхон тул
+   Jack's-ийн дүр зураг цагаан самбарт мөргөж, хоёр хэсэг нэг нь нөгөөгөө таслаж
+   байгаа мэт харагдана. Сайтын хэв маяг нь дэвсгэр дээр хөвөх бөөрөнхий карт —
+   зөвхөн амьсгалах зай дутуу байсан тул хэсгээ доороосоо хаана. */
+#hexagon-live{padding-bottom:clamp(56px,7vw,104px)}
 #hexagon-live .hx-wrap{max-width:1180px;margin:0 auto;padding:0 22px}
 
 /* ---- хэсгийн толгой: сайтын хэв маягаар ---- */
@@ -1481,6 +1487,15 @@
 #hx-detail .jxp{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}
 #hx-detail .jxp span{background:#23241E;color:#C9C8BE;border-radius:999px;padding:5px 11px;
   font-size:10.5px;font-weight:600}
+
+/* The sponsorship call to action above the cell map. */
+.hex-buy-cta{display:flex;flex-direction:column;align-items:center;gap:10px;
+             text-align:center;margin:0 0 26px}
+.hex-buy-cta a{display:inline-block;text-decoration:none;background:#14150F;color:#fff;
+               border-radius:100px;padding:17px 40px;font:700 13px/1 'Urbanist',sans-serif;
+               letter-spacing:.07em;text-transform:uppercase;transition:transform .2s ease}
+.hex-buy-cta a:hover{transform:translateY(-2px)}
+.hex-buy-cta span{font-size:13px;color:#5E5F55;max-width:420px;line-height:1.6}
 </style>
 
 <!-- ═══════════ LAND ARTS — live 3D section ═══════════ -->
@@ -1541,12 +1556,12 @@
     <div class="hx-pmeta">
       <div class="hx-pnum">(03) · 2026 → 2032</div>
       <h3 class="hx-ph">HEXAGON</h3>
-      <div class="hx-pills"><span>30,000 m² site</span><span>4,571 m² planted</span><span>6,057 trees</span><span>54 cells</span></div>
+      <div class="hx-pills"><span>30,000 m² site</span><span>9,000 pits</span><span>27,000 trees</span><span>54 cells</span></div>
     </div>
     <p class="hx-plead">The third work, and the 2026–2032 programme. Fifty-four hexagonal cells
-      set out by GPS on a fenced three-hectare site, 4,571 m² of it under planting. Cells run
+      set out by GPS on a fenced three-hectare site, 9,000 m² of it under planting. Cells run
       from 12 m² to 400 m², each with a fixed position, an identifier and a named steward. Pits are
-      dug 1.5 m apart in both directions and take three seedlings each, so a cell states the trees
+      dug 1 m apart in both directions and take three seedlings each, so a cell states the trees
       it can actually hold. The
       build order is dependency-driven — water and power, enclosure, buildings, then planting in
       hardiness order — because on this ground the sequence, not the species list, decides
@@ -1590,7 +1605,7 @@
       <figure class="hx-cellcard">
         <div class="hx-cellshot">
           <img src="assets/images/cells/cell-a-01-birds.jpg" loading="lazy" decoding="async"
-               width="1020" height="765" alt="Cell A-01: the Jack's Coffee mark planted in elm, with nest boxes on posts and a small pond beside it.">
+               width="1020" height="765" alt="Cell AH: the Jack's Coffee mark planted in elm, with nest boxes on posts and a small pond beside it.">
           <button type="button" class="hx-hot" style="left:50%;top:45.86%" aria-expanded="false" data-n="The mark, in 10,000 elms" data-d="Siberian elm · &lt;i&gt;Ulmus pumila&lt;/i&gt; at half-metre spacing, four to the square metre. Elm is the signature species and the most demanding of the five: it goes in the sheltered interior, behind the saxaul and caragana ranks, and inherits their wind shelter and their nitrogen."><span class="hx-hotlabel">The mark, in 10,000 elms</span></button>
           <button type="button" class="hx-hot" style="left:72.89%;top:40.8%" aria-expanded="false" data-n="Nest boxes" data-d="On new planting the limit on breeding birds is cavities, not food — there are no old trees to hold them, and there will not be for twenty years. Closed boxes rather than open trays: on the Mongolian steppe closed designs carry the higher nest survival. Sited clear of the mark, and cleared out annually, which is when occupancy is recorded."><span class="hx-hotlabel">Nest boxes</span></button>
           <button type="button" class="hx-hot" style="left:55.59%;top:69.94%" aria-expanded="false" data-n="Water point" data-d="A shallow pond with shelving sides, so insects and fledglings can get out again. There is no permanent river or lake in this province and about 100 mm of rain a year: standing water, not canopy, is what decides whether birds and insects stay."><span class="hx-hotlabel">Water point</span></button>
@@ -1601,7 +1616,7 @@
           </div>
         </div>
         <figcaption>
-          <b class="hx-cellcode">A-01 · 400 m² · birds</b>
+          <b class="hx-cellcode">AH · 400 m² · birds</b>
           <b class="hx-cellname">Small Cup, Big Impact</b>
           <span>The Jack's Coffee land art — 10,000 Siberian elm in the form of the company's mark — carrying the site's bird provision on the same cell. New planting has no cavities in it, so nesting is the binding constraint long before food is. Boxes and open water do that job here, twenty years before the elms could.</span>
         </figcaption>
@@ -1618,7 +1633,7 @@
           <button type="button" class="hx-zoom">Enlarge</button>
         </div>
         <figcaption>
-          <b class="hx-cellcode">D-07 · 90 m² · delegations</b>
+          <b class="hx-cellcode">AR · 90 m² · delegations</b>
           <b class="hx-cellname">The delegation grove</b>
           <span>Elm, and nothing else. Every tree on this cell was given to someone who came
             through the delegation pavilion in the Blue Zone at COP17 — the part of the
@@ -1633,7 +1648,7 @@
       <figure class="hx-cellcard">
         <div class="hx-cellshot">
           <img src="assets/images/cells/cell-d-01-solar.jpg" loading="lazy" decoding="async"
-               width="1020" height="765" alt="Cell D-01: ground-mounted solar panels in rows with inverter cabinets among them.">
+               width="1020" height="765" alt="Cell E: ground-mounted solar panels in rows with inverter cabinets among them.">
           <button type="button" class="hx-hot" style="left:49.98%;top:45.57%" aria-expanded="false" data-n="Photovoltaic array" data-d="Ground-mounted on a single tracking axis, on its own cell rather than on a roof so every panel can be reached. Yield here is high — the 30 MW plant at Sainshand, in this province, returns about 1,900 kWh per kWp a year."><span class="hx-hotlabel">Photovoltaic array</span></button>
           <button type="button" class="hx-hot" style="left:37.8%;top:61.09%" aria-expanded="false" data-n="Inverter and battery cabinets" data-d="Conversion and storage at the edge of the array. The reserve is sized for pump duty overnight and through dust storms — the days the array produces least are the days it is needed most."><span class="hx-hotlabel">Inverter and battery cabinets</span></button>
           <button type="button" class="hx-zoom">Enlarge</button>
@@ -1643,7 +1658,7 @@
           </div>
         </div>
         <figcaption>
-          <b class="hx-cellcode">D-01 · 90 m² · energy</b>
+          <b class="hx-cellcode">E · 90 m² · energy</b>
           <b class="hx-cellname">Solar field</b>
           <span>Power for the borehole pump, the irrigation controllers, the sensor network and the buildings, with battery reserve for overnight and dust-storm running. Built in parallel with the borehole, because until the array is energised the borehole is a hole and not a water source. Sited on open ground rather than on a roof so the panels stay reachable: soiling is the main loss in this dust regime, and they are swept dry rather than washed, because water is the scarcer input.</span>
         </figcaption>
@@ -1652,7 +1667,7 @@
       <figure class="hx-cellcard">
         <div class="hx-cellshot">
           <img src="assets/images/cells/cell-d-02-water.jpg" loading="lazy" decoding="async"
-               width="1020" height="765" alt="Cell D-02: a covered storage tank beside a shallow collection basin, ringed by shrubs.">
+               width="1020" height="765" alt="Cell J: a covered storage tank beside a shallow collection basin, ringed by shrubs.">
           <button type="button" class="hx-hot" style="left:57.36%;top:37.05%" aria-expanded="false" data-n="Covered storage" data-d="Everything caught is held under cover. Evaporation here runs several times the annual rainfall, so open water loses faster than it fills."><span class="hx-hotlabel">Covered storage</span></button>
           <button type="button" class="hx-hot" style="left:42.87%;top:56.11%" aria-expanded="false" data-n="Condenser and catchment" data-d="Dew and hoarfrost, not fog — this is a continental desert, not a coastal one. A radiative condenser in arid conditions yields 0.3 to 0.6 litres per square metre on a good night, and the good nights are the cold, clear, still ones: cloud stops the surface cooling and wind warms it back up."><span class="hx-hotlabel">Condenser and catchment</span></button>
           <button type="button" class="hx-zoom">Enlarge</button>
@@ -1662,7 +1677,7 @@
           </div>
         </div>
         <figcaption>
-          <b class="hx-cellcode">D-02 · 90 m² · water</b>
+          <b class="hx-cellcode">J · 90 m² · water</b>
           <b class="hx-cellname">Water harvesting</b>
           <span>The supply is the borehole — this province has no permanent river or lake, and groundwater is the only reasonable source. This cell catches and holds what arrives on site instead: rain, and dew and hoarfrost off a radiative condenser. At 0.3 to 0.6 litres per square metre on a good night that is a genuine contribution to nursery beds and a working demonstration of the principle. It is not a water supply, and the design does not claim it is.</span>
         </figcaption>
@@ -1671,7 +1686,7 @@
       <figure class="hx-cellcard">
         <div class="hx-cellshot">
           <img src="assets/images/cells/cell-d-03-recycling.jpg" loading="lazy" decoding="async"
-               width="1020" height="765" alt="Cell D-03: four timber composting bays under a slatted shade canopy, with sorting bins beside them.">
+               width="1020" height="765" alt="Cell S: four timber composting bays under a slatted shade canopy, with sorting bins beside them.">
           <button type="button" class="hx-hot" style="left:50.02%;top:49.35%" aria-expanded="false" data-n="Composting bays" data-d="Four timber bays, garden scale rather than industrial. Feedstock is site green waste — prunings, weedings, spent understorey — held at 50–60% moisture and a carbon to nitrogen ratio around 25:1, and turned on temperature rather than on a calendar, because every turn costs water."><span class="hx-hotlabel">Composting bays</span></button>
           <button type="button" class="hx-hot" style="left:52.61%;top:32.77%" aria-expanded="false" data-n="Shade canopy" data-d="What limits composting here is moisture, not feedstock: a pile in full sun dries out before it finishes. Slatted rather than solid — enough shade to hold the moisture, enough gap to keep the bays workable."><span class="hx-hotlabel">Shade canopy</span></button>
           <button type="button" class="hx-hot" style="left:54.22%;top:43.52%" aria-expanded="false" data-n="Sorting bins" data-d="Plastic, glass and metal separated at source and taken off site. Nothing that arrives with construction, planting or visitors is left to blow across the planting."><span class="hx-hotlabel">Sorting bins</span></button>
@@ -1682,7 +1697,7 @@
           </div>
         </div>
         <figcaption>
-          <b class="hx-cellcode">D-03 · 90 m² · waste</b>
+          <b class="hx-cellcode">S · 90 m² · waste</b>
           <b class="hx-cellname">Recycling and compost</b>
           <span>The compost is the point; the sorting is housekeeping. Finished compost goes back into the planting pits and is the only organic matter this ground receives. What limits it here is moisture rather than feedstock — in a dry, windy, high-sun climate a pile dries out before it finishes — so the bays sit under a slatted canopy and are turned as little as the process allows.</span>
         </figcaption>
@@ -1691,7 +1706,7 @@
       <figure class="hx-cellcard">
         <div class="hx-cellshot">
           <img src="assets/images/cells/cell-d-04-research.jpg" loading="lazy" decoding="async"
-               width="1020" height="765" alt="Cell D-04: a field station building with a mast carrying weather instruments.">
+               width="1020" height="765" alt="Cell AD: a field station building with a mast carrying weather instruments.">
           <button type="button" class="hx-hot" style="left:44.33%;top:48.47%" aria-expanded="false" data-n="Field station" data-d="Datalogger, telemetry and sample store, and the head of the soil-moisture profile — sensors at 5, 10, 20, 50 and 100 cm, the standard depths for a rooting-zone profile. The profile, not the calendar, sets the irrigation."><span class="hx-hotlabel">Field station</span></button>
           <button type="button" class="hx-hot" style="left:58.69%;top:17.64%" aria-expanded="false" data-n="Automatic weather station" data-d="Wind speed and direction, air temperature and humidity, precipitation, pressure and solar radiation, logged continuously. Wind at ground level is what the windward shelter planting is designed against, so it is measured rather than assumed."><span class="hx-hotlabel">Automatic weather station</span></button>
           <button type="button" class="hx-zoom">Enlarge</button>
@@ -1701,7 +1716,7 @@
           </div>
         </div>
         <figcaption>
-          <b class="hx-cellcode">D-04 · 90 m² · research</b>
+          <b class="hx-cellcode">AD · 90 m² · research</b>
           <b class="hx-cellname">Research station</b>
           <span>Continuous weather and soil-moisture logging, with vegetation, survival and biodiversity surveyed on a fixed calendar. It is what makes a report to a sponsor a measurement rather than an estimate — and it is what sets the irrigation, because on this ground more water is not better. In the Korea–Mongolia Green Belt trials in the desert region, the trees on the heaviest watering grew the tallest and survived the worst; 4 litres an hour was the optimum for elm and for tamarix.</span>
         </figcaption>
@@ -1710,7 +1725,7 @@
       <figure class="hx-cellcard">
         <div class="hx-cellshot">
           <img src="assets/images/cells/cell-d-06-pollinators.jpg" loading="lazy" decoding="async"
-               width="1020" height="765" alt="Cell D-06: a low south-facing sand bank pierced with nest holes, with flowering ground in front of it inside a ring of trees.">
+               width="1020" height="765" alt="Cell AK: a low south-facing sand bank pierced with nest holes, with flowering ground in front of it inside a ring of trees.">
           <button type="button" class="hx-hot" style="left:43.32%;top:38.36%" aria-expanded="false" data-n="Nesting bank" data-d="A south-facing sand bank, left bare and undisturbed. Around 70% of bee species nest in the ground rather than in anything built, and they want exactly this: loose, well-drained, sun-warmed soil on an open face. On this site that is the one habitat there is no shortage of raw material for."><span class="hx-hotlabel">Nesting bank</span></button>
           <button type="button" class="hx-hot" style="left:54.19%;top:54.72%" aria-expanded="false" data-n="Forage, in sequence" data-d="Caragana, &lt;i&gt;Allium mongolicum&lt;/i&gt; and tamarix flower at different points of a short season, so something is in bloom across as much of it as possible. The bare warm ground between the clumps is not unfinished — it is the other half of the habitat."><span class="hx-hotlabel">Forage, in sequence</span></button>
           <button type="button" class="hx-zoom">Enlarge</button>
@@ -1720,7 +1735,7 @@
           </div>
         </div>
         <figcaption>
-          <b class="hx-cellcode">D-06 · 90 m² · pollinators</b>
+          <b class="hx-cellcode">AK · 90 m² · pollinators</b>
           <b class="hx-cellname">Pollinator cell</b>
           <span>Pollination is what separates a planting that renews itself from one that has to be replanted. There are no hives on this cell, and that is the design decision, not an omission: the honeybee is not native to Mongolia, and high-density beekeeping has been measured depressing wild bee numbers by around half out to a kilometre — which on a three-hectare site means all of it. So the cell is built for the bees already on this ground. Around 70% of bee species nest in soil, not in anything built, and what they need is a warm, well-drained, undisturbed face.</span>
         </figcaption>
@@ -1750,7 +1765,7 @@
     <a href="#pricing" class="hx-claim"><i></i>Claim a cell</a>
   </div>
 
-  <!-- Fourth work · corporate collaboration. Jack's is also cell A-01 inside HEXAGON,
+  <!-- Fourth work · corporate collaboration. Jack's is also cell AH inside HEXAGON,
        which is where it is bought; this section is the work in its own right, and it
        has its own scene because the mark is planted at a scale the cell view cannot
        show. The copy is kept in step with screen.html, which never stopped carrying it.
@@ -1831,7 +1846,7 @@
   <div class="st" id="hxDst"></div>
   <!-- JACK'S COFFEE. Нүүр хуудсан дээрх тусдаа хэсгээс энд зөөгдөв: бүтээл нь
        HEXAGON-ы нэг эс болсон тул тайлбар нь эсийнхээ дэргэд гарах нь зөв.
-       Зөвхөн A-01 дээр нээгдэнэ — openCell шийднэ. -->
+       Зөвхөн AH дээр нээгдэнэ — openCell шийднэ. -->
   <div class="jx" id="hxDjacks" hidden>
     <div class="jxh">(04) · 2026 · with Jack's Coffee</div>
     <p><b>One Coffee, One Tree.</b> Every specially marked cup sold at COP17 plants one elm in
@@ -2289,7 +2304,7 @@
                         One Hectare. <br> Ten Thousand Cells.
                     </div>
                     <p class="text-neutral-400 eco-web-intro effectFade fadeUp" style="margin: 16px auto 0;">
-                        The artwork is one hectare. Pits are dug 1.5 m apart in both directions and planted with three Siberian elm each, so a hectare holds about 4,440 of them. Sponsoring a pit is not a land purchase and not an open-ended donation: it funds a defined stack of costs, published in full below. This is why USD 30 per pit is not a restoration cost-per-hectare benchmark and should not be read as one.
+                        The artwork is one hectare. Pits are dug 1 m apart in both directions and planted with three Siberian elm each, so a hectare holds up to 10,000 of them. Sponsoring a pit is not a land purchase and not an open-ended donation: it funds a defined stack of costs, published in full below. This is why USD 30 per pit is not a restoration cost-per-hectare benchmark and should not be read as one.
                     </p>
 
                     <div class="cost-stack effectFade fadeUp">
@@ -2323,6 +2338,14 @@
                         be traced to a located area of ground rather than to a site average.
                         Sponsorship confers stewardship and recognition — not title to land.
                     </p>
+                </div>
+                <!-- The way in. Pressing a hexagon on the map used to be the only
+                     route to a purchase, and it was not one anybody found: the map
+                     reads as something to look at. The button says what it does and
+                     leads to a page that asks one thing at a time. -->
+                <div class="hex-buy-cta effectFade fadeUp">
+                    <a href="sponsor.html">Sponsor a tree &rarr;</a>
+                    <span>Choose a cell, name your certificate, pay. Three elms to a pit, one numbered certificate.</span>
                 </div>
                 <div class="hex-map-embed effectFade fadeUp">
                     <iframe id="hexMapFrame" src="hexagon-experience-map.html" title="HEXAGON cell map" loading="lazy" scrolling="no"></iframe>

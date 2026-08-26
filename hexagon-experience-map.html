@@ -67,6 +67,11 @@ canvas#wind{position:absolute;inset:0;width:100%;height:100%;pointer-events:none
 .tip{position:absolute;pointer-events:none;z-index:6;background:var(--ink);color:#fff;border-radius:12px;padding:8px 12px;font-size:11px;line-height:1.55;opacity:0;transition:opacity .15s;white-space:nowrap}
 .tip.show{opacity:1}
 .tip b{color:var(--lime)}
+.mapcta{text-align:center;margin:0 0 20px}
+.mapcta[hidden]{display:none}
+.mapcta a{display:inline-block;text-decoration:none;background:var(--ink);color:#fff;
+          border-radius:100px;padding:15px 34px;font:700 12.5px/1 inherit;
+          letter-spacing:.07em;text-transform:uppercase}
 .stamp.avail{background:var(--lime)}
 .stamp.avail small{color:#3C4A16}
 .legend b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
@@ -239,13 +244,30 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.reveal{opacity:1}.cell.presow{opacity:1}}
 
 </style>
+<script>
+/* Picker mode, decided before the first paint. sponsor.html frames this map to
+   choose a cell and carries its own heading; the map's own title and lead
+   paragraph would say the same thing twice. Set here rather than in the main
+   script at the foot of the page so the header is never briefly visible. */
+if(new URLSearchParams(location.search).get('pick')==='1')
+  document.documentElement.className+=' pickmode';
+</script>
+<style>
+.pickmode .eyebrow,.pickmode h1,.pickmode .lead,.pickmode .legend{display:none}
+.pickmode .wrap{padding-top:0}
+</style>
 </head>
 <body>
 <div class="wrap">
 
   <span class="eyebrow"><i></i>Erdene Sum · Dornogovi · 44.0754 N / 111.1958 E</span>
   <h1>HEXAGON<span>Cell map</span></h1>
-  <p class="lead">Fifty-four hexagonal cells on a fenced 30,000 m² site, 4,571 m² of it under planting. The map is drawn to scale: each cell is shown at its true area, every point is one pit and every row one drip line. Cells outlined in green are unallocated; grey cells are already sponsored. Select any cell for its area, tree count and terms.</p>
+  <p class="lead">Fifty-four hexagonal cells on a fenced 30,000 m² site, holding 9,000 planting pits. The map is drawn to scale: each cell is shown at its true area, the darker core is the planted ground, and every point in it is one pit at 1 m spacing. The paler edge of each cell is its working margin — the drip header and the room to reach the rows. Cells outlined in green are unallocated; grey cells are already sponsored. Select any cell for its area, tree count and terms.</p>
+
+  <!-- Not shown when this map is embedded as a picker: there the surrounding
+       page is already the purchase, and a second way in would send someone
+       round in a circle. -->
+  <div class="mapcta" id="mapcta"><a href="sponsor.html" target="_top">Sponsor a tree &rarr;</a></div>
 
   <div class="mapbox">
     <div class="mapinner" id="mapinner">
@@ -256,6 +278,11 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
            the 3D scene on the main page carries the years. -->
       <div class="hud">
         <div class="stamp avail"><span id="availN">—</span><small>CELLS FREE</small></div>
+        <!-- The figure a sponsor is actually choosing from. Cells-free counts
+             cells with nothing sold in them, which undercounts badly once a
+             partner takes fifty pits out of a cell of 259 — the other 209 are
+             still for sale. This counts the pits. -->
+        <div class="stamp"><span id="pitsN">—</span><small>PITS AVAILABLE</small></div>
       </div>
       <button class="zoomout" id="zoomout" type="button">⤢ Full Site</button>
     </div>
@@ -300,18 +327,18 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
    after every cell and step upwards off each other, so none is covered.
    Nothing to configure — `aspect` is all either path needs. ────── */
 var PARTNERS = {
-  'B-01': { name:'EFES GROUP', logo:'assets/images/partner/hexagon-cells/EFES-GROUP_L.png', aspect:1.41 },
-  'C-02': { name:'TIMBERLAND', logo:'assets/images/partner/hexagon-cells/Timberland_M.svg', aspect:5.70 },
-  'C-01': { name:'YVES ROCHER', logo:'assets/images/partner/hexagon-cells/Yves-Rocher_M.webp', aspect:4.65 },
+  'K': { name:'EFES GROUP', logo:'assets/images/partner/hexagon-cells/EFES-GROUP_L.png', aspect:1.41 },
+  'R': { name:'TIMBERLAND', logo:'assets/images/partner/hexagon-cells/Timberland_M.svg', aspect:5.70 },
+  'P': { name:'YVES ROCHER', logo:'assets/images/partner/hexagon-cells/Yves-Rocher_M.webp', aspect:4.65 },
   /* KHARKHORUM нь 3D дүрслэлд түнш байсан ч энэ хүснэгтэд байхгүй байсан тул
      худалдан авах газрын зурагт "чөлөөтэй" гэж харагдаж байв. 3D-г эх болгоно. */
-  'E-01': { name:'KHARKHORUM', logo:null, aspect:1 },
+  'B': { name:'KHARKHORUM', logo:null, aspect:1 },
   /* EFES Group-ийн дөрвөн компани — төвд хамгийн ойр дөрвөн F нүд.
      Код нь 3D дүрслэлтэй яг таарна. */
-  'F-13': { name:'EFES INTERNATIONAL', logo:'assets/images/partner/hexagon-cells/EFES-INTERNATIONAL_S.jpg', aspect:3.02 },
-  'F-11': { name:'EFES CONSTRUCTION',  logo:'assets/images/partner/hexagon-cells/EFES-CONSTRUCTION_S.png',  aspect:1.51 },
-  'F-16': { name:'EFEC SUPERMARKET',   logo:'assets/images/partner/hexagon-cells/EFEC-SUPERMARKET_S.png',   aspect:2.76 },
-  'F-10': { name:'KHULAN UUL',         logo:'assets/images/partner/hexagon-cells/KHULAN-UUL_S.png',         aspect:3.67 }
+  'AJ': { name:'EFES INTERNATIONAL', logo:'assets/images/partner/hexagon-cells/EFES-INTERNATIONAL_S.jpg', aspect:3.02 },
+  'X': { name:'EFES CONSTRUCTION',  logo:'assets/images/partner/hexagon-cells/EFES-CONSTRUCTION_S.png',  aspect:1.51 },
+  'AQ': { name:'EFEC SUPERMARKET',   logo:'assets/images/partner/hexagon-cells/EFEC-SUPERMARKET_S.png',   aspect:2.76 },
+  'N': { name:'KHULAN UUL',         logo:'assets/images/partner/hexagon-cells/KHULAN-UUL_S.png',         aspect:3.67 }
 };
 var HELD     = [];
 
@@ -323,19 +350,19 @@ var INFRA = {
   /* A-01-ийг БИД зарахгүй. Тэр бүтээлийн дэмжлэг нь Jack's Coffee-ийн өөрсдийн
      вэбээр дамжина — нэг кофе, нэг мод. Тул энд нүх зарах хяналт биш, тэдний
      худалдан авах холбоос гарна. */
-  'A-01':"Jack's Coffee · bird refuge",
-  'D-01':'Solar field · 100 kW',
-  'D-02':'Water harvesting',
-  'D-03':'Recycling point',
-  'D-04':'Research station',
-  'D-06':'Pollinator meadow',
-  'D-07':'Community ground'
+  'AH':"Jack's Coffee · bird refuge",
+  'E':'Solar field · 100 kW',
+  'J':'Water harvesting',
+  'S':'Recycling point',
+  'AD':'Research station',
+  'AK':'Pollinator meadow',
+  'AR':'Community ground'
 };
 
 /* ══════════ 2. МАСШТАБ ══════════
    2,625 м² зургаалжны радиус = 31.79 м → зурагт 47.9 нэгж.
    1 метр = 1.506 нэгж. Хээний нүд = 1 метр = 1 бортого.    */
-/* 1 м = хэдэн зурган нэгж. SIZES-ийг 3D дүр зургийн бодит талбайд (4,571 м²)
+/* 1 м = хэдэн зурган нэгж. SIZES-ийг 3D дүр зургийн харьцаанд
    тааруулахад зурагдсан хэмжээ хэвээр үлдэхийн тулд UPM-ийг √6.5625 = 2.5617
    дахин томсгов: 1.506 → 3.858. Зураг өөрчлөгдөхгүй, гэхдээ метр нь жинхэнэ. */
 var UPM=3.858, CX=470, CY=420;
@@ -345,23 +372,56 @@ var PAT=UPM, P4=PAT/4;                          /* хээний нүд ба ху
    зурагдсан хэмжээ зарагдсан м²-тэй үргэлж таарна. 54 нүдний нийлбэр яг
    30,000 м². Хашаа байхгүй — нүднүүд өөрсдөө талбайг бүрдүүлнэ.
    ₮100,000/м², $1 ≈ ₮3,400. */
-/* Нэгж нь НҮХ, м² биш. Нүхийг хоёр тийшээ 1.5 м зайтай ухах тул нэг нь
-   2.25 м² эзэлж, дотор нь 3 суулгац орно. 1 нүх = ₮100,000 = $30.
+/* Нэгж нь НҮХ, м² биш. Нүхийг хоёр тийшээ 1 м зайтай ухах тул нэг нь
+   1 м² эзэлж, дотор нь 3 суулгац орно. 1 нүх = $30.
    Урьд нь 1 м² = $30, 1 м²-т 3 мод гэж байсан нь 0.58 м зайг шаардах бөгөөд
    хайлаасанд боломжгүй. Тоо бүрийг талбайгаас гаргана — 3D дүр зургийнхтай
-   ижил томьёо тул хоёр газар салах боломжгүй. */
-var SPACING=1.5, AREA_PER_PIT=SPACING*SPACING, SEEDS_PER_PIT=3;
-var PIT_MNT=100000, PIT_USD=30;
-function mkSize(area,nm){
-  var pots=Math.floor(area/AREA_PER_PIT);
+   ижил томьёо тул хоёр газар салах боломжгүй.
+
+   Үнэ зөвхөн доллараар. Нэхэмжлэх доллараар үүсдэг тул төгрөгийн дүнг хажууд
+   нь тавих нь аль нь жинхэнэ вэ гэсэн асуултыг л төрүүлнэ. */
+var SEEDS_PER_PIT=3;
+var PIT_USD=30;
+
+/* НҮХНИЙ ТОО НЬ ЗАРЛАСАН ТОО, талбайгаас гаргасан биш. Хөтөлбөр 9,000 нүхээр
+   төлөвлөгдсөн тул тоог нь шууд зарлана — api/_minu.js доторхтой ижил хүснэгт,
+   хоёр газар салах боломжгүй.
+
+   ЗАЙ 1.5 м-ЭЭС 1 м БОЛСОН. Урьд нь нэг нүх 2.25 м² эзэлж байсан бол одоо 1 м².
+   Үүний хажуугаар мод таригдахгүй зургаан нүд — нар, ус, дахин боловсруулалт,
+   судалгаа, тоос хүртээгч, олон нийтийн талбай — зарагдахаа больсон тул тэдний
+   1,164 нүх үлдсэн 47 нүдэнд хуваарилагдав. Нүд бүр ойролцоогоор ×1.1485:
+     A 2×991  B 4×647  C 6×297  D 2×223  E 15×112  F 18×29  = 47 нүд, 9,000 нүх
+   Газар нь өөрчлөгдөөгүй. 9,000 нүх × 1 м² = 9,000 м² тарина, харин тэдгээр
+   47 нүд 17,631 м² газар эзэлдэг — үлдсэн тал нь нүд бүрийн захын ажлын зурвас,
+   дуслын толгой шугам, зам. Урьд нь нүднүүд бие биедээ хүрч, ажиллах зай
+   үлдээгүй байв.
+   AH бол Jack's-ийн бүтээл: тэмдгийнх нь хэлбэрээр таригдана, зарагдахгүй. */
+var PITS_BY_CLASS={A:991,B:647,C:297,D:223,E:112,F:29};
+var PITS={
+  AH:991, AM:991, AS:991, K:647, AB:647, AL:647, BA:647, P:297, R:297,
+  AC:297, AE:297, AY:297, AZ:297, E:223, J:223, S:223, AD:223, AN:223,
+  AK:223, AR:223, AV:223, B:112, H:112, L:112, Q:112, O:112, T:112,
+  Y:112, AA:112, W:112, AF:112, AI:112, AO:112, AT:112, AU:112, AX:112,
+  A:29, F:29, D:29, C:29, G:29, I:29, U:29, V:29, M:29,
+  N:29, X:29, Z:29, AJ:29, AG:29, AP:29, AQ:29, AW:29, BB:29,
+};
+/* Газрын талбай нь тогтмол — хашаа, хэмжилт хийгдсэн бодит газар. Нүхний тоо
+   нь тэр талбай дотор хэдэн нүх багтахаас гарна, эсрэгээрээ биш. */
+var AREA_BY_CLASS={A:1942,B:1265,C:583,D:437,E:221,F:56};
+function mkSize(cls,nm){
+  var pots=PITS_BY_CLASS[cls];
   /* Бүтэн эсийн үнийг тооцохоо больлоо — эс бүтнээрээ зарагддаггүй.
      Үнэ нь сонгосон нүхний тооноос гарна (PIT_USD). */
-  return {area:area,pots:pots,trees:pots*SEEDS_PER_PIT,nm:nm};
+  return {area:AREA_BY_CLASS[cls],pots:pots,trees:pots*SEEDS_PER_PIT,nm:nm};
 }
 var SIZES={
-  A:mkSize(400,'Extra large cell'), B:mkSize(260,'Large cell'),
-  C:mkSize(120,'Medium cell'),      D:mkSize(90,'Small-plus cell'),
-  E:mkSize(45,'Small cell'),        F:mkSize(12,'Marker cell')
+  /* Area follows the pit count now, not the other way round: a pit occupies
+     1 m² at the 1 m spacing, so a cell's planted core is what its stated pits
+     need. The hexagons keep their relative sizes; only the figure changes. */
+  A:mkSize('A','Extra large cell'), B:mkSize('B','Large cell'),
+  C:mkSize('C','Medium cell'),      D:mkSize('D','Small-plus cell'),
+  E:mkSize('E','Small cell'),       F:mkSize('F','Marker cell')
 };
 /* [x, y, class] — хамгийн том зургаалжны радиусыг нэгж болгосон нормчилсон байрлал */
 var SHAPE=[[-3.5764,1.0969,'A'],[1.7086,1.3346,'A'],[-1.0171,2.6433,'A'],[3.3162,-2.7075,'B'],[-5.0352,0.1615,'B'],[0.18,0.5734,'B'],[-0.8746,4.3662,'B'],[-0.4271,-1.9448,'C'],[1.3021,-1.8147,'C'],[-3.8427,-0.369,'C'],[1.4678,-0.1359,'C'],[0.4255,3.9604,'C'],[-2.6239,4.3019,'C'],[3.4772,-3.9643,'D'],[1.4779,-2.8245,'D'],[3.1652,-1.4717,'D'],[-2.3281,0.3938,'D'],[2.9329,0.609,'D'],[-0.894,1.213,'D'],[3.8001,1.786,'D'],[2.4768,2.7478,'D'],[2.7672,-4.4452,'E'],[-0.3256,-2.8523,'E'],[4.5629,-2.5821,'E'],[0.4162,-1.6095,'E'],[-1.244,-1.5901,'E'],[4.559,-1.3989,'E'],[2.0393,-1.2502,'E'],[3.0955,-0.5974,'E'],[0.1599,-0.5587,'E'],[2.4652,-0.2342,'E'],[-1.5839,0.7345,'E'],[3.7374,0.9397,'E'],[0.2559,2.2948,'E'],[0.7569,3.0645,'E'],[-1.8797,3.7723,'E'],[2.6766,-5.0259,'F'],[4.4142,-3.8249,'F'],[2.8097,-3.7506,'F'],[-0.2575,-3.437,'F'],[-0.9854,-2.4884,'F'],[0.7546,-2.3227,'F'],[5.0174,-2.2042,'F'],[5.0352,-1.7713,'F'],[-2.1755,-1.5878,'F'],[-1.7992,-1.3679,'F'],[1.4887,-1.062,'F'],[2.4737,-0.8289,'F'],[-1.0613,0.52,'F'],[-4.8788,1.1704,'F'],[-4.8796,1.5971,'F'],[0.7941,2.0702,'F'],[3.2596,2.6053,'F'],[-2.8833,5.0259,'F']];
@@ -418,17 +478,45 @@ function rOf(cls){ return Math.sqrt(SIZES[cls].area/2.598)*UPM; }
 var UNIT=rOf('A');                              /* нормчилсон нэгж → зурган нэгж */
 
 var VIG=[0.84,1.0,1.14];                       /* эсийн өсөлтийн ялгаа */
-var counters={A:0,B:0,C:0,D:0,E:0,F:0}, CELLS=[];
+/* CELL CODES. One letter per hexagon — A…Z then AA…BB, which is exactly 54.
+   Ordered across the ground, north-west to south-east, so neighbouring cells
+   carry neighbouring letters: the point of lettering them is that a cell can be
+   found and reported on in the field, and letters that jumped between size
+   classes would not do that.
+   Indexed by position in SHAPE, so this file and the other one that walks SHAPE
+   cannot drift apart. The size class is no longer readable from the code, so
+   pit counts are stated per cell rather than derived from the letter. */
+/* Picker mode. sponsor.html embeds this map to let someone choose a cell, and
+   in that mode the map's own buy form must not appear: the wizard around it
+   asks for the details and takes the payment, and two forms for one purchase is
+   how a buyer ends up filling in the wrong one. The map's job here is to hand
+   back a cell code and nothing else. */
+var PICK=new URLSearchParams(location.search).get('pick')==='1';
+/* Hidden whenever this map is embedded — both the home page and the sponsor
+   wizard carry their own way in, and a second button inside the frame sends
+   someone round in a circle. Shown only when the map is opened on its own. */
+(function(){
+  var mc=document.getElementById('mapcta');
+  if(mc && (PICK || window.parent!==window)) mc.hidden=true;
+})();
+
+var LETTERS=["AH","AM","AS","K","AB","AL","BA","P","R","AC","AE","AY","AZ","E","J","S","AD","AN","AK","AR","AV","B","H","L","Q","O","T","Y","AA","W","AF","AI","AO","AT","AU","AX","A","F","D","C","G","I","U","V","M","N","X","Z","AJ","AG","AP","AQ","AW","BB"];
+var CELLS=[];
 SHAPE.forEach(function(h,i){
-  var cls=h[2]; counters[cls]++;
-  var id=cls+'-'+String(counters[cls]).replace(/^(\d)$/,'0$1');
+  var cls=h[2];
+  var id=LETTERS[i];
   var s={x:CX+h[0]*UNIT, y:CY+h[1]*UNIT};
   CELLS.push({x:s.x,y:s.y,cls:cls,id:id,R:rOf(cls),tier:Math.floor(rnd()*3),
+    pots:PITS[id],
     status:INFRA[id]?'infra':(PARTNERS[id]?'taken':(HELD.indexOf(id)>-1?'held':'free')),
     infra:INFRA[id]||null,
     partner:PARTNERS[id]?PARTNERS[id].name:null,
     logo:PARTNERS[id]?PARTNERS[id].logo:null,
-    logoAspect:PARTNERS[id]&&PARTNERS[id].aspect?PARTNERS[id].aspect:1});
+    logoAspect:PARTNERS[id]&&PARTNERS[id].aspect?PARTNERS[id].aspect:1,
+    /* A-01 is the Jack's Coffee cell: its trees are planted in the shape of
+       their mark, not in the even grid every other cell uses. Drawn as the
+       mark itself so the map says what is actually in the ground there. */
+    mark:id==='AH'?"assets/images/jacks-mark.png":null});
 });
 /* Талбайн гадна радиус нь эсийн бөөгнөрлөөс өөрөө гарна — хашааны хэмжээнээс биш. */
 var R_FIELD=0;
@@ -436,6 +524,27 @@ CELLS.forEach(function(c){
   var d=Math.sqrt((c.x-CX)*(c.x-CX)+(c.y-CY)*(c.y-CY))+c.R;
   if(d>R_FIELD) R_FIELD=d;
 });
+
+/* Зурагдах бүх муж. Урьд нь 940×860 гэж гурван газарт гараар бичигдсэн байсан
+   бөгөөд эсүүд түүнээс дөрвөн талаараа давдаг байв — зүүнээс 146, дээрээс 128
+   нэгж тайрагдаж, захын нүднүүд хагасаараа харагдана. Одоо эсүүдээс өөрсдөөс нь
+   гарна: газар, хайргын давхарга, зам, харагдах цонх дөрвүүлээ үүнийг уншина,
+   тул дахин салах боломжгүй.
+
+   Харьцааг анх зурсан 940:860-д барина. SVG өргөнөөрөө сунадаг тул мужийг
+   зөвхөн ТОМРУУЛЖ тэгшитгэнэ — багасгавал эргээд тайрна. */
+var FIELD=(function(){
+  var pad=26, x0=1e9, y0=1e9, x1=-1e9, y1=-1e9;
+  CELLS.forEach(function(c){
+    if(c.x-c.R<x0) x0=c.x-c.R;  if(c.x+c.R>x1) x1=c.x+c.R;
+    if(c.y-c.R<y0) y0=c.y-c.R;  if(c.y+c.R>y1) y1=c.y+c.R;
+  });
+  x0-=pad; y0-=pad; x1+=pad; y1+=pad;
+  var w=x1-x0, h=y1-y0, want=860/940;
+  if(h/w < want){ var nh=w*want; y0-=(nh-h)/2; h=nh; }
+  else           { var nw=h/want; x0-=(nw-w)/2; w=nw; }
+  return {x:x0,y:y0,w:w,h:h};
+})();
 
 /* ══════════ 5. DEFS: хайрга, гурван тарилтын хээ ══════════ */
 var defs=el('defs');
@@ -458,9 +567,9 @@ defs.innerHTML=
 map.appendChild(defs);
 
 /* ══════════ 6. ГАЗАР ══════════ */
-var groundRect=el('rect',{x:0,y:0,width:940,height:860,fill:'#E7DCC5',id:'ground'});
+var groundRect=el('rect',{x:FIELD.x,y:FIELD.y,width:FIELD.w,height:FIELD.h,fill:'#E7DCC5',id:'ground'});
 map.appendChild(groundRect);
-map.appendChild(el('rect',{x:0,y:0,width:940,height:860,filter:'url(#grit)'}));
+map.appendChild(el('rect',{x:FIELD.x,y:FIELD.y,width:FIELD.w,height:FIELD.h,filter:'url(#grit)'}));
 map.appendChild(el('path',{'class':'wash',d:'M 20 690 C 190 640, 300 720, 470 668 S 760 590, 930 640'}));
 map.appendChild(el('path',{'class':'wash',d:'M 60 120 C 210 190, 330 130, 452 196 S 700 250, 900 190',opacity:'.55'}));
 
@@ -474,7 +583,7 @@ for(var i=0;i<170;i++){
 map.appendChild(shrubs);
 
 /* Хашаа байхгүй: 54 зургаалжин өөрсдөө 30,000 м²-г бүрдүүлнэ. Зөвхөн орох зам үлдэнэ. */
-map.appendChild(el('path',{'class':'track',d:'M 470 860 L 470 '+(CY+R_FIELD+22).toFixed(0)}));
+map.appendChild(el('path',{'class':'track',d:'M '+CX+' '+(FIELD.y+FIELD.h).toFixed(0)+' L '+CX+' '+(CY+R_FIELD+22).toFixed(0)}));
 
 /* доод давхаргын халих */
 var halo=el('g',{id:'halo',filter:'url(#soft)',opacity:'0'});
@@ -500,7 +609,26 @@ var field=el('g');
 CELLS.forEach(function(c){
   var g=el('g',{'class':'cell'+(c.status==='free'?'':' '+c.status),tabindex:'0',role:'button','aria-label':'Cell '+c.id});
   g.dataset.id=c.id;
-  g.appendChild(el('polygon',{'class':'plot',points:hexPts(c.x,c.y,c.R),fill:'url(#grove'+c.tier+')'}));
+  /* The plot is the whole hexagon; the planting is the core of it.
+     The grove pattern draws one tree per square metre — it always did — so
+     filling the hexagon with it drew as many trees as the cell has square
+     metres. At 1 m spacing that is now the right density, but a cell holds
+     fewer pits than it has square metres: the rest is the working margin at
+     its edge, for the drip header and for getting a vehicle to the rows. So
+     the ground is drawn bare and the grove is laid only over the planted core,
+     whose area is exactly the pit count. */
+  g.appendChild(el('polygon',{'class':'plot',points:hexPts(c.x,c.y,c.R),fill:'#DCCFA8'}));
+  if(!c.mark){
+    /* R scales with √area, and the core's area is pots ÷ full area. */
+    var coreR=c.R*Math.sqrt(c.pots/SIZES[c.cls].area);
+    g.appendChild(el('polygon',{'class':'core',points:hexPts(c.x,c.y,coreR),
+      fill:'url(#grove'+c.tier+')'}));
+  }
+  if(c.mark){
+    var mr=c.R*0.80, mh=mr*2*0.92, mw=mh*(520/600);
+    g.appendChild(el('image',{href:c.mark,x:c.x-mw/2,y:c.y-mh/2,width:mw,height:mh,
+      preserveAspectRatio:'xMidYMid meet','pointer-events':'none'}));
+  }
   /* Гурван төлөв гурван өөр өнгөтэй байх ёстой. Ногооноор ялгах гэсэн нь бүтээгүй —
      газрын зураг өөрөө ногоон тул ногоон дээр ногоон нэмэхэд бүгд адилхан харагдана.
      Тиймээс: эзэнтэй = саарал (шийдэгдсэн, ард нь ухарна), ярилцаж буй = шар,
@@ -532,7 +660,7 @@ CELLS.forEach(function(c){
       callouts.push(c);
     }
   }
-  if(c.cls!=='S'&&!c.logo){var t=el('text',{'class':'lab',x:c.x,y:c.y+3});t.textContent=c.id;g.appendChild(t);}
+  if(c.cls!=='S'&&!c.logo&&!c.mark){var t=el('text',{'class':'lab',x:c.x,y:c.y+3});t.textContent=c.id;g.appendChild(t);}
   field.appendChild(g);
 });
 
@@ -614,7 +742,17 @@ function shelterAt(x,y){
 
 /* ══════════ 8. САЛХИНЫ ХЭСГҮҮД (canvas) ══════════ */
 var cvs=$('wind'), ctx=cvs.getContext('2d'), inner=$('mapinner');
-var VB={x:0,y:0,w:940,h:860}, VB_BASE={x:0,y:0,w:940,h:860};
+/* Талбайн харагдах муж нь эсүүдээс өөрсдөөс нь гарна, гараар бичсэн тооноос
+   биш. Урьд нь 940×860 гэж тогтоосон байсан нь хонхорцгийг дөрвөн талаас нь
+   тайрч байв — зүүн талаас 146, дээрээс 128 нэгж. Эсийн хэмжээ, байрлал
+   өөрчлөгдвөл энэ нь дагаж өөрчлөгдөнө, дахин тайрахгүй.
+
+   Зургийн харьцааг хадгална: SVG нь өргөнөөрөө сунадаг тул мужийг зөвхөн
+   томруулж тэгшитгэнэ — жижигрүүлбэл эргээд тайрна. */
+var VB_BASE={x:FIELD.x,y:FIELD.y,w:FIELD.w,h:FIELD.h};
+var VB={x:VB_BASE.x,y:VB_BASE.y,w:VB_BASE.w,h:VB_BASE.h};
+map.setAttribute('viewBox',
+  VB.x.toFixed(1)+' '+VB.y.toFixed(1)+' '+VB.w.toFixed(1)+' '+VB.h.toFixed(1));
 var DPR=Math.min(2,window.devicePixelRatio||1), CW=1, CH=1;
 function sizeCanvas(){
   var r=inner.getBoundingClientRect();
@@ -777,6 +915,35 @@ function frame(){
   function put(id,v){ var e=$(id); if(e) e.textContent=v; }
   put('availN',n.free); put('cntFree',n.free);
   put('cntHeld',n.held); put('cntTaken',n.taken);
+
+  /* Pits available across the whole site. Starts from the full sellable
+     capacity, then asks the ledger what has gone and subtracts it, so the
+     number is right whether or not the ledger answers. Jack's cell is excluded
+     the same way it is excluded everywhere else: it is not for sale. */
+  /* Only what can actually be bought. Counting the infrastructure cells put
+     1,164 pits into this figure that nobody can sponsor — the solar field, the
+     water works, the research station and the rest are real ground with real
+     area, but nothing is planted in them. INFRA is the same list the detail
+     panel refuses on, and the server refuses on it too. */
+  var sellable=CELLS.filter(function(c){return !INFRA[c.id];});
+  var total=sellable.reduce(function(a,c){return a+c.pots;},0);
+  function showPits(v){ put('pitsN',v.toLocaleString('en-US')); }
+  showPits(total);
+  fetch('/api/pay-availability',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({cells:sellable.map(function(c){return c.id;})})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d||!d.tracked||!d.cells) return;
+      var left=0;
+      sellable.forEach(function(c){
+        var i=d.cells[c.id];
+        /* A cell the ledger cannot speak for counts at full capacity rather
+           than zero: overstating what is gone turns buyers away. */
+        left+=(i&&typeof i.remaining==='number'&&!i.unknown)?i.remaining:c.pots;
+      });
+      showPits(left);
+    })
+    .catch(function(){});
 })();
 
 /* ══════════ 11. ТОМРУУЛАЛТ ══════════ */
@@ -823,14 +990,14 @@ function showIntro(){
     '<h3 class="d-title">54 cells, six sizes<span>Click any cell to zoom in</span></h3>'+
     '<p class="d-body">Each cell has a fixed position on the site and carries its sponsor\'s name. Sponsorship is not land ownership — it is stewardship and recognition.</p>'+
     '<ul class="d-stats">'+rows([
-      ['Site','30,000 m² fenced · 4,571 m² planted'],
+      ['Site','30,000 m² fenced · 9,000 m² planted'],
       ['Extra large','3 × 400 m² · $12,000'],
       ['Large','4 × 260 m² · $7,800'],
       ['Medium','6 × 120 m² · $3,600'],
       ['Small-plus','8 × 90 m² · $2,700'],
       ['Small','15 × 45 m² · $1,350'],
       ['Marker','18 × 12 m² · $360'],
-      ['Unit price','$30 / pit · 3 seedlings'],['Total trees','6,057 · Ulmus pumila']
+      ['Unit price','$30 / pit · 3 seedlings'],['Total trees','27,000 · Ulmus pumila']
     ])+'</ul>'+
     '<a class="d-cta" href="index.html#contact" target="_top">Enquire About Sponsoring a Cell →</a>';
   */
@@ -840,114 +1007,16 @@ function showIntro(){
    {sku:'pit', currency, quantity, cell} дөрөв. Төлбөр асаагаагүй үед хяналт огт
    гарахгүй — ажиллахгүй товч харуулахаас нуусан нь дээр. */
 var PAYCFG=null;
-function wireBuy(c,s){
-  var box=document.getElementById('buyBox'); if(!box) return;
-  var qty=document.getElementById('buyQty'), tot=document.getElementById('buyTotal'),
-      seeds=document.getElementById('buySeeds'), go=document.getElementById('buyGo'),
-      nlab=document.getElementById('buyN'), msg=document.getElementById('buyMsg');
-  var busy=false;
-
-  /* Багтаамж нь эсийн нүхний тоо, ГЭХДЭЭ аль хэдийн зарагдсаныг хасна.
-     Бүртгэлийн сан тохируулагдаагүй үед үлдэгдлийг мэдэхгүй тул бүтэн
-     багтаамжийг харуулна — батлагдаагүй тоо харуулснаас дээр. */
-  var cap=s.pots;
-  function read(){ var v=parseInt(qty.value,10);
-    return (isFinite(v)&&v>=1&&v<=cap)?v:null; }
-  function paint(){
-    var n=read();
-    if(n===null){ tot.textContent='—'; seeds.textContent=''; go.disabled=true; return; }
-    var usd=n*PIT_USD;
-    tot.textContent='$'+usd.toLocaleString('en-US');
-    seeds.textContent=(n*SEEDS_PER_PIT).toLocaleString('en-US')+' seedlings';
-    nlab.textContent=n;
-    go.disabled=busy;
-  }
-  qty.addEventListener('input',paint);
-
-  go.addEventListener('click',function(){
-    var n=read(); if(n===null||busy) return;
-    var nm=(document.getElementById('buyName').value||'').trim();
-    var em=(document.getElementById('buyEmail').value||'').trim();
-    if(!nm){ msg.className='buy-msg err'; msg.textContent='Please give a name.';
-             document.getElementById('buyName').focus(); return; }
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ msg.className='buy-msg err';
-             msg.textContent='Please give a valid email address.';
-             document.getElementById('buyEmail').focus(); return; }
-    busy=true; go.disabled=true; msg.className='buy-msg'; msg.textContent='Opening the secure payment page…';
-    fetch('/api/pay-create',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({sku:'pit',currency:'USD',quantity:n,cell:c.id,name:nm,email:em})})
-      .then(function(r){return r.json().then(function(d){return {ok:r.ok,d:d};});})
-      .then(function(res){
-        if(res.ok&&res.d&&res.d.invoice){
-          /* Газрын зураг нь iframe дотор байгаа тул зөвхөн өөрийгөө биш, бүх
-             хуудсыг шилжүүлнэ — эс тэгвээс банкны хуудас жижиг хүрээнд нээгдэнэ. */
-          try{ window.top.location.href=res.d.invoice; }
-          catch(e){ window.location.href=res.d.invoice; }
-          return;
-        }
-        busy=false; go.disabled=false; msg.className='buy-msg err';
-        msg.textContent=(res.d&&res.d.error)||"Couldn't start the payment.";
-        /* Хэн нэгэн түрүүлж авсан бол хязгаарыг шинэчилнэ. */
-        if(res.d&&typeof res.d.remaining==='number'){
-          cap=res.d.remaining; qty.max=Math.max(1,cap);
-          if(cap>0&&parseInt(qty.value,10)>cap) qty.value=cap;
-          paint();
-        }
-      })
-      .catch(function(){ busy=false; go.disabled=false; msg.className='buy-msg err';
-        msg.textContent='Network problem — please try again.'; });
-  });
-
-  function reveal(){
-    if(!PAYCFG||!PAYCFG.available) return;
-    box.hidden=false; paint();
-    /* Бүртгэл унтраалттай үед үлдэгдэл мэдэгдэхгүй тул эсийн багтаамжийг хэлнэ. */
-    setTimeout(function(){
-      var fine=box.querySelector('.buy-fine');
-      if(fine && !box.dataset.said)
-        fine.insertAdjacentHTML('afterbegin','<b>Up to '+s.pots.toLocaleString('en-US')+
-          ' pits in this cell.</b> ');
-    },900);
-    /* Үлдэгдлийг асууна. Хариу ирэх хүртэл бүтэн багтаамжаар үзүүлнэ. */
-    fetch('/api/pay-availability',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({cells:[c.id]})})
-      .then(function(r){return r.json();})
-      .then(function(d){
-        if(!d||!d.tracked||!d.cells||!d.cells[c.id]) return;
-        var info=d.cells[c.id];
-        if(typeof info.remaining!=='number'||info.unknown) return;
-        cap=info.remaining; qty.max=Math.max(1,cap);
-        var fine=box.querySelector('.buy-fine');
-        if(cap<=0){
-          box.hidden=true;
-          if(fine) fine.textContent='';
-          var sold=document.createElement('div');
-          sold.className='buy-fine';
-          sold.textContent='Every pit in this cell has been sponsored.';
-          box.parentNode.insertBefore(sold,box);
-          return;
-        }
-        if(parseInt(qty.value,10)>cap) qty.value=cap;
-        if(fine) fine.insertAdjacentHTML('afterbegin',
-          '<b>'+cap.toLocaleString('en-US')+' of '+s.pots.toLocaleString('en-US')+
-          ' pits still available.</b> ');
-        box.dataset.said='1';
-        paint();
-      })
-      .catch(function(){});
-  }
-  if(PAYCFG){ reveal(); return; }
-  fetch('/api/pay-config').then(function(r){return r.json();})
-    .then(function(d){ PAYCFG=d||{available:false}; reveal(); })
-    .catch(function(){ PAYCFG={available:false}; });
-}
 
 function showCell(id){
   var c=CELLS.filter(function(v){return v.id===id;})[0]; if(!c)return;
   /* Танилцуулга нуугдсан ч нүдний дэлгэц гарна. display:none үед гарч ирэх
      ажиглагч ажиллахгүй тул .in-г гараар өгнө — эс бөгөөс opacity:0 хэвээр. */
   detail.style.display=''; detail.classList.add('in');
-  var s=SIZES[c.cls], size=s.nm;
+  /* SIZES carries the area and the human name for the class; the pit count is
+     the cell's own, because a letter no longer implies a size. */
+  var s=Object.assign({},SIZES[c.cls],{pots:c.pots,trees:c.pots*SEEDS_PER_PIT});
+  var size=s.nm;
   var state=c.status==='infra'?('Project infrastructure — '+c.infra)
           :c.status==='taken'?('Partnered — '+c.partner)
           :(c.status==='held'?'In discussion':'Available');
@@ -957,47 +1026,52 @@ function showCell(id){
   var pots=s.pots.toLocaleString('en-US'), trees=s.trees.toLocaleString('en-US');
   detail.innerHTML='<span class="d-tag">Cell '+c.id+' · '+size+'</span>'+
     '<h3 class="d-title">'+state+'<span>'+pots+' pits · '+trees+' elms</span></h3>'+
-    '<p class="d-body">One named cell within the honeycomb. Pits are dug 1.5 m apart in both directions and take three Siberian elm each, every row connected to a drip line. Trees are irrigated for ten years and counted every six months.'+
+    '<p class="d-body">One named cell within the honeycomb. Pits are dug 1 m apart in both directions and take three Siberian elm each, every row connected to a drip line. The planted core sits inside the cell, leaving a margin at the edge for the drip header and for reaching the rows. Trees are irrigated for ten years and counted every six months.'+
     (c.status==='free'?' This cell is currently available.':'')+'</p>'+
     '<ul class="d-stats">'+rows([
       ['Cell number',c.id],
-      ['Planting pits',pots+' at 1.5 m spacing'],
+      ['Planting pits',pots+' at 1 m spacing'],
       ['Siberian elm',trees+' saplings · 3 per pit'],
       ['Care period','10 years'],['Reporting','count every six months'],['Status',state]
     ])+'</ul>'+
     /* Доллар нь үндсэн үнэ — олон улсын түнш уншина. Төгрөг нь жижгээр хажууд нь. */
     (c.status==='infra'
-      ? (c.id==='A-01'
+      ? (c.id==='AH'
           ? '<div class="buy-fine" style="margin-top:14px">This cell is the Jack\'s Coffee land art. It is not sponsored through this map — every specially marked cup plants an elm here.</div>'+
             '<a class="d-cta" href="https://jacks.coffee/product/cop17-bundle/" target="_blank" rel="noopener noreferrer">One Coffee, One Tree — Buy at Jack\'s →</a>'
           : '<div class="buy-fine" style="margin-top:14px">This cell is project infrastructure and is not offered for sponsorship.</div>'+
             '<a class="d-cta" href="index.html#contact" target="_top">Enquire About Another Cell →</a>')
+      : (c.status==='free' && PICK)
+      ? '<button type="button" class="d-cta" id="pickGo">Choose cell '+c.id+' &rarr;</button>'+
+        '<div class="buy-fine" style="margin-top:10px">'+pots+' pits in this cell. '+
+        'You say how many you want on the next step.</div>'
+      /* The map used to carry its own purchase form. It sent the whole page off
+         to the bank and, for anyone paying by QR inside a banking app, there
+         was no way back: the buyer was left on the provider's page and this
+         site never learned what happened. sponsor.html keeps the buyer on a
+         page of ours that asks the provider itself, so the cell now hands over
+         to it rather than taking the payment here. */
       : c.status==='free'
-      ? '<div class="buy" id="buyBox" hidden>'+
-          '<div class="buy-row buy-who">'+
-            '<label class="buy-f buy-wide"><span>Name</span>'+
-              '<input type="text" id="buyName" maxlength="120" autocomplete="name" placeholder="Name or organisation"></label>'+
-            '<label class="buy-f buy-wide"><span>Email</span>'+
-              '<input type="email" id="buyEmail" maxlength="160" autocomplete="email" placeholder="name@example.com"></label>'+
-          '</div>'+
-          '<div class="buy-row">'+
-            '<label class="buy-f"><span>Pits</span>'+
-              '<input type="number" id="buyQty" min="1" max="'+s.pots+'" step="1" value="1" inputmode="numeric"></label>'+
-            '<div class="buy-t"><span>Total &middot; <i id="buySeeds"></i></span><b id="buyTotal">—</b></div>'+
-          '</div>'+
-          '<button type="button" class="d-cta buy-go" id="buyGo">Sponsor '+
-            '<span id="buyN">1</span> pit in '+c.id+' →</button>'+
-          '<div class="buy-msg" id="buyMsg"></div>'+
-          '<div class="buy-fine"><b>This order is final and '+
-            'non-refundable.</b> It buys pots of three saplings and confers no right over land. '+
-            '<a href="terms.html" target="_top">Terms</a> · '+
-            '<a href="refunds.html" target="_top">Refunds</a> · '+
-            '<a href="privacy.html" target="_top">Privacy</a></div>'+
-        '</div>'+
-        '<a class="d-cta" href="index.html#contact" target="_top">Ask About the Whole Cell →</a>'
+      ? '<a class="d-cta" href="sponsor.html?cell='+encodeURIComponent(c.id)+'" target="_top">'+
+          'Sponsor pits in '+c.id+' &rarr;</a>'+
+        '<div class="buy-fine" style="margin-top:12px">'+pots+' pits in this cell, '+
+          '$30 each &mdash; three Siberian elm and one numbered certificate per pit. '+
+          '<b>Orders are final and non-refundable.</b> '+
+          '<a href="terms.html" target="_top">Terms</a> &middot; '+
+          '<a href="refunds.html" target="_top">Refunds</a> &middot; '+
+          '<a href="privacy.html" target="_top">Privacy</a></div>'+
+        '<a class="d-cta" href="index.html#contact" target="_top">Ask About the Whole Cell &rarr;</a>'
       : '<a class="d-cta" href="index.html#contact" target="_top">'+
           (c.status==='held'?'Ask About This Cell →':'Enquire About Another Cell →')+'</a>');
-  if(c.status==='free') wireBuy(c,s);
+  if(c.status==='free' && PICK){
+    var pg=document.getElementById('pickGo');
+    if(pg) pg.onclick=function(){
+      /* The parent owns the rest of the purchase; all it needs from here is
+         which cell, and how big it is so it can cap the quantity before the
+         server has to. */
+      parent.postMessage({hexPick:{cell:c.id,pits:c.pots}},'*');
+    };
+  }
   var cs=document.querySelectorAll('.cell');
   for(var i=0;i<cs.length;i++) cs[i].classList.toggle('on', cs[i].dataset.id===id);
   zoomToCell(c);
@@ -1050,7 +1124,8 @@ holder.addEventListener('pointermove',function(e){
 });
 document.addEventListener('pointerover',function(e){
   var cell=e.target.closest?e.target.closest('.cell'):null; if(!cell)return;
-  var c=CELLS.filter(function(v){return v.id===cell.dataset.id;})[0], s=SIZES[c.cls];
+  var c=CELLS.filter(function(v){return v.id===cell.dataset.id;})[0];
+  var s=Object.assign({},SIZES[c.cls],{pots:c.pots,trees:c.pots*SEEDS_PER_PIT});
   /* Бүтэн эсийн үнийг харуулахаа больсон: бид эсийг бүтнээр нь зардаггүй,
      нүхээр зардаг. Үнэ нь худалдан авах хяналт дээр, сонгосон тооноосоо
      хамаарч гарна. */

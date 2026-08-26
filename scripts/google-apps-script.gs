@@ -20,8 +20,20 @@
  * clear that cell and use Land-art Space → Send certificate.
  */
 
-/* Must match SHEETS_WEBHOOK_SECRET in Vercel. Replace before deploying. */
-var SECRET = 'PUT-THE-SAME-LONG-RANDOM-STRING-HERE';
+/* The shared secret lives in Script Properties, not in this file.
+ *
+ * It used to be a string on this line, which meant this file could never be
+ * replaced wholesale: every update had to preserve one line by hand, and twice
+ * that went wrong — once the quotes were lost and the secret parsed as a
+ * number, once the line was replaced by the placeholder and the sheet stopped
+ * accepting writes. A property survives every paste.
+ *
+ * Set it once: Project Settings (the gear, left) → Script Properties →
+ * Add script property → SHEETS_WEBHOOK_SECRET → the same string as in Vercel.
+ */
+function secret() {
+  return PropertiesService.getScriptProperties().getProperty('SHEETS_WEBHOOK_SECRET') || '';
+}
 
 /* Certificates are off until you are ready for them. Orders are still recorded
  * and still marked paid — nothing else changes. Set this to true, save, and
@@ -48,7 +60,14 @@ var HEADERS = [
   'Method',
   'Certificate sent',   // date the certificate went out — written automatically
   'Sent by',            // "automatic", or the name of whoever sent it by hand
-  'Notes'
+  'Notes',
+  /* Added after the sheet was already in use, so they go on the end rather
+     than beside Name and Email where they belong: inserting a column in the
+     middle would leave every row already in the sheet one place out of step
+     with its own headings. */
+  'Certificate name',   // what is printed on the certificate — often not "Name"
+  'Phone',
+  'Tree numbers'        // e.g. AM-001 to AM-003 — issued when the payment clears
 ];
 
 function doPost(e) {
@@ -57,7 +76,13 @@ function doPost(e) {
 
     /* An Apps Script Web App deployed for "anyone" is a public URL. Without
        this check, anyone who found it could write rows into the order book. */
-    if (!body.secret || body.secret !== SECRET) {
+    var want = secret();
+    if (!want) {
+      /* Refuse rather than accept anything: an empty property must not become
+         an open door. */
+      return reply({ ok: false, error: 'SHEETS_WEBHOOK_SECRET is not set in Script Properties' });
+    }
+    if (!body.secret || body.secret !== want) {
       return reply({ ok: false, error: 'unauthorised' });
     }
 
@@ -85,6 +110,21 @@ function getSheet() {
     sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
     sheet.autoResizeColumns(1, HEADERS.length);
+    return sheet;
+  }
+
+  /* A sheet that already has rows keeps the headings it was created with, so
+     columns added to HEADERS later would never get a name — the values would
+     arrive under blank cells and nobody would know what they were. Top up the
+     missing ones. Only ever appends to the right, and only where the cell is
+     empty, so a heading someone has renamed by hand is left alone. */
+  var width = sheet.getLastColumn();
+  if (width < HEADERS.length) {
+    var missing = HEADERS.slice(width);
+    var target = sheet.getRange(1, width + 1, 1, missing.length);
+    target.setValues([missing]);
+    target.setFontWeight('bold');
+    sheet.autoResizeColumns(width + 1, missing.length);
   }
   return sheet;
 }
@@ -107,7 +147,10 @@ function appendOrder(sheet, b) {
     b.currency || '',
     b.status || 'pending',
     '', '', '',      // paid at, bank txn, method — filled by the status call
-    '', '', ''       // certificate sent, sent by, notes
+    '', '', '',      // certificate sent, sent by, notes
+    b.certName || '',
+    b.phone || '',
+    ''               // tree numbers — issued when the payment clears
   ]);
   return { ok: true, row: sheet.getLastRow() };
 }
@@ -126,7 +169,8 @@ function appendOrder(sheet, b) {
 function sendCertificate(sheet, row) {
   var v = sheet.getRange(row, 1, 1, HEADERS.length).getValues()[0];
   var reference = v[1], name = v[2], email = v[3], cell = v[4],
-      pits = v[5], seedlings = v[6], alreadySent = v[13];
+      pits = v[5], seedlings = v[6], alreadySent = v[13],
+      certName = v[16], trees = v[18];
 
   if (alreadySent) return { sent: false, reason: 'already sent' };
   if (!email) {
@@ -136,13 +180,15 @@ function sendCertificate(sheet, row) {
 
   var subject = 'Your trees at Erdene — certificate ' + reference;
   var lines = [
-    'Dear ' + (name || 'sponsor') + ',',
+    'Dear ' + (certName || name || 'sponsor') + ',',
     '',
     'Thank you. Your sponsorship is confirmed.',
     '',
     '  Reference    ' + reference,
     '  Planting     ' + pits + ' pits, ' + seedlings + ' Siberian elm',
     (cell ? '  Cell         ' + cell : ''),
+    (trees ? '  Tree numbers ' + trees : ''),
+    (certName ? '  Certificate  ' + certName : ''),
     '  Site         Erdene sum, Dornogovi, Mongolia',
     '',
     'The trees are planted in the first planting window after this confirmation,',
@@ -205,7 +251,8 @@ function updateStatus(sheet, b) {
     sheet.appendRow([
       new Date(), b.reference, '', '', '', '', '', '', '',
       b.status || '', new Date(), b.txnId || '', b.method || '',
-      '', '', 'Status arrived before the order row existed'
+      '', '', 'Status arrived before the order row existed',
+      '', '', b.trees || ''
     ]);
     return { ok: true, recovered: true, row: sheet.getLastRow() };
   }
@@ -216,12 +263,31 @@ function updateStatus(sheet, b) {
   }
   if (b.txnId)  sheet.getRange(row, 12).setValue(b.txnId); // Bank txn
   if (b.method) sheet.getRange(row, 13).setValue(b.method);// Method
+  /* The numbers the buyer's certificates carry. They do not exist when the
+     order row is written — they are handed out only once the money is real —
+     so this is the first moment they can be recorded. */
+  if (b.trees) sheet.getRange(row, 19).setValue(b.trees);  // Tree numbers
 
   /* Төлбөр батлагдсан үед л гэрчилгээ явна. Цуцлагдсан, хугацаа нь дууссан,
      амжилтгүй болсон захиалгад явахгүй. SEND_CERTIFICATES унтраалттай үед
      бүртгэл хэвийн үргэлжилнэ — зөвхөн захидал явахгүй. */
+  /* suppressCertificate is set when a payment is being recovered long after it
+     happened — a reconciliation sweep. Some of those were already answered by
+     hand, and a second certificate leaves the buyer working out which is real.
+     The row still turns paid; only the email is held back. */
   var cert = null;
-  if (SEND_CERTIFICATES && String(b.status) === 'paid') cert = sendCertificate(sheet, row);
+  if (String(b.status) === 'paid' && !SEND_CERTIFICATES) {
+    /* The switch at the top of this file. It was declared and then never
+       consulted, so every paid row emailed a certificate whichever way it was
+       set — which only stayed hidden while status updates were not reaching
+       this script at all. They reach it now. */
+    cert = { sent: false, reason: 'SEND_CERTIFICATES is off' };
+  } else if (String(b.status) === 'paid' && !b.suppressCertificate) {
+    cert = sendCertificate(sheet, row);
+  } else if (String(b.status) === 'paid') {
+    cert = { sent: false, reason: 'suppressed — recovered payment' };
+    sheet.getRange(row, 16).setValue('Recovered by reconciliation — certificate not auto-sent');
+  }
 
   return { ok: true, row: row, certificate: cert };
 }
@@ -254,14 +320,15 @@ function reply(obj) {
  * 2. In the sheet: Extensions → Apps Script. Delete whatever is in the editor
  *    and paste this whole file.
  *
- * 3. Replace SECRET at the top with a long random string. Generate one with:
+ * 3. Put a long random string in Script Properties as SHEETS_WEBHOOK_SECRET
+ *    (Project Settings → Script Properties). Generate one with:
  *       node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"
  *
  * 4. Deploy → New deployment → gear icon → Web app.
  *       Execute as:        Me
  *       Who has access:    Anyone
  *    "Anyone" is required because Vercel's servers call this without a Google
- *    login. The SECRET is what actually protects it.
+ *    login. The secret is what actually protects it.
  *
  * 5. Authorise when prompted. It asks for two things: to edit this spreadsheet,
  *    and to send email as you — the second is what sends the certificates.
@@ -276,7 +343,7 @@ function reply(obj) {
  * 7. In Vercel → Environment Variables, add both, ticking Production and
  *    Preview, then redeploy:
  *       SHEETS_WEBHOOK_URL     the /exec URL
- *       SHEETS_WEBHOOK_SECRET  the same string as SECRET above
+ *       SHEETS_WEBHOOK_SECRET  the same string as the script property
  *
  * If you change this script later you must Deploy → Manage deployments → edit →
  * New version, or the old code keeps running.

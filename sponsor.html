@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sponsor a tree · Land-art Space</title>
+<meta name="description" content="Choose a cell in the HEXAGON honeycomb, sponsor planting pits of three Siberian elm each, and receive a numbered certificate.">
+<link rel="icon" href="assets/images/logo/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    /* Four steps, one at a time.
+     *
+     * The old route was to press a hexagon on the map and find a form inside the
+     * panel that opened. Nobody found it: the map reads as a map, and a person
+     * who has decided to sponsor a tree is looking for a button that says so.
+     * This page is that button's destination, and it never shows more than the
+     * one thing being asked for. */
+    :root { --ink:#14150F; --soft:#5E5F55; --shell:#F2F0EA; --card:#FBFAF6;
+            --hair:#E0DACA; --lime:#B8E020; --lime-deep:#8AAE13;
+            --good:#3E7B3B; --warn:#8A6A1C; --bad:#8A2E2E; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--shell); color:var(--ink);
+           font-family:'Urbanist',system-ui,-apple-system,sans-serif;
+           font-size:16px; line-height:1.6; padding:26px 18px 60px; }
+    .wrap { max-width:660px; margin:0 auto; }
+    .logo { height:30px; display:block; margin:0 auto 22px; }
+
+    /* The rail. Four dots so the length of the thing is visible from the start —
+       a form of unknown length is one people abandon. */
+    .rail { display:flex; gap:8px; margin:0 0 24px; }
+    .rail div { flex:1; height:4px; border-radius:3px; background:var(--hair); }
+    .rail div.done { background:var(--lime-deep); }
+    .rail div.now { background:var(--lime); }
+    .stepno { font-size:10px; letter-spacing:.16em; text-transform:uppercase;
+              color:var(--soft); font-weight:700; }
+    h1 { font-size:25px; font-weight:600; margin:8px 0 8px; line-height:1.25; }
+    .lead { color:var(--soft); font-size:14.5px; margin:0 0 22px; }
+
+    section { background:var(--card); border:1px solid var(--hair); border-radius:24px;
+              padding:26px 24px; }
+    section[hidden] { display:none; }
+
+    /* Step 1 — the map, in picker mode. */
+    .mapframe { width:100%; border:0; border-radius:16px; display:block;
+                background:var(--shell); min-height:420px; }
+    .picked { display:flex; align-items:center; gap:12px; margin-top:16px;
+              background:var(--shell); border-radius:14px; padding:13px 16px; font-size:14px; }
+    .picked b { font-size:17px; }
+    .picked[hidden] { display:none; }
+
+    /* Step 2 — the form. */
+    label { display:block; margin-bottom:15px; }
+    label span { display:block; font-size:10px; letter-spacing:.13em; text-transform:uppercase;
+                 color:var(--soft); font-weight:700; margin-bottom:5px; }
+    label i { font-style:normal; color:var(--bad); }
+    input { width:100%; font:600 16px/1.3 inherit; color:var(--ink); background:#fff;
+            border:1px solid var(--hair); border-radius:12px; padding:12px 14px; }
+    input:focus { outline:2px solid var(--lime-deep); outline-offset:1px; }
+    input.bad { border-color:var(--bad); }
+    .hint { font-size:11.5px; color:var(--soft); margin-top:5px; line-height:1.5; }
+    .err { font-size:12.5px; color:var(--bad); font-weight:600; margin-top:5px; min-height:0; }
+    .err:empty { display:none; }
+    .two { display:flex; gap:14px; }
+    .two label { flex:1 1 0; }
+    @media (max-width:520px) { .two { display:block; } }
+
+    /* The running total. */
+    .total { display:flex; justify-content:space-between; align-items:center;
+             gap:16px; background:var(--ink); color:#fff; border-radius:14px;
+             padding:15px 18px; margin:4px 0 18px; }
+    .total > span { font-size:10px; letter-spacing:.13em; text-transform:uppercase;
+                    color:#B9BBAE; font-weight:700; }
+    .total b { font-size:24px; color:var(--lime); font-weight:700; }
+
+    button.go { width:100%; border:none; cursor:pointer; font:700 12.5px/1 inherit;
+                letter-spacing:.06em; text-transform:uppercase; background:var(--ink);
+                color:#fff; border-radius:100px; padding:16px 22px; }
+    button.go:disabled { opacity:.5; cursor:default; }
+    button.back { background:none; border:none; cursor:pointer; color:var(--soft);
+                  font:600 12.5px/1 inherit; padding:14px 0 0; text-decoration:underline;
+                  text-underline-offset:3px; display:block; margin:0 auto; }
+
+    /* Step 3 — waiting for the bank. */
+    .waiting { text-align:center; padding:8px 0 4px; }
+    .spin { width:34px; height:34px; margin:0 auto 16px; border-radius:50%;
+            border:3px solid var(--hair); border-top-color:var(--lime-deep);
+            animation:sp 1s linear infinite; }
+    @keyframes sp { to { transform:rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .spin { animation:none; } }
+    .payagain { margin-top:16px; font-size:13px; color:var(--soft); }
+    .payagain a { color:var(--ink); font-weight:700; }
+
+    /* Step 4 — confirmed, and said so here rather than left to the bank's page.
+       The provider's own window ends on the word "Амжилттай" in a corner and,
+       for a QR paid inside a banking app, never comes back to us at all. So the
+       confirmation a buyer is waiting for has to appear in the window they are
+       already looking at. */
+    .done-mark { width:56px; height:56px; border-radius:50%; background:var(--lime);
+                 display:flex; align-items:center; justify-content:center; margin:0 auto 18px; }
+    .done-mark svg { width:28px; height:28px; }
+    .confirmed { text-align:center; }
+    .confirmed h2 { font-size:24px; margin:0 0 8px; font-weight:600; }
+    .confirmed p { color:var(--soft); font-size:14.5px; margin:0 0 6px; }
+    .codes { display:flex; flex-wrap:wrap; gap:7px; justify-content:center; margin:20px 0 6px; }
+    .codes b { background:var(--lime); border-radius:100px; padding:6px 15px;
+               font:700 13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;
+               letter-spacing:.04em; }
+    .receipt { margin:20px 0 0; padding:16px 18px; background:var(--shell); border-radius:14px;
+               display:grid; gap:9px; text-align:left; }
+    .receipt div { display:flex; justify-content:space-between; gap:16px; align-items:baseline; }
+    .receipt dt { font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+                  color:var(--soft); font-weight:700; }
+    .receipt dd { margin:0; font-weight:600; font-size:14px; text-align:right; }
+    .acts { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+    .acts a { flex:1 1 200px; text-align:center; text-decoration:none; border-radius:100px;
+              padding:15px 20px; font:700 12px/1 inherit; letter-spacing:.06em;
+              text-transform:uppercase; background:var(--ink); color:#fff; }
+    .acts a.alt { background:var(--lime); color:var(--ink); }
+    .mailed { margin-top:18px; font-size:13px; color:var(--soft); }
+    .mailed b { color:var(--ink); }
+
+    .fine { margin-top:16px; font-size:11px; color:var(--soft); line-height:1.6; }
+    .fine a { color:var(--soft); }
+    .foot { text-align:center; margin-top:26px; font-size:12.5px; color:var(--soft); }
+    .foot a { color:var(--soft); }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <a href="/"><img class="logo" src="assets/images/logo/land-art-logo.png" alt="Land-art Space"></a>
+
+    <div class="rail"><div id="r1"></div><div id="r2"></div><div id="r3"></div><div id="r4"></div></div>
+
+    <!-- ═══ STEP 1 · the cell ═══ -->
+    <section id="s1">
+        <div class="stepno">Step 1 of 4</div>
+        <h1>Choose your cell</h1>
+        <p class="lead">The site is a honeycomb of 54 cells. Pick the one your trees will grow in — your certificate is numbered after it, so the number tells you exactly where to find them. Cells outlined in green are available.</p>
+        <iframe class="mapframe" id="mapframe" src="hexagon-experience-map.html?pick=1" title="Choose a cell"></iframe>
+        <div class="picked" id="picked" hidden>
+            <b id="pickedCell">—</b>
+            <span id="pickedNote"></span>
+        </div>
+    </section>
+
+    <!-- ═══ STEP 2 · who it is for ═══ -->
+    <section id="s2" hidden>
+        <div class="stepno">Step 2 of 4</div>
+        <h1>Your details</h1>
+        <p class="lead" id="s2lead">All four fields are needed: the certificate is printed from them and the tree's letter is sent to them.</p>
+
+        <label>
+            <span>Your name <i>*</i></span>
+            <input type="text" id="fName" maxlength="120" autocomplete="name" placeholder="Name or organisation">
+            <div class="err" id="eName"></div>
+        </label>
+
+        <label>
+            <span>Name on the certificate <i>*</i></span>
+            <input type="text" id="fCert" maxlength="80" placeholder="TSETSEG BATBAYAR" autocapitalize="characters">
+            <!-- Latin only. The certificate is set in Abril Fatface, which has no
+                 Cyrillic: Mongolian typed here prints as empty boxes on a piece
+                 of paper somebody keeps. Caught while it can still be retyped. -->
+            <div class="hint">Latin letters only — the certificate is printed in a typeface that has no Cyrillic. Write Mongolian names as they are spelled in a passport.</div>
+            <div class="err" id="eCert"></div>
+        </label>
+
+        <div class="two">
+            <label>
+                <span>Email <i>*</i></span>
+                <input type="email" id="fEmail" maxlength="160" autocomplete="email" placeholder="name@example.com">
+                <div class="err" id="eEmail"></div>
+            </label>
+            <label>
+                <span>Phone <i>*</i></span>
+                <input type="tel" id="fPhone" maxlength="40" autocomplete="tel" placeholder="+976 …">
+                <div class="err" id="ePhone"></div>
+            </label>
+        </div>
+
+        <label>
+            <span>Planting pits <i>*</i></span>
+            <input type="number" id="fQty" min="1" step="1" value="1" inputmode="numeric">
+            <div class="hint" id="qtyHint">Each pit is three Siberian elm and one numbered certificate.</div>
+            <div class="err" id="eQty"></div>
+        </label>
+
+        <!-- Dollars only. The price is set in dollars and charged in dollars, and a
+             second figure beside it invites the question of which one is real. -->
+        <div class="total">
+            <span>Total · <i id="tSeeds"></i></span>
+            <b id="tAmount">—</b>
+        </div>
+        <button type="button" class="go" id="toPay">Continue to payment →</button>
+        <div class="err" id="eForm"></div>
+        <button type="button" class="back" id="back1">← Choose a different cell</button>
+    </section>
+
+    <!-- ═══ STEP 3 · the money ═══ -->
+    <section id="s3" hidden>
+        <div class="stepno">Step 3 of 4</div>
+        <h1>Payment</h1>
+        <div class="waiting">
+            <div class="spin"></div>
+            <p class="lead" id="payLead">The secure payment page is opening in a new tab. Pay there — by card or by scanning the QR with your banking app. That tab closes on its own the moment the payment clears, and your certificate appears here.</p>
+            <p class="lead" id="payHold"><b>Keep this tab open.</b></p>
+            <div class="payagain">Nothing opened? <a href="#" id="payLink" target="_blank" rel="noopener noreferrer">Open the payment page</a></div>
+        </div>
+        <div class="fine" id="payRef"></div>
+    </section>
+
+    <!-- ═══ STEP 4 · confirmed ═══ -->
+    <section id="s4" hidden>
+        <div class="stepno">Step 4 of 4</div>
+        <div class="confirmed">
+            <div class="done-mark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#14150F" stroke-width="3"
+                     stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg>
+            </div>
+            <h2>Payment confirmed</h2>
+            <p>Thank you for your contribution to the fight against desertification.</p>
+            <div class="codes" id="codes"></div>
+            <p class="lead" id="codesNote"></p>
+
+            <dl class="receipt">
+                <div><dt>Cell</dt><dd id="rCell">—</dd></div>
+                <div><dt>Planting</dt><dd id="rPits">—</dd></div>
+                <div><dt>Seedlings</dt><dd id="rTrees">—</dd></div>
+                <div><dt>Reference</dt><dd id="rRef">—</dd></div>
+            </dl>
+
+            <div class="acts">
+                <a id="aDl" href="#">Download certificate</a>
+                <a id="aStory" class="alt" href="#">Share as story</a>
+            </div>
+
+            <!-- Filled in once pay-config says whether the letter is being sent.
+                 Left empty until then rather than defaulting to a promise. -->
+            <p class="mailed" id="mailed"></p>
+        </div>
+    </section>
+
+    <div class="foot">
+        Questions? <a href="mailto:hello@shambala.today">hello@shambala.today</a><br>
+        <a href="terms.html">Terms</a> · <a href="refunds.html">Refunds</a> · <a href="privacy.html">Privacy</a>
+    </div>
+</div>
+
+<script>
+(function () {
+    "use strict";
+    var $ = function (id) { return document.getElementById(id); };
+    var SEEDS_PER_PIT = 3;
+
+    var pick = null;        /* {cell, pits} chosen on step 1 */
+    var payWindow = null;   /* the provider's tab, so it can be closed again */
+    var price = null;       /* what pay-config says a pit costs */
+    var cap = null;         /* pits still free in the chosen cell */
+    var ref = null;         /* our reference, once the invoice exists */
+
+    /* ── the rail ── */
+    var at = 1;
+    function show(n) {
+        at = n;
+        [1, 2, 3, 4].forEach(function (i) {
+            $("s" + i).hidden = (i !== n);
+            var d = $("r" + i);
+            d.className = i < n ? "done" : i === n ? "now" : "";
+        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    show(1);
+
+    /* ══ STEP 1 ══
+       The map is a separate document in an iframe; it tells us its height as it
+       draws, and tells us the cell when one is chosen. */
+    window.addEventListener("message", function (e) {
+        var d = e.data;
+        if (!d || typeof d !== "object") return;
+        if (typeof d.hexMapHeight === "number") {
+            $("mapframe").style.height = Math.max(420, d.hexMapHeight) + "px";
+        }
+        if (d.hexPick && d.hexPick.cell) {
+            pick = { cell: String(d.hexPick.cell), pits: Number(d.hexPick.pits) || 0 };
+            chose();
+        }
+    });
+
+    function chose() {
+        $("pickedCell").textContent = "Cell " + pick.cell;
+        $("pickedNote").textContent = "selected";
+        $("picked").hidden = false;
+        $("s2lead").textContent =
+            "Your trees will grow in cell " + pick.cell + ", and your certificate will be " +
+            "numbered " + pick.cell + "-001 onwards. All fields are needed: the certificate " +
+            "is printed from them and your tree's letter is sent to them.";
+        $("fQty").max = pick.pits || 1;
+        askAvailability();
+        show(2);
+        $("fName").focus();
+    }
+
+    /* How many are actually left. Until it answers, the cell's full size stands —
+       understating what is available loses a sale that could have happened. */
+    function askAvailability() {
+        cap = pick.pits;
+        $("qtyHint").textContent =
+            "Each pit is three Siberian elm and one numbered certificate. " +
+            "Up to " + pick.pits.toLocaleString("en-US") + " pits in this cell.";
+        fetch("/api/pay-availability", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ cells: [pick.cell] })
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+            var i = d && d.cells && d.cells[pick.cell];
+            if (!i || typeof i.remaining !== "number" || i.unknown) return;
+            cap = i.remaining;
+            $("fQty").max = Math.max(1, cap);
+            if (cap <= 0) {
+                $("qtyHint").textContent = "Every pit in this cell has been sponsored.";
+                $("toPay").disabled = true;
+                return;
+            }
+            $("qtyHint").textContent =
+                "Each pit is three Siberian elm and one numbered certificate. " +
+                cap.toLocaleString("en-US") + " of " + pick.pits.toLocaleString("en-US") +
+                " pits still available in " + pick.cell + ".";
+            if (Number($("fQty").value) > cap) { $("fQty").value = cap; total(); }
+        })
+        .catch(function () {});
+    }
+
+    $("back1").onclick = function () { show(1); };
+
+    /* ══ STEP 2 ══ */
+    fetch("/api/pay-config").then(function (r) { return r.json(); })
+        .then(function (d) { price = d || null; total(); })
+        .catch(function () {});
+
+    function unitAmount() {
+        /* pay-config is the authority on price; the server prices the order
+           again when the invoice is made, so this figure is only ever shown. */
+        if (!price || !price.unit) return null;
+        return { usd: price.unit.usd };
+    }
+
+    function total() {
+        var n = Math.max(1, parseInt($("fQty").value, 10) || 1);
+        $("tSeeds").textContent = (n * SEEDS_PER_PIT).toLocaleString("en-US") + " elms";
+        var u = unitAmount();
+        $("tAmount").textContent = u
+            ? "$" + (u.usd * n).toLocaleString("en-US")
+            : n + (n === 1 ? " pit" : " pits");
+    }
+    $("fQty").addEventListener("input", total);
+    total();
+
+    /* Latin only, and said so as soon as it is typed rather than on submit —
+       somebody typing their name in Cyrillic should find out immediately, not
+       after filling in the rest of the form. */
+    var LATIN = /^[A-Za-z][A-Za-z .'’-]*$/;
+    function certProblem(v) {
+        if (!v) return "Please give the name to print on the certificate.";
+        if (v.length < 2) return "That is too short to print.";
+        if (!LATIN.test(v)) {
+            return /[Ѐ-ӿ]/.test(v)
+                ? "Latin letters only — please write this name as it is spelled in a passport."
+                : "Use Latin letters only. Apostrophes, full stops and hyphens are fine.";
+        }
+        return "";
+    }
+    $("fCert").addEventListener("input", function () {
+        var p = certProblem($("fCert").value.trim());
+        $("eCert").textContent = $("fCert").value ? p : "";
+        $("fCert").classList.toggle("bad", Boolean($("fCert").value) && Boolean(p));
+    });
+
+    function check() {
+        var v = {
+            name: $("fName").value.trim(),
+            cert: $("fCert").value.trim(),
+            email: $("fEmail").value.trim(),
+            phone: $("fPhone").value.trim(),
+            qty: parseInt($("fQty").value, 10) || 0
+        };
+        var bad = null;
+        function set(id, field, msg) {
+            $("e" + id).textContent = msg;
+            $("f" + field).classList.toggle("bad", Boolean(msg));
+            if (msg && !bad) bad = $("f" + field);
+        }
+        set("Name", "Name", v.name ? "" : "Please give your name.");
+        set("Cert", "Cert", certProblem(v.cert));
+        set("Email", "Email",
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email) ? "" : "Please give an email we can send the certificate to.");
+        set("Phone", "Phone",
+            (v.phone.match(/\d/g) || []).length >= 6 ? "" : "Please give a phone number we can reach you on.");
+        set("Qty", "Qty",
+            v.qty < 1 ? "At least one pit."
+            : (cap !== null && v.qty > cap) ? "Only " + cap + " pits are left in " + pick.cell + "." : "");
+        if (bad) { bad.focus(); return null; }
+        return v;
+    }
+
+    var busy = false;
+    $("toPay").onclick = function () {
+        if (busy || !pick) return;
+        var v = check();
+        if (!v) return;
+        busy = true; $("toPay").disabled = true; $("eForm").textContent = "";
+
+        /* The window is opened before the request, not after: a popup opened
+           inside a promise callback is not a user gesture any more and browsers
+           block it. It is filled in when the invoice comes back. */
+        var win = window.open("", "_blank");
+        payWindow = win;
+
+        fetch("/api/pay-create", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name: v.name, certName: v.cert, email: v.email, phone: v.phone,
+                /* Dollars, matching the cell map and every order taken so far.
+                   Leaving this out billed in tugriks instead, which meant the
+                   same pit cost a different amount depending on which way in
+                   the buyer had used. */
+                cell: pick.cell, quantity: v.qty, sku: "pit", currency: "USD"
+            })
+        })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) {
+            if (!res.ok || !res.d || !res.d.invoice) {
+                if (win) win.close();
+                busy = false; $("toPay").disabled = false;
+                $("eForm").textContent = (res.d && res.d.error) || "Payment could not be started. Please try again.";
+                return;
+            }
+            ref = res.d.reference;
+            $("payLink").href = res.d.invoice;
+            $("payRef").textContent = "Reference " + ref;
+            if (win) { win.location = res.d.invoice; } else { $("payLead").textContent =
+                "Your browser blocked the new tab. Use the link below to open the secure payment page."; }
+            show(3);
+            watch();
+        })
+        .catch(function () {
+            if (win) win.close();
+            busy = false; $("toPay").disabled = false;
+            $("eForm").textContent = "Could not reach the payment service. Please try again.";
+        });
+    };
+
+    /* ══ STEP 3 → 4 ══
+       Asking, rather than waiting to be told. The provider redirects a card
+       payment back to us, but a QR scanned inside a banking app never returns —
+       the buyer is left on a page that says "Амжилттай" in the corner and
+       nothing else happens. pay-status settles whatever it finds, so polling it
+       both confirms the payment to the buyer and records it. */
+    function watch() {
+        var tries = 0;
+        (function again() {
+            tries++;
+            fetch("/api/pay-status", {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ reference: ref })
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (d) {
+                if (d && d.status === "paid" && d.certificate && d.certificate.first) {
+                    return confirmed(d);
+                }
+                if (d && (d.status === "cancelled" || d.status === "expired" || d.status === "failed")) {
+                    return failed();
+                }
+                queue();
+            })
+            .catch(queue);
+
+            function queue() {
+                /* Every 3 s for the first two minutes, then every 8 s. Someone
+                   paying by QR may take a while to find their phone. */
+                setTimeout(again, tries < 40 ? 3000 : 8000);
+            }
+        })();
+    }
+
+    /* Shuts the provider's tab and comes back to this one.
+     *
+     * Paying by QR leaves that tab sitting on the bank's page with nothing
+     * further to do — the phone did the work — and the buyer had to find their
+     * way back here by hand to see that it had worked. A window opened by
+     * script may be closed by script, whatever it navigated to since, and
+     * closing the front tab returns the browser to the one behind it.
+     *
+     * Wrapped because a popup blocker may have refused the window in the first
+     * place, and because a buyer who closed it themselves leaves a reference
+     * that no longer answers. Neither is a reason to fail. */
+    function closePayWindow() {
+        try {
+            if (payWindow && !payWindow.closed) payWindow.close();
+        } catch (e) { /* not ours to close any more */ }
+        payWindow = null;
+        /* Some browsers hand focus back on their own; asking costs nothing and
+           is ignored where it is not allowed. */
+        try { window.focus(); } catch (e) {}
+    }
+
+    function failed() {
+        closePayWindow();
+        $("payLead").textContent = "That payment did not go through. Nothing has been charged, and the pits are free again.";
+        document.querySelector(".spin").style.display = "none";
+        /* Both of these tell someone to wait, and there is nothing left to wait
+           for. Left on the page they read as a system still working. */
+        $("payHold").hidden = true;
+        document.querySelector(".payagain").firstChild.textContent = "";
+        $("payLink").textContent = "Start again";
+        $("payLink").href = "sponsor.html";
+        $("payLink").target = "_self";
+    }
+
+    function confirmed(d) {
+        closePayWindow();
+        var c = d.certificate, o = d.order || {};
+        var codes = [];
+        for (var n = c.first; n <= (c.last || c.first); n++) {
+            codes.push(c.prefix + "-" + String(n).padStart(3, "0"));
+        }
+        $("codes").innerHTML = codes.map(function (x) { return "<b>" + x + "</b>"; }).join("");
+        $("codesNote").textContent = codes.length === 1
+            ? "This is your tree's number. It is printed on your certificate and marked on the ground."
+            : "These are your trees' numbers. Each one is a pit of three elms with its own certificate.";
+
+        $("rCell").textContent = c.prefix;
+        $("rPits").textContent = (o.pits || codes.length) + (codes.length === 1 ? " pit" : " pits");
+        $("rTrees").textContent = (o.seedlings || codes.length * SEEDS_PER_PIT) + " Siberian elm";
+        $("rRef").textContent = ref;
+        /* pay-status does not hand back an email address, and should not: the
+           reference travels in URLs. Shown only when this browser is the one
+           that typed it. */
+        var mine = $("fEmail").value.trim();
+        if (price && price.treeLetter) {
+            $("mailed").innerHTML = "A letter from your tree is on its way to <b>" +
+                (mine ? mine.replace(/</g, "&lt;") : "your email") +
+                "</b>, sent from hello@shambala.today. Check your spam folder if it " +
+                "does not arrive within a few minutes.";
+        } else {
+            /* The letter is switched off. Say what is true — the certificate is
+               here now — and say the rest is coming, rather than sending
+               somebody to watch an inbox for a message nobody posted. */
+            $("mailed").innerHTML = "<b>Download your certificate now</b> — keep the file, " +
+                "or note your tree number. We will email it to you as well once " +
+                "certificates start going out.";
+        }
+
+        var href = "certificate.html?ref=" + encodeURIComponent(ref);
+        $("aDl").href = href;
+        $("aStory").href = href + "&story=1";
+        show(4);
+    }
+
+    var qs = new URLSearchParams(location.search);
+
+    /* Someone who paid, closed the tab and came back to sponsor.html?ref=… — or
+       who followed the provider's own redirect — lands straight on step 4. */
+    var back = qs.get("ref");
+    if (back && /^LA-[A-Z0-9-]{4,}$/i.test(back)) { ref = back; show(3); watch(); }
+
+    /* Arriving from the cell map with a cell already chosen. The map knows
+       which hexagon was pressed; asking the buyer to find it again on a second
+       map would be the same work twice. The cell's size comes from the ledger
+       rather than from the URL, so a hand-edited address cannot inflate it. */
+    var wanted = (qs.get("cell") || "").toUpperCase();
+    if (!back && /^[A-Z]{1,2}$/.test(wanted)) {
+        fetch("/api/pay-availability", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ cells: [wanted] })
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+            var i = d && d.cells && d.cells[wanted];
+            if (!i || typeof i.capacity !== "number") return;
+            pick = { cell: wanted, pits: i.capacity };
+            chose();
+        })
+        .catch(function () {});
+    }
+})();
+</script>
+</body>
+</html>

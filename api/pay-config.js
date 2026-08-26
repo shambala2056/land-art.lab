@@ -31,5 +31,10 @@ module.exports = async function handler(req, res) {
         sandbox: /oncom-test/.test(cfg.base),
         unit: { mnt: UNIT.mnt, usd: UNIT.usd },
         maxQuantity: MAX_QTY,
+        /* Whether the confirmation page may promise an email. While the letter
+           is switched off it must not: telling someone to watch their inbox for
+           something that was never sent is the one thing worse than not
+           sending it. */
+        treeLetter: require("./_mail").enabled(),
     });
 };

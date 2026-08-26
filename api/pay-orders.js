@@ -5,9 +5,15 @@
  * written to the ledger as well as the sheet, so this reads them straight back
  * out — as JSON, or as CSV that can be pasted into a spreadsheet.
  *
- * Set ORDERS_TOKEN in Vercel and pass it as ?token=... . Without it this
- * endpoint refuses: an unprotected order list would publish every buyer's name
- * and email address to anyone who guessed the URL.
+ * Set ORDERS_TOKEN in Vercel and send it as an x-orders-token header. Without
+ * it this endpoint refuses: an unprotected order list would publish every
+ * buyer's name and email address to anyone who guessed the URL.
+ *
+ * A ?token= query parameter is still read, because deleting it would lock out
+ * anything already calling that way, but nothing here should use it: a URL is
+ * written to browser history, to the server's access log, and to every proxy on
+ * the path, with the token still in it. The maintenance actions refuse a query
+ * token outright.
  */
 
 const ledger = require("./_ledger");
@@ -23,9 +29,9 @@ function tokenOk(given) {
     return crypto.timingSafeEqual(a, b);
 }
 
-const COLUMNS = ["created", "reference", "name", "email", "cell", "pits",
-                 "seedlings", "amount", "currency", "status", "paidAt",
-                 "txnId", "method"];
+const COLUMNS = ["created", "reference", "name", "certName", "email", "phone",
+                 "cell", "pits", "seedlings", "treePrefix", "treeFirst", "treeLast",
+                 "amount", "currency", "status", "paidAt", "txnId", "method"];
 
 /* Quote every field: a name with a comma in it would otherwise split into two
  * columns, and a quote inside a value has to be doubled. */
@@ -56,6 +62,20 @@ module.exports = async function handler(req, res) {
 
     if (!ledger.configured()) {
         return res.status(503).json({ error: "No ledger is connected, so no orders are stored." });
+    }
+
+    /* The maintenance runs live behind this same authenticated route rather
+       than as routes of their own: the plan allows twelve serverless functions
+       and api/ already holds twelve. They are guarded exactly as this listing
+       is, and each re-checks the token for itself. */
+    const action = (req.query && req.query.action) || "";
+    if (action) {
+        const admin = require("./_admin");
+        if (action === "reconcile") return admin.reconcile(req, res);
+        if (action === "migrate")   return admin.migrateCells(req, res);
+        if (action === "purge")     return admin.purgeTests(req, res);
+        if (action === "baseline")  return admin.baseline(req, res);
+        return res.status(400).json({ error: "Unknown action." });
     }
 
     const limit = Math.max(1, Math.min(2000, parseInt((req.query && req.query.limit) || "500", 10) || 500));

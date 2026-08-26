@@ -236,42 +236,50 @@ const THEMED={
   /* JACK'S COFFEE — хамгийн том ангийн нүд (A, 400 м²). Шувууны хоргодох
      байгууламж мөн энд байрлана: тэмдгийн эргэн тойрны чөлөөнд үүрний хайрцаг,
      усны цэг. Жижиг D нүдэнд тэмдэг уншигдахгүй байсан тул томд нь шилжив. */
-  'A-01':["Small Cup, Big Impact",'birds',"The Jack's Coffee land art: 10,000 Siberian elm "+
+  'AH':["Small Cup, Big Impact",'birds',"The Jack's Coffee land art: 10,000 Siberian elm "+
     "planted in the form of the company's mark, with nest boxes and a pond on the same cell — "+
     "canopy, shelter and water together, so the ground returns as habitat and not as a "+
     "plantation."],
-  'D-01':['Solar field · 100 kW','energy','100 kW installed capacity — irrigation pumps, lighting, sensor network and battery reserve'],
+  'E':['Solar field · 100 kW','energy','100 kW installed capacity — irrigation pumps, lighting, sensor network and battery reserve'],
   /* "Fog" биш: энэ бол эх газрын цөл, эрэг орчмынх биш — манан бараг байхгүй,
      шүүдэр, цан л байна. Мөн энэ нь усны эх үүсвэр биш нэмэлт: эх үүсвэр нь
      гүний худаг. */
-  'D-02':['Water harvesting','water','Dew and hoarfrost capture with covered storage — a supplement to the borehole, not a supply'],
-  'D-03':['Recycling and compost','waste','Sorting bays and a shaded composting yard — the compost returns to the planting pits'],
-  'D-04':['Research station','research','Weather and soil sensors, biodiversity monitoring'],
+  'J':['Water harvesting','water','Dew and hoarfrost capture with covered storage — a supplement to the borehole, not a supply'],
+  'S':['Recycling and compost','waste','Sorting bays and a shaded composting yard — the compost returns to the planting pits'],
+  'AD':['Research station','research','Weather and soil sensors, biodiversity monitoring'],
   /* D-05 сул боллоо: шувууны хоргодох газар A-01 руу нүүсэн тул энэ нүд
      энгийн тарилтын нүд болж, ивээн тэтгэхэд нээлттэй болов. */
-  'D-06':['Pollinator cell','insect','A nesting bank and forage for the bees native to this ground — no hives; see BUILD.insect for why'],
+  'AK':['Pollinator cell','insect','A nesting bank and forage for the bees native to this ground — no hives; see BUILD.insect for why'],
   /* Гэр, ангийн ширээ, тоглоомын талбай хасагдав: энэ нүд одоо зөвхөн хайлаас.
      COP17-ийн Цэнхэр бүсийн төлөөлөгчдийн павильоноор ирсэн хүн бүрд нэг мод
      бэлэглэсэн бөгөөд хэн эзэмшиж буйг жижиг тугууд заана. */
-  'D-07':['The delegation grove','community','Elm only — one tree for each participant from the COP17 Blue Zone delegation pavilion, with small flags for the delegations, organisations and companies that hold them']
+  'AR':['The delegation grove','community','Elm only — one tree for each participant from the COP17 Blue Zone delegation pavilion, with small flags for the delegations, organisations and companies that hold them']
 };
 /* Түншүүд өмнөх зэрэглэлдээ хамгийн ойр шинэ ангид шилжсэн */
-const PARTNERS={'B-01':'EFES GROUP','C-01':'YVES ROCHER','C-02':'TIMBERLAND',
-  'E-01':'KHARKHORUM',
+const PARTNERS={'K':'EFES GROUP','P':'YVES ROCHER','R':'TIMBERLAND',
+  'B':'KHARKHORUM',
   /* EFES Group-ийн дөрвөн компани тус тусдаа хөрөнгө оруулсан тул тус бүр
      өөрийн нүд, өөрийн тугтай. Хамгийн жижиг анги (F, 12 м²).
      Талбайн өмнөд захын нүднүүд (F-01..F-04, төвөөс 43–73 м) дээр байхад
      тугнууд хэтэрхий жижиг харагдаж, аль компанийх нь ялгарахгүй байв. Иймд
      төвд хамгийн ойр дөрвөн F нүд рүү шилжүүлэв (14–28 м), дөрвөн өөр зүг рүү
      тарсан тул бие биенээ халхлахгүй. */
-  'F-13':'EFES INTERNATIONAL','F-11':'EFES CONSTRUCTION',
-  'F-16':'EFEC SUPERMARKET','F-10':'KHULAN UUL'};
+  'AJ':'EFES INTERNATIONAL','X':'EFES CONSTRUCTION',
+  'AQ':'EFEC SUPERMARKET','N':'KHULAN UUL'};
+/* CELL CODES. One letter per hexagon — A…Z then AA…BB, which is exactly 54.
+   Ordered across the ground, north-west to south-east, so neighbouring cells
+   carry neighbouring letters: the point of lettering them is that a cell can be
+   found and reported on in the field, and letters that jumped between size
+   classes would not do that.
+   Indexed by position in SHAPE, so this file and the other one that walks SHAPE
+   cannot drift apart. The size class is no longer readable from the code, so
+   pit counts are stated per cell rather than derived from the letter. */
+const LETTERS=["AH","AM","AS","K","AB","AL","BA","P","R","AC","AE","AY","AZ","E","J","S","AD","AN","AK","AR","AV","B","H","L","Q","O","T","Y","AA","W","AF","AI","AO","AT","AU","AX","A","F","D","C","G","I","U","V","M","N","X","Z","AJ","AG","AP","AQ","AW","BB"];
 const CELLS=[];
 (function(){
-  const seq={A:0,B:0,C:0,D:0,E:0,F:0};
-  SHAPE.forEach(function(h){
-    const key=h[2], S=SIZES[key], i=++seq[key];
-    const code=key+'-'+String(i).padStart(2,'0'), th=THEMED[code];
+  SHAPE.forEach(function(h,idx){
+    const key=h[2], S=SIZES[key];
+    const code=LETTERS[idx], th=THEMED[code];
     CELLS.push({code:code,sizeKey:key,S:S,themed:!!th,cat:th?th[1]:'flora',
       name:th?th[0]:'Elm woodland',
       role:th?th[2]:S.area+' m² — '+S.pots+' pits at 1.5 m spacing, '+S.trees+
@@ -373,7 +381,7 @@ BEATS.forEach(function(b){ b.cam.r*=CAMK; });
 /* JACK'S COFFEE аль эсэд байгаа. Модулийн хүрээнд байх ёстой: openCell нь
    init3D-ээс гадна тодорхойлогддог тул дотор нь зарлавал нүд дарах бүрд
    ReferenceError өгч, дэлгэрэнгүй цонх огт нээгдэхгүй болно. */
-const JACKS_CELL='A-01';
+const JACKS_CELL='AH';
 
 /* ---------- дэлгэрэнгүй ---------- */
 const D=document.getElementById('hx-detail');
@@ -527,19 +535,19 @@ function init3D(){
      зөвхөн viewBox — ийм SVG-г зурган текстур болгоход хөтөч 300×150 гэж таамаглаж,
      лого сунана. Харьцааг эрэлтийн газрын зургийн PARTNERS өгөгдлөөс авав. */
   const FLAG_LOGOS={
-    'B-01':{url:'assets/images/partner/hexagon-cells/EFES-GROUP_L.png',  ar:1.41},
-    'C-01':{url:'assets/images/partner/hexagon-cells/Yves-Rocher_M.webp',ar:4.65},
-    'C-02':{url:'assets/images/partner/hexagon-cells/Timberland_M.svg',  ar:5.70},
-    'F-13':{url:'assets/images/partner/hexagon-cells/EFES-INTERNATIONAL_S.jpg', ar:3.02},
-    'F-11':{url:'assets/images/partner/hexagon-cells/EFES-CONSTRUCTION_S.png',  ar:1.51},
-    'F-16':{url:'assets/images/partner/hexagon-cells/EFEC-SUPERMARKET_S.png',   ar:2.76},
-    'F-10':{url:'assets/images/partner/hexagon-cells/KHULAN-UUL_S.png',         ar:3.67},
+    'K':{url:'assets/images/partner/hexagon-cells/EFES-GROUP_L.png',  ar:1.41},
+    'P':{url:'assets/images/partner/hexagon-cells/Yves-Rocher_M.webp',ar:4.65},
+    'R':{url:'assets/images/partner/hexagon-cells/Timberland_M.svg',  ar:5.70},
+    'AJ':{url:'assets/images/partner/hexagon-cells/EFES-INTERNATIONAL_S.jpg', ar:3.02},
+    'X':{url:'assets/images/partner/hexagon-cells/EFES-CONSTRUCTION_S.png',  ar:1.51},
+    'AQ':{url:'assets/images/partner/hexagon-cells/EFEC-SUPERMARKET_S.png',   ar:2.76},
+    'N':{url:'assets/images/partner/hexagon-cells/KHULAN-UUL_S.png',         ar:3.67},
     /* JACK'S COFFEE — A-01. Гар дээрх лого нь ЦАГААН дүрстэй (харанхуй
        дэвсгэрт зориулсан) тул цагаан даавуун дээр үл харагдана; иймд хэлбэрийг
        хөндөхгүй, зөвхөн бэхийг тодруулсан хувилбар үүсгэв. off нь тугийг эсийн
        ТӨВӨӨС зөөнө — тэр төвд Jack's-ийн тэмдэг тарьсан байдаг тул мачт нь
        тэмдгийн дундуур гарах ёсгүй. Цөөрөм (-1.05,.58) талаас эсрэг зүгт. */
-    'A-01':{url:'assets/images/partner/hexagon-cells/JACKS-COFFEE_A.png', ar:0.546,
+    'AH':{url:'assets/images/partner/hexagon-cells/JACKS-COFFEE_A.png', ar:0.546,
             off:{x:0.56,z:-0.60}}
   };
   const FLAGS=[];
@@ -554,7 +562,7 @@ function init3D(){
        өгсөн, тэдний улс өгөөгүй. Улсын тугийг гишүүнчлэлийн тэмдэг болгон
        тавих нь тухайн улс дэмжсэн гэсэн утга үүсгэнэ. Байгууллагын лого тэр
        утгыг үүсгэхгүй — тэд өөрсдөө зөвшөөрсөн. */
-    'D-07':[
+    'AR':[
       {url:DLG+'mongolia.png',     ar:2.000},
       {url:DLG+'saudi-arabia.png', ar:1.500},
       {url:DLG+'giz.png',          ar:3.840},
@@ -1175,7 +1183,7 @@ function init3D(){
     for(let i=0;i<hexes.length;i++) if(hexes[i].c.code===code) return hexes[i];
     return hexes[0];
   };
-  const HR=find('D-04');                      // судалгааны станц шинэ ангидаа
+  const HR=find('AD');                        // судалгааны станц шинэ ангидаа
 
   /* 1. Хиймэл дагуулын хяналт — судалгааны цэгээс тархах сканнердах цагираг */
   const swMat=new THREE.MeshBasicMaterial({color:SC('#9CC24A'),transparent:true,

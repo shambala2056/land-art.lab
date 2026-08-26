@@ -57,7 +57,9 @@ function recordOrder(o) {
         action: "order",
         reference: o.reference,
         name: o.name,
+        certName: o.certName || "",
         email: o.email,
+        phone: o.phone || "",
         cell: o.cell || "",
         pits: o.pits,
         seedlings: o.pits * 3,
@@ -68,13 +70,21 @@ function recordOrder(o) {
 }
 
 /* Written when the provider tells us what happened. */
-function updateStatus(reference, status, txnId, method) {
+function updateStatus(reference, status, txnId, method, opts) {
     return post({
         action: "status",
         reference: reference,
         status: status,
         txnId: txnId || "",
         method: method || "",
+        /* The Apps Script emails the certificate itself the moment a row turns
+           paid. That is right for a payment happening now and wrong for one
+           being recovered months later, which may already have been answered by
+           hand. The sweep says so, and the script honours it. */
+        suppressCertificate: Boolean(opts && opts.quiet),
+        /* The certificate numbers, once they exist. Written into the sheet so
+           the team can see what a buyer was sold without opening the ledger. */
+        trees: (opts && opts.trees) || "",
     });
 }
 
