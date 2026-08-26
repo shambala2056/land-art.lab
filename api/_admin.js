@@ -604,5 +604,84 @@ async function baseline(req, res) {
     return res.status(200).json({ summary: summary, cells: rows });
 }
 
-module.exports = { reconcile, migrateCells, purgeTests, baseline };
+/* Rebuilds the sold counters from the two things that actually decide them:
+ * what was allocated off the books, and what was paid for.
+ *
+ * They are running totals, incremented as payments land, so a counting bug
+ * leaves a permanent overstatement — and one did: confirm() claimed on only one
+ * of its two routes, so every paid order was counted twice and the site
+ * understated what was left to sell. Fixing the increment stops it happening
+ * again; it does not undo what already happened. This does, and can be run
+ * whenever the figures are in doubt, because it derives rather than adjusts.
+ *
+ * Numbers issued (trees:*) are deliberately NOT touched. A certificate number
+ * that has been printed is spent whatever the arithmetic says, and reusing one
+ * is the failure this whole scheme exists to prevent.
+ */
+async function recount(req, res) {
+    res.setHeader("Cache-Control", "no-store");
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+
+    const token = req.headers["x-orders-token"] || "";
+    if (req.query && req.query.token) {
+        return res.status(400).json({ error: "Send the token as an x-orders-token header, not in the URL." });
+    }
+    if (!process.env.ORDERS_TOKEN) return res.status(503).json({ error: "Not configured." });
+    if (!tokenOk(token)) return res.status(401).json({ error: "Unauthorized." });
+    if (!ledger.configured()) return res.status(503).json({ error: "No ledger is connected." });
+
+    const apply = String((req.query && req.query.apply) || "") === "1";
+    const cmd = ledger._cmd;
+
+    const orders = await ledger.listOrders(2000);
+    if (!orders) return res.status(502).json({ error: "Couldn't read the order book." });
+
+    /* What each cell should show: its off-books allocation plus every pit
+       actually paid for in it. Orders still carrying the old cell codes are
+       counted under those codes, which are not in the letter table — their
+       pits are already in BASELINE, entered by hand when they were found. */
+    const want = {};
+    for (const cell of Object.keys(BASELINE)) want[cell] = BASELINE[cell].pits || 0;
+    const unknown = [];
+    for (const o of orders) {
+        if (o.status !== "paid") continue;
+        const cell = String(o.cell || "");
+        const pits = Number(o.pits) || 0;
+        if (!pits) continue;
+        if (!/^[A-Z]{1,2}$/.test(cell)) { unknown.push({ reference: o.reference, cell: cell || null, pits: pits }); continue; }
+        want[cell] = (want[cell] || 0) + pits;
+    }
+
+    /* Every cell that has a counter now, so an overstatement on a cell with no
+       allocation and no orders is found rather than skipped. */
+    const keys = await cmd(["KEYS", "sold:*"]);
+    for (const k of (Array.isArray(keys) ? keys : [])) {
+        const cell = String(k).slice(5);
+        if (!(cell in want)) want[cell] = 0;
+    }
+
+    const rows = [];
+    for (const cell of Object.keys(want).sort()) {
+        const now = Number(await cmd(["GET", "sold:" + cell])) || 0;
+        const should = want[cell];
+        if (now === should) continue;
+        rows.push({ cell: cell, was: now, now: should, delta: should - now });
+        if (apply) await cmd(["SET", "sold:" + cell, String(should)]);
+    }
+
+    const summary = {
+        cellsChecked: Object.keys(want).length,
+        wrong: rows.length,
+        pitsGivenBack: rows.reduce((n, r) => n + (r.delta < 0 ? -r.delta : 0), 0),
+        pitsTakenBack: rows.reduce((n, r) => n + (r.delta > 0 ? r.delta : 0), 0),
+        ordersOnOldCellCodes: unknown.length,
+        applied: apply,
+        note: apply ? "Written. Tree numbers were not touched."
+                    : "Nothing was written. Add apply=1 to carry it out.",
+    };
+    console.log("recount:", JSON.stringify(summary));
+    return res.status(200).json({ summary: summary, cells: rows, oldCellCodes: unknown });
+}
+
+module.exports = { reconcile, migrateCells, purgeTests, baseline, recount };
 

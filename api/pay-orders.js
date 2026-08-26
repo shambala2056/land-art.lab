@@ -75,6 +75,7 @@ module.exports = async function handler(req, res) {
         if (action === "migrate")   return admin.migrateCells(req, res);
         if (action === "purge")     return admin.purgeTests(req, res);
         if (action === "baseline")  return admin.baseline(req, res);
+        if (action === "recount")   return admin.recount(req, res);
         return res.status(400).json({ error: "Unknown action." });
     }
 
