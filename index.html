@@ -1442,20 +1442,23 @@
 #hexagon-live .hx-cellwidecap span{color:var(--hx-soft);font-size:13.5px;line-height:1.65}
 /* Бүтэн өргөнд мөр хэтэрхий урт болж уншигдахгүй болно. */
 #hexagon-live .hx-cellwidecap span{max-width:78ch}
-/* One cell to a row from 992px, in a container wider than the 1180 text column.
-   Two up put the picture at ~570px, where a compost bay, a ger and a nesting bank
-   are the same beige lump to anyone meeting the project for the first time; this
-   is a third wider again and the caption reads beside it instead of under it.
-   The frame is never cropped — the markers are positioned in per-cent against the
-   whole picture, so any crop would slide them off what they point at. */
+/* Хоёр нүд нэг мөрөнд, 992px-ээс дээш. Нэг мөрөнд ганцаар байрлуулж үзсэн нь
+   зураг жижиг байхаас сэргийлэх зорилготой байсан — компостын хашаа, гэр,
+   үүрлэх хана гурав ~570px-д ижил бор овоо мэт харагдана гэсэн шалтгаантай.
+   Тэр асуудлыг мөрийн тоогоор биш, савны өргөнөөр шийдэв: сав 1,420px тул
+   хоёр багана болоход зураг бүр ~695px болно — урьдын 570-аас том. Ингэснээр
+   зураг ч томорч, жагсаалт ч богиносч, гүйлгэлт хоёр дахин багасна.
+
+   Jack's ба Native species хоёр бүтэн мөрөө хэвээр авна: эхнийх нь хөдөлдөг
+   дүр зураг, хоёр дахь нь үлдсэн 47 нүдийг төлөөлдөг. */
 @media(min-width:992px){
   #hexagon-live .hx-cells{max-width:1420px}
-  #hexagon-live .hx-cellgrid{grid-template-columns:1fr;gap:30px}
-  #hexagon-live .hx-cellcard{display:grid;align-items:center;
-    grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
-  #hexagon-live .hx-cellcard figcaption{padding:32px 42px;gap:10px}
-  #hexagon-live .hx-cellname{font-size:21px}
-  #hexagon-live .hx-cellcard figcaption span{font-size:14.5px}
+  /* Яг хоёр. Үндсэн дүрэм нь auto-fill бөгөөд 1,408px өргөнд 440px-ийн гурав
+     багтаж, гурван багана болно — 992px-ээс дээш үүнийг хоёроор тогтооно. */
+  #hexagon-live .hx-cellgrid{gap:30px;grid-template-columns:repeat(2,minmax(0,1fr))}
+  #hexagon-live .hx-cellcard figcaption{padding:26px 30px;gap:9px}
+  #hexagon-live .hx-cellname{font-size:20px}
+  #hexagon-live .hx-cellcard figcaption span{font-size:14px}
 }
 /* Opens the frame at its native 1020px in the lightbox the aerial photographs
    already use. Left visible rather than revealed on hover: a first-time reader
@@ -1678,7 +1681,7 @@
           <a href="https://jacks.coffee/product/cop17-bundle/" class="hx-claim" target="_blank"
              rel="noopener noreferrer"><i></i>See it at Jack's Coffee</a>
         </figcaption>
-      </figure>
+      </div>
 
       <!-- The picture is the general planting render standing in: this cell is elm and
            nothing else now, and the render made for it shows the gers it no longer has.
@@ -1701,7 +1704,7 @@
             companies that hold cells elsewhere on this site. A named tree with a fixed position is the unit
             here as everywhere else; what is different is that this cell is held in common.</span>
         </figcaption>
-      </div>
+      </figure>
 
       <figure class="hx-cellcard">
         <div class="hx-cellshot">
