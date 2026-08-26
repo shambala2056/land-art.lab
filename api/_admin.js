@@ -512,11 +512,16 @@ const BASELINE = {
        is still for sale. */
     "F":  { pits: 0, trees: 12, who: "reserving F-012 — issued to imy by hand" },
 
-    /* Ten certificates given as gifts on the community ground, written by hand
-       and posted by the team. AR is not on sale — it is the community cell —
-       so nothing here can take these numbers by buying them. The reservation is
-       belt and braces: if that cell is ever opened, it opens at AR-011. */
-    "AR": { pits: 0, trees: 10, who: "AR-001..AR-010 given as gifts" },
+    /* Ten certificates given as gifts, written by hand and posted by the team.
+       A gifted pit is still a planted pit: it holds three elms and comes out of
+       the 9,000 exactly as a sold one does, which is why pits is 10 here and
+       not 0 — the site should offer 8,787, not 8,797.
+
+       The community ground was the first thought and could not be used. AR is
+       infrastructure — gers, a classroom table, a play frame — and its ground
+       is not in the 9,000 at all, so taking ten pits there would have subtracted
+       nothing. AO is the nearest planting cell to it, untouched, 112 pits. */
+    "AO": { pits: 10, trees: 10, who: "AO-001..AO-010 given as gifts" },
 };
 
 async function baseline(req, res) {
