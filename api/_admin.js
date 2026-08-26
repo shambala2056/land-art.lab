@@ -514,14 +514,15 @@ const BASELINE = {
 
     /* Ten certificates given as gifts, written by hand and posted by the team.
        A gifted pit is still a planted pit: it holds three elms and comes out of
-       the 9,000 exactly as a sold one does, which is why pits is 10 here and
-       not 0 — the site should offer 8,787, not 8,797.
+       the 9,000 exactly as a sold one does, which is why pits is 10 and not 0 —
+       the site offers 8,787, not 8,797.
 
-       The community ground was the first thought and could not be used. AR is
-       infrastructure — gers, a classroom table, a play frame — and its ground
-       is not in the 9,000 at all, so taking ten pits there would have subtracted
-       nothing. AO is the nearest planting cell to it, untouched, 112 pits. */
-    "AO": { pits: 10, trees: 10, who: "AO-001..AO-010 given as gifts" },
+       They sit on AR, the delegation grove, which is what that cell is for:
+       elm only, every tree given to someone rather than sold. The cell holds
+       ten pits and all ten are these, so it is full. It stays out of the public
+       catalogue — a gift is not stock — and the numbers are held so that
+       nothing can ever be issued as AR-001 to AR-010 a second time. */
+    "AR": { pits: 10, trees: 10, who: "AR-001..AR-010 given as gifts" },
 };
 
 async function baseline(req, res) {
@@ -545,21 +546,19 @@ async function baseline(req, res) {
         /* Numbers and ground move together unless an entry says otherwise —
            a reserved number is not a sold pit. */
         const wantTrees = BASELINE[cell].trees === undefined ? want : BASELINE[cell].trees;
-        /* A cell that is not for sale still has ground and can still have
-           numbers written against it by hand. cellCapacity refuses those on
-           purpose — it is the function that decides what may be bought — so a
-           reservation-only entry is measured against the pit table instead.
-           Nothing here makes such a cell purchasable: pits stays 0 and the
-           sold counter is never raised. */
-        const reserveOnly = want === 0;
+        /* A cell that is closed to buyers still has ground, and things still
+           happen on it: the delegation grove is planted and given away, ten pits
+           of it at a time. cellCapacity refuses closed cells on purpose — it is
+           the function that decides what may be BOUGHT — so what a cell physically
+           holds is read from the pit table instead. Recording against a closed
+           cell cannot open it: purchases go through cellCapacity, which still
+           says no. */
         const cap = cellCapacity(cell);
-        const room = cap === null && reserveOnly
-            ? (Object.prototype.hasOwnProperty.call(PITS, cell) ? PITS[cell] : null)
-            : cap;
+        const room = cap !== null
+            ? cap
+            : (Object.prototype.hasOwnProperty.call(PITS, cell) ? PITS[cell] : null);
         if (room === null) {
-            rows.push({ cell: cell, error: cap === null && !reserveOnly
-                ? "that cell is not for sale — a reservation there must set pits to 0"
-                : "unknown cell" });
+            rows.push({ cell: cell, error: "unknown cell" });
             continue;
         }
         if (want > room || wantTrees > room) {
