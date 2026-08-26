@@ -347,7 +347,7 @@ var HELD     = [];
    "чөлөөтэй" гэж харуулж байв; төлбөр ажиллаж эхэлсэн одоо энэ нь Jack's
    Coffee-ийн эс болон нарны цахилгаан, усны талбайд мөнгө авах эрсдэл болно. */
 var INFRA = {
-  /* A-01-ийг БИД зарахгүй. Тэр бүтээлийн дэмжлэг нь Jack's Coffee-ийн өөрсдийн
+  /* AH-г БИД зарахгүй. Тэр бүтээлийн дэмжлэг нь Jack's Coffee-ийн өөрсдийн
      вэбээр дамжина — нэг кофе, нэг мод. Тул энд нүх зарах хяналт биш, тэдний
      худалдан авах холбоос гарна. */
   'AH':"Jack's Coffee · bird refuge",
@@ -513,7 +513,7 @@ SHAPE.forEach(function(h,i){
     partner:PARTNERS[id]?PARTNERS[id].name:null,
     logo:PARTNERS[id]?PARTNERS[id].logo:null,
     logoAspect:PARTNERS[id]&&PARTNERS[id].aspect?PARTNERS[id].aspect:1,
-    /* A-01 is the Jack's Coffee cell: its trees are planted in the shape of
+    /* AH is the Jack's Coffee cell: its trees are planted in the shape of
        their mark, not in the even grid every other cell uses. Drawn as the
        mark itself so the map says what is actually in the ground there. */
     mark:id==='AH'?"assets/images/jacks-mark.png":null});
@@ -1017,18 +1017,34 @@ function showCell(id){
      the cell's own, because a letter no longer implies a size. */
   var s=Object.assign({},SIZES[c.cls],{pots:c.pots,trees:c.pots*SEEDS_PER_PIT});
   var size=s.nm;
-  var state=c.status==='infra'?('Project infrastructure — '+c.infra)
+  /* AH бол дэд бүтэц биш, захиалгат бүтээл. Мөн энэ самбарын бусад тоо түүнд
+     хамаарахгүй: 991 нүх гэдэг нь ердийн эсийн багтаамж бөгөөд Jack's-ийн
+     талбай нь 2,500 м², 10,000 хайлаастай, 1 м-ийн торонд биш тэмдгийнх нь
+     хэлбэрээр таригдана. Зарагдахгүй эсийн дэргэд зарагдахгүй тоо бичих нь
+     хамгийн муу нь — хүн түүнийг үнийн санал гэж уншина. */
+  var JACKS=(c.id==='AH');
+  var state=JACKS?"Closed — Jack's Coffee land art"
+          :c.status==='infra'?('Project infrastructure — '+c.infra)
           :c.status==='taken'?('Partnered — '+c.partner)
           :(c.status==='held'?'In discussion':'Available');
   /* Нэгж нь НҮХ. Талбайг хэмжээс болгон харуулахаа больсон — зөвхөн зургийг
      зурахад л хэрэглэнэ. Урьд нь "planting pots · every 1 m" ба "1.5 m spacing"
      гэсэн хоёр мөр зэрэг байж, нэг тоог хоёр өөр зайгаар тайлбарлаж байв. */
   var pots=s.pots.toLocaleString('en-US'), trees=s.trees.toLocaleString('en-US');
-  detail.innerHTML='<span class="d-tag">Cell '+c.id+' · '+size+'</span>'+
-    '<h3 class="d-title">'+state+'<span>'+pots+' pits · '+trees+' elms</span></h3>'+
-    '<p class="d-body">One named cell within the honeycomb. Pits are dug 1 m apart in both directions and take three Siberian elm each, every row connected to a drip line. The planted core sits inside the cell, leaving a margin at the edge for the drip header and for reaching the rows. Trees are irrigated for ten years and counted every six months.'+
-    (c.status==='free'?' This cell is currently available.':'')+'</p>'+
-    '<ul class="d-stats">'+rows([
+  detail.innerHTML='<span class="d-tag">Cell '+c.id+' · '+(JACKS?'commissioned work':size)+'</span>'+
+    '<h3 class="d-title">'+state+'<span>'+
+      (JACKS?'2,500 m² · 10,000 elms':pots+' pits · '+trees+' elms')+'</span></h3>'+
+    '<p class="d-body">'+(JACKS
+      ? 'A quarter of a hectare planted with 10,000 Siberian elm in the form of the Jack\'s Coffee mark, 63 by 73 metres. It is set out to the shape rather than to the 1 m grid the other cells use, and it is maintained and irrigated on the same terms as the rest of the site.'
+      : 'One named cell within the honeycomb. Pits are dug 1 m apart in both directions and take three Siberian elm each, every row connected to a drip line. The planted core sits inside the cell, leaving a margin at the edge for the drip header and for reaching the rows. Trees are irrigated for ten years and counted every six months.'+
+        (c.status==='free'?' This cell is currently available.':''))+'</p>'+
+    '<ul class="d-stats">'+rows(JACKS?[
+      ['Cell number',c.id],
+      ['Area','2,500 m² · 0.25 ha'],
+      ['Siberian elm','10,000 · planted to the mark'],
+      ['Care period','10 years'],['Reporting','count every six months'],
+      ['Status','Closed — not sold here']
+    ]:[
       ['Cell number',c.id],
       ['Planting pits',pots+' at 1 m spacing'],
       ['Siberian elm',trees+' saplings · 3 per pit'],
@@ -1037,8 +1053,11 @@ function showCell(id){
     /* Доллар нь үндсэн үнэ — олон улсын түнш уншина. Төгрөг нь жижгээр хажууд нь. */
     (c.status==='infra'
       ? (c.id==='AH'
-          ? '<div class="buy-fine" style="margin-top:14px">This cell is the Jack\'s Coffee land art. It is not sponsored through this map — every specially marked cup plants an elm here.</div>'+
-            '<a class="d-cta" href="https://jacks.coffee/product/cop17-bundle/" target="_blank" rel="noopener noreferrer">One Coffee, One Tree — Buy at Jack\'s →</a>'
+          ? '<div class="buy-fine" style="margin-top:14px"><b>This cell is closed.</b> '+
+              'It is the Jack\'s Coffee land art — their own commission, planted in the form '+
+              'of their mark, and their own product. Trees here are not sold through this site: '+
+              'they come with a specially marked cup, from Jack\'s.</div>'+
+            '<a class="d-cta" href="https://jacks.coffee/product/cop17-bundle/" target="_blank" rel="noopener noreferrer">See it at Jack\'s Coffee →</a>'
           : '<div class="buy-fine" style="margin-top:14px">This cell is project infrastructure and is not offered for sponsorship.</div>'+
             '<a class="d-cta" href="index.html#contact" target="_top">Enquire About Another Cell →</a>')
       : (c.status==='free' && PICK)

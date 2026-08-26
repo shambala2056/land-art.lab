@@ -1189,6 +1189,12 @@
 #hexagon-live .hx-pvideo .hx-cap{border-top:none;padding:0 26px 0 24px}
 #hexagon-live .hx-pvideo .hx-cap p{max-width:none;font-size:14.5px}
 #hexagon-live .hx-pvideo .hx-cap h3{font-size:clamp(20px,2.2vw,27px);margin:0 0 12px}
+/* Хажуугийн бичвэрийг дахин нуув. Jack's нь одоо нүдний сүлжээн доторх бүтэн
+   мөрийн карт бөгөөд тайлбар нь доорх figcaption дээр байна — хоёр тайлбар нэг
+   дүр зургийг давхар тайлбарлаж, дээр нь дүрсний өргөнөөс 400px авч байв.
+   Үе шат тус бүрийн өгүүлэмж markup, логик хоёулаа байрандаа хэвээр: энэ ганц
+   дүрмийг устгавал буцаж ирнэ. */
+#hexagon-live .hx-pvideo .hx-capside{display:none}
 @media(max-width:860px){
   #hexagon-live .hx-pvideo .hx-sticky{flex-direction:column}
   #hexagon-live .hx-pvideo .hx-capside{flex:0 0 auto;border-left:none;
@@ -1385,6 +1391,39 @@
 #hexagon-live .hx-cellgrid{display:grid;gap:26px;margin-top:30px;
   grid-template-columns:repeat(auto-fill,minmax(440px,1fr))}
 @media(max-width:620px){#hexagon-live .hx-cellgrid{grid-template-columns:1fr}}
+
+/* Jack's нь бүх баганыг эзэлнэ. 1 / -1 нь багана хэд байхаас үл хамааран
+   мөрийг бүтнээр нь авах тул хажууд нь өөр карт зогсох боломжгүй — дараагийн
+   карт өөрөө доод мөрөөс эхэлнэ. Дүр зураг өөрөө хөдөлдөг тул зурган картын
+   хэмжээнд шахвал юу ч уншигдахгүй. */
+#hexagon-live .hx-cellwide{grid-column:1 / -1;margin:0;background:var(--hx-card);
+  border-radius:20px;box-shadow:var(--hx-shadow);overflow:hidden}
+/* Хуудсыг бүтэн дүүргэсэн 100vh нь энд хэтэрхий их: энэ бол бүтээлийн өөрийн
+   хэсэг биш, нүдний жагсаалтын нэг мөр. Хажуугийн тайлбар багтах өндөр. */
+#hexagon-live .hx-cellwide .hx-pstage{height:clamp(360px,52vh,560px)}
+/* .hx-sticky нь 100vh өндөртэй — бүтээлийн хэсэгт дэлгэц дүүргэх нь зөв, гэхдээ
+   энд дүр зураг 520px тул 480px халж, доорх тайлбарыг бүрэн халхалж байв.
+   Дүрсийг дэлгэцээр биш, багтаж буй хайрцгаараа хэмжинэ. */
+#hexagon-live .hx-cellwide .hx-sticky{height:100%}
+
+/* Бүтэн мөр эзэлсэн зурган карт. Зураг нь 1020×765 тул 1,180px өргөнд 885px
+   өндөр болно — хуудсыг дангаараа эзэлнэ. Өндрийг нь хязгаарлаж, object-fit
+   -ээр төвөөс нь тайрна: энэ бол панорам харагдац, дээд доод зах нь тэнгэр
+   ба хоосон газар. */
+#hexagon-live .hx-cellfull{grid-column:1 / -1}
+/* .hx-cellcard img нь энэ файлд доор бичигдсэн бөгөөд ижил жинтэй тул тэр
+   давамгайлж, зураг 885px өндөр болж байв. Хоёр ангиллыг зэрэг нэрлэж жинг нь
+   нэгээр өсгөв — дарааллаас хамаарахгүй. */
+#hexagon-live .hx-cellcard.hx-cellfull img{height:clamp(300px,44vh,480px);
+  aspect-ratio:auto;object-fit:cover;object-position:center}
+/* Уншигдах мөрийн урт — бүтэн өргөнд сунгавал нүд мөр алдана. */
+#hexagon-live .hx-cellfull figcaption span{max-width:78ch}
+#hexagon-live .hx-cellwidebuy{margin:4px 0 2px;color:var(--hx-soft);
+  font-size:13.5px;line-height:1.65;max-width:78ch}
+#hexagon-live .hx-cellwidecap .hx-claim{align-self:flex-start;margin-top:6px}
+@media(max-width:620px){
+  #hexagon-live .hx-cellwide .hx-pstage{height:clamp(300px,44vh,420px)}
+}
 #hexagon-live .hx-cellcard{margin:0;background:var(--hx-card);border-radius:20px;
   box-shadow:var(--hx-shadow);overflow:hidden;display:flex;flex-direction:column}
 #hexagon-live .hx-cellshot{position:relative;line-height:0}
@@ -1392,13 +1431,17 @@
    gets the layout it will end up with rather than a collapsing grid. */
 #hexagon-live .hx-cellcard img{display:block;width:100%;height:auto;
   aspect-ratio:1020/765;object-fit:cover;background:#F3E4BE}
-#hexagon-live .hx-cellcard figcaption{padding:18px 20px 22px;
+#hexagon-live .hx-cellcard figcaption,
+#hexagon-live .hx-cellwidecap{padding:18px 20px 22px;
   display:flex;flex-direction:column;gap:7px}
 #hexagon-live .hx-cellcode{font-family:'Urbanist',sans-serif;font-size:10.5px;font-weight:700;
   letter-spacing:.16em;text-transform:uppercase;color:var(--hx-lime-deep)}
 #hexagon-live .hx-cellname{font-family:'Urbanist',sans-serif;font-size:17px;font-weight:600;
   letter-spacing:-.01em;color:var(--hx-ink)}
-#hexagon-live .hx-cellcard figcaption span{color:var(--hx-soft);font-size:13.5px;line-height:1.65}
+#hexagon-live .hx-cellcard figcaption span,
+#hexagon-live .hx-cellwidecap span{color:var(--hx-soft);font-size:13.5px;line-height:1.65}
+/* Бүтэн өргөнд мөр хэтэрхий урт болж уншигдахгүй болно. */
+#hexagon-live .hx-cellwidecap span{max-width:78ch}
 /* One cell to a row from 992px, in a container wider than the 1180 text column.
    Two up put the picture at ~570px, where a compost bay, a ger and a nesting bank
    are the same beige lump to anyone meeting the project for the first time; this
@@ -1602,23 +1645,38 @@
 
     <div class="hx-cellgrid">
 
-      <figure class="hx-cellcard">
-        <div class="hx-cellshot">
-          <img src="assets/images/cells/cell-a-01-birds.jpg" loading="lazy" decoding="async"
-               width="1020" height="765" alt="Cell AH: the Jack's Coffee mark planted in elm, with nest boxes on posts and a small pond beside it.">
-          <button type="button" class="hx-hot" style="left:50%;top:45.86%" aria-expanded="false" data-n="The mark, in 10,000 elms" data-d="Siberian elm · &lt;i&gt;Ulmus pumila&lt;/i&gt; at half-metre spacing, four to the square metre. Elm is the signature species and the most demanding of the five: it goes in the sheltered interior, behind the saxaul and caragana ranks, and inherits their wind shelter and their nitrogen."><span class="hx-hotlabel">The mark, in 10,000 elms</span></button>
-          <button type="button" class="hx-hot" style="left:72.89%;top:40.8%" aria-expanded="false" data-n="Nest boxes" data-d="On new planting the limit on breeding birds is cavities, not food — there are no old trees to hold them, and there will not be for twenty years. Closed boxes rather than open trays: on the Mongolian steppe closed designs carry the higher nest survival. Sited clear of the mark, and cleared out annually, which is when occupancy is recorded."><span class="hx-hotlabel">Nest boxes</span></button>
-          <button type="button" class="hx-hot" style="left:55.59%;top:69.94%" aria-expanded="false" data-n="Water point" data-d="A shallow pond with shelving sides, so insects and fledglings can get out again. There is no permanent river or lake in this province and about 100 mm of rain a year: standing water, not canopy, is what decides whether birds and insects stay."><span class="hx-hotlabel">Water point</span></button>
-          <button type="button" class="hx-zoom">Enlarge</button>
-          <div class="hx-hotpop" hidden>
-            <b></b><span></span>
-            <button type="button" class="hx-hotx" aria-label="Close">&times;</button>
+      <!-- Jack's нь зурган карт биш, бүтэн өргөнөөр тоглох дүр зураг. Бусад
+           зургаан нүд бол тоног төхөөрөмж — тэднийг нэг агшинд буулгаж болно.
+           Энэ нүдэн дээр таригдсан зүйл нь өөрөө бүтээл, 63×73 метр тул
+           хөдөлгөөнгүй зураг хэлбэрийг нь харуулж чаддаггүй.
+           data-proj="jacks" нь land-art-scenes.js-д хэрэгтэй: тэр нь
+           #hexagon-live доторх .hx-proj бүрийг олж, түлхүүрээр нь дүр зургаа
+           барина. Хажууд байсан карт дараагийн мөр рүү өөрөө шилжинэ. -->
+      <div class="hx-cellwide hx-proj" data-proj="jacks">
+        <div class="hx-stage hx-pstage hx-pvideo" data-loop="1" data-plain="1">
+          <div class="hx-sticky">
+            <div class="hx-canvas"></div>
+            <div class="hx-meter"></div>
+            <div class="hx-capside">
+              <div class="hx-cap hx-fade"></div>
+            </div>
           </div>
         </div>
-        <figcaption>
-          <b class="hx-cellcode">AH · 400 m² · birds</b>
+        <figcaption class="hx-cellwidecap">
+          <b class="hx-cellcode">AH · 2026 · with Jack's Coffee</b>
           <b class="hx-cellname">Small Cup, Big Impact</b>
           <span>The Jack's Coffee land art — 10,000 Siberian elm in the form of the company's mark — carrying the site's bird provision on the same cell. New planting has no cavities in it, so nesting is the binding constraint long before food is. Boxes and open water do that job here, twenty years before the elms could.</span>
+
+          <!-- Тусдаа (04) хэсэг устсан тул худалдан авах товч зөвхөн эс дээр
+               дарсны дараах цонхонд үлдэж, хуудсан дээр харагдахаа больсон байв.
+               Бүтээлийнхээ дэргэд байх нь зөв байрлал. -->
+          <p class="hx-cellwidebuy"><b>This cell is closed.</b> It is Jack's Coffee's own
+            commission and their own product, so trees in it are not sold here. They come with a
+            specially marked cup: Jack's is serving at COP17 in Ulaanbaatar from 17 to 28 August,
+            and every marked coffee plants one elm in this cell, named for the buyer and reported
+            to them once a year.</p>
+          <a href="https://jacks.coffee/product/cop17-bundle/" class="hx-claim" target="_blank"
+             rel="noopener noreferrer"><i></i>See it at Jack's Coffee</a>
         </figcaption>
       </figure>
 
@@ -1643,7 +1701,7 @@
             companies that hold cells elsewhere on this site. A named tree with a fixed position is the unit
             here as everywhere else; what is different is that this cell is held in common.</span>
         </figcaption>
-      </figure>
+      </div>
 
       <figure class="hx-cellcard">
         <div class="hx-cellshot">
@@ -1742,7 +1800,11 @@
       </figure>
 
 
-      <figure class="hx-cellcard">
+      <!-- Энэ карт бол үлдсэн 47 нүд буюу талбайн дийлэнх — долоон тусгай нүдний
+           нэгтэй адил хэмжээтэй байх нь тоо хэмжээг нь худал харуулна. Бүтэн мөр
+           эзэлнэ: зурган дээр хэд хэдэн нүд зэрэг харагдах ёстой бөгөөд жагсаалт
+           нь таван зүйлийг дараалалтай нь тайлбарладаг тул урт. -->
+      <figure class="hx-cellcard hx-cellfull">
         <div class="hx-cellshot">
           <img src="assets/images/cells/cell-native-planting.jpg" loading="lazy" decoding="async"
                width="1020" height="765" alt="Several ordinary hexagonal cells filled with shrubs and trees, with bare ground between them.">
@@ -1765,58 +1827,10 @@
     <a href="#pricing" class="hx-claim"><i></i>Claim a cell</a>
   </div>
 
-  <!-- Fourth work · corporate collaboration. Jack's is also cell AH inside HEXAGON,
-       which is where it is bought; this section is the work in its own right, and it
-       has its own scene because the mark is planted at a scale the cell view cannot
-       show. The copy is kept in step with screen.html, which never stopped carrying it.
-       The scene needs nothing added: land-art-scenes.js already defines jacks in GRID,
-       SHAPES and BEATS, and builds every .hx-proj it finds inside #hexagon-live. -->
-  <section class="hx-proj" id="la-jacks" data-proj="jacks">
-  <div class="hx-projhead hx-pfull">
-    <div class="hx-pnum">(04) · 2026 · with Jack's Coffee</div>
-    <h3 class="hx-ph">JACK'S COFFEE</h3>
-    <div class="hx-pcols">
-    <p class="hx-plead">The first work commissioned by a company in its own mark. A quarter of a
-      hectare at Erdene sum, Dornogovi, planted with 10,000 Siberian elm in the form of the
-      Jack's Coffee symbol — a mark 63 by 73 metres, read by drone survey rather than from orbit
-      at this scale, on ground that carried nothing before it. The
-      same method as the three works before it: water and enclosure first, then planting, then
-      ten years of maintenance and irrigation, with each cell's growth reported once a year.</p>
-    <p class="hx-plead">
-      <b>At COP17.</b> Jack's Coffee is serving at the conference site in Ulaanbaatar from 17 to
-      28 August, where one cup carries one tree: every specially marked coffee plants an elm in
-      the severely desertified rangeland at Erdene. A delegate can taste the collaboration and read the
-      coordinates of what it plants on the same afternoon.</p>
-    <p class="hx-plead">
-      <b>How a cup becomes a tree.</b> Three COP17 editions are served — a sea-buckthorn matcha
-      latte, an anise espresso and a blueberry ube latte — at the conference booth, at any Jack's
-      Coffee branch in Ulaanbaatar, or online. Each purchase registers <b>one elm in the buyer's
-      own name</b> at Erdene, maintained and irrigated on the same terms as the rest of the site,
-      and reported to them by email once a year. A named tree with a fixed location is a
-      restoration unit, not a gesture — which is the whole point of doing it this way.</p>
-    </div>
-    <div class="hx-pills"><span>2,500 m² · 0.25 ha</span><span>10,000 elms</span><span>Erdene sum, Dornogovi</span><span>2026</span></div>
-    <a href="https://jacks.coffee/product/cop17-bundle/" class="hx-claim" target="_blank"
-       rel="noopener noreferrer"><i></i>One coffee, one tree — buy the COP17 edition</a>
-  </div>
-  <!-- No .hx-time here, and that is what removes the timeline: the scene builds
-       the control only if it finds that element, so leaving it out gives a scene
-       that simply plays. It loops, because with no Play button there would
-       otherwise be no way to watch it twice.
-       No .hx-year either, and data-plain drops the year line and the beat number
-       from the caption, so nothing on this stage reads as a timeline — only the
-       description. hx-pvideo puts that description beside the picture rather
-       than in a band beneath it. -->
-  <div class="hx-stage hx-pstage hx-pvideo" data-loop="1" data-plain="1">
-    <div class="hx-sticky">
-      <div class="hx-canvas"></div>
-      <div class="hx-meter"></div>
-      <div class="hx-capside">
-        <div class="hx-cap hx-fade"></div>
-      </div>
-    </div>
-  </div>
-  </section>
+  <!-- Jack's Coffee-д тусдаа хэсэг байхаа больсон. Түүний дүр зураг нь
+       "What each cell holds" дотор AH нүдний оруулга болж, COP17-ийн
+       худалдан авах товч түүний тайлбар руу зөөгдсөн — нэг бүтээлийг
+       хуудсан дээр хоёр газар тайлбарлах шаардлагагүй. -->
 
 </section>
 
