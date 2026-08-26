@@ -20,6 +20,12 @@ html,body{margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font-family:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
 .wrap{max-width:760px;margin:0 auto;padding:28px 18px 56px}
 
+/* Тэмдэг нь ЦАГААН дүрстэй — бараан дэвсгэрт зориулсан. Энэ хуудас цайвар тул
+   бэх болгож эргүүлнэ; хоёр дахь файл нэмбэл хожим зөрөх эрсдэлтэй. */
+.cbrand{display:block;width:max-content;margin:0 0 16px}
+.cbrand img{display:block;height:30px;width:auto;filter:brightness(0) saturate(100%)}
+.cbrand:hover img{opacity:.7}
+.cbrand[hidden]{display:none}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:7px 15px 7px 12px;
   font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;box-shadow:var(--shadow-out)}
 .eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--lime);display:block}
@@ -260,6 +266,11 @@ if(new URLSearchParams(location.search).get('pick')==='1')
 <body>
 <div class="wrap">
 
+  <a class="cbrand" id="cbrand" href="community.html" target="_top">
+    <img src="assets/images/logo/hexagon-community.png"
+         alt="HEXAGON — Land Art Community" width="514" height="142">
+  </a>
+
   <span class="eyebrow"><i></i>Erdene Sum · Dornogovi · 44.0754 N / 111.1958 E</span>
   <h1>HEXAGON<span>Cell map</span></h1>
   <p class="lead">Fifty-four hexagonal cells on a fenced 30,000 m² site, holding 9,000 planting pits. The map is drawn to scale: each cell is shown at its true area, the darker core is the planted ground, and every point in it is one pit at 1 m spacing. The paler edge of each cell is its working margin — the drip header and the room to reach the rows. Cells outlined in green are unallocated; grey cells are already sponsored. Select any cell for its area, tree count and terms.</p>
@@ -498,6 +509,9 @@ var PICK=new URLSearchParams(location.search).get('pick')==='1';
 (function(){
   var mc=document.getElementById('mapcta');
   if(mc && (PICK || window.parent!==window)) mc.hidden=true;
+  /* Тэмдэг нь мөн адил: суулгасан хуудас өөрийн толгойтой, хоёр лого давхарлана. */
+  var cb=document.getElementById('cbrand');
+  if(cb && (PICK || window.parent!==window)) cb.hidden=true;
 })();
 
 var LETTERS=["AH","AM","AS","K","AB","AL","BA","P","R","AC","AE","AY","AZ","E","J","S","AD","AN","AK","AR","AV","B","H","L","Q","O","T","Y","AA","W","AF","AI","AO","AT","AU","AX","A","F","D","C","G","I","U","V","M","N","X","Z","AJ","AG","AP","AQ","AW","BB"];
