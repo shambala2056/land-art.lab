@@ -48,6 +48,30 @@ body {
 
 /* ── Hero ── */
 
+/* Дэвсгэрт нь HEXAGON-ы загвар: гишүүн бүрийн туг талбай дээрээ. Зураг нь
+   цайвар элсэн өнгөтэй тул цагаан бичвэр шууд дээр нь уншигдахгүй — зүүнээс
+   баруун тийш гүн бараанаас тунгалаг руу шилжих хөшиг тавьна: бичвэр бараан
+   талд, тугууд задгай талд. */
+.hero::before, .hero::after { content: ''; position: absolute; inset: 0; z-index: 0; }
+.hero::before {
+  background-image: url('images/section/community-hero.jpg');
+  background-size: cover; background-position: 72% 26%;
+}
+.hero::after {
+  background: linear-gradient(100deg,
+    var(--bio-ink) 0%, rgba(21,22,15,.94) 30%, rgba(21,22,15,.72) 55%,
+    rgba(21,22,15,.34) 78%, rgba(21,22,15,.20) 100%);
+}
+.hero-nav, .hero-body, .hero-credit { z-index: 1; }
+/* Энэ бол 2032 оны загвар, өнөөдрийн газар биш — хуудас хэмжсэн тоон дээр
+   зогсдог тул зургаа ч нэрлэнэ. */
+.hero-credit {
+  position: relative;
+  align-self: flex-start;
+  margin: 0; padding: 0 clamp(20px, 5vw, 56px);
+  font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: rgba(239, 239, 234, .45);
+}
 .hero {
   position: relative;
   overflow: hidden;
@@ -289,208 +313,63 @@ button.submit[disabled] { background: var(--bio-muted); cursor: default; }
 }
 
 /* ══════════════════════════════════════════════════════════════════════
-   PORTAL — what a member sees once signed in
+   THE MEMBERS WALL
+   Нэвтрэх хэсгийн байрлалыг эсрэгээр эргүүлэв: хана нь өргөн, урилга нарийн.
+   Логонууд өөр өөр харьцаатай тул тус бүрийг тогтмол өндөртэй талбайд
+   төвлөрүүлнэ — эс бүр адилхан хэмжээтэй нүд шиг эгнэнэ.
    ══════════════════════════════════════════════════════════════════════ */
-
-.portal { min-height: 100%; display: flex; flex-direction: column; }
-.portal[hidden] { display: none; }
-
-.topbar {
-  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
-  padding: 14px 28px; background: var(--bio-card);
-  border-bottom: 1px solid var(--bio-line);
-  position: sticky; top: 0; z-index: 10;
+.members {
+  max-width: 1180px; margin: 0 auto;
+  padding: clamp(40px, 6vw, 72px) clamp(20px, 5vw, 56px) clamp(64px, 9vw, 104px);
+  display: grid; gap: clamp(24px, 4vw, 48px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+  align-items: start;
 }
-.brand { display: flex; align-items: center; gap: 11px; text-decoration: none; color: inherit; }
-.brand b {
-  display: block; font-family: "Urbanist", "Roboto", sans-serif;
-  font-size: 15px; font-weight: 800; letter-spacing: 0.14em;
+.wall-head h2 {
+  font-family: "Urbanist", "Roboto", sans-serif;
+  font-size: clamp(21px, 2.4vw, 28px); font-weight: 700; margin: 0;
 }
-.brand small { display: block; font-size: 10.5px; color: var(--bio-muted); letter-spacing: 0.1em; margin-top: 1px; }
-
-.tabs { display: flex; gap: 4px; margin-left: auto; }
-.tab {
-  border: 0; border-radius: 999px; padding: 8px 16px; cursor: pointer;
-  background: transparent; color: var(--bio-muted);
-  font-family: "Urbanist", "Roboto", sans-serif; font-size: 13px; font-weight: 700;
+.wall-head .sub {
+  font-size: 13.5px; line-height: 1.75; color: var(--bio-muted);
+  margin: 8px 0 26px; max-width: 60ch;
 }
-.tab:hover { color: var(--bio-ink); }
-.tab.is-on { background: var(--bio-ink); color: var(--bio-bg); }
-
-.who { display: flex; align-items: center; gap: 12px; font-size: 12.5px; color: var(--bio-muted); }
-.who button {
-  border: 1px solid var(--bio-line); border-radius: 8px; padding: 7px 12px; cursor: pointer;
-  background: transparent; color: var(--bio-muted); font-family: inherit; font-size: 12px;
+.holders {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
 }
-.who button:hover { color: var(--bio-ink); border-color: var(--bio-ink); }
-
-.view { flex: 1; width: 100%; max-width: 1060px; margin: 0 auto; padding: 32px 28px 64px; }
-.view[hidden] { display: none; }
-
-.lede { margin-bottom: 26px; }
-.lede h2 { font-family: "Urbanist", "Roboto", sans-serif; font-size: 24px; font-weight: 700; margin: 0 0 8px; }
-.lede p { font-size: 14px; line-height: 1.75; color: var(--bio-muted); margin: 0; max-width: 66ch; }
-
-.search { display: block; margin-top: 18px; max-width: 460px; }
-.search input {
-  width: 100%; padding: 11px 14px; border: 1px solid var(--bio-line);
-  border-radius: 999px; background: #fff; font-family: inherit; font-size: 13.5px;
-}
-.search input:focus { outline: none; border-color: var(--bio-ink); }
-
-/* ── directory cards ── */
-.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); align-items: start; }
-.empty { grid-column: 1 / -1; font-size: 13.5px; color: var(--bio-muted); line-height: 1.7; }
-
-.member {
+.holder {
+  position: relative;
   background: var(--bio-card); border: 1px solid var(--bio-line);
-  border-radius: 12px; padding: 20px; min-width: 0;
+  border-radius: 14px; padding: 18px 18px 16px;
+  display: flex; flex-direction: column; gap: 4px;
+  transition: border-color .18s, transform .18s;
 }
-.member.mine { border-color: var(--bio-ink); }
-.member h3 {
-  font-family: "Urbanist", "Roboto", sans-serif; font-size: 16px; font-weight: 700;
-  margin: 0; line-height: 1.3;
+/* Холбоос нь картаа бүтнээр нь эзэлнэ — лого руу оносон эсэхийг хэрэглэгч
+   бодох ёсгүй. Гишүүн бүр вэбтэй биш тул зарим карт холбоосгүй үлдэнэ. */
+.holder-link {
+  display: flex; flex-direction: column; gap: 4px;
+  color: inherit; text-decoration: none;
 }
-.member h3 em {
-  font-style: normal; font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
-  text-transform: uppercase; background: var(--bio-lime); color: var(--bio-ink);
-  border-radius: 999px; padding: 2px 8px; margin-left: 6px; vertical-align: middle;
+.holder-link::after { content: ''; position: absolute; inset: 0; border-radius: 14px; }
+.holder:has(.holder-link):hover { border-color: var(--bio-ink); transform: translateY(-2px); }
+.holder-link:focus-visible::after { outline: 2px solid var(--bio-ink); outline-offset: 2px; }
+.holder-mark {
+  height: 46px; margin-bottom: 12px;
+  display: flex; align-items: center; justify-content: flex-start;
 }
-.member .meta { font-size: 11.5px; color: var(--bio-muted); margin: 5px 0 0; }
-.member .meta.unlisted { color: #9A7B25; }
-.member .about { font-size: 13px; line-height: 1.65; margin: 14px 0 0; }
-
-.pair { margin-top: 12px; }
-.pair b {
-  display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--bio-muted); margin-bottom: 3px;
-}
-.pair span { font-size: 12.5px; line-height: 1.6; }
-
-.member footer {
-  display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px;
-  padding-top: 13px; border-top: 1px solid var(--bio-line);
-}
-.member footer a { font-size: 12px; color: var(--bio-ink); text-decoration: underline; text-underline-offset: 2px; }
-
-/* ── profile form ── */
-.profile { max-width: 720px; display: flex; flex-direction: column; gap: 16px; }
-.profile .row2 { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
-.profile label { margin: 0; }
-.profile textarea {
-  width: 100%; padding: 11px 12px; border: 1px solid var(--bio-line); border-radius: 8px;
-  background: #fff; font-family: inherit; font-size: 14px; color: var(--bio-ink);
-  line-height: 1.6; resize: vertical;
-}
-.profile textarea:focus { outline: none; border-color: var(--bio-ink); }
-.profile .check { display: flex; align-items: center; gap: 10px; }
-.profile .check input { width: 17px; height: 17px; accent-color: var(--bio-ink); }
-.profile .check span { font-size: 13px; color: var(--bio-ink); margin: 0; font-weight: 500; }
-.profile .submit { max-width: 180px; }
-
-@media (max-width: 720px) {
-  .profile .row2 { grid-template-columns: 1fr; }
-  .topbar { gap: 12px; }
-  .tabs { margin-left: 0; order: 3; width: 100%; }
-}
-
-/* ══════════════════════════════════════════════════════════════════════
-   NEWSROOM
-   A member arriving wants the same thing a reader wants: what happened,
-   who did it, and whether it concerns them. So it is set as a wire — one
-   lead, then the file — with the organisation as the byline and the ask
-   printed under each item, since the ask is the part that gets answered.
-   ══════════════════════════════════════════════════════════════════════ */
-
-.masthead {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  gap: 20px; flex-wrap: wrap;
-  padding-bottom: 16px; margin-bottom: 28px;
-  border-bottom: 2px solid var(--bio-ink);
-}
-.masthead h2 {
+.holder-mark img { max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain; }
+.holder b {
   font-family: "Urbanist", "Roboto", sans-serif;
-  font-size: clamp(26px, 3.4vw, 38px); font-weight: 800;
-  letter-spacing: -0.02em; margin: 0;
+  font-size: 14.5px; font-weight: 700; color: var(--bio-ink);
 }
-.masthead p { font-size: 13.5px; color: var(--bio-muted); margin: 6px 0 0; }
-.issue {
-  font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--bio-muted); white-space: nowrap;
+.holder .cell {
+  font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--bio-muted);
 }
+.next-report {
+  margin: 24px 0 0; font-size: 12.5px; color: var(--bio-muted);
+  padding-top: 16px; border-top: 1px solid var(--bio-line);
+}
+.next-report b { color: var(--bio-ink); }
 
-.kicker {
-  font-family: "Urbanist", "Roboto", sans-serif;
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.16em;
-  text-transform: uppercase; color: var(--bio-ink);
-  margin: 0 0 10px;
-}
-.kicker::before {
-  content: ""; display: inline-block;
-  width: 9px; height: 10px; margin-right: 8px; vertical-align: -1px;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  background: var(--bio-lime);
-}
-
-/* ── Lead story ── */
-.lead { padding-bottom: 32px; border-bottom: 1px solid var(--bio-line); }
-.lead h3 {
-  font-family: "Urbanist", "Roboto", sans-serif;
-  font-size: clamp(24px, 3.4vw, 40px); font-weight: 700;
-  line-height: 1.14; letter-spacing: -0.02em;
-  margin: 0 0 14px; max-width: 22ch; text-wrap: balance;
-}
-.lead .body { font-size: 15.5px; line-height: 1.8; margin: 16px 0 0; max-width: 62ch; }
-
-/* ── The wire ── */
-.wire {
-  display: grid; gap: 1px; margin-top: 32px;
-  background: var(--bio-line);
-  border-top: 1px solid var(--bio-line); border-bottom: 1px solid var(--bio-line);
-  grid-template-columns: repeat(2, 1fr);
-}
-.wire .item { background: var(--bio-bg); padding: 26px clamp(16px, 2.6vw, 32px); }
-.wire h4 {
-  font-family: "Urbanist", "Roboto", sans-serif;
-  font-size: 18px; font-weight: 700; line-height: 1.28;
-  letter-spacing: -0.01em; margin: 0 0 10px; max-width: 26ch;
-}
-.wire .body { font-size: 13.5px; line-height: 1.72; margin: 12px 0 0; max-width: 46ch; }
-
-/* ── Byline and ask ── */
-.byline {
-  font-family: "Urbanist", "Roboto", sans-serif;
-  font-size: 13px; font-weight: 700; color: var(--bio-ink); margin: 0;
-}
-.byline span {
-  display: block; font-weight: 400; font-size: 11.5px;
-  color: var(--bio-muted); margin-top: 3px; letter-spacing: 0;
-}
-.calls {
-  font-size: 12.5px; line-height: 1.65; color: var(--bio-muted);
-  margin: 14px 0 0; padding-left: 13px;
-  border-left: 3px solid var(--bio-lime);
-  max-width: 52ch;
-}
-.calls b {
-  display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--bio-ink); margin-bottom: 3px;
-}
-
-/* ── Initiative fieldset on the profile form ── */
-.initiative {
-  border: 1px solid var(--bio-line); border-radius: 12px;
-  padding: 20px 22px 6px; margin: 0;
-}
-.initiative legend {
-  font-family: "Urbanist", "Roboto", sans-serif;
-  font-size: 13px; font-weight: 700; padding: 0 8px;
-}
-.initiative .hint {
-  font-size: 11.5px; line-height: 1.65; color: var(--bio-muted);
-  margin: 0 0 16px; max-width: 56ch;
-}
-
-@media (max-width: 760px) {
-  .wire { grid-template-columns: 1fr; }
-}
+@media (max-width: 900px) { .members { grid-template-columns: minmax(0, 1fr); } }
