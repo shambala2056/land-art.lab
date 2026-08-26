@@ -114,10 +114,14 @@ const UNIT = { mnt: 100000, usd: 30 };          /* per pit */
    AH is the Jack's Coffee cell and is NOT part of the 9,000: it is planted in
    the shape of their mark, sold a cup at a time on their own site, and listed
    here only so the map can draw it. */
+/* AR carries only ten: the delegation grove is elm given to COP17 participants,
+ * and ten certificates are being issued from it. Those ten are planting pits like
+ * any other and come out of the 9,000, so ten came off AM — the site did not grow
+ * because a cell was reclassified. AM 991 -> 981. */
 const PITS = {
-    AH: 991, AM: 991, AS: 991, K: 647, AB: 647, AL: 647, BA: 647, P: 297, R: 297,
+    AH: 991, AM: 981, AS: 991, K: 647, AB: 647, AL: 647, BA: 647, P: 297, R: 297,
     AC: 297, AE: 297, AY: 297, AZ: 297, E: 223, J: 223, S: 223, AD: 223, AN: 223,
-    AK: 223, AR: 223, AV: 223, B: 112, H: 112, L: 112, Q: 112, O: 112, T: 112,
+    AK: 223, AR: 10, AV: 223, B: 112, H: 112, L: 112, Q: 112, O: 112, T: 112,
     Y: 112, AA: 112, W: 112, AF: 112, AI: 112, AO: 112, AT: 112, AU: 112, AX: 112,
     A: 29, F: 29, D: 29, C: 29, G: 29, I: 29, U: 29, V: 29, M: 29,
     N: 29, X: 29, Z: 29, AJ: 29, AG: 29, AP: 29, AQ: 29, AW: 29, BB: 29,
@@ -144,7 +148,11 @@ const NOT_FOR_SALE = {
     "S":  "the recycling point",
     "AD": "the research station",
     "AK": "the pollinator meadow",
-    "AR": "the community ground",
+    /* AR is planted — the delegation grove, elm only — so unlike the other six
+       its pits are inside the 9,000. It stays here because those trees are given
+       to the people who came through the COP17 pavilion, not sold: the cell is
+       fully spoken for, and a buyer must not be able to take one. */
+    "AR": "the delegation grove",
 };
 
 /* One SKU. The whole-cell SKUs are gone: they were keyed by size class, and a

@@ -512,11 +512,17 @@ const BASELINE = {
        is still for sale. */
     "F":  { pits: 0, trees: 12, who: "reserving F-012 — issued to imy by hand" },
 
-    /* Ten certificates given as gifts on the community ground, written by hand
-       and posted by the team. AR is not on sale — it is the community cell —
-       so nothing here can take these numbers by buying them. The reservation is
-       belt and braces: if that cell is ever opened, it opens at AR-011. */
-    "AR": { pits: 0, trees: 10, who: "AR-001..AR-010 given as gifts" },
+    /* Ten certificates given as gifts, written by hand and posted by the team.
+       A gifted pit is still a planted pit: it holds three elms and comes out of
+       the 9,000 exactly as a sold one does, which is why pits is 10 and not 0 —
+       the site offers 8,787, not 8,797.
+
+       They sit on AR, the delegation grove, which is what that cell is for:
+       elm only, every tree given to someone rather than sold. The cell holds
+       ten pits and all ten are these, so it is full. It stays out of the public
+       catalogue — a gift is not stock — and the numbers are held so that
+       nothing can ever be issued as AR-001 to AR-010 a second time. */
+    "AR": { pits: 10, trees: 10, who: "AR-001..AR-010 given as gifts" },
 };
 
 async function baseline(req, res) {
@@ -540,21 +546,19 @@ async function baseline(req, res) {
         /* Numbers and ground move together unless an entry says otherwise —
            a reserved number is not a sold pit. */
         const wantTrees = BASELINE[cell].trees === undefined ? want : BASELINE[cell].trees;
-        /* A cell that is not for sale still has ground and can still have
-           numbers written against it by hand. cellCapacity refuses those on
-           purpose — it is the function that decides what may be bought — so a
-           reservation-only entry is measured against the pit table instead.
-           Nothing here makes such a cell purchasable: pits stays 0 and the
-           sold counter is never raised. */
-        const reserveOnly = want === 0;
+        /* A cell that is closed to buyers still has ground, and things still
+           happen on it: the delegation grove is planted and given away, ten pits
+           of it at a time. cellCapacity refuses closed cells on purpose — it is
+           the function that decides what may be BOUGHT — so what a cell physically
+           holds is read from the pit table instead. Recording against a closed
+           cell cannot open it: purchases go through cellCapacity, which still
+           says no. */
         const cap = cellCapacity(cell);
-        const room = cap === null && reserveOnly
-            ? (Object.prototype.hasOwnProperty.call(PITS, cell) ? PITS[cell] : null)
-            : cap;
+        const room = cap !== null
+            ? cap
+            : (Object.prototype.hasOwnProperty.call(PITS, cell) ? PITS[cell] : null);
         if (room === null) {
-            rows.push({ cell: cell, error: cap === null && !reserveOnly
-                ? "that cell is not for sale — a reservation there must set pits to 0"
-                : "unknown cell" });
+            rows.push({ cell: cell, error: "unknown cell" });
             continue;
         }
         if (want > room || wantTrees > room) {
@@ -600,5 +604,84 @@ async function baseline(req, res) {
     return res.status(200).json({ summary: summary, cells: rows });
 }
 
-module.exports = { reconcile, migrateCells, purgeTests, baseline };
+/* Rebuilds the sold counters from the two things that actually decide them:
+ * what was allocated off the books, and what was paid for.
+ *
+ * They are running totals, incremented as payments land, so a counting bug
+ * leaves a permanent overstatement — and one did: confirm() claimed on only one
+ * of its two routes, so every paid order was counted twice and the site
+ * understated what was left to sell. Fixing the increment stops it happening
+ * again; it does not undo what already happened. This does, and can be run
+ * whenever the figures are in doubt, because it derives rather than adjusts.
+ *
+ * Numbers issued (trees:*) are deliberately NOT touched. A certificate number
+ * that has been printed is spent whatever the arithmetic says, and reusing one
+ * is the failure this whole scheme exists to prevent.
+ */
+async function recount(req, res) {
+    res.setHeader("Cache-Control", "no-store");
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+
+    const token = req.headers["x-orders-token"] || "";
+    if (req.query && req.query.token) {
+        return res.status(400).json({ error: "Send the token as an x-orders-token header, not in the URL." });
+    }
+    if (!process.env.ORDERS_TOKEN) return res.status(503).json({ error: "Not configured." });
+    if (!tokenOk(token)) return res.status(401).json({ error: "Unauthorized." });
+    if (!ledger.configured()) return res.status(503).json({ error: "No ledger is connected." });
+
+    const apply = String((req.query && req.query.apply) || "") === "1";
+    const cmd = ledger._cmd;
+
+    const orders = await ledger.listOrders(2000);
+    if (!orders) return res.status(502).json({ error: "Couldn't read the order book." });
+
+    /* What each cell should show: its off-books allocation plus every pit
+       actually paid for in it. Orders still carrying the old cell codes are
+       counted under those codes, which are not in the letter table — their
+       pits are already in BASELINE, entered by hand when they were found. */
+    const want = {};
+    for (const cell of Object.keys(BASELINE)) want[cell] = BASELINE[cell].pits || 0;
+    const unknown = [];
+    for (const o of orders) {
+        if (o.status !== "paid") continue;
+        const cell = String(o.cell || "");
+        const pits = Number(o.pits) || 0;
+        if (!pits) continue;
+        if (!/^[A-Z]{1,2}$/.test(cell)) { unknown.push({ reference: o.reference, cell: cell || null, pits: pits }); continue; }
+        want[cell] = (want[cell] || 0) + pits;
+    }
+
+    /* Every cell that has a counter now, so an overstatement on a cell with no
+       allocation and no orders is found rather than skipped. */
+    const keys = await cmd(["KEYS", "sold:*"]);
+    for (const k of (Array.isArray(keys) ? keys : [])) {
+        const cell = String(k).slice(5);
+        if (!(cell in want)) want[cell] = 0;
+    }
+
+    const rows = [];
+    for (const cell of Object.keys(want).sort()) {
+        const now = Number(await cmd(["GET", "sold:" + cell])) || 0;
+        const should = want[cell];
+        if (now === should) continue;
+        rows.push({ cell: cell, was: now, now: should, delta: should - now });
+        if (apply) await cmd(["SET", "sold:" + cell, String(should)]);
+    }
+
+    const summary = {
+        cellsChecked: Object.keys(want).length,
+        wrong: rows.length,
+        pitsGivenBack: rows.reduce((n, r) => n + (r.delta < 0 ? -r.delta : 0), 0),
+        pitsTakenBack: rows.reduce((n, r) => n + (r.delta > 0 ? r.delta : 0), 0),
+        ordersOnOldCellCodes: unknown.length,
+        applied: apply,
+        note: apply ? "Written. Tree numbers were not touched."
+                    : "Nothing was written. Add apply=1 to carry it out.",
+    };
+    console.log("recount:", JSON.stringify(summary));
+    return res.status(200).json({ summary: summary, cells: rows, oldCellCodes: unknown });
+}
+
+module.exports = { reconcile, migrateCells, purgeTests, baseline, recount };
 

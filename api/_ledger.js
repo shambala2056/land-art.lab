@@ -116,19 +116,32 @@ async function confirm(ref) {
         /* No reservation. Either this is being confirmed twice — the first call
            deletes it — or it is a payment being recovered long after the hold
            expired, which is exactly what reconciliation does. The order record
-           still says what was bought, so the sale can still be recorded.
-           Claimed once, because the deleted reservation is what used to stop a
-           second call counting the same pits again, and there isn't one. */
+           still says what was bought, so the sale can still be recorded. */
         const o = await readOrder(ref);
         if (!o || !o.cell || !o.pits) { console.warn("ledger: no reservation for", ref); return false; }
-        if (!(await claimOnce("confirmed:" + ref, 86400 * 400))) {
-            console.log("ledger: already confirmed, not counting twice:", ref);
-            return false;
-        }
         cell = o.cell; qty = Number(o.pits) || 0;
         console.log("ledger: reservation had expired, confirming from the order:", ref);
     }
     if (!cell || !qty) return false;
+
+    /* One claim, covering both routes above.
+     *
+     * The claim used to guard only the second, on the reasoning that the first
+     * was protected by deleting the reservation. It was not. A payment settles
+     * down two independent paths — the provider's callback and the browser's
+     * own status poll — and the first took the reservation route, incremented,
+     * and deleted the hold; the second then found no hold, took the recovery
+     * route, and found the claim still unmade, so it incremented again. Every
+     * paid order counted twice. Claiming here, before the increment and
+     * whichever way we arrived, is what actually makes this idempotent. */
+    if (!(await claimOnce("confirmed:" + ref, 86400 * 400))) {
+        console.log("ledger: already confirmed, not counting twice:", ref);
+        /* Still clear the hold: a second call must not leave pits reserved. */
+        await cmd(["ZREM", "resv:" + cell].concat(
+            Array.from({ length: qty }, (_, k) => ref + "#" + k)));
+        await cmd(["DEL", "ref:" + ref]);
+        return false;
+    }
 
     await cmd(["INCRBY", "sold:" + cell, String(qty)]);
     await cmd(["ZREM", "resv:" + cell].concat(
