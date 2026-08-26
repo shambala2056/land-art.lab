@@ -178,6 +178,15 @@
            unset, that reserves a near-full-screen blank gap under the heading on every
            laptop/mobile width. */
         #land-arts.section-about-us { min-height: 0; }
+        /* Land Arts opened on a title and went straight into "(01) BE HUMAN": someone
+           meeting the project here had no way to know the shapes are made of trees, or
+           that the works are on real ground rather than renderings of an idea. One
+           paragraph, held to a reading measure rather than the full heading width. */
+        .la-orient {
+            max-width: 68ch; margin: 26px 0 0;
+            font-size: clamp(15px, 1.25vw, 17px); line-height: 1.7;
+            color: rgba(20, 21, 15, .68);
+        }
         /* Hero dropped the oversized standalone logo (already in the nav) and now carries the
            2022-05-30 satellite frame of the site — the wide view, with the land arts sitting
            small at its centre. The photograph averages a light 129 luma, so the headline needs
@@ -912,6 +921,11 @@
                         <li class="menu-item">
                             <a href="#datasonification" class="item-link link1">Data-sonification</a>
                         </li>
+                        <!-- A page of its own, not an anchor: the community outlives any one
+                             scroll position on this page. -->
+                        <li class="menu-item">
+                            <a href="community.html" class="item-link link1">Hexagon Community</a>
+                        </li>
                     </ul>
                 </div>
                 <a href="#pricing" class="tf-btn d-lg-flex d-none">
@@ -1000,6 +1014,13 @@
                         <div class="heading-section">
                             <div class="heading-sub fw-semibold effectFade fadeUp">Land Arts</div>
                             <div class="heading-title text-gradient-3 effectFade fadeRotateX">Restoring Severely Desertified Land Through Land Art</div>
+                            <p class="la-orient">Land art here means trees planted in a
+                                deliberate shape, large enough to be read from the air. The shape is what
+                                brings attention and money to the ground; the trees are what hold it. Four
+                                works so far on severely desertified rangeland in Dornogovi — two grown in,
+                                two beginning in 2026 — each one fenced against livestock, irrigated, and
+                                counted every year for ten years. Each has a model of its own ground below:
+                                run it, and the years pass from bare sand to a closed canopy.</p>
                         </div>
                     </div>
                 </div>
@@ -1089,6 +1110,36 @@
 #hexagon-live .hx-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
 #hexagon-live .hx-pills span{background:var(--hx-card);border-radius:100px;padding:9px 16px;
   font-family:'Urbanist',sans-serif;font-size:11.5px;font-weight:700;box-shadow:var(--hx-shadow)}
+/* Each project head was a single narrow column pinned to the left of an 1180px wrap: the
+   eyebrow, title, lead and pills all capped near 560px, so on every laptop the right half of
+   the band under the heading was bare paper. From 992px up it becomes two columns — identity
+   (number, title, stats) on the left, the description on the right. The left three are held
+   in their own .hx-pmeta box rather than given grid rows each: a lead as long as HEXAGON's
+   would otherwise spread its extra height back through the rows it spans and push the stats
+   away from the title by a different amount in every project.
+   Below 992px none of this applies and the head stays the stacked column it was. */
+@media(min-width:992px){
+  /* .hx-pfull is left out: Jack's head is full-bleed and already spends its width on three
+     columns of its own, and a two-column grid over it would only fight that. */
+  #hexagon-live .hx-projhead:not(.hx-pfull){display:grid;align-items:start;
+    grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
+    column-gap:clamp(48px,6vw,92px)}
+  /* Clears the eyebrow (11.5px at 1.6) and the title's own 12px offset, so the description
+     starts on the title's top line and the number still leads the block on its own. */
+  #hexagon-live .hx-projhead:not(.hx-pfull)>.hx-plead{max-width:none;margin-top:31px;
+    font-size:15px;line-height:1.72}
+  #hexagon-live .hx-pmeta>.hx-pills{margin-top:24px}
+}
+/* Stacked, the box would otherwise put the stats above the description simply because it
+   holds them; below 992px it dissolves and the four blocks read in their written order —
+   number, title, description, stats — as they did before the two-column head existed.
+   .hx-pfull stays out of the flex box: its claim button would stretch the full width. */
+@media(max-width:991px){
+  #hexagon-live .hx-projhead:not(.hx-pfull){display:flex;flex-direction:column}
+  #hexagon-live .hx-pmeta{display:contents}
+  #hexagon-live .hx-projhead>.hx-plead{order:1}
+  #hexagon-live .hx-pmeta>.hx-pills{order:2}
+}
 #hexagon-live .hx-pstage{height:100vh}
 /* Лэнд артын хэсэгт бичвэр дүрсний дээр биш, доор нь тусдаа зурвасаар суух */
 #hexagon-live .hx-proj .hx-sticky,
@@ -1107,6 +1158,18 @@
 #hexagon-live .hx-proj .hx-cap h3,
 #hexagon-live #hxCap h3{font-size:clamp(20px,3vw,28px);margin:8px 0 8px}
 #hexagon-live .hx-cap p{max-width:720px}
+/* The strip under a scene had the same problem as the project heads above it: year, title
+   and prose all stacked down the left edge of a full-width bar, with the right half of it
+   bare. From 992px up the year and title take the left column and the prose the right, on
+   the same 0.95/1.05 split as the head, so the two read as one grid down the section.
+   .hx-pvideo keeps out of it — that caption is a narrow side column, not a band. */
+@media(min-width:992px){
+  #hexagon-live .hx-proj .hx-stage:not(.hx-pvideo) .hx-cap,
+  #hexagon-live #hxCap{display:grid;align-items:start;
+    grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
+    column-gap:clamp(48px,6vw,92px);padding-bottom:18px}
+  #hexagon-live .hx-cap .hx-capbody p{max-width:none}
+}
 
 /* ---- бичвэр хажуудаа: доошоо урт зурвас биш ----
    Тайлбар нь дүрсний доор бүтэн өргөнөөр сунавал дүрсийг доош түлхэж, уншигч
@@ -1125,10 +1188,6 @@
   #hexagon-live .hx-pvideo .hx-capside{flex:0 0 auto;border-left:none;
     border-top:1px solid var(--hx-hair);padding:16px 0 12px}
 }
-/* ТҮР ЗУУР: хажуугийн бичвэрийг нуув — дүр зураг дэлгэцийг бүтнээр эзэлнэ.
-   Энэ ганц дүрмийг устгавал бичвэр буцаж ирнэ: markup, үе шат бүрээр бичвэр
-   солих логик хоёул байрандаа хэвээр байгаа. */
-#hexagon-live .hx-pvideo .hx-capside{display:none}
 
 /* ---- лэнд артын тайлбар: дэлгэц дүүрэн ----
    1180px-ийн багана дотор биш, дэлгэцийн бүтэн өргөнөөр. Гурван догол мөр
@@ -1334,6 +1393,31 @@
 #hexagon-live .hx-cellname{font-family:'Urbanist',sans-serif;font-size:17px;font-weight:600;
   letter-spacing:-.01em;color:var(--hx-ink)}
 #hexagon-live .hx-cellcard figcaption span{color:var(--hx-soft);font-size:13.5px;line-height:1.65}
+/* One cell to a row from 992px, in a container wider than the 1180 text column.
+   Two up put the picture at ~570px, where a compost bay, a ger and a nesting bank
+   are the same beige lump to anyone meeting the project for the first time; this
+   is a third wider again and the caption reads beside it instead of under it.
+   The frame is never cropped — the markers are positioned in per-cent against the
+   whole picture, so any crop would slide them off what they point at. */
+@media(min-width:992px){
+  #hexagon-live .hx-cells{max-width:1420px}
+  #hexagon-live .hx-cellgrid{grid-template-columns:1fr;gap:30px}
+  #hexagon-live .hx-cellcard{display:grid;align-items:center;
+    grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
+  #hexagon-live .hx-cellcard figcaption{padding:32px 42px;gap:10px}
+  #hexagon-live .hx-cellname{font-size:21px}
+  #hexagon-live .hx-cellcard figcaption span{font-size:14.5px}
+}
+/* Opens the frame at its native 1020px in the lightbox the aerial photographs
+   already use. Left visible rather than revealed on hover: a first-time reader
+   has no reason to go looking for it. */
+#hexagon-live .hx-zoom{position:absolute;top:12px;right:12px;z-index:2;
+  display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;
+  background:rgba(14,14,12,.55);color:#fff;border-radius:100px;padding:8px 13px;
+  font-family:'Urbanist',sans-serif;font-size:10.5px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;backdrop-filter:blur(6px);
+  transition:background .2s}
+#hexagon-live .hx-zoom:hover{background:rgba(14,14,12,.82)}
 /* ---- markers on the pictures ----
    Positioned in per-cent from the model's own coordinates, so they hold their
    place at every card width. The hit area is 34px square for a fingertip while
@@ -1365,16 +1449,6 @@
   font-size:15px;line-height:1;cursor:pointer;padding:0}
 #hexagon-live .hx-hotx:hover{background:rgba(255,255,255,.26)}
 @media(prefers-reduced-motion:reduce){#hexagon-live .hx-hot::before{transition:none}}
-/* Sources, folded away. A reader checking a figure needs them; everyone else
-   needs the section not to end in a wall of citations. */
-#hexagon-live .hx-cellsrc{margin-top:26px;font-size:12.5px;color:var(--hx-soft)}
-#hexagon-live .hx-cellsrc summary{cursor:pointer;font-family:'Urbanist',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--hx-lime-deep)}
-#hexagon-live .hx-cellsrc ul{margin:14px 0 0;padding-left:18px;line-height:1.7}
-#hexagon-live .hx-cellsrc a{color:var(--hx-soft);text-decoration:underline;
-  text-underline-offset:2px}
-#hexagon-live .hx-cellsrc a:hover{color:var(--hx-ink)}
 /* ---- claim-a-cell call to action ---- */
 #hexagon-live .hx-cta{padding:44px 22px 110px;text-align:center}
 #hexagon-live .hx-cta p{color:var(--hx-soft);font-size:14px;max-width:520px;
@@ -1415,14 +1489,16 @@
 <section id="hexagon-live">
   <section class="hx-proj" id="la-behuman" data-proj="behuman">
     <div class="hx-wrap hx-projhead">
-      <div class="hx-pnum">(01) · 2019 → 2026</div>
-      <h3 class="hx-ph">BE HUMAN</h3>
-      <p class="hx-plead">The inaugural project spans a 300 by 100-meter corridor where the living canopy forms a satellite-legible message, defining what it means to "be human" through the active stewardship of the earth.</p>
-      <div class="hx-pills"><span>30,000 m²</span><span>21,857 trees</span><span>Planted June 2021</span>
-        <button type="button" class="hx-shot"
-          data-src="assets/images/section/be%20human%20real.jpg?v=4"
-          data-alt="Aerial photograph of the BE HUMAN band on severely desertified land"><i></i>See the real photo</button>
+      <div class="hx-pmeta">
+        <div class="hx-pnum">(01) · 2019 → 2026</div>
+        <h3 class="hx-ph">BE HUMAN</h3>
+        <div class="hx-pills"><span>30,000 m²</span><span>21,857 trees</span><span>Planted June 2021</span>
+          <button type="button" class="hx-shot"
+            data-src="assets/images/section/be%20human%20real.jpg?v=4"
+            data-alt="Aerial photograph of the BE HUMAN band on severely desertified land"><i></i>See the real photo</button>
+        </div>
       </div>
+      <p class="hx-plead">The inaugural project spans a 300 by 100-meter corridor where the living canopy forms a satellite-legible message, defining what it means to "be human" through the active stewardship of the earth.</p>
     </div>
     <div class="hx-stage hx-pstage">
       <div class="hx-sticky">
@@ -1437,16 +1513,18 @@
 
   <section class="hx-proj" id="la-artntech" data-proj="artntech">
     <div class="hx-wrap hx-projhead">
-      <div class="hx-pnum">(02) · 2021 → 2026</div>
-      <h3 class="hx-ph">ART N TECH</h3>
+      <div class="hx-pmeta">
+        <div class="hx-pnum">(02) · 2021 → 2026</div>
+        <h3 class="hx-ph">ART N TECH</h3>
+        <div class="hx-pills"><span>38,970 m²</span><span>36,000 trees</span><span>Planted 2023–2024</span>
+          <button type="button" class="hx-shot"
+            data-src="assets/images/section/art%20n%20tech%20real.jpg"
+            data-alt="Aerial photograph of the ART N TECH triangle on severely desertified land"><i></i>See the real photo</button>
+        </div>
+      </div>
       <p class="hx-plead">This precise geometry, the central ring combined with the three corner
         nodes, creates a system of four interconnected circles. This layout symbolizes the four
         seasons and nomadic grassland management.</p>
-      <div class="hx-pills"><span>38,970 m²</span><span>36,000 trees</span><span>Planted 2023–2024</span>
-        <button type="button" class="hx-shot"
-          data-src="assets/images/section/art%20n%20tech%20real.jpg"
-          data-alt="Aerial photograph of the ART N TECH triangle on severely desertified land"><i></i>See the real photo</button>
-      </div>
     </div>
     <div class="hx-stage hx-pstage">
       <div class="hx-sticky">
@@ -1460,8 +1538,11 @@
   </section>
 
   <div class="hx-wrap hx-projhead" id="la-hexagon" style="padding-top:52px">
-    <div class="hx-pnum">(03) · 2026 → 2032</div>
-    <h3 class="hx-ph">HEXAGON</h3>
+    <div class="hx-pmeta">
+      <div class="hx-pnum">(03) · 2026 → 2032</div>
+      <h3 class="hx-ph">HEXAGON</h3>
+      <div class="hx-pills"><span>30,000 m² site</span><span>4,571 m² planted</span><span>6,057 trees</span><span>54 cells</span></div>
+    </div>
     <p class="hx-plead">The third work, and the 2026–2032 programme. Fifty-four hexagonal cells
       set out by GPS on a fenced three-hectare site, 4,571 m² of it under planting. Cells run
       from 12 m² to 400 m², each with a fixed position, an identifier and a named steward. Pits are
@@ -1470,7 +1551,6 @@
       build order is dependency-driven — water and power, enclosure, buildings, then planting in
       hardiness order — because on this ground the sequence, not the species list, decides
       survival.</p>
-    <div class="hx-pills"><span>30,000 m² site</span><span>4,571 m² planted</span><span>6,057 trees</span><span>54 cells</span></div>
   </div>
 
   <div class="hx-stage" id="hxStage">
@@ -1485,8 +1565,8 @@
   </div>
 
   <!-- What the cells hold. The scene above runs seven years at site scale, and at
-       that distance every cell is the same patch of green — the panels, the hives,
-       the nest boxes and the gers are sub-metre objects on a 90 m² floor and never
+       that distance every cell is the same patch of green — the panels, the bays
+       and the nest boxes are sub-metre objects on a 90 m² floor and never
        resolve. These are the same model, photographed one cell at a time.
 
        The markers on each picture are placed from the model's own coordinates,
@@ -1495,11 +1575,15 @@
   <div class="hx-wrap hx-cells">
     <div class="hx-pnum">Inside the cells</div>
     <h4 class="hx-cellsh">What each cell holds</h4>
-    <p class="hx-plead">Seven of the fifty-four cells carry something besides planting: power,
-      water, waste, research, pollinators, birds and people. None of it is decoration — each one
-      answers a constraint this ground imposes, and the specification below says which. The scene
-      above shows where the cells sit; these show what is on them. Tap a marker on any picture
-      for the item and what it is for.</p>
+    <p class="hx-plead">A cell is one hexagon of the fifty-four — a numbered patch of ground
+      between 12 and 400 m², with a fixed position and a named steward. Most are planting and
+      nothing else. Six carry what the site runs on — power, water, waste, research, pollinators
+      and birds — and one is planted in elm for the people who took a tree at COP17. None of it
+      is decoration: each one answers a constraint this ground imposes, and the specification
+      below says which. These are views of the same
+      3D model as the scene above, taken one cell at a time, because at site scale every cell is
+      the same patch of green. Tap a marker for the item and what it is for, or enlarge any
+      picture to see it whole.</p>
 
     <div class="hx-cellgrid">
 
@@ -1510,6 +1594,7 @@
           <button type="button" class="hx-hot" style="left:50%;top:45.86%" aria-expanded="false" data-n="The mark, in 10,000 elms" data-d="Siberian elm · &lt;i&gt;Ulmus pumila&lt;/i&gt; at half-metre spacing, four to the square metre. Elm is the signature species and the most demanding of the five: it goes in the sheltered interior, behind the saxaul and caragana ranks, and inherits their wind shelter and their nitrogen."><span class="hx-hotlabel">The mark, in 10,000 elms</span></button>
           <button type="button" class="hx-hot" style="left:72.89%;top:40.8%" aria-expanded="false" data-n="Nest boxes" data-d="On new planting the limit on breeding birds is cavities, not food — there are no old trees to hold them, and there will not be for twenty years. Closed boxes rather than open trays: on the Mongolian steppe closed designs carry the higher nest survival. Sited clear of the mark, and cleared out annually, which is when occupancy is recorded."><span class="hx-hotlabel">Nest boxes</span></button>
           <button type="button" class="hx-hot" style="left:55.59%;top:69.94%" aria-expanded="false" data-n="Water point" data-d="A shallow pond with shelving sides, so insects and fledglings can get out again. There is no permanent river or lake in this province and about 100 mm of rain a year: standing water, not canopy, is what decides whether birds and insects stay."><span class="hx-hotlabel">Water point</span></button>
+          <button type="button" class="hx-zoom">Enlarge</button>
           <div class="hx-hotpop" hidden>
             <b></b><span></span>
             <button type="button" class="hx-hotx" aria-label="Close">&times;</button>
@@ -1518,7 +1603,30 @@
         <figcaption>
           <b class="hx-cellcode">A-01 · 400 m² · birds</b>
           <b class="hx-cellname">Small Cup, Big Impact</b>
-          <span>The Jack's Coffee land art — 10,000 Siberian elm in the form of the company's mark — carrying the site's bird provision on the same cell. New planting has no cavities in it, so nesting is the binding constraint long before food is: Mongolia's Saker falcon programme put up 5,000 artificial nests on nest-limited steppe and lifted occupancy from 17% to 39% in three years. Boxes and open water do that job here, twenty years before the elms could.</span>
+          <span>The Jack's Coffee land art — 10,000 Siberian elm in the form of the company's mark — carrying the site's bird provision on the same cell. New planting has no cavities in it, so nesting is the binding constraint long before food is. Boxes and open water do that job here, twenty years before the elms could.</span>
+        </figcaption>
+      </figure>
+
+      <!-- The picture is the general planting render standing in: this cell is elm and
+           nothing else now, and the render made for it shows the gers it no longer has.
+           No markers either — the ones here were projected for that other frame and would
+           point at nothing in this one. Replace both when the cell is rendered again. -->
+      <figure class="hx-cellcard">
+        <div class="hx-cellshot">
+          <img src="assets/images/cells/cell-native-planting.jpg" loading="lazy" decoding="async"
+               width="1020" height="765" alt="A hexagonal cell planted with young trees, bare ground between it and its neighbours.">
+          <button type="button" class="hx-zoom">Enlarge</button>
+        </div>
+        <figcaption>
+          <b class="hx-cellcode">D-07 · 90 m² · delegations</b>
+          <b class="hx-cellname">The delegation grove</b>
+          <span>Elm, and nothing else. Every tree on this cell was given to someone who came
+            through the delegation pavilion in the Blue Zone at COP17 — the part of the
+            conference where the negotiating is done — so the cell is a record of who was in the
+            room. Small flags mark who holds what: Mongolia and Saudi Arabia
+            among the delegations, GIZ, AVSF, Arbori and MMSE among the organisations, and the
+            companies that hold cells elsewhere on this site. A named tree with a fixed position is the unit
+            here as everywhere else; what is different is that this cell is held in common.</span>
         </figcaption>
       </figure>
 
@@ -1528,6 +1636,7 @@
                width="1020" height="765" alt="Cell D-01: ground-mounted solar panels in rows with inverter cabinets among them.">
           <button type="button" class="hx-hot" style="left:49.98%;top:45.57%" aria-expanded="false" data-n="Photovoltaic array" data-d="Ground-mounted on a single tracking axis, on its own cell rather than on a roof so every panel can be reached. Yield here is high — the 30 MW plant at Sainshand, in this province, returns about 1,900 kWh per kWp a year."><span class="hx-hotlabel">Photovoltaic array</span></button>
           <button type="button" class="hx-hot" style="left:37.8%;top:61.09%" aria-expanded="false" data-n="Inverter and battery cabinets" data-d="Conversion and storage at the edge of the array. The reserve is sized for pump duty overnight and through dust storms — the days the array produces least are the days it is needed most."><span class="hx-hotlabel">Inverter and battery cabinets</span></button>
+          <button type="button" class="hx-zoom">Enlarge</button>
           <div class="hx-hotpop" hidden>
             <b></b><span></span>
             <button type="button" class="hx-hotx" aria-label="Close">&times;</button>
@@ -1545,7 +1654,8 @@
           <img src="assets/images/cells/cell-d-02-water.jpg" loading="lazy" decoding="async"
                width="1020" height="765" alt="Cell D-02: a covered storage tank beside a shallow collection basin, ringed by shrubs.">
           <button type="button" class="hx-hot" style="left:57.36%;top:37.05%" aria-expanded="false" data-n="Covered storage" data-d="Everything caught is held under cover. Evaporation here runs several times the annual rainfall, so open water loses faster than it fills."><span class="hx-hotlabel">Covered storage</span></button>
-          <button type="button" class="hx-hot" style="left:42.87%;top:56.11%" aria-expanded="false" data-n="Condenser and catchment" data-d="Dew and hoarfrost, not fog — this is a continental desert, not a coastal one. A radiative condenser in arid conditions yields 0.3 to 0.6 litres per square metre on a good night against a physical ceiling near 0.7, and the good nights are the cold, clear, still ones: cloud stops the surface cooling and wind warms it back up."><span class="hx-hotlabel">Condenser and catchment</span></button>
+          <button type="button" class="hx-hot" style="left:42.87%;top:56.11%" aria-expanded="false" data-n="Condenser and catchment" data-d="Dew and hoarfrost, not fog — this is a continental desert, not a coastal one. A radiative condenser in arid conditions yields 0.3 to 0.6 litres per square metre on a good night, and the good nights are the cold, clear, still ones: cloud stops the surface cooling and wind warms it back up."><span class="hx-hotlabel">Condenser and catchment</span></button>
+          <button type="button" class="hx-zoom">Enlarge</button>
           <div class="hx-hotpop" hidden>
             <b></b><span></span>
             <button type="button" class="hx-hotx" aria-label="Close">&times;</button>
@@ -1563,8 +1673,9 @@
           <img src="assets/images/cells/cell-d-03-recycling.jpg" loading="lazy" decoding="async"
                width="1020" height="765" alt="Cell D-03: four timber composting bays under a slatted shade canopy, with sorting bins beside them.">
           <button type="button" class="hx-hot" style="left:50.02%;top:49.35%" aria-expanded="false" data-n="Composting bays" data-d="Four timber bays, garden scale rather than industrial. Feedstock is site green waste — prunings, weedings, spent understorey — held at 50–60% moisture and a carbon to nitrogen ratio around 25:1, and turned on temperature rather than on a calendar, because every turn costs water."><span class="hx-hotlabel">Composting bays</span></button>
-          <button type="button" class="hx-hot" style="left:52.61%;top:32.77%" aria-expanded="false" data-n="Shade canopy" data-d="What limits composting here is moisture, not feedstock: a pile in full sun runs 10 to 15 °C hotter than one in shade and dries out before it finishes. Slatted rather than solid — enough shade to hold the moisture, enough gap to keep the bays workable."><span class="hx-hotlabel">Shade canopy</span></button>
+          <button type="button" class="hx-hot" style="left:52.61%;top:32.77%" aria-expanded="false" data-n="Shade canopy" data-d="What limits composting here is moisture, not feedstock: a pile in full sun dries out before it finishes. Slatted rather than solid — enough shade to hold the moisture, enough gap to keep the bays workable."><span class="hx-hotlabel">Shade canopy</span></button>
           <button type="button" class="hx-hot" style="left:54.22%;top:43.52%" aria-expanded="false" data-n="Sorting bins" data-d="Plastic, glass and metal separated at source and taken off site. Nothing that arrives with construction, planting or visitors is left to blow across the planting."><span class="hx-hotlabel">Sorting bins</span></button>
+          <button type="button" class="hx-zoom">Enlarge</button>
           <div class="hx-hotpop" hidden>
             <b></b><span></span>
             <button type="button" class="hx-hotx" aria-label="Close">&times;</button>
@@ -1583,6 +1694,7 @@
                width="1020" height="765" alt="Cell D-04: a field station building with a mast carrying weather instruments.">
           <button type="button" class="hx-hot" style="left:44.33%;top:48.47%" aria-expanded="false" data-n="Field station" data-d="Datalogger, telemetry and sample store, and the head of the soil-moisture profile — sensors at 5, 10, 20, 50 and 100 cm, the standard depths for a rooting-zone profile. The profile, not the calendar, sets the irrigation."><span class="hx-hotlabel">Field station</span></button>
           <button type="button" class="hx-hot" style="left:58.69%;top:17.64%" aria-expanded="false" data-n="Automatic weather station" data-d="Wind speed and direction, air temperature and humidity, precipitation, pressure and solar radiation, logged continuously. Wind at ground level is what the windward shelter planting is designed against, so it is measured rather than assumed."><span class="hx-hotlabel">Automatic weather station</span></button>
+          <button type="button" class="hx-zoom">Enlarge</button>
           <div class="hx-hotpop" hidden>
             <b></b><span></span>
             <button type="button" class="hx-hotx" aria-label="Close">&times;</button>
@@ -1601,6 +1713,7 @@
                width="1020" height="765" alt="Cell D-06: a low south-facing sand bank pierced with nest holes, with flowering ground in front of it inside a ring of trees.">
           <button type="button" class="hx-hot" style="left:43.32%;top:38.36%" aria-expanded="false" data-n="Nesting bank" data-d="A south-facing sand bank, left bare and undisturbed. Around 70% of bee species nest in the ground rather than in anything built, and they want exactly this: loose, well-drained, sun-warmed soil on an open face. On this site that is the one habitat there is no shortage of raw material for."><span class="hx-hotlabel">Nesting bank</span></button>
           <button type="button" class="hx-hot" style="left:54.19%;top:54.72%" aria-expanded="false" data-n="Forage, in sequence" data-d="Caragana, &lt;i&gt;Allium mongolicum&lt;/i&gt; and tamarix flower at different points of a short season, so something is in bloom across as much of it as possible. The bare warm ground between the clumps is not unfinished — it is the other half of the habitat."><span class="hx-hotlabel">Forage, in sequence</span></button>
+          <button type="button" class="hx-zoom">Enlarge</button>
           <div class="hx-hotpop" hidden>
             <b></b><span></span>
             <button type="button" class="hx-hotx" aria-label="Close">&times;</button>
@@ -1609,33 +1722,16 @@
         <figcaption>
           <b class="hx-cellcode">D-06 · 90 m² · pollinators</b>
           <b class="hx-cellname">Pollinator cell</b>
-          <span>Pollination is what separates a planting that renews itself from one that has to be replanted. There are no hives on this cell, and that is the design decision, not an omission: the honeybee is not native to Mongolia, no colony here survives a winter unmanaged, and high-density beekeeping has been measured depressing wild bee numbers by around half out to a kilometre — which on a three-hectare site means all of it. So the cell is built for the bees already on this ground. Around 70% of bee species nest in soil, not in anything built, and what they need is a warm, well-drained, undisturbed face.</span>
+          <span>Pollination is what separates a planting that renews itself from one that has to be replanted. There are no hives on this cell, and that is the design decision, not an omission: the honeybee is not native to Mongolia, and high-density beekeeping has been measured depressing wild bee numbers by around half out to a kilometre — which on a three-hectare site means all of it. So the cell is built for the bees already on this ground. Around 70% of bee species nest in soil, not in anything built, and what they need is a warm, well-drained, undisturbed face.</span>
         </figcaption>
       </figure>
 
-      <figure class="hx-cellcard">
-        <div class="hx-cellshot">
-          <img src="assets/images/cells/cell-d-07-community.jpg" loading="lazy" decoding="async"
-               width="1020" height="765" alt="Cell D-07: two gers, a shaded table and a swing frame inside a ring of trees.">
-          <button type="button" class="hx-hot" style="left:46.74%;top:42.01%" aria-expanded="false" data-n="Ger" data-d="Accommodation for the crew working the planting, and shelter for visitors. Gers rather than a building: no foundations on ground that heaves with frost, and they can be struck and moved as the work moves."><span class="hx-hotlabel">Ger</span></button>
-          <button type="button" class="hx-hot" style="left:36.56%;top:56.01%" aria-expanded="false" data-n="Outdoor classroom" data-d="A shaded table. School and community groups walk the planting first; the survival counts and the soil work are then explained on the ground they were taken from."><span class="hx-hotlabel">Outdoor classroom</span></button>
-          <button type="button" class="hx-hot" style="left:73.43%;top:37.68%" aria-expanded="false" data-n="Play frame" data-d="Community support is the difference between an enclosure that is respected and one that is grazed through. The fence only holds if the people around it want it to."><span class="hx-hotlabel">Play frame</span></button>
-          <div class="hx-hotpop" hidden>
-            <b></b><span></span>
-            <button type="button" class="hx-hotx" aria-label="Close">&times;</button>
-          </div>
-        </div>
-        <figcaption>
-          <b class="hx-cellcode">D-07 · 90 m² · community</b>
-          <b class="hx-cellname">Community ground</b>
-          <span>Two gers, a shaded classroom table and a play frame. Over a seven-year programme the people who keep a site alive are the ones with somewhere to be on it: this cell houses the crew working the planting and brings school and community groups onto the ground rather than showing it to them from outside the fence.</span>
-        </figcaption>
-      </figure>
 
       <figure class="hx-cellcard">
         <div class="hx-cellshot">
           <img src="assets/images/cells/cell-native-planting.jpg" loading="lazy" decoding="async"
                width="1020" height="765" alt="Several ordinary hexagonal cells filled with shrubs and trees, with bare ground between them.">
+          <button type="button" class="hx-zoom">Enlarge</button>
         </div>
         <figcaption>
           <b class="hx-cellcode">The other 47 cells · planting</b>
@@ -1646,21 +1742,6 @@
 
     </div>
 
-    <details class="hx-cellsrc">
-      <summary>What this specification rests on</summary>
-      <ul>
-        <li><a href="https://www.mdpi.com/2073-445X/10/2/212" target="_blank" rel="noopener noreferrer">Optimal irrigation regime for woody species in the desert region of Mongolia (Korea–Mongolia Green Belt, <i>Land</i> 10:212, 2021)</a></li>
-        <li><a href="https://www.researchgate.net/publication/292983474_Influence_of_nest_box_design_on_occupancy_and_breeding_success_of_predatory_birds_utilizing_artificial_nests_in_the_Mongolian_steppe" target="_blank" rel="noopener noreferrer">Influence of nest box design on occupancy and breeding success of predatory birds on the Mongolian steppe</a></li>
-        <li><a href="https://en.wikipedia.org/wiki/Beekeeping_in_Mongolia" target="_blank" rel="noopener noreferrer">Beekeeping in Mongolia — introduced stock, forest-steppe distribution, managed overwintering</a></li>
-        <li><a href="https://www.nature.com/articles/s41598-018-27591-y" target="_blank" rel="noopener noreferrer">Controlling the impact of the managed honeybee on wild bees in protected areas (<i>Scientific Reports</i> 8, 2018)</a></li>
-        <li><a href="https://www.sare.org/publications/managing-alternative-pollinators/chapter-nine-the-search-for-new-managed-pollinators/ground-nesting-bees/" target="_blank" rel="noopener noreferrer">Ground-nesting bees: share of species, and what a nesting bank needs</a></li>
-        <li><a href="https://link.springer.com/article/10.1007/s40899-015-0038-z" target="_blank" rel="noopener noreferrer">Radiative dew condensers: yields and the thermodynamic ceiling in arid regions</a></li>
-        <li><a href="https://www.biocycle.net/managing-moisture-desert/" target="_blank" rel="noopener noreferrer">Managing moisture in desert composting</a></li>
-        <li><a href="https://www.mdpi.com/2077-0472/15/11/1204" target="_blank" rel="noopener noreferrer">Shelterbelt structure and function in arid regions — porosity and sheltered distance</a></li>
-        <li><a href="https://www.tandfonline.com/doi/full/10.1080/02626667.2018.1511053" target="_blank" rel="noopener noreferrer">Groundwater as the only reasonable source in Dornogovi province</a></li>
-        <li><a href="https://www.power-technology.com/data-insights/power-plant-profile-sainshand-solar-pv-park-mongolia/" target="_blank" rel="noopener noreferrer">Sainshand Solar PV Park, Dornogovi — local yield per kWp</a></li>
-      </ul>
-    </details>
   </div>
 
   <div class="hx-wrap hx-cta">
@@ -1777,10 +1858,19 @@
 
   function open(btn){
     opener=btn;
-    img.src=btn.getAttribute('data-src');
-    img.alt=btn.getAttribute('data-alt')||'';
+    /* Агаарын гэрэл зураг өөрөө data-src авчирна. Нүдний зураг дээрх "Enlarge"
+       товч юу ч авчрахгүй — картныхаа зураг, нэр, кодыг өөрөө олж авна. */
+    var card=btn.closest?btn.closest('.hx-cellcard'):null;
+    var pic=card&&card.querySelector('img');
+    img.src=btn.getAttribute('data-src')||(pic?pic.getAttribute('src'):'');
+    img.alt=btn.getAttribute('data-alt')||(pic?pic.alt:'');
     /* тайлбаргүй зурагт хоосон мөр үлдээхгүй — figcaption-ыг бүрэн нуна */
-    var c=btn.getAttribute('data-cap')||'';
+    var c=btn.getAttribute('data-cap');
+    if(c===null&&card){
+      var nm=card.querySelector('.hx-cellname'), cd=card.querySelector('.hx-cellcode');
+      c=(cd?cd.textContent+' · ':'')+(nm?nm.textContent:'');
+    }
+    c=c||'';
     cap.textContent=c; cap.style.display=c?'':'none';
     box.classList.add('open');
     document.body.style.overflow='hidden';
@@ -1794,7 +1884,7 @@
     setTimeout(function(){ if(!box.classList.contains('open')) img.removeAttribute('src'); },320);
   }
 
-  var btns=document.querySelectorAll('#hexagon-live .hx-shot');
+  var btns=document.querySelectorAll('#hexagon-live .hx-shot, #hexagon-live .hx-zoom');
   for(var i=0;i<btns.length;i++)
     btns[i].addEventListener('click',function(){ open(this); });
 
@@ -2586,6 +2676,13 @@
                                 <div class="item">
                                     <a href="#datasonification" class="mb-menu-link text-display-1">
                                         <span class="text">Data-sonification</span>
+                                    </a>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item">
+                                    <a href="community.html" class="mb-menu-link text-display-1">
+                                        <span class="text">Hexagon Community</span>
                                     </a>
                                 </div>
                             </li>

@@ -250,7 +250,10 @@ const THEMED={
   /* D-05 сул боллоо: шувууны хоргодох газар A-01 руу нүүсэн тул энэ нүд
      энгийн тарилтын нүд болж, ивээн тэтгэхэд нээлттэй болов. */
   'D-06':['Pollinator cell','insect','A nesting bank and forage for the bees native to this ground — no hives; see BUILD.insect for why'],
-  'D-07':['Community ground','community','Playground, outdoor classroom, ger and gathering space']
+  /* Гэр, ангийн ширээ, тоглоомын талбай хасагдав: энэ нүд одоо зөвхөн хайлаас.
+     COP17-ийн Цэнхэр бүсийн төлөөлөгчдийн павильоноор ирсэн хүн бүрд нэг мод
+     бэлэглэсэн бөгөөд хэн эзэмшиж буйг жижиг тугууд заана. */
+  'D-07':['The delegation grove','community','Elm only — one tree for each participant from the COP17 Blue Zone delegation pavilion, with small flags for the delegations, organisations and companies that hold them']
 };
 /* Түншүүд өмнөх зэрэглэлдээ хамгийн ойр шинэ ангид шилжсэн */
 const PARTNERS={'B-01':'EFES GROUP','C-01':'YVES ROCHER','C-02':'TIMBERLAND',
@@ -340,11 +343,12 @@ const BEATS=[
    g:0.68,y:'2031',l:'phase 6 · habitat',num:'(08)',
    h:'Phase 6 · Habitat Structures',
    p:'Structures do not attract fauna on their own — <b>forage must precede colonisation</b>. '+
-     'Hives go in only once the flowering species are in flower; the bird hotel only once the '+
-     'canopy gives adjacent cover and the insect populations exist to feed on. The cell in view '+
+     'The nesting bank goes in only once the flowering species are in flower; the bird hotel '+
+     'only once the canopy gives adjacent cover and the insect populations exist to feed on. '+
+     'The cell in view '+
      'is <b>A-01, Small Cup, Big Impact</b> — the Jack\'s Coffee mark in 10,000 elms, with the '+
      'nest boxes and pond set in the open ground inside it.',
-   mini:['hives after first flowering','bird hotel after canopy','cell A-01']},
+   mini:['nesting bank after first flowering','bird hotel after canopy','cell A-01']},
   /* Сүүлийн үе — газрын түвшний ташуу өнцөг. Дээрээс харсан төлөвлөгөө нь
      хэлбэрийг сайн харуулдаг ч тугууд шугам болж хавтгайрч, ямар компанийн
      туг болох нь уншигдахгүй байв. Камерыг тугны оройтой ойролцоо өндөрт
@@ -435,9 +439,12 @@ function setCap(i){
   const b=BEATS[i];
   capEl.classList.add('out');
   setTimeout(function(){
-    capEl.innerHTML='<div class="yr">'+b.y+' · '+b.l+'</div>'+
-      '<h3>'+b.num+' '+b.h+'</h3><p>'+b.p+'</p>'+
-      (b.mini?'<div class="mini">'+b.mini.map(function(m){return '<span>'+m+'</span>';}).join('')+'</div>':'');
+    /* Year and title in one box, the prose and chips in another, so the strip under the
+       scene can be set as two columns on a wide screen instead of leaving its right half
+       empty. Stacked, the boxes read in the same order as before. */
+    capEl.innerHTML='<div class="hx-caphead"><div class="yr">'+b.y+' · '+b.l+'</div>'+
+      '<h3>'+b.num+' '+b.h+'</h3></div><div class="hx-capbody"><p>'+b.p+'</p>'+
+      (b.mini?'<div class="mini">'+b.mini.map(function(m){return '<span>'+m+'</span>';}).join('')+'</div>':'')+'</div>';
     capEl.classList.remove('out');
   },180);
 }
@@ -537,6 +544,30 @@ function init3D(){
   };
   const FLAGS=[];
   window.__hexFlags=FLAGS;
+  /* Нэг эс = нэг эзэн гэсэн дүрэм D-07-д хамаарахгүй: төлөөлөгчдийн нүдэн дэх
+     модыг COP17-ийн Цэнхэр бүсээр ирсэн хүн бүр эзэмшинэ. Тиймээс тэнд ганц том
+     туг биш, жижиг тугуудын цагираг. Компаниудын тугууд өөрсдийн эс дээрээ
+     хэвээр — энд давхардуулахгүй. */
+  const DLG='assets/images/partner/delegations/';
+  const CELL_FLAG_SETS={
+    /* Герман, Францын туг хасагдав: зөвшөөрлийг GIZ, AVSF буюу БАЙГУУЛЛАГУУД
+       өгсөн, тэдний улс өгөөгүй. Улсын тугийг гишүүнчлэлийн тэмдэг болгон
+       тавих нь тухайн улс дэмжсэн гэсэн утга үүсгэнэ. Байгууллагын лого тэр
+       утгыг үүсгэхгүй — тэд өөрсдөө зөвшөөрсөн. */
+    'D-07':[
+      {url:DLG+'mongolia.png',     ar:2.000},
+      {url:DLG+'saudi-arabia.png', ar:1.500},
+      {url:DLG+'giz.png',          ar:3.840},
+      {url:DLG+'avsf.png',         ar:2.899},
+      {url:DLG+'arbori.png',       ar:3.200},
+      {url:DLG+'mmse.png',         ar:4.375},
+      /* Түншийн зурвасын логонууд ЦАГААН дэвсгэргүй — бараан хэсэгт зориулсан.
+         Цагаан даавуун дээр үл харагдах тул бэхэн хувилбарыг тусад нь хийв. */
+      {url:DLG+'plastic-center.png', ar:2.595},
+      {url:DLG+'ongo-nemye.png',     ar:2.050},
+      {url:DLG+'oim.png',            ar:1.027}
+    ]
+  };
   /* Логог цагаан даавуун дээр буулгана: PNG-үүд тунгалаг дэвсгэртэй тул шууд
      наавал туг цоорхойтой харагдана. Canvas дээр нийлүүлбэл хэвлэсэн туг шиг. */
   function clothTexture(spec,W,H,done){
@@ -559,18 +590,14 @@ function init3D(){
     img.src=spec.url;
     done(tex);
   }
-  function makeFlag(c,p,S){
-    const spec=FLAG_LOGOS[c.code]; if(!spec) return;
-    /* Өндөр нь эсийн хэмжээнээс биш, камерын анхны зайнаас хамаарна — жижиг
-       эс дээр ч уншигдахуйц, том эсийг дарахгүй хэмжээ. */
-    /* Хэмжээ нь анхныхаараа — асуудал нь хэмжээ биш, өнцөг байсан: тугууд бүгд
-       салхины нэг зүг рүү харснаас хажуугийнх нь ирмэгээрээ эргэж уншигдахгүй
-       байв. Одоо камер руу эргэдэг (wave-г үз). */
-    const poleH=Math.max(3.2,PITCH*1.15), cw=poleH*0.62, ch=poleH*0.34;
+  /* Мачт, даавуу, текстур — байрлал ба өндрийг гаднаас нь өгнө. Ингэснээр нэг
+     эсэд нэг ч, зургаа ч туг босгоход ижил код ажиллана. */
+  function placeFlag(spec,x,z,y,poleH,sizeH){
+    /* Даавууны хэмжээ мачтын өндрөөс ТУСДАА: ар эгнээг өндөрлөхөд туг нь
+       томроод, хоёр эгнээ өөр өөр хэмжээтэй мэт харагдаж байв. */
+    const bh=sizeH||poleH, cw=bh*0.62, ch=bh*0.34;
     const g=new THREE.Group();
-    /* Анхдагчаар эсийн төвд. off байвал эсийн радиусын хувиар зөөнө. */
-    const cr=PITCH*S.rad*0.9;
-    g.position.set(p.x+(spec.off?spec.off.x*cr:0), S.h, p.z+(spec.off?spec.off.z*cr:0));
+    g.position.set(x,y,z);
 
     const pole=new THREE.Mesh(new THREE.CylinderGeometry(poleH*.012,poleH*.016,poleH,6),
       new THREE.MeshStandardMaterial({color:SC('#8A8578'),roughness:.6,metalness:.3}));
@@ -592,6 +619,38 @@ function init3D(){
 
     FLAGS.push({group:g,cloth:cloth,base:cloth.geometry.attributes.position.array.slice(),
       cw:cw,phase:FLAGS.length*1.7});
+  }
+  /* Ганц эзэнтэй эсийн туг эсээсээ хавьгүй өргөн (даавуу нь эсийн радиусаас том)
+     — нэг ширхэг байхад асуудалгүй, зургаа болоход бие бие рүүгээ орно. Тиймээс
+     цагираг биш, эгнээ: 3×2 сүлжээ, даавууны өргөнөөр зайлуулж, ар талынхыг нь
+     өндөрлөнө. Тугууд уншигч руу эргэдэг (wave-г үз) тул сүлжээ аль ч өнцгөөс
+     ижил уншигдана. */
+  function makeFlagCluster(p,S,specs){
+    /* Дөрөв хүртэл бол хоёр багана — нарийн байж, талбайн ирмэгээс халихгүй.
+       Түүнээс олон бол гурав: есөн тугийг хоёр баганаар өрвөл таван эгнээ
+       гүн болж, урдах эгнээ ардахаа бүрэн далдална. */
+    const n=specs.length, cols=Math.min(n<=4?2:3,n), rows=Math.ceil(n/cols);
+    /* Ганц тугийн 0.42 нь эсэд багтаж байсан ч уншигдахгүй байв: талбайн
+       өнцгөөс лого хэдхэн пиксел болно. Уншигдах нь эхний шаардлага тул
+       0.72 — сүлжээ нь эсээсээ халина, яг л ганц туг хальдагтай адил. */
+    const poleH=Math.max(3.0,PITCH*0.72), cw=poleH*0.62;
+    const gx=cw*1.18, gz=poleH*0.42;
+    for(let i=0;i<n;i++){
+      const cx=i%cols, cz=Math.floor(i/cols);
+      placeFlag(specs[i],
+        p.x+(cx-(cols-1)/2)*gx,
+        p.z+(cz-(rows-1)/2)*gz,
+        S.h, poleH*(1+cz*0.30), poleH);
+    }
+  }
+  function makeFlag(c,p,S){
+    const set=CELL_FLAG_SETS[c.code];
+    if(set) return makeFlagCluster(p,S,set);
+    const spec=FLAG_LOGOS[c.code]; if(!spec) return;
+    const poleH=Math.max(3.2,PITCH*1.15);
+    /* Анхдагчаар эсийн төвд. off байвал эсийн радиусын хувиар зөөнө. */
+    const cr=PITCH*S.rad*0.9;
+    placeFlag(spec,p.x+(spec.off?spec.off.x*cr:0),p.z+(spec.off?spec.off.z*cr:0),S.h,poleH);
   }
   function wave(t){
     for(let i=0;i<FLAGS.length;i++){
@@ -631,7 +690,7 @@ function init3D(){
     /* Туг нь лого тодорхойлогдсон бүх эсэд гарна. Урьд нь зөвхөн c.partner
        байхыг шалгадаг байсан тул A-01 (төслийн бүтээл, худалдаанд байхгүй)
        туггүй үлдэж байв. */
-    if(c.partner || FLAG_LOGOS[c.code]) makeFlag(c,p,S);
+    if(c.partner || FLAG_LOGOS[c.code] || CELL_FLAG_SETS[c.code]) makeFlag(c,p,S);
   });
 
   /* --- модны байрлал (дэд бүтцийн нүдэнд мод тарихгүй) --- */
@@ -2536,8 +2595,8 @@ else{ document.getElementById('hxBoot').textContent='3D VIEW COULD NOT LOAD'; }
         /* PLAIN дүр зурагт таймлайн байхгүй тул түүнийг заасан бичвэр ч
            байхгүй: он, үе шатны нэр, дарааллын дугаар аль нь ч гарахгүй —
            зөвхөн тайлбар. */
-        cap.innerHTML=(PLAIN?'':'<div class="yr">'+b.y+' · '+b.l+'</div>')+
-          '<h3>'+(PLAIN?'':b.n+' ')+b.h+'</h3><p>'+b.p+'</p>';
+        cap.innerHTML='<div class="hx-caphead">'+(PLAIN?'':'<div class="yr">'+b.y+' · '+b.l+'</div>')+
+          '<h3>'+(PLAIN?'':b.n+' ')+b.h+'</h3></div><div class="hx-capbody"><p>'+b.p+'</p></div>';
         cap.classList.remove('out');
       },180);
     }
