@@ -13,7 +13,7 @@
  */
 
 const ledger = require("./_ledger");
-const { cellCapacity } = require("./_minu");
+const { cellCapacity, PITS } = require("./_minu");
 const { settle, verify, wordFor } = require("./_settle");
 const crypto = require("crypto");
 
@@ -511,6 +511,12 @@ const BASELINE = {
        numbers below it are never issued. No pit is withheld — the ground in F
        is still for sale. */
     "F":  { pits: 0, trees: 12, who: "reserving F-012 — issued to imy by hand" },
+
+    /* Ten certificates given as gifts on the community ground, written by hand
+       and posted by the team. AR is not on sale — it is the community cell —
+       so nothing here can take these numbers by buying them. The reservation is
+       belt and braces: if that cell is ever opened, it opens at AR-011. */
+    "AR": { pits: 0, trees: 10, who: "AR-001..AR-010 given as gifts" },
 };
 
 async function baseline(req, res) {
@@ -534,22 +540,34 @@ async function baseline(req, res) {
         /* Numbers and ground move together unless an entry says otherwise —
            a reserved number is not a sold pit. */
         const wantTrees = BASELINE[cell].trees === undefined ? want : BASELINE[cell].trees;
+        /* A cell that is not for sale still has ground and can still have
+           numbers written against it by hand. cellCapacity refuses those on
+           purpose — it is the function that decides what may be bought — so a
+           reservation-only entry is measured against the pit table instead.
+           Nothing here makes such a cell purchasable: pits stays 0 and the
+           sold counter is never raised. */
+        const reserveOnly = want === 0;
         const cap = cellCapacity(cell);
-        if (cap === null) {
-            rows.push({ cell: cell, error: "unknown cell" });
+        const room = cap === null && reserveOnly
+            ? (Object.prototype.hasOwnProperty.call(PITS, cell) ? PITS[cell] : null)
+            : cap;
+        if (room === null) {
+            rows.push({ cell: cell, error: cap === null && !reserveOnly
+                ? "that cell is not for sale — a reservation there must set pits to 0"
+                : "unknown cell" });
             continue;
         }
-        if (want > cap || wantTrees > cap) {
+        if (want > room || wantTrees > room) {
             /* Refuse rather than truncate: a partner allocated more pits than
                their cell holds is a placement to settle on the map, not a
                number to quietly round down here. */
-            rows.push({ cell: cell, who: BASELINE[cell].who, pits: want, capacity: cap,
+            rows.push({ cell: cell, who: BASELINE[cell].who, pits: want, capacity: room,
                         error: "allocation exceeds the cell — move them to a larger cell first" });
             continue;
         }
         const sold  = Number(await cmd(["GET", "sold:"  + cell])) || 0;
         const trees = Number(await cmd(["GET", "trees:" + cell])) || 0;
-        const row = { cell: cell, who: BASELINE[cell].who, pits: want, capacity: cap,
+        const row = { cell: cell, who: BASELINE[cell].who, pits: want, capacity: room,
                       soldWas: sold, treesWas: trees,
                       soldNow: Math.max(sold, want), treesNow: Math.max(trees, wantTrees) };
         row.changed = row.soldNow !== sold || row.treesNow !== trees;
