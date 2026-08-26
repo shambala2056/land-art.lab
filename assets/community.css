@@ -321,7 +321,10 @@ button.submit[disabled] { background: var(--bio-muted); cursor: default; }
 .members {
   max-width: 1180px; margin: 0 auto;
   padding: clamp(40px, 6vw, 72px) clamp(20px, 5vw, 56px) clamp(64px, 9vw, 104px);
-  display: grid; gap: clamp(24px, 4vw, 48px);
+  display: grid;
+  /* Мөр хоорондын завсар нь баганынхаас бага: урсгалын зурвас толгойгоосоо
+     салж хоцрох ёсгүй. */
+  column-gap: clamp(24px, 4vw, 48px); row-gap: 8px;
   grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
   align-items: start;
 }
@@ -333,11 +336,68 @@ button.submit[disabled] { background: var(--bio-muted); cursor: default; }
   font-size: 13.5px; line-height: 1.75; color: var(--bio-muted);
   margin: 8px 0 26px; max-width: 60ch;
 }
+/* ── the register: a running strip until someone searches it ──────────────
+   Хөдөлгөөн нь "энэ бүртгэл амьд" гэдгийг үзүүлнэ, гэхдээ хөдөлж буй мөрөөс
+   тодорхой нэр хайх боломжгүй. Тиймээс хоёр төлөв: анхдагчаар урсана, бичиж
+   эхэлмэгц зогсоод сүлжээ болно. Жагсаалт нэг, төлөв нь хоёр. */
+.marquee, .no-match, .next-report { grid-column: 1 / -1; }
+.marquee {
+  --marquee-w: 2000px; --marquee-t: 40s;
+  position: relative; overflow: hidden;
+  display: flex; gap: 12px;
+  margin: 0 -4px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
 .holders {
-  list-style: none; margin: 0; padding: 0;
+  list-style: none; margin: 0; padding: 0 4px;
+  display: flex; gap: 12px; flex: 0 0 auto;
+  animation: marquee var(--marquee-t) linear infinite;
+}
+.holders > li { flex: 0 0 190px; }
+@keyframes marquee { to { transform: translateX(calc(-1 * var(--marquee-w) - 12px)); } }
+/* Уншихыг хүсвэл барих боломжтой байх ёстой */
+.marquee:hover .holders, .marquee:focus-within .holders { animation-play-state: paused; }
+
+/* ── searching: the strip stops being a strip ── */
+.marquee.is-searching {
+  /* flex хэвээр үлдвэл жагсаалт агуулгынхаа өргөнөөр хумигдаж, сүлжээ нэг
+     багана болно — хайлтын үр дүн бүтэн өргөнөө эзлэх ёстой. */
+  display: block;
+  overflow: visible; -webkit-mask-image: none; mask-image: none; margin: 0;
+}
+.marquee.is-searching .holders {
+  animation: none; padding: 0;
   display: grid; gap: 12px;
   grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
 }
+.marquee.is-searching .holders > li { flex: none; }
+.holders > li[hidden] { display: none; }
+/* [hidden] нь хөтчийн анхдагч display:none-оор ажилладаг ч .holders дээрх
+   display:flex, хайлтын үеийн display:grid хоёр түүнийг дардаг. Хуулбарыг
+   нуухын тулд тэдгээрээс өндөр жинтэй дүрэм хэрэгтэй. */
+.marquee > ul[hidden],
+.marquee.is-searching > ul[hidden] { display: none; }
+
+.wall-search {
+  display: flex; align-items: center; gap: 9px;
+  background: var(--bio-card); border: 1px solid var(--bio-line);
+  border-radius: 999px; padding: 0 16px; margin: 0 0 22px; max-width: 340px;
+}
+.wall-search svg {
+  width: 15px; height: 15px; flex: none;
+  fill: none; stroke: var(--bio-muted); stroke-width: 2; stroke-linecap: round;
+}
+.wall-search input {
+  flex: 1; min-width: 0; border: 0; background: none; outline: none;
+  font: inherit; font-size: 13.5px; color: var(--bio-ink);
+  padding: 11px 0;
+}
+.wall-search:focus-within { border-color: var(--bio-ink); }
+.no-match { font-size: 13.5px; color: var(--bio-muted); margin: 18px 0 0; }
+.no-match[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) { .holders { animation: none; } }
 .holder {
   position: relative;
   background: var(--bio-card); border: 1px solid var(--bio-line);
@@ -367,7 +427,7 @@ button.submit[disabled] { background: var(--bio-muted); cursor: default; }
   font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--bio-muted);
 }
 .next-report {
-  margin: 24px 0 0; font-size: 12.5px; color: var(--bio-muted);
+  margin: 4px 0 0; font-size: 12.5px; color: var(--bio-muted);
   padding-top: 16px; border-top: 1px solid var(--bio-line);
 }
 .next-report b { color: var(--bio-ink); }
