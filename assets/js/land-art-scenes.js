@@ -573,7 +573,8 @@ function init3D(){
          Цагаан даавуун дээр үл харагдах тул бэхэн хувилбарыг тусад нь хийв. */
       {url:DLG+'plastic-center.png', ar:2.595},
       {url:DLG+'ongo-nemye.png',     ar:2.050},
-      {url:DLG+'oim.png',            ar:1.027}
+      {url:DLG+'oim.png',            ar:1.027},
+      {url:DLG+'fpwc.png',           ar:3.394}
     ]
   };
   /* Логог цагаан даавуун дээр буулгана: PNG-үүд тунгалаг дэвсгэртэй тул шууд
