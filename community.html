@@ -132,7 +132,6 @@
         <a href="mailto:hello@shambala.today">hello@shambala.today</a></p>
     </aside>
 
-      <div class="marquee" id="marquee">
       <ul class="holders" id="holders">
         <li class="holder">
           <a class="holder-link" href="https://efesgroup.mn/" target="_blank" rel="noopener noreferrer">
@@ -235,7 +234,6 @@
           </a>
         </li>
       </ul>
-      </div>
       <p class="no-match" id="noMatch" hidden>Nothing on the register by that name.</p>
       <p class="next-report">Next annual report to every holder · <b>June 2027</b></p>
   </section>
@@ -243,35 +241,16 @@
 </div>
 
 <script>
-/* Урсгал ба хайлт нэг жагсаалт дээр ажиллана — гишүүдийн бүртгэл нэг л газар
-   бичигдэнэ. Тасралтгүй давхарлахын тулд жагсаалтыг JS хувилна: гараар хоёр
-   удаа бичвэл нэгийг нь засахад нөгөө нь хоцорно. */
+/* Хайлт: нэрээр ч, нүдний кодоор ч шүүнэ. Жагсаалт нэг — DOM дээрх картуудыг
+   нуух, харуулах замаар ажиллана. */
 (function(){
-  var ul=document.getElementById('holders'), box=document.getElementById('marquee'),
-      inp=document.getElementById('memberSearch'), none=document.getElementById('noMatch');
-  if(!ul||!box||!inp) return;
-
-  var clone=ul.cloneNode(true);
-  clone.id=''; clone.setAttribute('aria-hidden','true');
-  /* Хуулбар дахь холбоос гар утсаар удирдахад давхар зогсоол үүсгэхгүй */
-  Array.prototype.forEach.call(clone.querySelectorAll('a'),function(a){a.tabIndex=-1;});
-  box.appendChild(clone);
-  /* Хурд нь уртаасаа хамаарна: гишүүн нэмэгдэхэд урсалт хурдсах ёсгүй */
-  var setSpeed=function(){
-    var w=ul.scrollWidth;
-    box.style.setProperty('--marquee-w', w+'px');
-    box.style.setProperty('--marquee-t', Math.max(24,Math.round(w/70))+'s');
-  };
-  setSpeed();
-  addEventListener('resize',setSpeed);
-  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(setSpeed);
-
+  var ul=document.getElementById('holders'),
+      inp=document.getElementById('memberSearch'),
+      none=document.getElementById('noMatch');
+  if(!ul||!inp) return;
   var items=Array.prototype.slice.call(ul.children);
   inp.addEventListener('input',function(){
-    var q=inp.value.trim().toLowerCase();
-    box.classList.toggle('is-searching', !!q);
-    clone.hidden=!!q;
-    var hits=0;
+    var q=inp.value.trim().toLowerCase(), hits=0;
     items.forEach(function(li){
       var name=(li.querySelector('b')||{}).textContent||'';
       var cell=(li.querySelector('.cell')||{}).textContent||'';

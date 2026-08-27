@@ -303,48 +303,16 @@ button.submit[disabled] { background: var(--bio-muted); cursor: default; }
   font-size: 13.5px; line-height: 1.75; color: var(--bio-muted);
   margin: 8px 0 26px; max-width: 60ch;
 }
-/* ── the register: a running strip until someone searches it ──────────────
-   Хөдөлгөөн нь "энэ бүртгэл амьд" гэдгийг үзүүлнэ, гэхдээ хөдөлж буй мөрөөс
-   тодорхой нэр хайх боломжгүй. Тиймээс хоёр төлөв: анхдагчаар урсана, бичиж
-   эхэлмэгц зогсоод сүлжээ болно. Жагсаалт нэг, төлөв нь хоёр. */
-.marquee, .no-match, .next-report { grid-column: 1 / -1; }
-.marquee {
-  --marquee-w: 2000px; --marquee-t: 40s;
-  position: relative; overflow: hidden;
-  display: flex; gap: 12px;
-  margin: 0 -4px;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-          mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-}
+/* ── the register ─────────────────────────────────────────────────────────
+   Энгийн хана: гишүүн бүр адилхан хэмжээтэй нүд. Хайлт нь тохирохгүйг нь
+   нуух замаар яг энэ сүлжээн дотроо ажиллана. */
+.holders, .no-match, .next-report { grid-column: 1 / -1; }
 .holders {
-  list-style: none; margin: 0; padding: 0 4px;
-  display: flex; gap: 12px; flex: 0 0 auto;
-  animation: marquee var(--marquee-t) linear infinite;
-}
-.holders > li { flex: 0 0 190px; }
-@keyframes marquee { to { transform: translateX(calc(-1 * var(--marquee-w) - 12px)); } }
-/* Уншихыг хүсвэл барих боломжтой байх ёстой */
-.marquee:hover .holders, .marquee:focus-within .holders { animation-play-state: paused; }
-
-/* ── searching: the strip stops being a strip ── */
-.marquee.is-searching {
-  /* flex хэвээр үлдвэл жагсаалт агуулгынхаа өргөнөөр хумигдаж, сүлжээ нэг
-     багана болно — хайлтын үр дүн бүтэн өргөнөө эзлэх ёстой. */
-  display: block;
-  overflow: visible; -webkit-mask-image: none; mask-image: none; margin: 0;
-}
-.marquee.is-searching .holders {
-  animation: none; padding: 0;
+  list-style: none; margin: 0; padding: 0;
   display: grid; gap: 12px;
   grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
 }
-.marquee.is-searching .holders > li { flex: none; }
 .holders > li[hidden] { display: none; }
-/* [hidden] нь хөтчийн анхдагч display:none-оор ажилладаг ч .holders дээрх
-   display:flex, хайлтын үеийн display:grid хоёр түүнийг дардаг. Хуулбарыг
-   нуухын тулд тэдгээрээс өндөр жинтэй дүрэм хэрэгтэй. */
-.marquee > ul[hidden],
-.marquee.is-searching > ul[hidden] { display: none; }
 
 .wall-search {
   display: flex; align-items: center; gap: 9px;
