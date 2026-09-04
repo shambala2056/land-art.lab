@@ -341,7 +341,6 @@ var PARTNERS = {
   'K': { name:'EFES GROUP', logo:'assets/images/partner/hexagon-cells/EFES-GROUP_L.png', aspect:1.41 },
   'R': { name:'TIMBERLAND', logo:'assets/images/partner/hexagon-cells/Timberland_M.svg', aspect:5.70 },
   'P': { name:'YVES ROCHER', logo:'assets/images/partner/hexagon-cells/Yves-Rocher_M.webp', aspect:4.65 },
-  'AM': { name:'АРГА БИЛИГ', logo:'assets/images/partner/hexagon-cells/АРГА БИЛИГ.png', aspect:1.0 },
   /* KHARKHORUM нь 3D дүрслэлд түнш байсан ч энэ хүснэгтэд байхгүй байсан тул
      худалдан авах газрын зурагт "чөлөөтэй" гэж харагдаж байв. 3D-г эх болгоно. */
   'B': { name:'KHARKHORUM', logo:null, aspect:1 },
@@ -351,6 +350,9 @@ var PARTNERS = {
   'X': { name:'EFES CONSTRUCTION',  logo:'assets/images/partner/hexagon-cells/EFES-CONSTRUCTION_S.png',  aspect:1.51 },
   'AQ': { name:'EFEC SUPERMARKET',   logo:'assets/images/partner/hexagon-cells/EFEC-SUPERMARKET_S.png',   aspect:2.76 },
   'N': { name:'KHULAN UUL',         logo:'assets/images/partner/hexagon-cells/KHULAN-UUL_S.png',         aspect:3.67 }
+};
+var OPEN_LOGOS = {
+  'AM': { name:'АРГА БИЛИГ', logo:'assets/images/partner/hexagon-cells/АРГА БИЛИГ.png', aspect:1.0 }
 };
 var HELD     = [];
 
@@ -529,8 +531,8 @@ SHAPE.forEach(function(h,i){
     status:INFRA[id]?'infra':(PARTNERS[id]?'taken':(HELD.indexOf(id)>-1?'held':'free')),
     infra:INFRA[id]||null,
     partner:PARTNERS[id]?PARTNERS[id].name:null,
-    logo:PARTNERS[id]?PARTNERS[id].logo:null,
-    logoAspect:PARTNERS[id]&&PARTNERS[id].aspect?PARTNERS[id].aspect:1,
+    logo:(PARTNERS[id]||OPEN_LOGOS[id])?(PARTNERS[id]||OPEN_LOGOS[id]).logo:null,
+    logoAspect:(PARTNERS[id]||OPEN_LOGOS[id])&&(PARTNERS[id]||OPEN_LOGOS[id]).aspect?(PARTNERS[id]||OPEN_LOGOS[id]).aspect:1,
     /* AH is the Jack's Coffee cell: its trees are planted in the shape of
        their mark, not in the even grid every other cell uses. Drawn as the
        mark itself so the map says what is actually in the ground there. */
@@ -1079,7 +1081,7 @@ function showCell(id){
           : '<div class="buy-fine" style="margin-top:14px">This cell is project infrastructure and is not offered for sponsorship.</div>'+
             '<a class="d-cta" href="index.html#contact" target="_top">Enquire About Another Cell →</a>')
       : (c.status==='free' && PICK)
-      ? '<button type="button" class="d-cta" id="pickGo">Choose cell '+c.id+' &rarr;</button>'+
+      ? '<button type="button" class="d-cta" id="pickGo">Sponsor pits in '+c.id+' &rarr;</button>'+
         '<div class="buy-fine" style="margin-top:10px">'+pots+' pits in this cell. '+
         'You say how many you want on the next step.</div>'
       /* The map used to carry its own purchase form. It sent the whole page off
