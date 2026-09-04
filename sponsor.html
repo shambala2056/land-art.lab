@@ -253,6 +253,7 @@
     var SEEDS_PER_PIT = 3;
 
     var pick = null;        /* {cell, pits} chosen on step 1 */
+    var requestedCell = new URLSearchParams(window.location.search).get("cell");
     var payWindow = null;   /* the provider's tab, so it can be closed again */
     var price = null;       /* what pay-config says a pit costs */
     var cap = null;         /* pits still free in the chosen cell */
@@ -298,6 +299,19 @@
         askAvailability();
         show(2);
         $("fName").focus();
+    }
+
+    /* A cell link from the standalone map already identifies the buyer's
+       choice, so do not make them select the same cell a second time. */
+    if (requestedCell) {
+        requestedCell = requestedCell.trim().toUpperCase();
+        if (/^[A-Z]{1,2}$/.test(requestedCell)) {
+            var requestedPits = { AM: 981 }[requestedCell];
+            if (requestedPits) {
+                pick = { cell: requestedCell, pits: requestedPits };
+                chose();
+            }
+        }
     }
 
     /* How many are actually left. Until it answers, the cell's full size stands —
