@@ -173,6 +173,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .reveal{opacity:0}.reveal.in{animation:rise .7s cubic-bezier(.22,.85,.25,1) both}
 @keyframes sow{0%{opacity:0;transform:scale(.5)}62%{transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
 .cell.presow{opacity:0}
+.cell[data-id="AM"].presow{opacity:1}
 .cell.seeded{animation:sow .5s cubic-bezier(.3,1.45,.5,1) both}
 /* ───── modules ───── */
 .mhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:4px}
@@ -665,7 +666,7 @@ CELLS.forEach(function(c){
       var clip=el('clipPath',{id:'clip-'+c.id});
       clip.appendChild(el('polygon',{points:hexPts(c.x,c.y,lr)}));
       defs.appendChild(clip);
-      g.appendChild(el('polygon',{points:hexPts(c.x,c.y,lr),fill:'#fff',opacity:'.92','pointer-events':'none'}));
+      g.appendChild(el('polygon',{points:hexPts(c.x,c.y,lr),fill:'#fff',opacity:c.id==='AM'?'1':'.92','pointer-events':'none'}));
       g.appendChild(el('image',{href:c.logo,x:c.x-fit.w/2,y:c.y-fit.h/2,width:fit.w,height:fit.h,
         preserveAspectRatio:'xMidYMid meet','clip-path':'url(#clip-'+c.id+')','pointer-events':'none'}));
     }else{
