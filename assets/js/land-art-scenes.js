@@ -257,6 +257,7 @@ const THEMED={
 };
 /* Түншүүд өмнөх зэрэглэлдээ хамгийн ойр шинэ ангид шилжсэн */
 const PARTNERS={'K':'EFES GROUP','P':'YVES ROCHER','R':'TIMBERLAND',
+  'AM':'АРГА БИЛИГ',
   'B':'KHARKHORUM',
   /* EFES Group-ийн дөрвөн компани тус тусдаа хөрөнгө оруулсан тул тус бүр
      өөрийн нүд, өөрийн тугтай. Хамгийн жижиг анги (F, 12 м²).
@@ -538,6 +539,7 @@ function init3D(){
     'K':{url:'assets/images/partner/hexagon-cells/EFES-GROUP_L.png',  ar:1.41},
     'P':{url:'assets/images/partner/hexagon-cells/Yves-Rocher_M.webp',ar:4.65},
     'R':{url:'assets/images/partner/hexagon-cells/Timberland_M.svg',  ar:5.70},
+    'AM':{url:'assets/images/partner/hexagon-cells/АРГА БИЛИГ.jpg', ar:1.0},
     'AJ':{url:'assets/images/partner/hexagon-cells/EFES-INTERNATIONAL_S.jpg', ar:3.02},
     'X':{url:'assets/images/partner/hexagon-cells/EFES-CONSTRUCTION_S.png',  ar:1.51},
     'AQ':{url:'assets/images/partner/hexagon-cells/EFEC-SUPERMARKET_S.png',   ar:2.76},
