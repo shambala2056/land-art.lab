@@ -716,8 +716,6 @@ callouts.sort(function(a,b){return a.y-b.y;}).forEach(function(c){
 
   var gg=el('g',{'class':'cell callout',tabindex:'0',role:'button','aria-label':'Cell '+c.id+' — '+(c.partner||'')});
   gg.dataset.id=c.id;
-  gg.appendChild(el('line',{x1:c.x,y1:c.y-c.R,x2:c.x,y2:cy+ph/2,
-    stroke:'#4A4C40','stroke-width':'1',opacity:'.5','pointer-events':'none'}));
   gg.appendChild(el('rect',{x:c.x-pw/2,y:cy-ph/2,width:pw,height:ph,rx:3.6,
     fill:'#fff',opacity:'.96',stroke:'#CFC8B6','stroke-width':'0.8'}));
   gg.appendChild(el('image',{href:c.logo,x:c.x-w/2,y:cy-h/2,width:w,height:h,
