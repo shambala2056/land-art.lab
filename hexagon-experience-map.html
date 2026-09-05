@@ -666,7 +666,7 @@ CELLS.forEach(function(c){
       var clip=el('clipPath',{id:'clip-'+c.id});
       clip.appendChild(el('polygon',{points:hexPts(c.x,c.y,lr)}));
       defs.appendChild(clip);
-      g.appendChild(el('polygon',{points:hexPts(c.x,c.y,lr),fill:'#fff',opacity:c.id==='AM'?'1':'.92','pointer-events':'none'}));
+      g.appendChild(el('polygon',{points:hexPts(c.x,c.y,lr),fill:'#fff',opacity:'.92','pointer-events':'none'}));
       g.appendChild(el('image',{href:c.logo,x:c.x-fit.w/2,y:c.y-fit.h/2,width:fit.w,height:fit.h,
         preserveAspectRatio:'xMidYMid meet','clip-path':'url(#clip-'+c.id+')','pointer-events':'none'}));
     }else{
