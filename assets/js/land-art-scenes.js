@@ -245,7 +245,7 @@ const THEMED={
      шүүдэр, цан л байна. Мөн энэ нь усны эх үүсвэр биш нэмэлт: эх үүсвэр нь
      гүний худаг. */
   'J':['Water harvesting','water','Dew and hoarfrost capture with covered storage — a supplement to the borehole, not a supply'],
-  'S':['Recycling and compost','waste','Sorting bays and a shaded composting yard — the compost returns to the planting pits'],
+  'AN':['Recycling and compost','waste','Sorting bays and a shaded composting yard — the compost returns to the planting pits'],
   'AD':['Research station','research','Weather and soil sensors, biodiversity monitoring'],
   /* D-05 сул боллоо: шувууны хоргодох газар A-01 руу нүүсэн тул энэ нүд
      энгийн тарилтын нүд болж, ивээн тэтгэхэд нээлттэй болов. */
@@ -266,7 +266,8 @@ const PARTNERS={'K':'EFES GROUP','P':'YVES ROCHER','R':'TIMBERLAND',
      төвд хамгийн ойр дөрвөн F нүд рүү шилжүүлэв (14–28 м), дөрвөн өөр зүг рүү
      тарсан тул бие биенээ халхлахгүй. */
   'AJ':'EFES INTERNATIONAL','X':'EFES CONSTRUCTION',
-  'AQ':'EFEC SUPERMARKET','N':'KHULAN UUL'};
+  'AQ':'EFEC SUPERMARKET','N':'KHULAN UUL',
+  'S':'JCI SKY'};
 /* CELL CODES. One letter per hexagon — A…Z then AA…BB, which is exactly 54.
    Ordered across the ground, north-west to south-east, so neighbouring cells
    carry neighbouring letters: the point of lettering them is that a cell can be
@@ -275,7 +276,13 @@ const PARTNERS={'K':'EFES GROUP','P':'YVES ROCHER','R':'TIMBERLAND',
    Indexed by position in SHAPE, so this file and the other one that walks SHAPE
    cannot drift apart. The size class is no longer readable from the code, so
    pit counts are stated per cell rather than derived from the letter. */
-const LETTERS=["AH","AM","AS","K","AB","AL","BA","P","R","AC","AE","AY","AZ","E","J","S","AD","AN","AK","AR","AV","B","H","L","Q","O","T","Y","AA","W","AF","AI","AO","AT","AU","AX","A","F","D","C","G","I","U","V","M","N","X","Z","AJ","AG","AP","AQ","AW","BB"];
+const LETTERS=["AH","AM","AS","K","AB","AL","BA","P","R","AC","AE","AY","AZ","E","J","AN","AD","S","AK","AR","AV","B","H","L","Q","O","T","Y","AA","W","AF","AI","AO","AT","AU","AX","A","F","D","C","G","I","U","V","M","N","X","Z","AJ","AG","AP","AQ","AW","BB"];
+/* S ба AN кодыг 2026-09-24 санал болгосноор сольсон: S нь бодит баригдсан
+   компостын байгууламжийн код байсан ч "Sky" гэдэгтэй санаанд нийцүүлэн JCI
+   Sky-д шилжүүлэв. Физик кодны утгыг (аль байрлал аль үсэгтэй) сольсон тул
+   THEMED/PARTNERS/FLAG_LOGOS доторх 'S' ба 'AN' түлхүүрүүд ч сольсон. Талбайд
+   аль хэдийн шошго тавьсан бол код мөргөлдөнө гэдгийг мэдсэн дээрээ шийдвэр
+   гаргасан. */
 const CELLS=[];
 (function(){
   SHAPE.forEach(function(h,idx){
@@ -544,6 +551,7 @@ function init3D(){
     'X':{url:'assets/images/partner/hexagon-cells/EFES-CONSTRUCTION_S.png',  ar:1.51},
     'AQ':{url:'assets/images/partner/hexagon-cells/EFEC-SUPERMARKET_S.png',   ar:2.76},
     'N':{url:'assets/images/partner/hexagon-cells/KHULAN-UUL_S.png',         ar:3.67},
+    'S':{url:'assets/images/partner/hexagon-cells/JCI-SKY.png',              ar:1.85},
     /* JACK'S COFFEE — A-01. Гар дээрх лого нь ЦАГААН дүрстэй (харанхуй
        дэвсгэрт зориулсан) тул цагаан даавуун дээр үл харагдана; иймд хэлбэрийг
        хөндөхгүй, зөвхөн бэхийг тодруулсан хувилбар үүсгэв. off нь тугийг эсийн
