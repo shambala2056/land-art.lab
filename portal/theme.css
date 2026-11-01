@@ -1,0 +1,383 @@
+/* Portal light / dark theme. The app's SURFACE, TEXT, TONE, SHADOW and BRAND
+   tokens read these. Teal on deep sea-green at night, pale aqua by day, with a
+   warm glow in the top corner and slow waves along the bottom. */
+:root {
+  color-scheme: light;
+  --pt-page: #EDF5F6;
+  --pt-card: #FFFFFF;
+  --pt-border: #DCE8EA;
+  --pt-border-solid: #DCE8EA;
+  --pt-text: #0C1A1D;
+  --pt-text-2: rgba(12, 26, 29, 0.70);
+  --pt-text-3: rgba(12, 26, 29, 0.54);
+  --pt-text-4: rgba(12, 26, 29, 0.40);
+
+  --pt-accent: #0F6E6E;
+  --pt-on-accent: #FFFFFF;
+  --pt-accent-surface: rgba(15, 110, 110, 0.10);
+  --pt-accent-border: rgba(15, 110, 110, 0.32);
+  --pt-button-bg: linear-gradient(180deg, #158080 0%, #0F6E6E 100%);
+
+  --pt-brand-bg: linear-gradient(120deg, #DDF1EF 0%, #EEF8F7 55%, #FCEBD4 100%);
+
+  --pt-tone-bg: var(--pt-card);
+  --pt-tone-primary: linear-gradient(160deg, rgba(15, 110, 110, 0.12), rgba(15, 110, 110, 0.02) 70%), #FFFFFF;
+  --pt-tone-cyan: var(--pt-tone-primary);
+  --pt-tone-success: var(--pt-tone-primary);
+  --pt-tone-warning: var(--pt-tone-primary);
+  --pt-tone-danger: var(--pt-tone-primary);
+  --pt-tone-purple: var(--pt-tone-primary);
+  --pt-tone-info: var(--pt-tone-primary);
+  --pt-tone-pink: var(--pt-tone-primary);
+
+  --pt-shadow-card: 0 1px 2px rgba(12, 60, 64, 0.05), 0 8px 24px rgba(12, 60, 64, 0.05);
+  --pt-shadow-raised: 0 10px 30px rgba(12, 60, 64, 0.10);
+  --pt-shadow-modal: 0 24px 64px rgba(12, 60, 64, 0.20);
+  --pt-shadow-dropdown: 0 10px 30px rgba(12, 60, 64, 0.12);
+
+  --pt-glow: rgba(255, 186, 102, 0.30);
+  --pt-wave: rgba(43, 179, 168, 0.10);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --pt-page: #08141A;
+    --pt-card: #0E1D23;
+    --pt-border: rgba(255, 255, 255, 0.08);
+    --pt-border-solid: #1B2D33;
+    --pt-text: #EAF3F3;
+    --pt-text-2: rgba(234, 243, 243, 0.68);
+    --pt-text-3: rgba(234, 243, 243, 0.48);
+    --pt-text-4: rgba(234, 243, 243, 0.32);
+
+    --pt-accent: #5ED3C7;
+    --pt-on-accent: #04201E;
+    --pt-accent-surface: rgba(94, 211, 199, 0.14);
+    --pt-accent-border: rgba(94, 211, 199, 0.40);
+    --pt-button-bg: linear-gradient(180deg, #74E0D5 0%, #4FC6BA 100%);
+
+    --pt-brand-bg: linear-gradient(120deg, #0E2A2D 0%, #0C1D22 55%, #2A1E14 100%);
+
+    --pt-tone-primary: linear-gradient(160deg, rgba(94, 211, 199, 0.22), rgba(94, 211, 199, 0.04) 70%), #0E1D23;
+
+    --pt-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --pt-shadow-raised: 0 14px 40px rgba(0, 0, 0, 0.4);
+    --pt-shadow-modal: 0 30px 90px rgba(0, 0, 0, 0.55);
+    --pt-shadow-dropdown: 0 14px 40px rgba(0, 0, 0, 0.45);
+
+    --pt-glow: rgba(214, 122, 52, 0.16);
+    --pt-wave: rgba(43, 179, 168, 0.07);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --pt-page: #08141A;
+  --pt-card: #0E1D23;
+  --pt-border: rgba(255, 255, 255, 0.08);
+  --pt-border-solid: #1B2D33;
+  --pt-text: #EAF3F3;
+  --pt-text-2: rgba(234, 243, 243, 0.68);
+  --pt-text-3: rgba(234, 243, 243, 0.48);
+  --pt-text-4: rgba(234, 243, 243, 0.32);
+
+  --pt-accent: #5ED3C7;
+  --pt-on-accent: #04201E;
+  --pt-accent-surface: rgba(94, 211, 199, 0.14);
+  --pt-accent-border: rgba(94, 211, 199, 0.40);
+  --pt-button-bg: linear-gradient(180deg, #74E0D5 0%, #4FC6BA 100%);
+
+  --pt-brand-bg: linear-gradient(120deg, #0E2A2D 0%, #0C1D22 55%, #2A1E14 100%);
+
+  --pt-tone-primary: linear-gradient(160deg, rgba(94, 211, 199, 0.22), rgba(94, 211, 199, 0.04) 70%), #0E1D23;
+
+  --pt-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --pt-shadow-raised: 0 14px 40px rgba(0, 0, 0, 0.4);
+  --pt-shadow-modal: 0 30px 90px rgba(0, 0, 0, 0.55);
+  --pt-shadow-dropdown: 0 14px 40px rgba(0, 0, 0, 0.45);
+
+  --pt-glow: rgba(214, 122, 52, 0.16);
+  --pt-wave: rgba(43, 179, 168, 0.07);
+}
+
+body { background: var(--pt-page); }
+
+/* The logo and the banners (brand gradient, login panel) are drawn white for a
+   dark background. In light mode the gradient turns pale, so they go dark. */
+:root[data-theme="light"] :is(.las-sidebar, .auth-brand) img[src$="las-logo-light.png"] {
+  content: url("/portal/las-logo-dark.png");
+}
+:root[data-theme="light"] :is([style*="--pt-brand-bg"], .auth-brand),
+:root[data-theme="light"] :is([style*="--pt-brand-bg"], .auth-brand) [style*="color: rgb(255, 255, 255)"],
+:root[data-theme="light"] :is([style*="--pt-brand-bg"], .auth-brand) [style*="color: rgba(255, 255, 255"] {
+  color: var(--pt-text) !important;
+}
+:root[data-theme="light"] :is([style*="--pt-brand-bg"], .auth-brand) [style*="border: 1px solid rgba(255, 255, 255"] {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+:root[data-theme="light"] :is([style*="--pt-brand-bg"], .auth-brand) [style*="background: rgba(255, 255, 255"] {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) :is(.las-sidebar, .auth-brand) img[src$="las-logo-light.png"] {
+    content: url("/portal/las-logo-dark.png");
+  }
+  :root:not([data-theme="dark"]) :is([style*="--pt-brand-bg"], .auth-brand),
+  :root:not([data-theme="dark"]) :is([style*="--pt-brand-bg"], .auth-brand) [style*="color: rgb(255, 255, 255)"],
+  :root:not([data-theme="dark"]) :is([style*="--pt-brand-bg"], .auth-brand) [style*="color: rgba(255, 255, 255"] {
+    color: var(--pt-text) !important;
+  }
+  :root:not([data-theme="dark"]) :is([style*="--pt-brand-bg"], .auth-brand) [style*="border: 1px solid rgba(255, 255, 255"] {
+    border-color: rgba(0, 0, 0, 0.12) !important;
+  }
+  :root:not([data-theme="dark"]) :is([style*="--pt-brand-bg"], .auth-brand) [style*="background: rgba(255, 255, 255"] {
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+}
+
+/* Warm glow in the top corner and slow waves along the bottom. Drawn over the
+   app at low strength because its own layout paints an opaque page colour. */
+.pt-atmos {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 25;
+  overflow: hidden;
+}
+.pt-atmos::before {
+  content: "";
+  position: absolute;
+  right: -10vw;
+  top: -20vh;
+  width: 60vw;
+  height: 70vh;
+  background: radial-gradient(closest-side, var(--pt-glow), transparent);
+  animation: pt-glow 14s ease-in-out infinite alternate;
+}
+.pt-wave {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 200%;
+  height: 160px;
+  color: var(--pt-wave);
+  animation: pt-wave 22s linear infinite;
+}
+.pt-wave + .pt-wave {
+  height: 120px;
+  animation-duration: 15s;
+  animation-direction: reverse;
+  opacity: 0.8;
+}
+.pt-wave svg { width: 100%; height: 100%; display: block; }
+@keyframes pt-wave { to { transform: translateX(-50%); } }
+@keyframes pt-glow {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-4vw, 3vh) scale(1.08); }
+}
+
+/* Theme switch: the new theme grows out of the button in a circle. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+.pt-theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 14px;
+  border: 1px solid var(--pt-border-solid);
+  background: var(--pt-card);
+  color: var(--pt-text-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color .2s, border-color .2s;
+}
+.pt-theme-toggle:hover { color: var(--pt-text); border-color: var(--pt-text-4); }
+.pt-theme-toggle svg { width: 18px; height: 18px; transition: transform .5s cubic-bezier(.22, 1, .36, 1); }
+.pt-theme-toggle:active svg { transform: rotate(45deg) scale(.9); }
+.pt-theme-toggle.is-floating {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1000;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  box-shadow: var(--pt-shadow-dropdown);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pt-atmos::before, .pt-wave { animation: none; }
+}
+
+/* ---- Top navigation, laid out like the reference: a floating header card with
+   the logo, a pill row of sections and the actions on the right, and a
+   breadcrumb row underneath. The old sidebar stays in the DOM but out of sight;
+   the tabs drive it. */
+.las-sidebar { display: none !important; }
+.las-main { margin-left: 0 !important; }
+.las-navbtn { display: none !important; }
+
+.las-main > header {
+  position: sticky;
+  top: 12px !important;
+  margin: 12px 16px 0;
+  border: 1px solid var(--pt-border-solid) !important;
+  border-radius: 20px;
+  box-shadow: var(--pt-shadow-card);
+  background: color-mix(in srgb, var(--pt-card) 88%, transparent) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.las-main > header .las-headbar {
+  padding: 10px 14px !important;
+  min-height: 0 !important;
+  gap: 12px !important;
+}
+
+/* Search collapses to an icon button, as in the reference. */
+.las-headbar .las-search {
+  flex: 0 0 auto !important;
+  width: 36px; height: 36px;
+  padding: 0 !important;
+  justify-content: center;
+  background: var(--pt-card) !important;
+}
+.las-headbar .las-search-label,
+.las-headbar .las-kbd { display: none !important; }
+
+.pt-topnav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.pt-topnav-logo { display: flex; align-items: center; flex-shrink: 0; }
+.pt-topnav-logo img { height: 26px; width: auto; display: block; }
+:root[data-theme="light"] .pt-topnav-logo img { content: url("/portal/las-logo-dark.png"); }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .pt-topnav-logo img { content: url("/portal/las-logo-dark.png"); }
+}
+
+.pt-tabs {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 14px;
+  border: 1px solid var(--pt-border-solid);
+  background: var(--pt-page);
+  overflow-x: auto;
+  scrollbar-width: none;
+  min-width: 0;
+}
+.pt-tabs::-webkit-scrollbar { display: none; }
+.pt-tab {
+  position: relative;
+  z-index: 1;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--pt-text-3);
+  padding: 7px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: color .3s;
+}
+.pt-tab:hover { color: var(--pt-text); }
+.pt-tab.is-active { color: var(--pt-on-accent); }
+.pt-tab-ind {
+  position: absolute;
+  z-index: 0;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  width: 0;
+  border-radius: 10px;
+  background: var(--pt-accent);
+  box-shadow: 0 4px 14px var(--pt-accent-border);
+}
+
+.pt-crumbs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 18px;
+  border-top: 1px solid var(--pt-border-solid);
+  font-size: 12px;
+  color: var(--pt-text-3);
+}
+.pt-crumbs b { color: var(--pt-text); font-weight: 600; }
+.pt-crumbs .sep { margin: 0 8px; opacity: .6; }
+.pt-crumbs-status { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.pt-crumbs-status::before {
+  content: "";
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--pt-accent);
+  box-shadow: 0 0 0 3px var(--pt-accent-surface);
+}
+
+/* ---- Moving between sections: the old page dims and blurs away while the
+   tide rises, then the new title types itself in and the cards come up in
+   reading order. */
+.las-content { position: relative; }
+.las-content > * { transition: opacity .16s ease, filter .16s ease, transform .16s ease; }
+.las-content.pt-leaving > * {
+  opacity: 0;
+  filter: blur(3px);
+  transform: scale(.995);
+}
+/* Page title: a line mask at the baseline that the letters rise out of. The
+   padding keeps descenders (у, ц, щ) inside the mask. */
+.pt-rise {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  white-space: pre;
+  padding-bottom: .14em;
+  margin-bottom: -.14em;
+}
+.pt-rise > span { display: inline-block; white-space: pre; }
+
+/* Click ring under the pointer. */
+.pt-ring {
+  position: fixed;
+  z-index: 2000;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--pt-text);
+  pointer-events: none;
+  animation: pt-ring .5s cubic-bezier(.22, 1, .36, 1) forwards;
+}
+@keyframes pt-ring {
+  from { transform: scale(.35); opacity: .7; }
+  to   { transform: scale(1); opacity: 0; }
+}
+
+.pt-wave { transition: height .6s cubic-bezier(.65, 0, .35, 1); }
+.pt-atmos.pt-tide .pt-wave { height: 340px; }
+.pt-atmos.pt-tide .pt-wave + .pt-wave { height: 280px; }
+
+@media (max-width: 900px) {
+  .pt-topnav-logo { display: none; }
+  .pt-crumbs-status { display: none; }
+  .las-main > header { margin: 8px 8px 0; top: 8px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pt-tab-ind, .pt-wave, .las-content > * { transition: none; }
+  .pt-ring { display: none; }
+}
